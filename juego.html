@@ -185,12 +185,6 @@
             margin-bottom: 10px;
         }
 
-        #category-display {
-            font-size: 1.05rem; /* Ligeramente más grande */
-            color: var(--text-color);
-            text-shadow: 0 0 1px rgba(224, 224, 224, 0.7);
-        }
-
         .attempts-counter {
             font-weight: 700;
             padding: 5px 10px;
@@ -370,17 +364,58 @@
             background-color: rgba(230, 230, 0, 0.1);
             text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         }
+
+        #winner-display {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            text-shadow: 0 0 8px var(--secondary-color), 0 0 15px var(--secondary-color);
+            margin-bottom: 25px;
+            animation: neonGlow 1.5s ease-in-out infinite alternate;
+            padding: 10px 0;
+            border-bottom: 2px solid var(--secondary-color);
+            border-top: 2px solid var(--secondary-color);
+        }
+
+        @keyframes neonGlow {
+            from { text-shadow: 0 0 5px var(--secondary-color), 0 0 10px var(--secondary-color), 0 0 20px var(--secondary-color); }
+            to { text-shadow: 0 0 8px var(--primary-color), 0 0 15px var(--primary-color), 0 0 30px var(--secondary-color); }
+        }
     </style>
 </head>
 <body>
     <div id="home-screen" class="screen active">
         <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
-        <button class="btn" onclick="showScreen('category-screen')">Jugar</button>
+        <button class="btn" onclick="showScreen('login-screen')">Jugar</button>
     </div>
+    <div id="login-screen" class="screen">
+    <h2>Iniciar Sesión</h2>
+    <input type="email" id="login-email" class="text-input" placeholder="Correo electrónico">
+    <input type="password" id="login-password" class="text-input" placeholder="Contraseña">
+    <button class="btn" onclick="loginUser()">Entrar</button>
+    <p class="small-text">¿No tienes cuenta? <a href="#" onclick="showScreen('register-screen')">Regístrate aquí</a></p>
+</div>
+
+<div id="register-screen" class="screen">
+    <h2>Registro</h2>
+    <input type="email" id="register-email" class="text-input" placeholder="Correo electrónico">
+    <input type="password" id="register-password" class="text-input" placeholder="Contraseña">
+    <button class="btn" onclick="registerUser()">Registrar</button>
+    <p class="small-text">¿Ya tienes cuenta? <a href="#" onclick="showScreen('login-screen')">Inicia sesión</a></p>
+</div>
+
+<div id="set-player-name-screen" class="screen">
+    <div id="game-info" style="margin-bottom: 15px;">
+        </div>
+    <h2>Nombre de Jugador</h2>
+    <input type="text" id="player-name-input" class="text-input" placeholder="Introduce tu nombre de jugador">
+    <button class="btn" onclick="setPlayerName()">Continuar</button>
+</div>
     <div id="category-screen" class="screen">
         <h2>Elige una Categoría</h2>
         <div id="category-buttons"></div>
         <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
+        <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
     </div>
     <div id="player-selection-screen" class="screen">
         <h2>Introduce el número de jugadores</h2>
@@ -392,9 +427,21 @@
             <button class="player-btn" onclick="selectPlayers(5)">5 Jugadores</button>
             <button class="player-btn" onclick="selectPlayers(6)">6 Jugadores</button>
         </div>
-        <button class="btn secondary" onclick="showScreen('category-screen')" style="margin-top: 20px;">Cambiar Categoría</button>
+        <button class="btn secondary" onclick="confirmReturnToMenu()" style="margin-top: 20px;">Menú Principal</button>
     </div>
+    <div id="player-names-input-screen" class="screen">
+        <h2>Nombres de los Jugadores</h2>
+        <p class="small-text">El primer jugador es tu usuario logueado: <strong id="logged-in-player-name"></strong></p>
+        <div id="other-player-names-inputs"></div>
+        <button class="btn" onclick="startGame()">Comenzar Partida</button>
+        <button class="btn secondary" onclick="showScreen('player-selection-screen')">Volver a selección de jugadores</button>
+    </div>
+
     <div id="game-screen" class="screen">
+        <div id="game-info" style="margin-bottom: 15px;">
+            <strong>Turno de:</strong> <span id="player-name-display"></span>
+        </div>
+
         <div class="game-header">
             <div class="game-info">
                 <div id="category-display"></div>
@@ -408,63 +455,17 @@
         <h3 id="player-turn"></h3>
         <button id="play-song-btn" class="btn">▶</button>
         <div id="answer-buttons"></div>
-        <button class="btn secondary" onclick="showScreen('category-screen')" style="margin-top: 20px;">Menú Principal</button>
+        <button class="btn secondary" onclick="confirmReturnToMenu()" style="margin-top: 20px;">Menú Principal</button>
     </div>
     <div id="end-game-screen" class="screen">
         <h2>Partida Terminada</h2>
+        <div id="winner-display"></div>
         <div id="final-scores"></div>
         <button class="btn" id="play-again-btn">Volver a Jugar</button>
         <button class="btn secondary" onclick="showScreen('category-screen')">Menú Principal</button>
         <button class="btn tertiary" onclick="showScreen('home-screen')">Salir</button>
     </div>
 
-    <div id="home-screen" class="screen active">
-        <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
-        <button class="btn" onclick="showScreen('login-screen')">Jugar</button> </div>
-
-    <div id="register-screen" class="screen">
-        <h2>Crear Cuenta</h2>
-        <input type="email" id="register-email" placeholder="Email" class="text-input">
-        <input type="password" id="register-password" placeholder="Contraseña" class="text-input">
-        <button class="btn" onclick="registerUser()">Registrarse</button>
-        <p class="small-text">¿Ya tienes cuenta? <a href="#" onclick="showScreen('login-screen')">Inicia Sesión aquí</a></p>
-        <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
-    </div>
-
-    <div id="login-screen" class="screen">
-        <h2>Iniciar Sesión</h2>
-        <input type="email" id="login-email" placeholder="Email" class="text-input">
-        <input type="password" id="login-password" placeholder="Contraseña" class="text-input">
-        <button class="btn" onclick="loginUser()">Entrar</button>
-        <p class="small-text">¿No tienes cuenta? <a href="#" onclick="showScreen('register-screen')">Regístrate aquí</a></p>
-        <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
-    </div>
-
-    <div id="set-player-name-screen" class="screen">
-        <h2>Elige tu Nombre de Jugador</h2>
-        <p class="warning-text">¡Atención! Este nombre no se podrá modificar una vez establecido.</p>
-        <input type="text" id="player-name-input" placeholder="Tu nombre de jugador" class="text-input">
-        <button class="btn" onclick="setPlayerName()">Confirmar Nombre</button>
-        <button class="btn secondary" onclick="logout()">Cerrar Sesión</button>
-    </div>
-
-    <div id="category-screen" class="screen">
-        </div>
-    <div id="player-selection-screen" class="screen">
-        </div>
-    <div id="game-screen" class="screen">
-        </div>
-    <div id="end-game-screen" class="screen">
-        </div>
-    
-    <audio id="audio-player"></audio>
-    <audio id="sfx-acierto" src="audio/sfx/acierto.mp3"></audio>
-    <audio id="sfx-error" src="audio/sfx/error.mp3"></audio>
-
-    <script>
-        // ... Tu JavaScript existente (se modificará en el siguiente paso) ...
-    </script>
-    
     <audio id="audio-player"></audio>
     <audio id="sfx-acierto" src="audio/sfx/acierto.mp3"></audio>
     <audio id="sfx-error" src="audio/sfx/error.mp3"></audio>
@@ -475,26 +476,112 @@
     //=====================================================================
     const configuracionCanciones = {
       espanol: [
-        { file: 'vetusta-morla - copenhague.mp3', display: 'Vetusta Morla - Copenhague' },
-        { file: 'estopa - la-raja-de-tu-falda.mp3', display: 'Estopa - La Raja de tu Falda' },
-        { file: 'joaquin-sabina - 19 -dias-y-500-noches.mp3', display: 'Joaquín Sabina - 19 Días y 500 Noches' },
-        { file: 'rosalia - malamente.mp3', display: 'Rosalía - Malamente' },
-        { file: 'heroes-del-silencio - entre-dos-tierras.mp3', display: 'Héroes del Silencio - Entre Dos Tierras' },
-        { file: 'hombres-g - sufriendo-gozando.mp3', display: 'Hombres G - Sufriendo Gozando' },
-        { file: 'mana - labios-compartidos.mp3', display: 'Maná - Labios Compartidos' },
-        { file: 'shakira - bzrp-music-sessions-vol-53.mp3', display: 'Shakira - BZRP Music Sessions #53' },
-        { file: 'alejandro-sanz - corazon-partio.mp3', display: 'Alejandro Sanz - Corazón Partío' },
-        { file: 'melendi - la-promesa.mp3', display: 'Melendi - La Promesa' },
-        { file: 'camela - cuando-zarpa-el-amor.mp3', display: 'Camela - Cuando Zarpa el Amor' },
-        { file: 'david-bisbal - ave-maria.mp3', display: 'David Bisbal - Ave María' },
-        { file: 'la-oreja-de-van-gogh - cuentame-al-oido.mp3', display: 'La Oreja de Van Gogh - Cuéntame al Oído' },
-        { file: 'fito-y-fitipaldis - la-casa-por-el-tejado.mp3', display: 'Fito y Fitipaldis - La Casa por el Tejado' },
+        { file: 'alejandro-sanz - y-si-fuera-ella.mp3', display: 'Alejandro Sanz - Y Si Fuera Ella' },
+        { file: 'alex-ubago - sin-miedo-a-nada.mp3', display: 'Alex Ubago - Sin Miedo A Nada' },
+        { file: 'alvaro-soler - sofia.mp3', display: 'Alvaro Soler - Sofia' },
+        { file: 'amaral - moriria-por-vos.mp3', display: 'Amaral - Moriria Por Vos' },
+        { file: 'amaral - sin-ti-no-soy-nada.mp3', display: 'Amaral - Sin Ti No Soy Nada' },
+        { file: 'amistades-peligrosas - me-quedare-solo.mp3', display: 'Amistades Peligrosas - Me Quedare Solo' },
+        { file: 'ana-mena - usica-ligera.mp3', display: 'Ana Mena - Usica Ligera' },
+        { file: 'andy-y-lucas - tanto-la-queria.mp3', display: 'Andy Y Lucas - Tanto La Queria' },
+        { file: 'antonio-orozco - estoy-hecho-de-pedacitos-de-ti.mp3', display: 'Antonio Orozco - Estoy Hecho De Pedacitos De Ti' },
+        { file: 'baute-y-marta-sanchez - colgando-en-tus-manos.mp3', display: 'Baute Y Marta Sanchez - Colgando En Tus Manos' },
+        { file: 'bebe - malo.mp3', display: 'Bebe - Malo' },
+        { file: 'bizarrap-ft-quevedo - bzrp-session-vol.-52.mp3', display: 'Bizarrap Ft Quevedo - Bzrp Session Vol. 52' },
+        { file: 'bizarrap-y-shakira - bzrp-music-sessions-53.mp3', display: 'Bizarrap Y Shakira - Bzrp Music Sessions 53' },
+        { file: 'buika - no-habr-nadie-en-el-mundo.mp3', display: 'Buika - No Habr Nadie En El Mundo' },
+        { file: 'cabaret-pop - juegos-de-amor.mp3', display: 'Cabaret Pop - Juegos De Amor' },
+        { file: 'camilo-sesto - algo-de-mi.mp3', display: 'Camilo Sesto - Algo De Mi' },
+        { file: 'celia-cruz - la-vida-es-un-carnaval.mp3', display: 'Celia Cruz - La Vida Es Un Carnaval' },
+        { file: 'celtas-cortos - 20-de-abril.mp3', display: 'Celtas Cortos - 20 De Abril' },
+        { file: 'chayanne - torero.mp3', display: 'Chayanne - Torero' },
+        { file: 'chimo-bayo - asi-me-gusta-a-mi.mp3', display: 'Chimo Bayo - Asi Me Gusta A Mi' },
+        { file: 'complices-es-por-ti.mp3', display: 'Complices Es Por Ti' },
+        { file: 'coti - nada-fue-un-error.mp3', display: 'Coti - Nada Fue Un Error' },
+        { file: 'david-bisbal - digale.mp3', display: 'David Bisbal - Digale' },
+        { file: 'david-bisbal - me-enamore-de-ti.mp3', display: 'David Bisbal - Me Enamore De Ti' },
+        { file: 'david-de-maria-precisamente-ahora.mp3', display: 'David De Maria Precisamente Ahora' },
+        { file: 'diana-navarro - sola.mp3', display: 'Diana Navarro - Sola' },
+        { file: 'dinamita-pa-los-pollos - pandilleros.mp3', display: 'Dinamita Pa Los Pollos - Pandilleros ' },
+        { file: 'duncan-dhu - en-algun-lugar.mp3', display: 'Duncan Dhu - En Algun Lugar' },
+        { file: 'efecto-pasillo - pan-y-manquilla.mp3', display: 'Efecto Pasillo - Pan Y Manquilla' },
+        { file: 'el-canto-del-loco - la-madre-de-jose.mp3', display: 'El Canto Del Loco - La Madre De Jose' },
+        { file: 'el-chaval-de-la-peca - a-ba-ni-bi.mp3', display: 'El Chaval De La Peca - A Ba Ni Bi' },
+        { file: 'el-ultimo-de-la-fila - como-un-burro-amarrado-a-la-puerta-del-baile.mp3', display: 'El Ultimo De La Fila - Como Un Burro Amarrado A La Puerta Del Baile' },
+        { file: 'ella-baila-sola - cuando-los-sapos-bailen-flamenco.mp3', display: 'Ella Baila Sola - Cuando Los Sapos Bailen Flamenco' },
+        { file: 'estopa - me-quedare.mp3', display: 'Estopa - Me Quedare' },
+        { file: 'estopa-y-el-bicho-demonios.mp3', display: 'Estopa y El Bicho Demonios' },
         { file: 'extremoduro - so-payaso.mp3', display: 'Extremoduro - So Payaso' },
-        { file: 'ivan-ferreiro - turnedo.mp3', display: 'Iván Ferreiro - Turnedo' },
-        { file: 'enrique-iglesias - bailando.mp3', display: 'Enrique Iglesias - Bailando' },
-        { file: 'daddy-yankee - gasolina.mp3', display: 'Daddy Yankee - Gasolina' },
-        { file: 'ozuna - balenciaga.mp3', display: 'Ozuna - Balenciaga' },
-        { file: 'bad-bunny - me-porto-bonito.mp3', display: 'Bad Bunny - Me Porto Bonito' }
+        { file: 'fito-y-fitipaldis - por-la-boca-vive-el-pez.mp3', display: 'Fito Y Fitipaldis - Por La Boca Vive El Pez' },
+        { file: 'gabinete-caligari - -al-calor-de-un-amor-en-un-bar-.mp3', display: 'Gabinete Caligari -  Al Calor De Un Amor En Un Bar ' },
+        { file: 'gloria-estefan - mi-tierra.mp3', display: 'Gloria Estefan - Mi Tierra' },
+        { file: 'gloria-trevi - todos-me-miran-.mp3', display: 'Gloria Trevi - Todos Me Miran ' },
+        { file: 'heroes-del-silencio - heroe-de-leyenda.mp3', display: 'Heroes Del Silencio - Heroe De Leyenda' },
+        { file: 'janette - por-que-te-vas.mp3', display: 'Janette - Por Que Te Vas' },
+        { file: 'jarabe-de-palo - el-lado-oscuro.mp3', display: 'Jarabe De Palo - El Lado Oscuro' },
+        { file: 'jarabe-de-palo - la-flaca.mp3', display: 'Jarabe De Palo - La Flaca' },
+        { file: 'joan-sebastian-ft.-lucero - golondrinas-viajeras.mp3', display: 'Joan Sebastian Ft. Lucero - Golondrinas Viajeras' },
+        { file: 'juan-luis-guerra - ojala-que-llueva-cafe.mp3', display: 'Juan Luis Guerra - Ojala Que Llueva Cafe' },
+        { file: 'juanes - la-camisa-negra.mp3', display: 'Juanes - La Camisa Negra' },
+        { file: 'julieta-venegas - limon-y-sal.mp3', display: 'Julieta Venegas - Limon Y Sal' },
+        { file: 'julieta-venegas - me-voy.mp3', display: 'Julieta Venegas - Me Voy' },
+        { file: 'karol-g - si-antes-te-hubiera-conocido.mp3', display: 'Karol G - Si Antes Te Hubiera Conocido' },
+        { file: 'kiko-y-shara - puede-ser.mp3', display: 'Kiko Y Shara - Puede Ser' },
+        { file: 'la-guardia - mil-calles-llevan-hacia-ti.mp3', display: 'La Guardia - Mil Calles Llevan Hacia Ti' },
+        { file: 'la-oreja-de-van-gogh - rosas.mp3', display: 'La Oreja De Van Gogh - Rosas' },
+        { file: 'la-union - lobo-hombre-en-paris.mp3', display: 'La Union - Lobo Hombre En Paris' },
+        { file: 'las-grecas - te-estoy-amando-locamente.mp3', display: 'Las Grecas - Te Estoy Amando Locamente' },
+        { file: 'laura-pausini - la-soledad.mp3', display: 'Laura Pausini - La Soledad' },
+        { file: 'locomia - locomia.mp3', display: 'Locomia - Locomia' },
+        { file: 'loquillo - cadillac-solitario.mp3', display: 'Loquillo - Cadillac Solitario' },
+        { file: 'los-chichos - la-historia-de-juan-castillo.mp3', display: 'Los Chichos - La Historia De Juan Castillo' },
+        { file: 'los-secretos - pero-a-tu-lado.mp3', display: 'Los Secretos - Pero A Tu Lado' },
+        { file: 'los-toreros-muertos - mi-aguita-amarilla.mp3', display: 'Los Toreros Muertos - Mi Aguita Amarilla' },
+        { file: 'luis-fonsi - despacito.mp3', display: 'Luis Fonsi - Despacito' },
+        { file: 'luz-casal - te-deje-marchar.mp3', display: 'Luz Casal - Te Deje Marchar' },
+        { file: 'm-clan - carolina.mp3', display: 'M Clan - Carolina' },
+        { file: 'macaco - moving.mp3', display: 'Macaco - Moving' },
+        { file: 'magneto - vuela,-vuela.mp3', display: 'Magneto - Vuela, Vuela' },
+        { file: 'mana - el-muelle-de-san-blas.mp3', display: 'Mana - El Muelle De San Blas' },
+        { file: 'manolo-escobar - que-viva-espana.mp3', display: 'Manolo Escobar - Que Viva Espana' },
+        { file: 'manolo-garcia - pajaros-de-barro.mp3', display: 'Manolo Garcia - Pajaros De Barro' },
+        { file: 'manuel-carrasco - que-bonito-es-querer.mp3', display: 'Manuel Carrasco - Que Bonito Es Querer' },
+        { file: 'marc-anthony - valio-la-pena.mp3', display: 'Marc Anthony - Valio La Pena' },
+        { file: 'marc-anthony - vivir-mi-vida.mp3', display: 'Marc Anthony - Vivir Mi Vida' },
+        { file: 'mecano - me-cuesta-tanto-olvidarte.mp3', display: 'Mecano - Me Cuesta Tanto Olvidarte' },
+        { file: 'miguel-rios - santa-lucia.mp3', display: 'Miguel Rios - Santa Lucia' },
+        { file: 'molotov - gimme-tha-power.mp3', display: 'Molotov - Gimme Tha Power' },
+        { file: 'monica-naranjo - europa.mp3', display: 'Monica Naranjo - Europa' },
+        { file: 'monica-naranjo - sobrevivire.mp3', display: 'Monica Naranjo - Sobrevivire' },
+        { file: 'morat - como-te-atreves.mp3', display: 'Morat - Como Te Atreves' },
+        { file: 'nacho-cano-y-mercedes-ferrer - vivimos-siempre-juntos.mp3', display: 'Nacho Cano Y Mercedes Ferrer - Vivimos Siempre Juntos' },
+        { file: 'navajita-platea - frio-sin-ti.mp3', display: 'Navajita Platea - Frio Sin Ti' },
+        { file: 'navajita-platea - noches-de-bohemia.mp3', display: 'Navajita Platea - Noches De Bohemia' },
+        { file: 'nena-daconte - tenia-tanto-que-darte.mp3', display: 'Nena Daconte - Tenia Tanto Que Darte' },
+        { file: 'no-me-pises-que-llevo-chanclas - bolillon.mp3', display: 'No Me Pises Que Llevo Chanclas - Bolillon' },
+        { file: 'obk - historias-de-amor.mp3', display: 'Obk - Historias De Amor' },
+        { file: 'pablo-alboran - solamente-tu.mp3', display: 'Pablo Alboran - Solamente Tu' },
+        { file: 'pablo-lopez - tu-enemigo.mp3', display: 'Pablo Lopez - Tu Enemigo' },
+        { file: 'radio-futura - escuela-de-calor.mp3', display: 'Radio Futura - Escuela De Calor' },
+        { file: 'raphael - mi-gran-noche.mp3', display: 'Raphael - Mi Gran Noche' },
+        { file: 'revolver - el-roce-de-tu-piel-(en-directo-).mp3', display: 'Revolver - El Roce De Tu Piel (En Directo )' },
+        { file: 'revolver - el-roce-de-tu-piel.mp3', display: 'Revolver - El Roce De Tu Piel' },
+        { file: 'revólver - el-roce-de-tu-piel.mp3', display: 'Revólver - El Roce De Tu Piel' },
+        { file: 'ricky-martin - maria-.mp3', display: 'Ricky Martin - Maria ' },
+        { file: 'rocio-durcal - la-gata-bajo-la-lluvia-.mp3', display: 'Rocio Durcal - La Gata Bajo La Lluvia ' },
+        { file: 'rocio-jurado - muera-el-amor.mp3', display: 'Rocio Jurado - Muera El Amor' },
+        { file: 'rosalia - despecha.mp3', display: 'Rosalia - Despecha' },
+        { file: 'rosana - si-tu-no-estas.mp3', display: 'Rosana - Si Tu No Estas' },
+        { file: 'rozalen - la-puerta-violeta.mp3', display: 'Rozalen - La Puerta Violeta' },
+        { file: 'sabina-19-dias-y-500-noches.mp3', display: 'Sabina 19 Dias y 500 Noches' },
+        { file: 'seguridad-social - chiquilla.mp3', display: 'Seguridad Social - Chiquilla' },
+        { file: 'shakira - ciega,-sordomuda.mp3', display: 'Shakira - Ciega, Sordomuda' },
+        { file: 'tam-tam-go! - espaldas-mojadas.mp3', display: 'Tam Tam Go! - Espaldas Mojadas' },
+        { file: 'thalia - arrasando.mp3', display: 'Thalia - Arrasando' },
+        { file: 'tino-casal - eloise.mp3', display: 'Tino Casal - Eloise' },
+        { file: 'triana - una-noche-de-amor-desesperada.mp3', display: 'Triana - Una Noche De Amor Desesperada' },
+        { file: 'vicco - nochentera.mp3', display: 'Vicco - Nochentera' },
+        { file: 'zzoilo-y-aitana - mon-amour.mp3', display: 'Zzoilo Y Aitana - Mon Amour' },
       ],
       ingles: [
         { file: 'queen - bohemian-rhapsody.mp3', display: 'Queen - Bohemian Rhapsody' },
@@ -576,7 +663,7 @@
         { file: 'piratas-del-caribe - 2003.mp3', display: 'Piratas del Caribe - 2003' },
         { file: 'pretty-woman - 1990.mp3', display: 'Pretty Woman - 1990' },
         { file: 'pulp-fiction - 1994.mp3', display: 'Pulp Fiction - 1994' },
-        { file: 'regreso-al-futuro - 1985.mp3', display: 'Regreso al Futuro - 1985' },
+        { file: 'regreso-al-futuro - 1985.mp3', display: 'Regreso al Futuro - 198uro' },
         { file: 'regreso-al-futuro-inicio - 1985.mp3', display: 'Regreso al Futuro (Inicio) - 1985' },
         { file: 'rocky - 1976.mp3', display: 'Rocky - 1976' },
         { file: 'rocky-iii - 1982.mp3', display: 'Rocky III - 1982' },
@@ -662,6 +749,11 @@
     function showScreen(screenId) {
         screens.forEach(screen => screen.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
+        // Ocultar inputs de nombres de jugador al volver a la selección de jugadores
+        if (screenId === 'player-selection-screen') {
+            document.getElementById('other-player-names-inputs').innerHTML = ''; // Limpiar inputs
+            document.getElementById('logged-in-player-name').textContent = ''; // Limpiar nombre del jugador logueado
+        }
     }
 
     // =====================================================================
@@ -805,78 +897,144 @@
     }
 
     function selectCategory(category) {
-        gameState.category = category;
-        // Solo permitir seleccionar jugadores si hay un usuario logueado
-        if (currentUser && currentUser.playerName) {
-            showScreen('player-selection-screen');
-        } else {
+        if (!currentUser || !currentUser.playerName) {
             alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
-            showScreen('login-screen'); // O directamente a set-player-name-screen si ya está logueado pero sin nombre
+            showScreen('login-screen');
+            return;
         }
+        gameState.category = category;
+        showScreen('player-selection-screen');
     }
+    
+    // Función para seleccionar el número de jugadores y generar inputs de nombres
+    function selectPlayers(numPlayers) {
+        if (!currentUser || !currentUser.playerName) {
+            alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+            showScreen('login-screen');
+            return;
+        }
 
-    function selectPlayers(num) {
-        gameState.playerCount = num;
-        startGame();
+        gameState.playerCount = numPlayers;
+        const otherPlayerNamesInputsDiv = document.getElementById('other-player-names-inputs');
+        otherPlayerNamesInputsDiv.innerHTML = ''; // Limpiar inputs anteriores
+        
+        // Mostrar el nombre del usuario logueado como el primer jugador
+        document.getElementById('logged-in-player-name').textContent = currentUser.playerName;
+
+        // Generar inputs para los jugadores adicionales (si hay)
+        for (let i = 1; i < numPlayers; i++) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'text-input';
+            input.placeholder = `Nombre del Jugador ${i + 1}`;
+            input.id = `player-${i + 1}-name-input`;
+            otherPlayerNamesInputsDiv.appendChild(input);
+        }
+
+        showScreen('player-names-input-screen'); // Mostrar la pantalla para introducir nombres
     }
 
     function startGame() {
-        // En el modo multijugador, los jugadores serán objetos con su ID y nombre de jugador si es el currentUser
-        gameState.players = Array.from({ length: gameState.playerCount }, (_, i) => {
-            if (i === 0 && currentUser && currentUser.playerName) {
-                // El primer jugador es el usuario logueado
-                return { id: i + 1, name: currentUser.playerName, score: 0 };
-            } else {
-                // Otros jugadores (en modo local) serán "Jugador X"
-                return { id: i + 1, name: `Jugador ${i + 1}`, score: 0 };
-            }
-        });
-        gameState.totalQuestions = 10;
-        gameState.currentQuestionIndex = 0;
-        gameState.currentPlayerIndex = 0;
-
-        const songObjects = [...configuracionCanciones[gameState.category]];
-        if (songObjects.length < 4) {
-            alert("Error: Se necesitan al menos 4 canciones en una categoría para jugar.");
-            showScreen('category-screen');
+        if (!currentUser || !currentUser.playerName) {
+            alert('Error: No se ha encontrado el nombre del jugador principal. Por favor, inicia sesión de nuevo.');
+            logout(); // Forzar cierre de sesión y redirigir
             return;
         }
-        gameState.questions = songObjects.sort(() => 0.5 - Math.random()).slice(0, gameState.totalQuestions);
-        if (gameState.questions.length < gameState.totalQuestions) {
-            gameState.totalQuestions = gameState.questions.length;
+
+        gameState.players = [];
+        // Añadir el usuario logueado como el primer jugador
+        gameState.players.push({ 
+            id: 1, 
+            name: currentUser.playerName, 
+            score: 0, 
+            questionsAnswered: 0, 
+            questions: [] 
+        });
+
+        // Recopilar nombres de otros jugadores si existen
+        for (let i = 1; i < gameState.playerCount; i++) {
+            const input = document.getElementById(`player-${i + 1}-name-input`);
+            const name = input.value.trim() || `Jugador ${i + 1}`;
+            gameState.players.push({ 
+                id: i + 1, 
+                name: name, 
+                score: 0, 
+                questionsAnswered: 0, 
+                questions: [] 
+            });
         }
+
+        gameState.totalQuestionsPerPlayer = 10; // Cada jugador responderá 10 preguntas
+        // Comprobar si hay suficientes canciones para la categoría seleccionada y el número de jugadores
+        const allSongsInCat = [...configuracionCanciones[gameState.category]];
+        const requiredSongs = gameState.totalQuestionsPerPlayer * gameState.playerCount;
+
+        if (allSongsInCat.length < requiredSongs) {
+            console.warn(`Advertencia: No hay suficientes canciones en la categoría (${categoryNames[gameState.category]}) para ${gameState.playerCount} jugadores, cada uno con ${gameState.totalQuestionsPerPlayer} preguntas. Se necesitan ${requiredSongs} y solo hay ${allSongsInCat.length}. Ajustando el número de preguntas por jugador.`);
+            gameState.totalQuestionsPerPlayer = Math.floor(allSongsInCat.length / gameState.playerCount);
+            if (gameState.totalQuestionsPerPlayer < 1) { 
+                 alert('No hay suficientes canciones para que cada jugador tenga al menos una pregunta. Elige otra categoría o menos jugadores.');
+                 showScreen('category-screen');
+                 return;
+            }
+        }
+        
+        let shuffledSongs = allSongsInCat.sort(() => 0.5 - Math.random());
+
+        // Asignar 10 preguntas aleatorias a cada jugador desde el inicio de la partida
+        for (let i = 0; i < gameState.playerCount; i++) {
+            // Asegurarse de que haya suficientes canciones para cortar
+            if (shuffledSongs.length >= gameState.totalQuestionsPerPlayer) {
+                gameState.players[i].questions = shuffledSongs.splice(0, gameState.totalQuestionsPerPlayer);
+            } else {
+                // Si no hay suficientes, asignar las restantes y avisar
+                gameState.players[i].questions = [...shuffledSongs];
+                console.warn(`No se pudieron asignar ${gameState.totalQuestionsPerPlayer} preguntas al jugador ${gameState.players[i].name}. Solo se asignaron ${shuffledSongs.length} preguntas.`);
+                shuffledSongs = []; // Vaciar el array para asegurar que no se reusen
+                gameState.totalQuestionsPerPlayer = gameState.players[i].questions.length; // Ajustar para este jugador si es necesario
+            }
+        }
+        
+        gameState.currentPlayerIndex = 0; // Siempre empezar por el primer jugador
         setupQuestion();
         showScreen('game-screen');
     }
 
     function setupQuestion() {
-        if (gameState.currentQuestionIndex >= gameState.totalQuestions) {
-            endGame();
+        const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+
+        // Verificar si el jugador actual ha respondido todas sus preguntas
+        if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
+            nextPlayerOrEndGame(); // Si ya terminó, pasar al siguiente jugador o finalizar
             return;
         }
+        
         clearTimeout(audioPlaybackTimeout);
+        audioPlayer.pause(); // Pausar cualquier audio en reproducción
         gameState.attempts = 3;
         gameState.hasPlayed = false;
 
-        const currentPlayer = gameState.players[gameState.currentPlayerIndex];
-        const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
-
+        // Obtener la pregunta actual para este jugador
+        const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
+        
+        // Actualizar la interfaz del juego
+        document.getElementById("player-name-display").textContent = currentPlayer.name;
         document.getElementById('category-display').innerText = categoryNames[gameState.category];
-        document.getElementById('question-counter').innerText = `Pregunta ${gameState.currentQuestionIndex + 1}/${gameState.totalQuestions}`;
-        // Muestra el nombre del jugador en el turno
+        document.getElementById('question-counter').innerText = `Pregunta ${currentPlayer.questionsAnswered + 1}/${gameState.totalQuestionsPerPlayer}`;
         document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
         document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
 
         updateAttemptsCounter();
 
         const answerButtonsContainer = document.getElementById('answer-buttons');
-        answerButtonsContainer.innerHTML = '';
+        answerButtonsContainer.innerHTML = ''; // Limpiar botones anteriores
 
         const allSongsInCat = [...configuracionCanciones[gameState.category]];
         let options = [currentQuestion];
         while (options.length < 4) {
             const randomSong = allSongsInCat[Math.floor(Math.random() * allSongsInCat.length)];
-            if (!options.some(opt => opt.file === randomSong.file)) {
+            // Asegurarse de que la opción aleatoria no sea la respuesta correcta y no esté ya en las opciones
+            if (!options.some(opt => opt.file === randomSong.file) && randomSong.file !== currentQuestion.file) {
                 options.push(randomSong);
             }
         }
@@ -910,7 +1068,8 @@
         gameState.hasPlayed = true;
         const durations = { 3: 4000, 2: 6000, 1: 10000 };
         const duration = durations[gameState.attempts];
-        const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
+        const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+        const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
         audioPlayer.src = `audio/${gameState.category}/${currentQuestion.file}`;
         audioPlayer.currentTime = 0;
@@ -941,7 +1100,11 @@
             const points = { 3: 3, 2: 2, 1: 1 };
             gameState.players[gameState.currentPlayerIndex].score += points[gameState.attempts];
             button.classList.add('correct');
-            setTimeout(nextTurn, 1500);
+            // Incrementar las preguntas respondidas para el jugador actual
+            gameState.players[gameState.currentPlayerIndex].questionsAnswered++;
+            
+            // Esperar antes de pasar al siguiente turno/jugador
+            setTimeout(nextPlayerOrEndGame, 1500); // Llama directamente a la lógica de avance
         } else {
             sfxError.currentTime = 0;
             sfxError.play();
@@ -951,7 +1114,7 @@
             if (gameState.attempts > 0) {
                 setTimeout(() => {
                     document.querySelectorAll('.answer-btn').forEach(btn => {
-                        btn.classList.remove('disabled', 'incorrect');
+                        btn.classList.remove('disabled', 'incorrect', 'correct'); 
                     });
                     gameState.hasPlayed = false;
                     const playBtn = document.getElementById('play-song-btn');
@@ -959,32 +1122,94 @@
                     playBtn.innerText = "▶";
                 }, 1500);
             } else {
-                // Si no quedan intentos, avanza al siguiente turno
-                setTimeout(nextTurn, 1500);
+                // Si no quedan intentos, el jugador actual no acertó esta pregunta, pasar al siguiente turno
+                gameState.players[gameState.currentPlayerIndex].questionsAnswered++;
+                setTimeout(nextPlayerOrEndGame, 1500); // Llama directamente a la lógica de avance
             }
         }
     }
 
-    function nextTurn() {
-        gameState.currentQuestionIndex++;
-        // Si hay un solo jugador, el turno siempre es suyo. Si hay más, rotamos.
-        if (gameState.playerCount > 1) {
-            gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.playerCount;
+    function nextPlayerOrEndGame() {
+        const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+
+        // Verificar si el jugador actual ha respondido todas sus preguntas
+        if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
+            // Si el jugador actual terminó sus preguntas, pasar al siguiente jugador
+            gameState.currentPlayerIndex++;
+
+            // Verificar si hay más jugadores o si todos han terminado
+            if (gameState.currentPlayerIndex < gameState.players.length) {
+                // Si hay más jugadores, configurar la pregunta para el siguiente
+                setupQuestion();
+            } else {
+                // Si todos los jugadores han terminado, finalizar la partida
+                endGame();
+            }
+        } else {
+            // Si el jugador actual aún tiene preguntas, configurar la siguiente pregunta para él mismo
+            setupQuestion();
         }
-        setupQuestion();
     }
+
 
     function endGame() {
         const finalScoresContainer = document.getElementById('final-scores');
         finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
+        
         const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
+
+        // Mostrar al ganador
+        const winnerDisplay = document.getElementById('winner-display');
+        if (sortedPlayers.length > 0) {
+            // Si hay un empate en la puntuación más alta
+            const topScore = sortedPlayers[0].score;
+            const winners = sortedPlayers.filter(player => player.score === topScore);
+
+            if (winners.length > 1) {
+                // Múltiples ganadores
+                const winnerNames = winners.map(winner => winner.name).join(' y ');
+                winnerDisplay.textContent = `¡Hay un EMPATE! Los GANADORES son ${winnerNames} con ${topScore} puntos!`;
+            } else {
+                // Un único ganador
+                winnerDisplay.textContent = `¡El GANADOR es ${sortedPlayers[0].name} con ${sortedPlayers[0].score} puntos!`;
+            }
+        } else {
+            winnerDisplay.textContent = 'No hay ganador en esta partida.';
+        }
+
+        // Mostrar todas las puntuaciones
         sortedPlayers.forEach((player, index) => {
             const medal = { 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '';
-            finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`; // Mostrar nombre del jugador
+            finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`; 
         });
-        document.getElementById('play-again-btn').onclick = () => { selectPlayers(gameState.playerCount); };
+        
+        document.getElementById('play-again-btn').onclick = () => { 
+            // Reiniciar los scores y questionsAnswered para cada jugador para una nueva partida
+            gameState.players.forEach(player => {
+                player.score = 0;
+                player.questionsAnswered = 0;
+                player.questions = []; // Importante para que startGame vuelva a asignar nuevas preguntas
+            });
+            // Volver a la pantalla de selección de número de jugadores para configurar la nueva partida
+            showScreen('player-selection-screen'); 
+        };
         showScreen('end-game-screen');
     }
+
+    function exitGame() {
+        const confirmed = confirm('¿Seguro que quieres salir del juego? Se cerrará la sesión actual.');
+        if (confirmed) {
+            logout();
+        }
+    }
+
+    function confirmReturnToMenu() {
+        const confirmed = confirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
+        if (confirmed) {
+            showScreen('category-screen');
+        }
+    }
+    
 
     // =====================================================================
     // INICIALIZACIÓN (Modificada para gestionar sesión)
