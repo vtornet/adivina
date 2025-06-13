@@ -375,11 +375,12 @@
 <body>
     <div id="home-screen" class="screen active">
         <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
-        <button class="btn" onclick="showScreen('category-screen')">Jugar</button>
+        <button class="btn" onclick="showScreen('login-screen')">Jugar</button>
     </div>
     <div id="category-screen" class="screen">
         <h2>Elige una Categoría</h2>
         <div id="category-buttons"></div>
+        <button class="btn" onclick="showStats()">Ver Estadísticas</button>
         <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
     </div>
     <div id="player-selection-screen" class="screen">
@@ -446,6 +447,12 @@
         <input type="text" id="player-name-input" placeholder="Tu nombre de jugador" class="text-input">
         <button class="btn" onclick="setPlayerName()">Confirmar Nombre</button>
         <button class="btn secondary" onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <div id="stats-screen" class="screen">
+        <h2>Tus Estadísticas</h2>
+        <div id="stats-content"></div>
+        <button class="btn secondary" onclick="showScreen('category-screen')">Volver</button>
     </div>
 
     <div id="category-screen" class="screen">
@@ -974,7 +981,7 @@
         setupQuestion();
     }
 
-    function endGame() {
+function endGame() {
         const finalScoresContainer = document.getElementById('final-scores');
         finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
         const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
@@ -983,9 +990,51 @@
             finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`; // Mostrar nombre del jugador
         });
         document.getElementById('play-again-btn').onclick = () => { selectPlayers(gameState.playerCount); };
+        if (currentUser) {
+            const userPlayer = gameState.players.find(p => p.name === currentUser.playerName);
+            if (userPlayer) {
+                updateUserStats(gameState.category, userPlayer.score);
+            }
+        }
         showScreen('end-game-screen');
     }
 
+    function updateUserStats(category, score) {
+        const stats = JSON.parse(localStorage.getItem('userStats')) || {};
+        const email = currentUser.email;
+        if (!stats[email]) {
+            stats[email] = { categories: {} };
+        }
+        const catStats = stats[email].categories[category] || { totalPoints: 0, maxScore: null, minScore: null, gamesPlayed: 0 };
+        catStats.totalPoints += score;
+        catStats.gamesPlayed += 1;
+        if (catStats.maxScore === null || score > catStats.maxScore) catStats.maxScore = score;
+        if (catStats.minScore === null || score < catStats.minScore) catStats.minScore = score;
+        stats[email].categories[category] = catStats;
+        localStorage.setItem('userStats', JSON.stringify(stats));
+    }
+
+    function showStats() {
+        if (!currentUser) {
+            alert('Debes iniciar sesión primero.');
+            showScreen('login-screen');
+            return;
+        }
+        const stats = JSON.parse(localStorage.getItem('userStats')) || {};
+        const userStats = stats[currentUser.email];
+        const container = document.getElementById('stats-content');
+        if (!userStats) {
+            container.innerHTML = '<p>Aún no tienes estadísticas.</p>';
+        } else {
+            container.innerHTML = '';
+            for (const cat in userStats.categories) {
+                const s = userStats.categories[cat];
+                const name = categoryNames[cat] || cat;
+                container.innerHTML += `<p><strong>${name}</strong>: ${s.totalPoints} puntos (Máx: ${s.maxScore}, Mín: ${s.minScore})</p>`;
+            }
+        }
+        showScreen('stats-screen');
+    }
     // =====================================================================
     // INICIALIZACIÓN (Modificada para gestionar sesión)
     // =====================================================================
