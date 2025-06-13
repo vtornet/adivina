@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adivina la Canción</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary-color: #7b00ff;
+            --secondary-color: #00eaff;
+            --background-start: #1a0033;
+            --background-end: #000000;
+            --card-background: rgba(255, 255, 255, 0.08);
+            --text-color: #e0e0e0;
+            --light-text-color: #ffffff;
+            --correct-color: #00cc00;
+            --incorrect-color: #e6006e;
+            --warning-color: #e6e600;
+            --shadow-base: 0 0 8px rgba(0, 255, 255, 0.25);
+            --button-shadow-neon: 0 0 8px var(--secondary-color), 0 0 12px var(--secondary-color);
+            --border-radius: 15px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: radial-gradient(circle at center, var(--background-start) 0%, var(--background-end) 100%);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-base);
+            text-align: center;
+            animation: fadeIn .7s ease-in-out;
+            border: 1px solid var(--secondary-color);
+            backdrop-filter: blur(3px);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            font-family: 'Luckiest Guy', cursive;
+            text-shadow: 0 0 3px rgba(123, 0, 255, 0.7), 0 0 6px rgba(123, 0, 255, 0.5);
+        }
+
+        .logo {
+            max-width: 220px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.4));
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: -webkit-linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text; /* ¡Añade esta línea! */
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-shadow: 0 0 6px rgba(123, 0, 255, 0.8), 0 0 10px rgba(0, 234, 255, 0.6);
+        }
+
+        .btn, .category-btn, .player-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            background-image: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--light-text-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s, background-image .3s;
+            text-align: center;
+            text-decoration: none;
+            text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+            box-shadow: var(--button-shadow-neon);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover, .category-btn:hover, .player-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 10px var(--primary-color), 0 0 18px var(--secondary-color);
+            background-image: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+        }
+
+        .btn.secondary {
+            background-image: linear-gradient(45deg, #6c757d, #343a40);
+            box-shadow: 0 0 8px rgba(108, 117, 125, 0.5);
+        }
+        .btn.secondary:hover {
+            background-image: linear-gradient(45deg, #343a40, #6c757d);
+            box-shadow: 0 0 12px rgba(108, 117, 125, 0.7);
+        }
+
+        .btn.tertiary {
+            background-image: linear-gradient(45deg, var(--warning-color), #ff007b);
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
+        }
+        .btn.tertiary:hover {
+            background-image: linear-gradient(45deg, #ff007b, var(--warning-color));
+            box-shadow: 0 0 12px rgba(255, 193, 7, 0.7);
+        }
+
+        /* Ajustes para el recuadro del encabezado del juego */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px 20px; /* Aumentado el padding para más espacio */
+            min-height: 80px; /* Nueva altura mínima para el recuadro */
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .game-header div {
+            flex: 1;
+            /* Se podría añadir flex-basis aquí si queremos que los divs internos tengan un tamaño base diferente */
+        }
+
+        .game-info {
+            text-align: left;
+        }
+
+        .game-score {
+            text-align: right;
+            display: flex; /* Usar flexbox para alinear contador y puntos */
+            flex-direction: column; /* Apilar verticalmente */
+            align-items: flex-end; /* Alinear a la derecha */
+            justify-content: center; /* Centrar verticalmente */
+            gap: 5px; /* Espacio entre los elementos */
+        }
+
+        #question-counter {
+            font-weight: 700;
+            color: var(--warning-color);
+            text-shadow: 0 0 2px rgba(230, 230, 0, 0.8);
+            font-size: 1.1rem; /* Ligeramente más grande para que se vea mejor */
+        }
+
+        #points-display { /* Aseguramos que este elemento se vea bien con el nuevo espacio */
+            font-size: 1.1rem; /* Ligeramente más grande */
+            font-weight: 700;
+            color: var(--light-text-color);
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+        }
+
+        #player-turn {
+            font-size: 1.6rem; /* Un poco más grande para destacar */
+            font-weight: 700;
+            color: var(--secondary-color);
+            text-shadow: 0 0 4px rgba(0, 234, 255, 0.8);
+            margin-bottom: 10px;
+        }
+
+        #category-display {
+            font-size: 1.05rem; /* Ligeramente más grande */
+            color: var(--text-color);
+            text-shadow: 0 0 1px rgba(224, 224, 224, 0.7);
+        }
+
+        .attempts-counter {
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: var(--light-text-color);
+            transition: background-color .3s, box-shadow .3s;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+            font-size: 1rem; /* Asegurar que el tamaño sea legible */
+        }
+
+        #attempts-counter[style*="var(--correct-color)"] {
+            box-shadow: 0 0 8px var(--correct-color);
+        }
+        #attempts-counter[style*="var(--warning-color)"] {
+            box-shadow: 0 0 8px var(--warning-color);
+        }
+        #attempts-counter[style*="var(--incorrect-color)"] {
+            box-shadow: 0 0 8px var(--incorrect-color);
+        }
+
+        #play-song-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            padding-left: 0px;
+            box-shadow: 0 0 10px var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+        }
+        #play-song-btn:hover {
+            box-shadow: 0 0 15px var(--secondary-color), 0 0 20px var(--secondary-color);
+        }
+
+        #answer-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .answer-btn {
+            background-image: none;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            text-align: center;
+            padding: 12px;
+            height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0;
+            font-size: .95rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.15);
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .answer-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 8px var(--secondary-color);
+        }
+
+        .answer-btn.correct {
+            background-color: var(--correct-color);
+            color: #fff;
+            box-shadow: 0 0 8px var(--correct-color), 0 0 15px var(--correct-color);
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .answer-btn.incorrect {
+            background-color: var(--incorrect-color);
+            color: #fff;
+            box-shadow: 0 0 8px var(--incorrect-color), 0 0 15px var(--incorrect-color);
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .answer-btn.disabled {
+            pointer-events: none;
+            opacity: .6;
+        }
+
+        .answer-btn strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+            font-family: 'Luckiest Guy', cursive;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .player-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .player-btn {
+            margin-bottom: 0;
+            padding: 20px 15px;
+        }
+
+        #final-scores h3 {
+            margin-top: 25px;
+            color: var(--secondary-color);
+            text-shadow: 0 0 4px rgba(0, 234, 255, 0.7);
+        }
+
+        #final-scores p {
+            font-size: 1.2rem;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            margin-bottom: 10px;
+            border: 1px solid var(--primary-color);
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+        }
+
+        #final-scores p strong {
+            color: var(--warning-color);
+            text-shadow: 0 0 4px rgba(230, 230, 0, 0.8);
+
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-text-color);
+            font-size: 1rem;
+            box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.1);
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .text-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .text-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: inset 0 0 5px rgba(123, 0, 255, 0.4), 0 0 8px rgba(0, 234, 255, 0.4);
+        }
+
+        .small-text {
+            font-size: 0.9rem;
+            margin-top: -5px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .small-text a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .small-text a:hover {
+            color: var(--primary-color);
+        }
+
+        .warning-text {
+            color: var(--warning-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid var(--warning-color);
+            border-radius: 8px;
+            background-color: rgba(230, 230, 0, 0.1);
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="home-screen" class="screen active">
+        <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
+        <button class="btn" onclick="showScreen('category-screen')">Jugar</button>
+    </div>
+    <div id="category-screen" class="screen">
+        <h2>Elige una Categoría</h2>
+        <div id="category-buttons"></div>
+        <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
+    </div>
+    <div id="player-selection-screen" class="screen">
+        <h2>Introduce el número de jugadores</h2>
+        <div class="player-selection-grid">
+            <button class="player-btn" onclick="selectPlayers(1)">1 Jugador</button>
+            <button class="player-btn" onclick="selectPlayers(2)">2 Jugadores</button>
+            <button class="player-btn" onclick="selectPlayers(3)">3 Jugadores</button>
+            <button class="player-btn" onclick="selectPlayers(4)">4 Jugadores</button>
+            <button class="player-btn" onclick="selectPlayers(5)">5 Jugadores</button>
+            <button class="player-btn" onclick="selectPlayers(6)">6 Jugadores</button>
+        </div>
+        <button class="btn secondary" onclick="showScreen('category-screen')" style="margin-top: 20px;">Cambiar Categoría</button>
+    </div>
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="game-info">
+                <div id="category-display"></div>
+                <div id="question-counter"></div>
+            </div>
+            <div class="game-score">
+                <span id="attempts-counter" class="attempts-counter"></span>
+                <div id="points-display"></div>
+            </div>
+        </div>
+        <h3 id="player-turn"></h3>
+        <button id="play-song-btn" class="btn">▶</button>
+        <div id="answer-buttons"></div>
+        <button class="btn secondary" onclick="showScreen('category-screen')" style="margin-top: 20px;">Menú Principal</button>
+    </div>
+    <div id="end-game-screen" class="screen">
+        <h2>Partida Terminada</h2>
+        <div id="final-scores"></div>
+        <button class="btn" id="play-again-btn">Volver a Jugar</button>
+        <button class="btn secondary" onclick="showScreen('category-screen')">Menú Principal</button>
+        <button class="btn tertiary" onclick="showScreen('home-screen')">Salir</button>
+    </div>
+
+    <div id="home-screen" class="screen active">
+        <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
+        <button class="btn" onclick="showScreen('login-screen')">Jugar</button> </div>
+
+    <div id="register-screen" class="screen">
+        <h2>Crear Cuenta</h2>
+        <input type="email" id="register-email" placeholder="Email" class="text-input">
+        <input type="password" id="register-password" placeholder="Contraseña" class="text-input">
+        <button class="btn" onclick="registerUser()">Registrarse</button>
+        <p class="small-text">¿Ya tienes cuenta? <a href="#" onclick="showScreen('login-screen')">Inicia Sesión aquí</a></p>
+        <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
+    </div>
+
+    <div id="login-screen" class="screen">
+        <h2>Iniciar Sesión</h2>
+        <input type="email" id="login-email" placeholder="Email" class="text-input">
+        <input type="password" id="login-password" placeholder="Contraseña" class="text-input">
+        <button class="btn" onclick="loginUser()">Entrar</button>
+        <p class="small-text">¿No tienes cuenta? <a href="#" onclick="showScreen('register-screen')">Regístrate aquí</a></p>
+        <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
+    </div>
+
+    <div id="set-player-name-screen" class="screen">
+        <h2>Elige tu Nombre de Jugador</h2>
+        <p class="warning-text">¡Atención! Este nombre no se podrá modificar una vez establecido.</p>
+        <input type="text" id="player-name-input" placeholder="Tu nombre de jugador" class="text-input">
+        <button class="btn" onclick="setPlayerName()">Confirmar Nombre</button>
+        <button class="btn secondary" onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <div id="category-screen" class="screen">
+        </div>
+    <div id="player-selection-screen" class="screen">
+        </div>
+    <div id="game-screen" class="screen">
+        </div>
+    <div id="end-game-screen" class="screen">
+        </div>
+    
+    <audio id="audio-player"></audio>
+    <audio id="sfx-acierto" src="audio/sfx/acierto.mp3"></audio>
+    <audio id="sfx-error" src="audio/sfx/error.mp3"></audio>
+
+    <script>
+        // ... Tu JavaScript existente (se modificará en el siguiente paso) ...
+    </script>
+    
+    <audio id="audio-player"></audio>
+    <audio id="sfx-acierto" src="audio/sfx/acierto.mp3"></audio>
+    <audio id="sfx-error" src="audio/sfx/error.mp3"></audio>
+
+    <script>
+    //=====================================================================
+    // CONFIGURACIÓN DE CANCIONES
+    //=====================================================================
+    const configuracionCanciones = {
+      espanol: [
+        { file: 'vetusta-morla - copenhague.mp3', display: 'Vetusta Morla - Copenhague' },
+        { file: 'estopa - la-raja-de-tu-falda.mp3', display: 'Estopa - La Raja de tu Falda' },
+        { file: 'joaquin-sabina - 19 -dias-y-500-noches.mp3', display: 'Joaquín Sabina - 19 Días y 500 Noches' },
+        { file: 'rosalia - malamente.mp3', display: 'Rosalía - Malamente' },
+        { file: 'heroes-del-silencio - entre-dos-tierras.mp3', display: 'Héroes del Silencio - Entre Dos Tierras' },
+        { file: 'hombres-g - sufriendo-gozando.mp3', display: 'Hombres G - Sufriendo Gozando' },
+        { file: 'mana - labios-compartidos.mp3', display: 'Maná - Labios Compartidos' },
+        { file: 'shakira - bzrp-music-sessions-vol-53.mp3', display: 'Shakira - BZRP Music Sessions #53' },
+        { file: 'alejandro-sanz - corazon-partio.mp3', display: 'Alejandro Sanz - Corazón Partío' },
+        { file: 'melendi - la-promesa.mp3', display: 'Melendi - La Promesa' },
+        { file: 'camela - cuando-zarpa-el-amor.mp3', display: 'Camela - Cuando Zarpa el Amor' },
+        { file: 'david-bisbal - ave-maria.mp3', display: 'David Bisbal - Ave María' },
+        { file: 'la-oreja-de-van-gogh - cuentame-al-oido.mp3', display: 'La Oreja de Van Gogh - Cuéntame al Oído' },
+        { file: 'fito-y-fitipaldis - la-casa-por-el-tejado.mp3', display: 'Fito y Fitipaldis - La Casa por el Tejado' },
+        { file: 'extremoduro - so-payaso.mp3', display: 'Extremoduro - So Payaso' },
+        { file: 'ivan-ferreiro - turnedo.mp3', display: 'Iván Ferreiro - Turnedo' },
+        { file: 'enrique-iglesias - bailando.mp3', display: 'Enrique Iglesias - Bailando' },
+        { file: 'daddy-yankee - gasolina.mp3', display: 'Daddy Yankee - Gasolina' },
+        { file: 'ozuna - balenciaga.mp3', display: 'Ozuna - Balenciaga' },
+        { file: 'bad-bunny - me-porto-bonito.mp3', display: 'Bad Bunny - Me Porto Bonito' }
+      ],
+      ingles: [
+        { file: 'queen - bohemian-rhapsody.mp3', display: 'Queen - Bohemian Rhapsody' },
+        { file: 'nirvana - smells-like-teen-spirit.mp3', display: 'Nirvana - Smells Like Teen Spirit' },
+        { file: 'michael-jackson - billie-jean.mp3', display: 'Michael Jackson - Billie Jean' },
+        { file: 'the-beatles - hey-jude.mp3', display: 'The Beatles - Hey Jude' },
+        { file: 'eagles - hotel-california.mp3', display: 'Eagles - Hotel California' },
+        { file: 'adele - rolling-in-the-deep.mp3', display: 'Adele - Rolling in the Deep' },
+        { file: 'coldplay - viva-la-vida.mp3', display: 'Coldplay - Viva La Vida' },
+        { file: 'ed-sheeran - shape-of-you.mp3', display: 'Ed Sheeran - Shape of You' },
+        { file: 'dua-lipa - don-t-start-now.mp3', display: 'Dua Lipa - Don\'t Start Now' },
+        { file: 'the-weeknd - blinding-lights.mp3', display: 'The Weeknd - Blinding Lights' },
+        { file: 'billie-eilish - bad-guy.mp3', display: 'Billie Eilish - Bad Guy' },
+        { file: 'imagine-dragons - radioactive.mp3', display: 'Imagine Dragons - Radioactive' },
+        { file: 'bruno-mars - uptown-funk.mp3', display: 'Bruno Mars - Uptown Funk' },
+        { file: 'maroon-5 - sugar.mp3', display: 'Maroon 5 - Sugar' },
+        { file: 'rihanna - umbrella.mp3', display: 'Rihanna - Umbrella' },
+        { file: 'beyonce - single-ladies.mp3', display: 'Beyoncé - Single Ladies' },
+        { file: 'kanye-west - stronger.mp3', display: 'Kanye West - Stronger' },
+        { file: 'taylor-swift - shake-it-off.mp3', display: 'Taylor Swift - Shake It Off' },
+        { file: 'justin-bieber - sorry.mp3', display: 'Justin Bieber - Sorry' },
+        { file: 'ariana-grande - thank-u-next.mp3', display: 'Ariana Grande - Thank U, Next' }
+      ],
+      peliculas: [
+        { file: '007-james-bond - 1962.mp3', display: '007 James Bond - 1962' },
+        { file: '1492-la-conquista-del-paraiso - 1992.mp3', display: '1492 La Conquista del Paraíso - 1992' },
+        { file: '2001-una-odisea-del-espacio - 1968.mp3', display: '2001 Una Odisea del Espacio - 1968' },
+        { file: '50-primeras-citas - 2004.mp3', display: '50 Primeras Citas - 2004' },
+        { file: 'amelie - 2001.mp3', display: 'Amelie - 2001' },
+        { file: 'atrapame-si-puedes - 2002.mp3', display: 'Atrápame Si Puedes - 2002' },
+        { file: 'avatar - 2009.mp3', display: 'Avatar - 2009' },
+        { file: 'blade-runner - 1982.mp3', display: 'Blade Runner - 1982' },
+        { file: 'braveheart - 1995.mp3', display: 'Braveheart - 1995' },
+        { file: 'cabaret - 1972.mp3', display: 'Cabaret - 1972' },
+        { file: 'cantando-bajo-la-lluvia - 1952.mp3', display: 'Cantando Bajo la Lluvia - 1952' },
+        { file: 'carros-de-fuego - 1981.mp3', display: 'Carros de Fuego - 1981' },
+        { file: 'casablanca - 1942.mp3', display: 'Casablanca - 1942' },
+        { file: 'cazafantasmas - 1984.mp3', display: 'Cazafantasmas - 1984' },
+        { file: 'conan-el-barbaro - 1982.mp3', display: 'Conan el Bárbaro - 1982' },
+        { file: 'dirty-dancing - 1987.mp3', display: 'Dirty Dancing - 1987' },
+        { file: 'el-bueno-el-feo-y-el-malo - 1966.mp3', display: 'El Bueno, el Feo y el Malo - 1966' },
+        { file: 'el-graduado - 1967.mp3', display: 'El Graduado - 1967' },
+        { file: 'el-guardaespaldas - 1992.mp3', display: 'El Guardaespaldas - 1992' },
+        { file: 'el-mago-de-oz - 1939.mp3', display: 'El Mago de Oz - 1939' },
+        { file: 'el-padrino - 1972.mp3', display: 'El Padrino - 1972' },
+        { file: 'el-puente-sobre-el-rio-kwai - 1957.mp3', display: 'El Puente Sobre el Río Kwai - 1957' },
+        { file: 'el-senor-de-los-anillos - 2001.mp3', display: 'El Señor de los Anillos - 2001' },
+        { file: 'flashdance - 1983.mp3', display: 'Flashdance - 1983' },
+        { file: 'footloose - 1984.mp3', display: 'Footloose - 1984' },
+        { file: 'forrest-gump - 1994.mp3', display: 'Forrest Gump - 1994' },
+        { file: 'ghost - 1990.mp3', display: 'Ghost - 1990' },
+        { file: 'gilda - 1946.mp3', display: 'Gilda - 1946' },
+        { file: 'gladiator - 2000.mp3', display: 'Gladiator - 2000' },
+        { file: 'grease - 1978.mp3', display: 'Grease - 1978' },
+        { file: 'harry-potter - 2001.mp3', display: 'Harry Potter - 2001' },
+        { file: 'hasta-que-llego-su-hora - 1968.mp3', display: 'Hasta que Llegó su Hora - 1968' },
+        { file: 'indiana-jones - 1981.mp3', display: 'Indiana Jones - 1981' },
+        { file: 'interstellar - 2014.mp3', display: 'Interstellar - 2014' },
+        { file: 'james-bond - 1964.mp3', display: 'James Bond - 1964' },
+        { file: 'joker - 2019.mp3', display: 'Joker - 2019' },
+        { file: 'kill-bill - 2003.mp3', display: 'Kill Bill - 2003' },
+        { file: 'kill-bill-2 - 2004.mp3', display: 'Kill Bill 2 - 2004' },
+        { file: 'la-bella-y-la-bestia - 2017.mp3', display: 'La Bella y la Bestia - 2017' },
+        { file: 'la-familia-addams - 1991.mp3', display: 'La Familia Addams - 1991' },
+        { file: 'la-historia-interminable - 1984.mp3', display: 'La Historia Interminable - 1984' },
+        { file: 'la-lista-de-schindler - 1993.mp3', display: 'La Lista de Schindler - 1993' },
+        { file: 'la-mision - 1986.mp3', display: 'La Misión - 1986' },
+        { file: 'la-muerte-tenia-un-precio - 1965.mp3', display: 'La Muerte Tenia un Precio - 1965' },
+        { file: 'la-mascara-del-zorro - 1998.mp3', display: 'La Máscara del Zorro - 1998' },
+        { file: 'la-vida-de-brian - 1979.mp3', display: 'La Vida de Brian - 1979' },
+        { file: 'la-vida-de-pi - 2012.mp3', display: 'La Vida de Pi - 2012' },
+        { file: 'la-vida-en-rosa - 2007.mp3', display: 'La Vida en Rosa - 2007' },
+        { file: 'la-vida-es-bella - 1997.mp3', display: 'La Vida es Bella - 1997' },
+        { file: 'leon - 1994.mp3', display: 'León - 1994' },
+        { file: 'mary-poppins - 1964.mp3', display: 'Mary Poppins - 1964' },
+        { file: 'memorias-de-africa - 1985.mp3', display: 'Memorias de África - 1985' },
+        { file: 'mision-imposible - 1996.mp3', display: 'Mision Imposible - 1996' },
+        { file: 'philadelphia - 1993.mp3', display: 'Philadelphia - 1993' },
+        { file: 'piratas-del-caribe - 2003.mp3', display: 'Piratas del Caribe - 2003' },
+        { file: 'pretty-woman - 1990.mp3', display: 'Pretty Woman - 1990' },
+        { file: 'pulp-fiction - 1994.mp3', display: 'Pulp Fiction - 1994' },
+        { file: 'regreso-al-futuro - 1985.mp3', display: 'Regreso al Futuro - 1985' },
+        { file: 'regreso-al-futuro-inicio - 1985.mp3', display: 'Regreso al Futuro (Inicio) - 1985' },
+        { file: 'rocky - 1976.mp3', display: 'Rocky - 1976' },
+        { file: 'rocky-iii - 1982.mp3', display: 'Rocky III - 1982' },
+        { file: 'saga-crepusculo-amanecer-parte-1 - 2011.mp3', display: 'Saga Crepúsculo Amanecer Parte 1 - 2011' },
+        { file: 'solo-en-casa - 1990.mp3', display: 'Solo en Casa - 1990' },
+        { file: 'sombrero-de-copa - 1935.mp3', display: 'Sombrero de Copa - 1935' },
+        { file: 'sonrisas-y-lagrimas - 1965.mp3', display: 'Sonrisas y Lágrimas - 1965' },
+        { file: 'star-wars - 1977.mp3', display: 'Star Wars - 1977' },
+        { file: 'star-wars-imperial-march - 1977.mp3', display: 'Star Wars (Imperial March) - 1977' },
+        { file: 'superman - 1978.mp3', display: 'Superman - 1978' },
+        { file: 'tal-como-eramos - 1973.mp3', display: 'Tal Como Éramos - 1973' },
+        { file: 'tiburon - 1975.mp3', display: 'Tiburón - 1975' },
+        { file: 'titanic - 1997.mp3', display: 'Titanic - 1997' },
+        { file: 'un-dia-en-nueva-york - 1949.mp3', display: 'Un Día en Nueva York - 1949' },
+        { file: 'west-side-story - 1965.mp3', display: 'West Side Story - 1965' },
+        { file: 'willow - 1988.mp3', display: 'Willow - 1988' }
+      ],
+      series: [
+        { file: 'alf - 1986.mp3', display: 'ALF - 1986' },
+        { file: 'alice-in-borderland - 2020.mp3', display: 'Alice in Borderland - 2020' },
+        { file: 'ally-mcbeal - 1997.mp3', display: 'Ally McBeal - 1997' },
+        { file: 'friends - 1994.mp3', display: 'Friends - 1994' },
+        { file: 'the-simpsons - 1989.mp3', display: 'Los Simpson - 1989' },
+        { file: 'game-of-thrones - 2011.mp3', display: 'Juego de Tronos - 2011' },
+        { file: 'stranger-things - 2016.mp3', display: 'Stranger Things - 2016' },
+        { file: 'breaking-bad - 2008.mp3', display: 'Breaking Bad - 2008' },
+        { file: 'the-office - 2005.mp3', display: 'The Office - 2005' },
+        { file: 'money-heist - 2017.mp3', display: 'La Casa de Papel - 2017' }
+      ],
+      tv: [
+        { file: 'un-dos-tres - sintonía.mp3', display: 'Un, dos, tres... responda otra vez - Sintonía' },
+        { file: 'grand-prix - sintonía.mp3', display: 'Grand Prix del Verano - Sintonía' },
+        { file: 'que-apostamos - sintonía.mp3', display: 'Qué apostamos - Sintonía' },
+        { file: 'la-bola-de-cristal - bruja-averia.mp3', display: 'La Bola de Cristal - La Bruja Avería' },
+        { file: 'el-hormiguero - sintonía.mp3', display: 'El Hormiguero - Sintonía' },
+        { file: 'saber-y-ganar - sintonía.mp3', display: 'Saber y Ganar - Sintonía' },
+        { file: 'pasapalabra - sintonía.mp3', display: 'Pasapalabra - Sintonía' },
+        { file: 'cuentame-como-paso - sintonía.mp3', display: 'Cuéntame Cómo Pasó - Sintonía' },
+        { file: 'farmacia-de-guardia - sintonía.mp3', display: 'Farmacia de Guardia - Sintonía' },
+        { file: 'verano-azul - sintonía.mp3', display: 'Verano Azul - Sintonía' }
+      ],
+      infantiles: [
+        { file: 'dragones-y-mazmorras - sintonía.mp3', display: 'Dragones y Mazmorras - Sintonía' },
+        { file: 'david-el-gnomo - sintonía.mp3', display: 'David el Gnomo - Sintonía' },
+        { file: 'd-artacan - sintonía.mp3', display: 'D\'Artacán y los Tres Mosqueperros - Sintonía' },
+        { file: 'willy-fog - sintonía.mp3', display: 'La Vuelta al Mundo de Willy Fog - Sintonía' },
+        { file: 'barrio-sesamo - sintonía.mp3', display: 'Barrio Sésamo - Sintonía' },
+        { file: 'heidi - sintonía.mp3', display: 'Heidi - Sintonía' },
+        { file: 'marco - sintonía.mp3', display: 'Marco - Sintonía' },
+        { file: 'mazinger-z - sintonía.mp3', display: 'Mazinger Z - Sintonía' },
+        { file: 'pokemon - sintonía.mp3', display: 'Pokémon - Sintonía' },
+        { file: 'digimon - sintonía.mp3', display: 'Digimon - Sintonía' }
+      ],
+      anuncios: [
+        { file: 'cola-cao - negrito.mp3', display: 'Cola Cao - Yo soy aquel negrito' },
+        { file: 'pipas-g - jingle.mp3', display: 'Pipas G - Jingle' },
+        { file: 'choco-krispies - desayuno.mp3', display: 'Choco Krispies - El desayuno de los campeones' },
+        { file: 'fanta - jingle-90s.mp3', display: 'Fanta - Jingle 90s' },
+        { file: 'la-casera - el-verano-mas-refrescante.mp3', display: 'La Casera - El verano más refrescante' },
+        { file: 'donuts - tengo-los-agujeros.mp3', display: 'Donuts - Tengo los agujeros' },
+        { file: 'mimosin - suavidad-mimosin.mp3', display: 'Mimosín - Suavidad Mimosín' },
+        { file: 'bocatta - que-te-voy-a-dar.mp3', display: 'Bocatta - ¿Qué te voy a dar?' },
+        { file: 'campofrio - la-familia.mp3', display: 'Campofrío - La Familia' },
+        { file: 'navidad - el-almendro.mp3', display: 'Navidad - Vuelve a Casa por Navidad (El Almendro)' }
+      ]
+    };
+    //=====================================================================
+    // FIN DE LA SECCIÓN DE CONFIGURACIÓN
+    //=====================================================================
+
+    const categoryNames = { espanol: "Canciones en Español", ingles: "Canciones en Inglés", peliculas: "BSO de Películas", series: "BSO de Series", tv: "Programas de TV", infantiles: "Series Infantiles", anuncios: "Anuncios"};
+    let gameState = {};
+    let audioPlaybackTimeout;
+    const screens = document.querySelectorAll('.screen');
+    const audioPlayer = document.getElementById('audio-player');
+    const sfxAcierto = document.getElementById('sfx-acierto');
+    const sfxError = document.getElementById('sfx-error');
+
+    // Estado global para el usuario logueado
+    let currentUser = null; // Almacenará { email: '', playerName: '' }
+
+    // Función para mostrar pantallas
+    function showScreen(screenId) {
+        screens.forEach(screen => screen.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // =====================================================================
+    // FUNCIONES DE AUTENTICACIÓN (Registro y Login)
+    // =====================================================================
+
+    // Función para validar formato de email
+    function isValidEmail(email) {
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+
+    // Función de registro de usuario
+    function registerUser() {
+        const emailInput = document.getElementById('register-email');
+        const passwordInput = document.getElementById('register-password');
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!email || !password) {
+            alert('Por favor, introduce un email y una contraseña.');
+            return;
+        }
+        if (!isValidEmail(email)) {
+            alert('Por favor, introduce un email válido.');
+            return;
+        }
+
+        // Recuperar usuarios existentes de localStorage
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+
+        if (users[email]) {
+            alert('Este email ya está registrado. Por favor, inicia sesión o usa otro email.');
+            return;
+        }
+
+        // Guardar nuevo usuario (contraseña en texto plano por ahora, no es seguro para producción)
+        users[email] = { password: password, playerName: null }; // playerName es null al principio
+        localStorage.setItem('users', JSON.stringify(users));
+
+        alert('¡Registro exitoso! Ya puedes iniciar sesión.');
+        emailInput.value = '';
+        passwordInput.value = '';
+        showScreen('login-screen');
+    }
+
+    // Función de login de usuario
+    function loginUser() {
+        const emailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('login-password');
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!email || !password) {
+            alert('Por favor, introduce tu email y contraseña.');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users')) || {};
+        const user = users[email];
+
+        if (!user || user.password !== password) {
+            alert('Email o contraseña incorrectos.');
+            return;
+        }
+
+        // Login exitoso
+        currentUser = { email: email, playerName: user.playerName };
+        localStorage.setItem('loggedInUserEmail', email); // Guardar sesión
+
+        alert(`¡Bienvenido, ${user.playerName || email}!`); // Mensaje de bienvenida
+        emailInput.value = '';
+        passwordInput.value = '';
+
+        // Redirigir según si el nombre de jugador ya está establecido
+        if (currentUser.playerName) {
+            showScreen('category-screen');
+        } else {
+            showScreen('set-player-name-screen');
+        }
+    }
+
+    // Función para cerrar sesión
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('loggedInUserEmail');
+        alert('Sesión cerrada correctamente.');
+        showScreen('home-screen'); // Vuelve a la pantalla de inicio
+    }
+
+    // Función para establecer el nombre de jugador
+    function setPlayerName() {
+        const playerNameInput = document.getElementById('player-name-input');
+        const newPlayerName = playerNameInput.value.trim();
+
+        if (!newPlayerName) {
+            alert('Por favor, introduce un nombre de jugador.');
+            return;
+        }
+
+        if (currentUser) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            users[currentUser.email].playerName = newPlayerName;
+            localStorage.setItem('users', JSON.stringify(users));
+
+            currentUser.playerName = newPlayerName; // Actualiza el objeto currentUser en memoria
+            alert(`Tu nombre de jugador "${newPlayerName}" ha sido establecido.`);
+            playerNameInput.value = ''; // Limpiar el input
+            showScreen('category-screen'); // Ir a la selección de categoría
+        } else {
+            alert('No hay un usuario logueado. Por favor, inicia sesión primero.');
+            showScreen('login-screen');
+        }
+    }
+
+
+    // =====================================================================
+    // FUNCIONES DEL JUEGO (existentes, con pequeñas modificaciones)
+    // =====================================================================
+
+    function parseDisplay(displayText) {
+        const parts = displayText.split(' - ');
+        if (parts.length < 2) {
+            return { artist: displayText, title: '' };
+        }
+        return { artist: parts[0].trim(), title: parts.slice(1).join(' - ').trim() };
+    }
+
+    function generateCategoryButtons() {
+        const container = document.getElementById('category-buttons');
+        container.innerHTML = '';
+        for (const categoryId in categoryNames) {
+            if (configuracionCanciones[categoryId] && configuracionCanciones[categoryId].length >= 4) {
+                const button = document.createElement('button');
+                button.className = 'category-btn';
+                button.innerText = categoryNames[categoryId];
+                button.onclick = () => selectCategory(categoryId);
+                container.appendChild(button);
+            }
+        }
+    }
+
+    function selectCategory(category) {
+        gameState.category = category;
+        // Solo permitir seleccionar jugadores si hay un usuario logueado
+        if (currentUser && currentUser.playerName) {
+            showScreen('player-selection-screen');
+        } else {
+            alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+            showScreen('login-screen'); // O directamente a set-player-name-screen si ya está logueado pero sin nombre
+        }
+    }
+
+    function selectPlayers(num) {
+        gameState.playerCount = num;
+        startGame();
+    }
+
+    function startGame() {
+        // En el modo multijugador, los jugadores serán objetos con su ID y nombre de jugador si es el currentUser
+        gameState.players = Array.from({ length: gameState.playerCount }, (_, i) => {
+            if (i === 0 && currentUser && currentUser.playerName) {
+                // El primer jugador es el usuario logueado
+                return { id: i + 1, name: currentUser.playerName, score: 0 };
+            } else {
+                // Otros jugadores (en modo local) serán "Jugador X"
+                return { id: i + 1, name: `Jugador ${i + 1}`, score: 0 };
+            }
+        });
+        gameState.totalQuestions = 10;
+        gameState.currentQuestionIndex = 0;
+        gameState.currentPlayerIndex = 0;
+
+        const songObjects = [...configuracionCanciones[gameState.category]];
+        if (songObjects.length < 4) {
+            alert("Error: Se necesitan al menos 4 canciones en una categoría para jugar.");
+            showScreen('category-screen');
+            return;
+        }
+        gameState.questions = songObjects.sort(() => 0.5 - Math.random()).slice(0, gameState.totalQuestions);
+        if (gameState.questions.length < gameState.totalQuestions) {
+            gameState.totalQuestions = gameState.questions.length;
+        }
+        setupQuestion();
+        showScreen('game-screen');
+    }
+
+    function setupQuestion() {
+        if (gameState.currentQuestionIndex >= gameState.totalQuestions) {
+            endGame();
+            return;
+        }
+        clearTimeout(audioPlaybackTimeout);
+        gameState.attempts = 3;
+        gameState.hasPlayed = false;
+
+        const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+        const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
+
+        document.getElementById('category-display').innerText = categoryNames[gameState.category];
+        document.getElementById('question-counter').innerText = `Pregunta ${gameState.currentQuestionIndex + 1}/${gameState.totalQuestions}`;
+        // Muestra el nombre del jugador en el turno
+        document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
+        document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
+
+        updateAttemptsCounter();
+
+        const answerButtonsContainer = document.getElementById('answer-buttons');
+        answerButtonsContainer.innerHTML = '';
+
+        const allSongsInCat = [...configuracionCanciones[gameState.category]];
+        let options = [currentQuestion];
+        while (options.length < 4) {
+            const randomSong = allSongsInCat[Math.floor(Math.random() * allSongsInCat.length)];
+            if (!options.some(opt => opt.file === randomSong.file)) {
+                options.push(randomSong);
+            }
+        }
+        options.sort(() => 0.5 - Math.random());
+
+        options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'btn answer-btn';
+            const parsedDisplay = parseDisplay(option.display);
+            button.innerHTML = `<strong>${parsedDisplay.artist}</strong>${parsedDisplay.title}`;
+            button.onclick = () => checkAnswer(option.file === currentQuestion.file, button);
+            answerButtonsContainer.appendChild(button);
+        });
+
+        const playBtn = document.getElementById('play-song-btn');
+        playBtn.onclick = playAudioSnippet;
+        playBtn.disabled = false;
+        playBtn.innerText = "▶";
+    }
+
+    function updateAttemptsCounter() {
+        const counter = document.getElementById('attempts-counter');
+        counter.innerText = `Intentos: ${gameState.attempts}`;
+        if (gameState.attempts === 3) counter.style.backgroundColor = 'var(--correct-color)';
+        else if (gameState.attempts === 2) counter.style.backgroundColor = 'var(--warning-color)';
+        else counter.style.backgroundColor = 'var(--incorrect-color)';
+    }
+
+    function playAudioSnippet() {
+        if (gameState.hasPlayed) return;
+        gameState.hasPlayed = true;
+        const durations = { 3: 4000, 2: 6000, 1: 10000 };
+        const duration = durations[gameState.attempts];
+        const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
+
+        audioPlayer.src = `audio/${gameState.category}/${currentQuestion.file}`;
+        audioPlayer.currentTime = 0;
+        audioPlayer.play();
+
+        const playBtn = document.getElementById('play-song-btn');
+        playBtn.innerText = "🎵";
+        playBtn.disabled = true;
+
+        audioPlaybackTimeout = setTimeout(() => {
+            audioPlayer.pause();
+            playBtn.innerText = "▶";
+        }, duration);
+    }
+
+    function checkAnswer(isCorrect, button) {
+        if (!gameState.hasPlayed) {
+            alert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
+            return;
+        }
+        clearTimeout(audioPlaybackTimeout);
+        audioPlayer.pause();
+        document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
+
+        if (isCorrect) {
+            sfxAcierto.currentTime = 0;
+            sfxAcierto.play();
+            const points = { 3: 3, 2: 2, 1: 1 };
+            gameState.players[gameState.currentPlayerIndex].score += points[gameState.attempts];
+            button.classList.add('correct');
+            setTimeout(nextTurn, 1500);
+        } else {
+            sfxError.currentTime = 0;
+            sfxError.play();
+            button.classList.add('incorrect');
+            gameState.attempts--;
+            updateAttemptsCounter();
+            if (gameState.attempts > 0) {
+                setTimeout(() => {
+                    document.querySelectorAll('.answer-btn').forEach(btn => {
+                        btn.classList.remove('disabled', 'incorrect');
+                    });
+                    gameState.hasPlayed = false;
+                    const playBtn = document.getElementById('play-song-btn');
+                    playBtn.disabled = false;
+                    playBtn.innerText = "▶";
+                }, 1500);
+            } else {
+                // Si no quedan intentos, avanza al siguiente turno
+                setTimeout(nextTurn, 1500);
+            }
+        }
+    }
+
+    function nextTurn() {
+        gameState.currentQuestionIndex++;
+        // Si hay un solo jugador, el turno siempre es suyo. Si hay más, rotamos.
+        if (gameState.playerCount > 1) {
+            gameState.currentPlayerIndex = (gameState.currentPlayerIndex + 1) % gameState.playerCount;
+        }
+        setupQuestion();
+    }
+
+    function endGame() {
+        const finalScoresContainer = document.getElementById('final-scores');
+        finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
+        const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
+        sortedPlayers.forEach((player, index) => {
+            const medal = { 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '';
+            finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`; // Mostrar nombre del jugador
+        });
+        document.getElementById('play-again-btn').onclick = () => { selectPlayers(gameState.playerCount); };
+        showScreen('end-game-screen');
+    }
+
+    // =====================================================================
+    // INICIALIZACIÓN (Modificada para gestionar sesión)
+    // =====================================================================
+
+    window.onload = () => {
+        generateCategoryButtons();
+        // Intentar cargar la sesión del usuario
+        const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+        if (loggedInUserEmail) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            const user = users[loggedInUserEmail];
+            if (user) {
+                currentUser = { email: loggedInUserEmail, playerName: user.playerName };
+                if (currentUser.playerName) {
+                    showScreen('category-screen'); // Si ya tiene nombre, va directo a categorías
+                } else {
+                    showScreen('set-player-name-screen'); // Si está logueado pero sin nombre, va a establecer nombre
+                }
+            } else {
+                // Si el email guardado no corresponde a un usuario, limpiar sesión y mostrar login
+                localStorage.removeItem('loggedInUserEmail');
+                showScreen('login-screen');
+            }
+        } else {
+            showScreen('home-screen'); // Si no hay sesión, ir a la pantalla de inicio (que redirigirá a login)
+        }
+    };
+    </script>
+</body>
+</html>
