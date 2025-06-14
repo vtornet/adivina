@@ -414,9 +414,29 @@
     <div id="category-screen" class="screen">
         <h2>Elige una Categoría</h2>
         <div id="category-buttons"></div>
-        <button class="btn secondary" onclick="showScreen('home-screen')">Volver</button>
+        <button class="btn tertiary" onclick="showStatisticsScreen()">Estadísticas</button>
         <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
     </div>
+
+    <div id="statistics-screen" class="screen">
+        <h2>Mis Estadísticas</h2>
+        <div id="user-total-scores" style="margin-bottom: 20px;">
+            <h3>Puntos Acumulados por Categoría</h3>
+            <div id="category-scores-list">
+                <p>Cargando estadísticas...</p>
+            </div>
+        </div>
+
+        <div id="duel-history">
+            <h3>Historial de Duelos (2 Jugadores)</h3>
+            <div id="duel-list">
+                <p>Cargando historial...</p>
+            </div>
+        </div>
+
+        <button class="btn secondary" onclick="showScreen('category-screen')">Volver al Menú</button>
+    </div>
+
     <div id="player-selection-screen" class="screen">
         <h2>Introduce el número de jugadores</h2>
         <div class="player-selection-grid">
@@ -435,6 +455,13 @@
         <div id="other-player-names-inputs"></div>
         <button class="btn" onclick="startGame()">Comenzar Partida</button>
         <button class="btn secondary" onclick="showScreen('player-selection-screen')">Volver a selección de jugadores</button>
+    </div>
+
+    <div id="player-transition-screen" class="screen">
+        <h2>Turno Terminado</h2>
+        <p id="current-player-score-summary" style="font-size: 1.3rem; margin-bottom: 20px; color: var(--warning-color);"></p>
+        <h3 id="next-player-prompt" style="color: var(--secondary-color); margin-bottom: 30px;"></h3>
+        <button class="btn" onclick="continueToNextPlayerTurn()">Comenzar</button>
     </div>
 
     <div id="game-screen" class="screen">
@@ -573,7 +600,7 @@
         { file: 'rosalia - despecha.mp3', display: 'Rosalia - Despecha' },
         { file: 'rosana - si-tu-no-estas.mp3', display: 'Rosana - Si Tu No Estas' },
         { file: 'rozalen - la-puerta-violeta.mp3', display: 'Rozalen - La Puerta Violeta' },
-        { file: 'sabina-19-dias-y-500-noches.mp3', display: 'Sabina 19 Dias y 500 Noches' },
+        { file: 'sabina - 19-dias-y-500-noches.mp3', display: 'Sabina 19 Dias y 500 Noches' },
         { file: 'seguridad-social - chiquilla.mp3', display: 'Seguridad Social - Chiquilla' },
         { file: 'shakira - ciega,-sordomuda.mp3', display: 'Shakira - Ciega, Sordomuda' },
         { file: 'tam-tam-go! - espaldas-mojadas.mp3', display: 'Tam Tam Go! - Espaldas Mojadas' },
@@ -682,52 +709,52 @@
         { file: 'willow - 1988.mp3', display: 'Willow - 1988' }
       ],
       series: [
-        { file: 'alf - 1986.mp3', display: 'ALF - 1986' },
-        { file: 'alice-in-borderland - 2020.mp3', display: 'Alice in Borderland - 2020' },
-        { file: 'ally-mcbeal - 1997.mp3', display: 'Ally McBeal - 1997' },
-        { file: 'friends - 1994.mp3', display: 'Friends - 1994' },
-        { file: 'the-simpsons - 1989.mp3', display: 'Los Simpson - 1989' },
-        { file: 'game-of-thrones - 2011.mp3', display: 'Juego de Tronos - 2011' },
-        { file: 'stranger-things - 2016.mp3', display: 'Stranger Things - 2016' },
-        { file: 'breaking-bad - 2008.mp3', display: 'Breaking Bad - 2008' },
-        { file: 'the-office - 2005.mp3', display: 'The Office - 2005' },
-        { file: 'money-heist - 2017.mp3', display: 'La Casa de Papel - 2017' }
+        { file: 'alf-1986.mp3', display: 'ALF - 1986' },
+        { file: 'alice-in-borderland-2020.mp3', display: 'Alice in Borderland - 2020' },
+        { file: 'ally-mcbeal-1997.mp3', display: 'Ally McBeal - 1997' },
+        { file: 'friends-1994.mp3', display: 'Friends - 1994' },
+        { file: 'the-simpsons-1989.mp3', display: 'Los Simpson - 1989' },
+        { file: 'game-of-thrones-2011.mp3', display: 'Juego de Tronos - 2011' },
+        { file: 'stranger-things-2016.mp3', display: 'Stranger Things - 2016' },
+        { file: 'breaking-bad-2008.mp3', display: 'Breaking Bad - 2008' },
+        { file: 'the-office-2005.mp3', display: 'The Office - 2005' },
+        { file: 'money-heist-2017.mp3', display: 'La Casa de Papel - 2017' }
       ],
       tv: [
-        { file: 'un-dos-tres - sintonía.mp3', display: 'Un, dos, tres... responda otra vez - Sintonía' },
-        { file: 'grand-prix - sintonía.mp3', display: 'Grand Prix del Verano - Sintonía' },
-        { file: 'que-apostamos - sintonía.mp3', display: 'Qué apostamos - Sintonía' },
-        { file: 'la-bola-de-cristal - bruja-averia.mp3', display: 'La Bola de Cristal - La Bruja Avería' },
-        { file: 'el-hormiguero - sintonía.mp3', display: 'El Hormiguero - Sintonía' },
-        { file: 'saber-y-ganar - sintonía.mp3', display: 'Saber y Ganar - Sintonía' },
-        { file: 'pasapalabra - sintonía.mp3', display: 'Pasapalabra - Sintonía' },
-        { file: 'cuentame-como-paso - sintonía.mp3', display: 'Cuéntame Cómo Pasó - Sintonía' },
-        { file: 'farmacia-de-guardia - sintonía.mp3', display: 'Farmacia de Guardia - Sintonía' },
-        { file: 'verano-azul - sintonía.mp3', display: 'Verano Azul - Sintonía' }
+        { file: 'un-dos-tres-sintonia.mp3', display: 'Un, dos, tres... responda otra vez - Sintonía' },
+        { file: 'grand-prix-sintonia.mp3', display: 'Grand Prix del Verano - Sintonía' },
+        { file: 'que-apostamos-sintonia.mp3', display: 'Qué apostamos - Sintonía' },
+        { file: 'la-bola-de-cristal-bruja-averia.mp3', display: 'La Bola de Cristal - La Bruja Avería' },
+        { file: 'el-hormiguero-sintonia.mp3', display: 'El Hormiguero - Sintonía' },
+        { file: 'saber-y-ganar-sintonia.mp3', display: 'Saber y Ganar - Sintonía' },
+        { file: 'pasapalabra-sintonia.mp3', display: 'Pasapalabra - Sintonía' },
+        { file: 'cuentame-como-paso-sintonia.mp3', display: 'Cuéntame Cómo Pasó - Sintonía' },
+        { file: 'farmacia-de-guardia-sintonia.mp3', display: 'Farmacia de Guardia - Sintonía' },
+        { file: 'verano-azul-sintonia.mp3', display: 'Verano Azul - Sintonía' }
       ],
       infantiles: [
-        { file: 'dragones-y-mazmorras - sintonía.mp3', display: 'Dragones y Mazmorras - Sintonía' },
-        { file: 'david-el-gnomo - sintonía.mp3', display: 'David el Gnomo - Sintonía' },
-        { file: 'd-artacan - sintonía.mp3', display: 'D\'Artacán y los Tres Mosqueperros - Sintonía' },
-        { file: 'willy-fog - sintonía.mp3', display: 'La Vuelta al Mundo de Willy Fog - Sintonía' },
-        { file: 'barrio-sesamo - sintonía.mp3', display: 'Barrio Sésamo - Sintonía' },
-        { file: 'heidi - sintonía.mp3', display: 'Heidi - Sintonía' },
-        { file: 'marco - sintonía.mp3', display: 'Marco - Sintonía' },
-        { file: 'mazinger-z - sintonía.mp3', display: 'Mazinger Z - Sintonía' },
-        { file: 'pokemon - sintonía.mp3', display: 'Pokémon - Sintonía' },
-        { file: 'digimon - sintonía.mp3', display: 'Digimon - Sintonía' }
+        { file: 'dragones-y-mazmorras-sintonia.mp3', display: 'Dragones y Mazmorras - Sintonía' },
+        { file: 'david-el-gnomo-sintonia.mp3', display: 'David el Gnomo - Sintonía' },
+        { file: 'd-artacan-sintonia.mp3', display: 'D\'Artacán y los Tres Mosqueperros - Sintonía' },
+        { file: 'willy-fog-sintonia.mp3', display: 'La Vuelta al Mundo de Willy Fog - Sintonía' },
+        { file: 'barrio-sesamo-sintonia.mp3', display: 'Barrio Sésamo - Sintonía' },
+        { file: 'heidi-sintonia.mp3', display: 'Heidi - Sintonía' },
+        { file: 'marco-sintonia.mp3', display: 'Marco - Sintonía' },
+        { file: 'mazinger-z-sintonia.mp3', display: 'Mazinger Z - Sintonía' },
+        { file: 'pokemon-sintonia.mp3', display: 'Pokémon - Sintonía' },
+        { file: 'digimon-sintonia.mp3', display: 'Digimon - Sintonía' }
       ],
       anuncios: [
-        { file: 'cola-cao - negrito.mp3', display: 'Cola Cao - Yo soy aquel negrito' },
-        { file: 'pipas-g - jingle.mp3', display: 'Pipas G - Jingle' },
-        { file: 'choco-krispies - desayuno.mp3', display: 'Choco Krispies - El desayuno de los campeones' },
-        { file: 'fanta - jingle-90s.mp3', display: 'Fanta - Jingle 90s' },
-        { file: 'la-casera - el-verano-mas-refrescante.mp3', display: 'La Casera - El verano más refrescante' },
-        { file: 'donuts - tengo-los-agujeros.mp3', display: 'Donuts - Tengo los agujeros' },
-        { file: 'mimosin - suavidad-mimosin.mp3', display: 'Mimosín - Suavidad Mimosín' },
-        { file: 'bocatta - que-te-voy-a-dar.mp3', display: 'Bocatta - ¿Qué te voy a dar?' },
-        { file: 'campofrio - la-familia.mp3', display: 'Campofrío - La Familia' },
-        { file: 'navidad - el-almendro.mp3', display: 'Navidad - Vuelve a Casa por Navidad (El Almendro)' }
+        { file: 'cola-cao-negrito.mp3', display: 'Cola Cao - Yo soy aquel negrito' },
+        { file: 'pipas-g-jingle.mp3', display: 'Pipas G - Jingle' },
+        { file: 'choco-krispies-desayuno.mp3', display: 'Choco Krispies - El desayuno de los campeones' },
+        { file: 'fanta-jingle-90s.mp3', display: 'Fanta - Jingle 90s' },
+        { file: 'la-casera-el-verano-mas-refrescante.mp3', display: 'La Casera - El verano más refrescante' },
+        { file: 'donuts-tengo-los-agujeros.mp3', display: 'Donuts - Tengo los agujeros' },
+        { file: 'mimosin-suavidad-mimosin.mp3', display: 'Mimosín - Suavidad Mimosín' },
+        { file: 'bocatta-que-te-voy-a-dar.mp3', display: 'Bocatta - ¿Qué te voy a dar?' },
+        { file: 'campofrio-la-familia.mp3', display: 'Campofrío - La Familia' },
+        { file: 'navidad-el-almendro.mp3', display: 'Navidad - Vuelve a Casa por Navidad (El Almendro)' }
       ]
     };
     //=====================================================================
@@ -744,6 +771,10 @@
 
     // Estado global para el usuario logueado
     let currentUser = null; // Almacenará { email: '', playerName: '' }
+    // Objetos para almacenar las puntuaciones acumuladas y el historial de partidas en memoria
+    // Su estructura será: { 'email@dominio.com': { 'espanol': 150, 'peliculas': 200, ... } }
+    let userAccumulatedScores = {};
+    let gameHistory = []; // Almacena resultados de partidas multijugador
 
     // Función para mostrar pantallas
     function showScreen(screenId) {
@@ -800,7 +831,7 @@
         showScreen('login-screen');
     }
 
-    // Función de login de usuario
+    // Función de login de usuario (MODIFICADA para cargar historial y puntuaciones acumuladas)
     function loginUser() {
         const emailInput = document.getElementById('login-email');
         const passwordInput = document.getElementById('login-password');
@@ -822,13 +853,16 @@
 
         // Login exitoso
         currentUser = { email: email, playerName: user.playerName };
-        localStorage.setItem('loggedInUserEmail', email); // Guardar sesión
+        localStorage.setItem('loggedInUserEmail', email); 
 
-        alert(`¡Bienvenido, ${user.playerName || email}!`); // Mensaje de bienvenida
+        // Cargar las puntuaciones acumuladas y el historial de partidas del usuario logueado
+        loadUserScores(currentUser.email); 
+        loadGameHistory(); // NUEVA LLAMADA: Cargar el historial de partidas al loguear
+
+        alert(`¡Bienvenido, ${user.playerName || email}!`); 
         emailInput.value = '';
         passwordInput.value = '';
 
-        // Redirigir según si el nombre de jugador ya está establecido
         if (currentUser.playerName) {
             showScreen('category-screen');
         } else {
@@ -871,7 +905,94 @@
 
 
     // =====================================================================
-    // FUNCIONES DEL JUEGO (existentes, con pequeñas modificaciones)
+    // FUNCIONES PARA GESTIÓN DE PUNTUACIONES ACUMULADAS Y HISTORIAL
+    // =====================================================================
+
+    function loadUserScores(userEmail) {
+        const storedScores = JSON.parse(localStorage.getItem('userScores')) || {};
+        userAccumulatedScores = storedScores;
+
+        // Inicializar el usuario si no tiene puntuaciones previas
+        if (!userAccumulatedScores[userEmail]) {
+            userAccumulatedScores[userEmail] = {};
+        }
+        console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+    }
+
+    function saveUserScores(userEmail, category, score) {
+        if (!userEmail || !category || typeof score !== 'number') {
+            console.error("Error: Datos incompletos para guardar puntuación acumulada.");
+            return;
+        }
+
+        // Asegurarse de que el usuario existe en el objeto de puntuaciones acumuladas
+        if (!userAccumulatedScores[userEmail]) {
+            userAccumulatedScores[userEmail] = {};
+        }
+
+        // Sumar los puntos obtenidos en la partida a la categoría correspondiente
+        userAccumulatedScores[userEmail][category] = (userAccumulatedScores[userEmail][category] || 0) + score;
+
+        // Guardar el objeto actualizado en localStorage
+        localStorage.setItem('userScores', JSON.stringify(userAccumulatedScores));
+        console.log(`Puntuación de ${userEmail} actualizada para ${category}: ${userAccumulatedScores[userEmail][category]}`);
+    }
+
+    function loadGameHistory() {
+        const storedHistory = JSON.parse(localStorage.getItem('gameHistory')) || [];
+        gameHistory = storedHistory;
+        console.log("Historial de partidas cargado:", gameHistory);
+    }
+
+    function saveGameResult(players, winnerName, category) {
+        // Obtenemos la fecha actual en formato DD/MM/AAAA
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses son 0-11
+        const year = today.getFullYear();
+        const formattedDate = `${day}/${month}/${year}`;
+
+        const gameResult = {
+            date: formattedDate,
+            players: players.map(p => p.name), // Guardar solo los nombres de los jugadores
+            winner: winnerName,
+            category: category
+        };
+        gameHistory.push(gameResult);
+        localStorage.setItem('gameHistory', JSON.stringify(gameHistory));
+        console.log("Resultado de partida guardado:", gameResult);
+    }
+
+    // Función para calcular victorias entre dos jugadores específicos (para la futura pantalla de stats)
+    function calculateDuelWins(player1Name, player2Name) {
+        let wins1 = 0;
+        let wins2 = 0;
+        
+        // Convertir a minúsculas para una comparación insensible a mayúsculas/minúsculas
+        const p1 = player1Name.toLowerCase();
+        const p2 = player2Name.toLowerCase();
+
+        gameHistory.forEach(game => {
+            // Asegurarse de que el juego sea un "duelo" y que los jugadores coincidan
+            if (game.players.length === 2) {
+                const gamePlayersLower = game.players.map(name => name.toLowerCase()).sort(); // Ordenar para comparar independientemente del orden
+                const sortedDuelPlayers = [p1, p2].sort();
+
+                if (gamePlayersLower[0] === sortedDuelPlayers[0] && gamePlayersLower[1] === sortedDuelPlayers[1]) {
+                    // Es un duelo entre estos dos jugadores
+                    if (game.winner && game.winner.toLowerCase() === p1) {
+                        wins1++;
+                    } else if (game.winner && game.winner.toLowerCase() === p2) {
+                        wins2++;
+                    }
+                }
+            }
+        });
+        return { [player1Name]: wins1, [player2Name]: wins2 };
+    }
+
+    // =====================================================================
+    // FUNCIONES DEL JUEGO (MODIFICADAS: loginUser, endGame, inicialización)
     // =====================================================================
 
     function parseDisplay(displayText) {
@@ -1132,23 +1253,44 @@
     function nextPlayerOrEndGame() {
         const currentPlayer = gameState.players[gameState.currentPlayerIndex];
 
-        // Verificar si el jugador actual ha respondido todas sus preguntas
-        if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
-            // Si el jugador actual terminó sus preguntas, pasar al siguiente jugador
-            gameState.currentPlayerIndex++;
-
-            // Verificar si hay más jugadores o si todos han terminado
-            if (gameState.currentPlayerIndex < gameState.players.length) {
-                // Si hay más jugadores, configurar la pregunta para el siguiente
-                setupQuestion();
+        // Caso de un solo jugador: siempre va directamente a la siguiente pregunta o finaliza
+        if (gameState.players.length === 1) {
+            if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
+                endGame(); // Si el único jugador ha terminado, finaliza el juego
             } else {
-                // Si todos los jugadores han terminado, finalizar la partida
+                setupQuestion(); // Si el único jugador tiene más preguntas, configura la siguiente para él
+            }
+            return; // Salir de la función después de manejar el caso de un solo jugador
+        }
+
+        // Lógica para MÚLTIPLES jugadores
+        // Si el jugador actual ha respondido todas sus preguntas
+        if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
+            gameState.currentPlayerIndex++; // Intentar pasar al siguiente jugador
+
+            // Verificar si hay más jugadores después del actual
+            if (gameState.currentPlayerIndex < gameState.players.length) {
+                // Hay otro jugador: mostrar pantalla de transición
+                const nextPlayer = gameState.players[gameState.currentPlayerIndex];
+                document.getElementById('current-player-score-summary').textContent = 
+                    `${currentPlayer.name} ha terminado su turno con ${currentPlayer.score} puntos.`;
+                document.getElementById('next-player-prompt').textContent = 
+                    `Siguiente jugador: ${nextPlayer.name}, ¿preparado para comenzar?`;
+                showScreen('player-transition-screen');
+            } else {
+                // Todos los jugadores han terminado sus preguntas
                 endGame();
             }
         } else {
-            // Si el jugador actual aún tiene preguntas, configurar la siguiente pregunta para él mismo
+            // El jugador actual aún tiene preguntas por responder
             setupQuestion();
         }
+    }
+
+    // Nueva función para continuar el turno del siguiente jugador
+    function continueToNextPlayerTurn() {
+        setupQuestion(); // Configurar el juego para el jugador que sigue
+        showScreen('game-screen'); // Volver a la pantalla de juego
     }
 
 
@@ -1157,40 +1299,80 @@
         finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
         
         const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
-
-        // Mostrar al ganador
         const winnerDisplay = document.getElementById('winner-display');
-        if (sortedPlayers.length > 0) {
-            // Si hay un empate en la puntuación más alta
-            const topScore = sortedPlayers[0].score;
-            const winners = sortedPlayers.filter(player => player.score === topScore);
 
-            if (winners.length > 1) {
-                // Múltiples ganadores
-                const winnerNames = winners.map(winner => winner.name).join(' y ');
-                winnerDisplay.textContent = `¡Hay un EMPATE! Los GANADORES son ${winnerNames} con ${topScore} puntos!`;
-            } else {
-                // Un único ganador
-                winnerDisplay.textContent = `¡El GANADOR es ${sortedPlayers[0].name} con ${sortedPlayers[0].score} puntos!`;
+        if (gameState.players.length === 1) {
+            // Caso de un solo jugador
+            const player = gameState.players[0];
+            winnerDisplay.textContent = `${player.name} has conseguido ${player.score} puntos.`;
+            // Asegurarse de quitar los estilos de neón si vienen de una partida anterior
+            winnerDisplay.style.animation = 'none'; 
+            winnerDisplay.style.textShadow = 'none';
+            winnerDisplay.style.color = 'var(--light-text-color)'; 
+            winnerDisplay.style.border = 'none'; 
+            winnerDisplay.style.fontSize = '1.8rem'; 
+
+            // Guardar la puntuación acumulada para el usuario logueado (NUEVO)
+            if (currentUser && currentUser.email) {
+                saveUserScores(currentUser.email, gameState.category, player.score);
             }
+
         } else {
-            winnerDisplay.textContent = 'No hay ganador en esta partida.';
+            // Caso de múltiples jugadores (lógica existente para ganador/empate)
+            let winnerName = 'Empate'; // Valor por defecto si hay empate
+            if (sortedPlayers.length > 0) {
+                const topScore = sortedPlayers[0].score;
+                const winners = sortedPlayers.filter(player => player.score === topScore);
+
+                if (winners.length > 1) {
+                    const winnerNames = winners.map(winner => winner.name).join(' y ');
+                    winnerDisplay.textContent = `¡Hay un EMPATE! Los GANADORES son ${winnerNames} con ${topScore} puntos!`;
+                    // winnerName ya es 'Empate'
+                } else {
+                    winnerDisplay.textContent = `¡El GANADOR es ${sortedPlayers[0].name} con ${sortedPlayers[0].score} puntos!`;
+                    winnerName = sortedPlayers[0].name; // Obtener el nombre del ganador
+                }
+            } else {
+                winnerDisplay.textContent = 'No hay ganador en esta partida.';
+                winnerName = 'Nadie'; // Si no hay jugadores o puntuaciones, lo indicamos así
+            }
+            // Asegurarse de que los estilos de neón estén activos para multijugador
+            winnerDisplay.style.animation = 'neonGlow 1.5s ease-in-out infinite alternate';
+            winnerDisplay.style.textShadow = '0 0 8px var(--secondary-color), 0 0 15px var(--secondary-color)';
+            winnerDisplay.style.color = 'var(--secondary-color)';
+            winnerDisplay.style.borderBottom = '2px solid var(--secondary-color)';
+            winnerDisplay.style.borderTop = '2px solid var(--secondary-color)';
+            winnerDisplay.style.fontSize = '2.5rem';
+
+            // Guardar la puntuación acumulada para el usuario logueado si participó (NUEVO)
+            if (currentUser && currentUser.email) {
+                const loggedInPlayer = gameState.players.find(p => p.email === currentUser.email); // Usar email para identificar al jugador logueado
+                if (loggedInPlayer) {
+                    saveUserScores(currentUser.email, gameState.category, loggedInPlayer.score);
+                } else {
+                    // Si el jugador logueado no está en gameState.players (ej. en partidas de invitados sin loguearse)
+                    // No deberíamos llegar aquí si el flujo de login es correcto
+                    console.warn("Usuario logueado no encontrado en la lista de jugadores de la partida.");
+                }
+            }
+            
+            // NUEVO: Guardar el resultado de la partida multijugador
+            saveGameResult(gameState.players, winnerName, gameState.category);
         }
 
-        // Mostrar todas las puntuaciones
+        // Mostrar todas las puntuaciones (siempre)
         sortedPlayers.forEach((player, index) => {
-            const medal = { 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '';
+            const medal = (gameState.players.length > 1) ? ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '') : ''; 
             finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`; 
         });
         
         document.getElementById('play-again-btn').onclick = () => { 
-            // Reiniciar los scores y questionsAnswered para cada jugador para una nueva partida
+            // Reiniciar el estado de los jugadores para una nueva partida
             gameState.players.forEach(player => {
                 player.score = 0;
                 player.questionsAnswered = 0;
                 player.questions = []; // Importante para que startGame vuelva a asignar nuevas preguntas
             });
-            // Volver a la pantalla de selección de número de jugadores para configurar la nueva partida
             showScreen('player-selection-screen'); 
         };
         showScreen('end-game-screen');
@@ -1209,6 +1391,112 @@
             showScreen('category-screen');
         }
     }
+
+    // ... (Tus funciones loadUserScores, saveUserScores, loadGameHistory, saveGameResult, calculateDuelWins) ...
+
+// =====================================================================
+// FUNCIONES DE PANTALLA DE ESTADÍSTICAS
+// =====================================================================
+
+function showStatisticsScreen() {
+    if (!currentUser || !currentUser.email) {
+        alert("Debes iniciar sesión para ver tus estadísticas.");
+        showScreen('login-screen');
+        return;
+    }
+
+    showScreen('statistics-screen');
+    renderUserTotalScores();
+    renderDuelHistory();
+}
+
+function renderUserTotalScores() {
+    const categoryScoresList = document.getElementById('category-scores-list');
+    categoryScoresList.innerHTML = ''; // Limpiar contenido anterior
+
+    const userScores = userAccumulatedScores[currentUser.email];
+
+    if (!userScores || Object.keys(userScores).length === 0) {
+        categoryScoresList.innerHTML = '<p style="color: var(--text-color);">Aún no tienes puntos acumulados. ¡Juega para empezar a sumar!</p>';
+        return;
+    }
+
+    // Convertir el objeto de puntuaciones a un array para ordenar
+    const sortedCategories = Object.entries(userScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
+
+    sortedCategories.forEach(([categoryId, score]) => {
+        const categoryName = categoryNames[categoryId] || categoryId; // Obtener nombre legible
+        const p = document.createElement('p');
+        p.className = 'score-item'; // Puedes añadir CSS para esto después si quieres
+        p.innerHTML = `${categoryName}: <strong>${score} puntos</strong>`;
+        categoryScoresList.appendChild(p);
+    });
+}
+
+function renderDuelHistory() {
+    const duelList = document.getElementById('duel-list');
+    duelList.innerHTML = ''; // Limpiar contenido anterior
+
+    // Filtrar solo los duelos (partidas de 2 jugadores)
+    const duels = gameHistory.filter(game => game.players.length === 2);
+
+    if (duels.length === 0) {
+        duelList.innerHTML = '<p style="color: var(--text-color);">Aún no tienes duelos registrados. ¡Desafía a un amigo!</p>';
+        return;
+    }
+
+    // Agrupar duelos por pares de jugadores para calcular victorias entre ellos
+    const duelPairs = {}; // Clave: "JugadorA_JugadorB" (ordenado alfabéticamente)
+    duels.forEach(game => {
+        // Normalizar nombres para la clave del par (insensible a mayúsculas y minúsculas)
+        const playerNames = game.players.map(name => name.toLowerCase()).sort();
+        const pairKey = playerNames.join('_');
+
+        if (!duelPairs[pairKey]) {
+            duelPairs[pairKey] = { players: game.players.sort(), games: [] }; // Guardar nombres originales pero ordenados para visualización
+        }
+        duelPairs[pairKey].games.push(game);
+    });
+
+    // Mostrar estadísticas para cada par de duelos
+    for (const key in duelPairs) {
+        const pair = duelPairs[key];
+        const [p1Name, p2Name] = pair.players; // Nombres ordenados alfabéticamente
+        const duelWins = calculateDuelWins(p1Name, p2Name); // Usa la función ya existente
+
+        const duelSummaryDiv = document.createElement('div');
+        duelSummaryDiv.className = 'duel-summary-card'; // Para CSS
+        duelSummaryDiv.style.background = 'rgba(0, 0, 0, 0.2)';
+        duelSummaryDiv.style.padding = '10px';
+        duelSummaryDiv.style.borderRadius = '8px';
+        duelSummaryDiv.style.marginBottom = '15px';
+        duelSummaryDiv.style.border = '1px solid var(--primary-color)';
+        
+        duelSummaryDiv.innerHTML = `
+            <p style="font-size: 1.1rem; font-weight: bold; color: var(--secondary-color); margin-bottom: 5px;">${p1Name} vs ${p2Name}</p>
+            <p style="font-size: 0.95rem;">${p1Name}: <strong>${duelWins[p1Name]} victorias</strong> | ${p2Name}: <strong>${duelWins[p2Name]} victorias</strong></p>
+            <details style="margin-top: 10px; text-align: left;">
+                <summary style="font-size: 0.9rem; cursor: pointer; color: var(--warning-color);">Ver historial detallado</summary>
+                <ul style="list-style-type: none; padding-left: 0;">
+                </ul>
+            </details>
+        `;
+        const detailsList = duelSummaryDiv.querySelector('ul');
+        // Ordenar los juegos dentro del duelo por fecha (más reciente primero)
+        pair.games.sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+
+        pair.games.forEach(game => {
+            const listItem = document.createElement('li');
+            listItem.style.fontSize = '0.85rem';
+            listItem.style.marginBottom = '3px';
+            listItem.style.color = 'var(--text-color)';
+            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Categoría: ${categoryNames[game.category]}`;
+            detailsList.appendChild(listItem);
+        });
+
+        duelList.appendChild(duelSummaryDiv);
+    }
+}
     
 
     // =====================================================================
@@ -1229,7 +1517,8 @@
                 } else {
                     showScreen('set-player-name-screen'); // Si está logueado pero sin nombre, va a establecer nombre
                 }
-            } else {
+            }
+             else {
                 // Si el email guardado no corresponde a un usuario, limpiar sesión y mostrar login
                 localStorage.removeItem('loggedInUserEmail');
                 showScreen('login-screen');
