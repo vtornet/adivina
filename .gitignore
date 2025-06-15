@@ -1,0 +1,30 @@
+<<<<<<< HEAD
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Editor y entorno
+.vscode/
+.idea/
+*.log
+*.tmp
+*.swp
+
+# Archivos de construcción
+dist/
+build/
+
+# Dependencias (si llegas a usar Node.js o similares)
+node_modules/
+
+# Variables de entorno
+.env
+=======
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+dist/
+*.log
+.vscode/
+>>>>>>> 098a320f2014647dfc8199539bcf5976fd612160
