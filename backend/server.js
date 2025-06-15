@@ -89,13 +89,13 @@ app.post('/api/register', async (req, res) => {
       password: hashedPassword
     });
 
-    await user.save();
+    await user.save(); // <-- ¿Se está ejecutando esta línea sin errores?
     res.status(201).json({ message: 'Usuario registrado exitosamente.' });
   } catch (err) {
-    console.error('Error en el registro:', err.message);
+    console.error('Error en el registro:', err.message); // <-- Si ves esto en los logs de Railway, hay un problema
     res.status(500).json({ message: 'Error del servidor.' });
   }
-});
+});;
 
 // Ruta de Login
 app.post('/api/login', async (req, res) => {
