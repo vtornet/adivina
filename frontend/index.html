@@ -1297,8 +1297,8 @@ async function loginUser() { // Añade 'async' aquí si no está
     async function loadUserScores(userEmail) { // Añade 'async' aquí si no está
         try {
             // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
-            const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
-            const data = await response.json(); // Esto será el objeto de puntuaciones o {}
+            const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/scores/</span>{userEmail}`); // <<< CORRECCIÓN CLAVE
+            const data = await response.json();
 
             if (response.ok) {
                 userAccumulatedScores[userEmail] = data; // Asigna directamente el objeto de puntuaciones
@@ -2073,32 +2073,24 @@ function renderDuelHistory() {
 
 window.onload = async () => {
     generateCategoryButtons();
-    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail'); // Mantenemos esto para saber si hubo una sesión previa
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
 
     if (loggedInUserEmail) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/users/${loggedInUserEmail}`);
-            const data = await response.json();
+        const users = JSON.parse(localStorage.getItem('users')) || {}; // <<< ¡PROBLEMA! Esto usa localStorage
+        const user = users[loggedInUserEmail]; // <<< ¡PROBLEMA! Esto usa localStorage
 
-            if (response.ok && data.user) {
-                currentUser = { email: data.user.email, playerName: data.user.playerName };
-                await loadUserScores(currentUser.email);
-                await loadGameHistory(currentUser.email);
+        if (user) {
+            currentUser = { email: loggedInUserEmail, playerName: user.playerName };
+            await loadUserScores(currentUser.email);
+            await loadGameHistory(currentUser.email);
 
-                if (currentUser.playerName) {
-                    showScreen('category-screen');
-                } else {
-                    showScreen('set-player-name-screen');
-                }
+            if (currentUser.playerName) {
+                showScreen('category-screen');
             } else {
-                // Si el usuario no se encuentra o hay un error al obtenerlo, limpia el local storage y pide login
-                console.warn(`No se pudo cargar el perfil del usuario ${loggedInUserEmail} desde la API:`, data.message || 'Error desconocido.');
-                localStorage.removeItem('loggedInUserEmail');
-                showScreen('login-screen');
+                showScreen('set-player-name-screen');
             }
-        } catch (error) {
-            console.error('Error de red al cargar el perfil del usuario al inicio:', error);
-            localStorage.removeItem('loggedInUserEmail'); // Limpiar para evitar bucles si hay problemas de red
+        } else {
+            localStorage.removeItem('loggedInUserEmail');
             showScreen('login-screen');
         }
     } else {
