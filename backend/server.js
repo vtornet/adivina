@@ -1,230 +1,244 @@
+// backend/server.js
+
+require('dotenv').config(); // Carga las variables de entorno del archivo .env
 const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const cors = require('cors'); // Importa el módulo CORS
-const path = require('path'); // Módulo para trabajar con rutas de archivos y directorios
+const { MongoClient, ObjectId } = require('mongodb'); // Importa ObjectId
+const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3000; // Usa el puerto de Railway o 3000 por defecto
+const port = process.env.PORT || 3000;
+const mongoUri = process.env.MONGODB_URI;
 
-// ** Configuración de CORS **
-// Permite peticiones desde tus orígenes de frontend
-const corsOptions = {
-  origin: [
-    'https://adivinala.netlify.app',
-    'http://localhost:5500',
-    'http://127.0.0.1:5500'
-  ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Esto es importante si manejas cookies o sesiones
-  optionsSuccessStatus: 204 // Para pre-vuelos OPTIONS
-};
+let db; // Variable para almacenar la conexión a la base de datos
 
-app.use(cors(corsOptions)); // Aplica la configuración de CORS a la aplicación Express
-app.use(express.json()); // Middleware para parsear cuerpos de peticiones JSON
+// Middleware
+app.use(cors()); // Habilita CORS para permitir peticiones desde tu frontend
+app.use(express.json()); // Permite a Express parsear JSON en las peticiones
 
-// Conexión a MongoDB (usando la variable de entorno de Railway para la URI)
-const dbUri = process.env.MONGO_URI;
-
-mongoose.connect(dbUri)
-  .then(() => console.log('Conectado a MongoDB Atlas'))
-  .catch(err => console.error('Error de conexión a MongoDB Atlas:', err));
-
-// Esquemas y Modelos de Mongoose
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  playerName: { type: String, default: null }
-});
-
-const scoreSchema = new mongoose.Schema({
-    email: { type: String, required: true }, // Referencia al usuario
-    category: { type: String, required: true },
-    score: { type: Number, default: 0 }
-});
-
-const gameHistorySchema = new mongoose.Schema({
-    date: { type: String, required: true },
-    players: [
-        {
-            name: { type: String, required: true },
-            score: { type: Number, required: true },
-            email: { type: String, default: null } // Email del jugador si está logueado
-        }
-    ],
-    winner: { type: String, required: true },
-    category: { type: String, required: true }
-});
-
-
-const User = mongoose.model('User', userSchema);
-const Score = mongoose.model('Score', scoreSchema);
-const GameHistory = mongoose.model('GameHistory', gameHistorySchema);
+// Conexión a la base de datos
+async function connectToDb() {
+    try {
+        const client = new MongoClient(mongoUri);
+        await client.connect();
+        db = client.db('adivinaLaCancionDB'); // Nombre de tu base de datos
+        console.log('Conectado a MongoDB Atlas');
+    } catch (error) {
+        console.error('Error al conectar a la base de datos:', error);
+        process.exit(1); // Sale de la aplicación si no puede conectar
+    }
+}
 
 // Rutas de la API
 
-// Ruta de Registro
+// Endpoint de prueba
+app.get('/', (req, res) => {
+    res.send('API del juego Adivina la Canción funcionando!');
+});
+// ... (código anterior: inicialización y conexión a DB)
+
+// =====================================================================
+// RUTAS DE AUTENTICACIÓN Y PERFIL DE USUARIO
+// =====================================================================
+
+// POST /api/register
+// Registra un nuevo usuario.
 app.post('/api/register', async (req, res) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  try {
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: 'El usuario ya existe.' });
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email y contraseña son requeridos.' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    user = new User({
-      email,
-      password: hashedPassword
-    });
-
-    await user.save();
-    res.status(201).json({ message: 'Usuario registrado exitosamente.' });
-  } catch (err) {
-    console.error('Error en el registro:', err.message);
-    res.status(500).json({ message: 'Error del servidor.' });
-  }
-});
-
-// Ruta de Login
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'Credenciales inválidas.' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Credenciales inválidas.' });
-    }
-
-    // Devuelve el usuario (sin la contraseña)
-    res.status(200).json({
-      message: 'Inicio de sesión exitoso.',
-      user: { email: user.email, playerName: user.playerName }
-    });
-  } catch (err) {
-    console.error('Error en el login:', err.message);
-    res.status(500).json({ message: 'Error del servidor.' });
-  }
-});
-
-// Ruta para obtener el perfil de un usuario por email
-app.get('/api/users/:email', async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.params.email }).select('-password'); // Excluir la contraseña
-        if (!user) {
+        const usersCollection = db.collection('users');
+        const existingUser = await usersCollection.findOne({ email });
+
+        if (existingUser) {
+            return res.status(409).json({ message: 'Este email ya está registrado.' });
+        }
+
+        // En un entorno de producción, hashearías la contraseña aquí (ej. con bcrypt)
+        const newUser = {
+            email,
+            password, // Considera hashear esto en producción
+            playerName: null // Nombre de jugador inicial nulo
+        };
+
+        await usersCollection.insertOne(newUser);
+        res.status(201).json({ message: 'Usuario registrado exitosamente.' });
+    } catch (error) {
+        console.error('Error al registrar usuario:', error);
+        res.status(500).json({ message: 'Error interno del servidor al registrar usuario.' });
+    }
+});
+
+// POST /api/login
+// Inicia sesión un usuario.
+app.post('/api/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email y contraseña son requeridos.' });
+    }
+
+    try {
+        const usersCollection = db.collection('users');
+        const user = await usersCollection.findOne({ email });
+
+        if (!user || user.password !== password) { // Compara la contraseña (sin hashear en este ejemplo)
+            return res.status(401).json({ message: 'Email o contraseña incorrectos.' });
+        }
+
+        // Login exitoso, devuelve datos del usuario (sin la contraseña)
+        res.status(200).json({
+            message: 'Login exitoso.',
+            user: {
+                email: user.email,
+                playerName: user.playerName
+            }
+        });
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        res.status(500).json({ message: 'Error interno del servidor al iniciar sesión.' });
+    }
+});
+
+// PUT /api/users/:email/playername
+// Actualiza el nombre de jugador de un usuario.
+app.put('/api/users/:email/playername', async (req, res) => {
+    const { email } = req.params;
+    const { playerName } = req.body;
+
+    if (!playerName) {
+        return res.status(400).json({ message: 'El nombre de jugador es requerido.' });
+    }
+
+    try {
+        const usersCollection = db.collection('users');
+        const result = await usersCollection.updateOne(
+            { email },
+            { $set: { playerName } }
+        );
+
+        if (result.matchedCount === 0) {
             return res.status(404).json({ message: 'Usuario no encontrado.' });
         }
-        res.status(200).json({ user });
-    } catch (err) {
-        console.error('Error al obtener usuario:', err.message);
-        res.status(500).json({ message: 'Error del servidor.' });
+
+        res.status(200).json({ message: 'Nombre de jugador actualizado exitosamente.' });
+    } catch (error) {
+        console.error('Error al actualizar nombre de jugador:', error);
+        res.status(500).json({ message: 'Error interno del servidor al actualizar nombre de jugador.' });
     }
 });
+// ... (código anterior: inicialización, conexión a DB, rutas de autenticación)
 
-// Ruta para actualizar el nombre de jugador de un usuario
-app.put('/api/users/:email/playername', async (req, res) => {
-  const { playerName } = req.body;
-  const { email } = req.params;
+// =====================================================================
+// RUTAS DE PUNTUACIONES ACUMULADAS (PARA UN SOLO JUGADOR)
+// =====================================================================
 
-  try {
-    const user = await User.findOneAndUpdate(
-      { email },
-      { $set: { playerName } },
-      { new: true } // Devuelve el documento actualizado
-    ).select('-password');
-
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado.' });
-    }
-
-    res.status(200).json({
-      message: 'Nombre de jugador actualizado exitosamente.',
-      user: { email: user.email, playerName: user.playerName }
-    });
-  } catch (err) {
-    console.error('Error al actualizar nombre de jugador:', err.message);
-    res.status(500).json({ message: 'Error del servidor.' });
-  }
-});
-
-// Ruta para obtener las puntuaciones acumuladas de un usuario
+// GET /api/scores/:email
+// Obtiene las puntuaciones acumuladas de un usuario por categoría.
 app.get('/api/scores/:email', async (req, res) => {
+    const { email } = req.params;
+
     try {
-        const scores = await Score.find({ email: req.params.email });
-        const aggregatedScores = {};
-        scores.forEach(s => {
-            aggregatedScores[s.category] = s.score;
-        });
-        res.status(200).json(aggregatedScores); // Devuelve un objeto { categoria: puntuacion, ... }
-    } catch (err) {
-        console.error('Error al obtener puntuaciones:', err.message);
-        res.status(500).json({ message: 'Error del servidor.' });
+        const scoresCollection = db.collection('userScores');
+        const userScores = await scoresCollection.findOne({ email });
+
+        if (!userScores) {
+            // Si el usuario no tiene puntuaciones, devuelve un objeto vacío
+            return res.status(200).json({});
+        }
+
+        // Excluye el _id de la respuesta si no es necesario en el frontend
+        const { _id, ...scores } = userScores;
+        res.status(200).json(scores);
+    } catch (error) {
+        console.error('Error al obtener puntuaciones acumuladas:', error);
+        res.status(500).json({ message: 'Error interno del servidor al obtener puntuaciones.' });
     }
 });
 
-// Ruta para guardar/actualizar una puntuación acumulada
+// POST /api/scores
+// Actualiza/guarda la puntuación acumulada de un usuario para una categoría.
 app.post('/api/scores', async (req, res) => {
     const { email, category, score } = req.body;
 
+    if (!email || !category || typeof score !== 'number') {
+        return res.status(400).json({ message: 'Email, categoría y puntuación son requeridos.' });
+    }
+
     try {
-        // Encontrar y actualizar la puntuación existente o crear una nueva
-        const result = await Score.findOneAndUpdate(
-            { email: email, category: category },
-            { $inc: { score: score } }, // $inc incrementa el valor existente
-            { upsert: true, new: true } // upsert: si no existe, lo crea; new: devuelve el doc actualizado
+        const scoresCollection = db.collection('userScores');
+        // Usamos $inc para sumar a la puntuación existente o crearla si no existe
+        const result = await scoresCollection.updateOne(
+            { email },
+            { $inc: { [category]: score } }, // Suma 'score' a la categoría especificada
+            { upsert: true } // Crea el documento si no existe
         );
-        res.status(200).json({ message: 'Puntuación acumulada guardada exitosamente.', score: result });
-    } catch (err) {
-        console.error('Error al guardar puntuación acumulada:', err.message);
-        res.status(500).json({ message: 'Error del servidor.' });
+
+        if (result.matchedCount === 0 && result.upsertedCount === 0) {
+             return res.status(500).json({ message: 'No se pudo actualizar o crear la puntuación.' });
+        }
+
+        res.status(200).json({ message: 'Puntuación acumulada actualizada exitosamente.' });
+    } catch (error) {
+        console.error('Error al guardar puntuación acumulada:', error);
+        res.status(500).json({ message: 'Error interno del servidor al guardar puntuación.' });
     }
 });
 
-// Ruta para obtener el historial de partidas de un usuario logueado
+// =====================================================================
+// RUTAS DE HISTORIAL DE PARTIDAS (PARA MULTIJUGADOR)
+// =====================================================================
+
+// GET /api/gamehistory/:email
+// Obtiene el historial de partidas donde participó un usuario.
 app.get('/api/gamehistory/:email', async (req, res) => {
+    const { email } = req.params;
+
     try {
-        // Busca partidas donde el email del usuario logueado esté entre los jugadores
-        const history = await GameHistory.find({ 'players.email': req.params.email }).sort({ date: -1 }); // Ordenar por fecha descendente
-        res.status(200).json(history);
-    } catch (err) {
-        console.error('Error al obtener historial de partidas:', err.message);
-        res.status(500).json({ message: 'Error del servidor.' });
+        const historyCollection = db.collection('gameHistory');
+        // Busca partidas donde el email del usuario logueado esté en el array de jugadores
+        // Nota: Se asume que en el frontend, al guardar la partida, incluyes el email en el array 'players'
+        const userGames = await historyCollection.find({ 'players.email': email }).toArray();
+
+        res.status(200).json(userGames);
+    } catch (error) {
+        console.error('Error al obtener historial de partidas:', error);
+        res.status(500).json({ message: 'Error interno del servidor al obtener historial.' });
     }
 });
 
-// Ruta para guardar un resultado de partida multijugador
+// POST /api/gamehistory
+// Guarda un nuevo resultado de partida multijugador.
 app.post('/api/gamehistory', async (req, res) => {
     const { date, players, winner, category } = req.body;
 
+    if (!date || !Array.isArray(players) || players.length === 0 || !winner || !category) {
+        return res.status(400).json({ message: 'Datos de partida incompletos.' });
+    }
+
     try {
-        const newGame = new GameHistory({
+        const historyCollection = db.collection('gameHistory');
+        const newGame = {
             date,
-            players,
+            players, // Array de objetos { name, score, email (opcional) }
             winner,
             category
-        });
-        await newGame.save();
-        res.status(201).json({ message: 'Historial de partida guardado exitosamente.', game: newGame });
-    } catch (err) {
-        console.error('Error al guardar historial de partida:', err.message);
-        res.status(500).json({ message: 'Error del servidor.' });
+        };
+        await historyCollection.insertOne(newGame);
+        res.status(201).json({ message: 'Resultado de partida guardado exitosamente.' });
+    } catch (error) {
+        console.error('Error al guardar resultado de partida:', error);
+        res.status(500).json({ message: 'Error interno del servidor al guardar resultado.' });
     }
 });
+// ... (código anterior: todas las rutas de la API)
 
-// Ruta de prueba para verificar que el servidor está funcionando
-app.get('/', (req, res) => {
-  res.send('Servidor de Adivina la Canción está funcionando.');
-});
-
-// Escucha en el puerto configurado
-app.listen(port, () => {
-  console.log(`Servidor de Adivina la Canción escuchando en el puerto ${port}`);
+// Inicia el servidor
+connectToDb().then(() => {
+    app.listen(port, () => {
+        console.log(`Servidor backend escuchando en http://localhost:${port}`);
+    });
 });
