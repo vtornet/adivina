@@ -641,7 +641,7 @@
 </div>
 
 <div id="set-player-name-screen" class="screen">
-    <div id="game-info" style="margin-bottom: 15px;">
+    <div id="set-player-game-info" style="margin-bottom: 15px;">
         </div>
     <h2>Nombre de Jugador</h2>
     <input type="text" id="player-name-input" class="text-input" placeholder="Introduce tu nombre de jugador">
@@ -1122,6 +1122,8 @@ series: [
     const sfxAcierto = document.getElementById('sfx-acierto');
     const sfxError = document.getElementById('sfx-error');
 
+    const API_BASE_URL = 'https://accomplished-balance-production.up.railway.app';
+
     // Estado global para el usuario logueado
     let currentUser = null; // Almacenará { email: '', playerName: '' }
     // Objetos para almacenar las puntuaciones acumuladas y el historial de partidas en memoria
@@ -1151,77 +1153,92 @@ series: [
     }
 
     // Función de registro de usuario
-    function registerUser() {
-        const emailInput = document.getElementById('register-email');
-        const passwordInput = document.getElementById('register-password');
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
+    // CÓDIGO CORRECTO para la función registerUser()
+async function registerUser() { // Añade 'async' aquí si no está
+    const emailInput = document.getElementById('register-email');
+    const passwordInput = document.getElementById('register-password');
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
 
-        if (!email || !password) {
-            alert('Por favor, introduce un email y una contraseña.');
-            return;
-        }
-        if (!isValidEmail(email)) {
-            alert('Por favor, introduce un email válido.');
-            return;
-        }
-
-        // Recuperar usuarios existentes de localStorage
-        const users = JSON.parse(localStorage.getItem('users')) || {};
-
-        if (users[email]) {
-            alert('Este email ya está registrado. Por favor, inicia sesión o usa otro email.');
-            return;
-        }
-
-        // Guardar nuevo usuario (contraseña en texto plano por ahora, no es seguro para producción)
-        users[email] = { password: password, playerName: null }; // playerName es null al principio
-        localStorage.setItem('users', JSON.stringify(users));
-
-        alert('¡Registro exitoso! Ya puedes iniciar sesión.');
-        emailInput.value = '';
-        passwordInput.value = '';
-        showScreen('login-screen');
+    if (!email || !password) {
+        alert('Por favor, introduce un email y una contraseña.');
+        return;
     }
+    if (!isValidEmail(email)) {
+        alert('Por favor, introduce un email válido.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message);
+            emailInput.value = '';
+            passwordInput.value = '';
+            showScreen('login-screen');
+        } else {
+            alert(`Error al registrar: ${data.message}`);
+        }
+    } catch (error) {
+        console.error('Error de red durante el registro:', error);
+        alert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
 
     // Función de login de usuario (MODIFICADA para cargar historial y puntuaciones acumuladas)
-    function loginUser() {
-        const emailInput = document.getElementById('login-email');
-        const passwordInput = document.getElementById('login-password');
-        const email = emailInput.value.trim();
-        const password = passwordInput.value.trim();
+    // CÓDIGO CORRECTO para la función loginUser()
+async function loginUser() { // Añade 'async' aquí si no está
+    const emailInput = document.getElementById('login-email');
+    const passwordInput = document.getElementById('login-password');
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
 
-        if (!email || !password) {
-            alert('Por favor, introduce tu email y contraseña.');
-            return;
-        }
-
-        const users = JSON.parse(localStorage.getItem('users')) || {};
-        const user = users[email];
-
-        if (!user || user.password !== password) {
-            alert('Email o contraseña incorrectos.');
-            return;
-        }
-
-        // Login exitoso
-        currentUser = { email: email, playerName: user.playerName };
-        localStorage.setItem('loggedInUserEmail', email); 
-
-        // Cargar las puntuaciones acumuladas y el historial de partidas del usuario logueado
-        loadUserScores(currentUser.email); 
-        loadGameHistory(); // NUEVA LLAMADA: Cargar el historial de partidas al loguear
-
-        alert(`¡Bienvenido, ${user.playerName || email}!`); 
-        emailInput.value = '';
-        passwordInput.value = '';
-
-        if (currentUser.playerName) {
-            showScreen('category-screen');
-        } else {
-            showScreen('set-player-name-screen');
-        }
+    if (!email || !password) {
+        alert('Por favor, introduce tu email y contraseña.');
+        return;
     }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            currentUser = { email: data.user.email, playerName: data.user.playerName };
+            localStorage.setItem('loggedInUserEmail', data.user.email); // Mantén esto para el auto-login
+
+            alert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
+            emailInput.value = '';
+            passwordInput.value = '';
+
+            // Cargar puntuaciones e historial DE LA BASE DE DATOS
+            await loadUserScores(currentUser.email);
+            await loadGameHistory(currentUser.email); // Ahora necesita el email para filtrar por usuario
+
+            if (currentUser.playerName) {
+                showScreen('category-screen');
+            } else {
+                showScreen('set-player-name-screen');
+            }
+        } else {
+            alert(`Error al iniciar sesión: ${data.message}`);
+        }
+    } catch (error) {
+        console.error('Error de red durante el login:', error);
+        alert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
 
     // Función para cerrar sesión
     function logout() {
@@ -1232,7 +1249,8 @@ series: [
     }
 
     // Función para establecer el nombre de jugador
-    function setPlayerName() {
+    // CÓDIGO CORRECTO para la función setPlayerName()
+    async function setPlayerName() { // Añade 'async' aquí si no está
         const playerNameInput = document.getElementById('player-name-input');
         const newPlayerName = playerNameInput.value.trim();
 
@@ -1242,14 +1260,28 @@ series: [
         }
 
         if (currentUser) {
-            const users = JSON.parse(localStorage.getItem('users')) || {};
-            users[currentUser.email].playerName = newPlayerName;
-            localStorage.setItem('users', JSON.stringify(users));
+            try {
+                // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
+                const response = await fetch(`${API_BASE_URL}/api/users/${currentUser.email}/playername`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ playerName: newPlayerName })
+                });
 
-            currentUser.playerName = newPlayerName; // Actualiza el objeto currentUser en memoria
-            alert(`Tu nombre de jugador "${newPlayerName}" ha sido establecido.`);
-            playerNameInput.value = ''; // Limpiar el input
-            showScreen('category-screen'); // Ir a la selección de categoría
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentUser.playerName = newPlayerName; // Actualiza el objeto currentUser en memoria
+                    alert(data.message);
+                    playerNameInput.value = '';
+                    showScreen('category-screen');
+                } else {
+                    alert(`Error al actualizar nombre: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error de red al establecer nombre de jugador:', error);
+                alert('Error de conexión. Intenta de nuevo más tarde.');
+            }
         } else {
             alert('No hay un usuario logueado. Por favor, inicia sesión primero.');
             showScreen('login-screen');
@@ -1261,44 +1293,76 @@ series: [
     // FUNCIONES PARA GESTIÓN DE PUNTUACIONES ACUMULADAS Y HISTORIAL
     // =====================================================================
 
-    function loadUserScores(userEmail) {
-        const storedScores = JSON.parse(localStorage.getItem('userScores')) || {};
-        userAccumulatedScores = storedScores;
+    // CÓDIGO CORRECTO para la función loadUserScores(userEmail)
+    async function loadUserScores(userEmail) { // Añade 'async' aquí si no está
+        try {
+            // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
+            const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
+            const data = await response.json(); // Esto será el objeto de puntuaciones o {}
 
-        // Inicializar el usuario si no tiene puntuaciones previas
-        if (!userAccumulatedScores[userEmail]) {
-            userAccumulatedScores[userEmail] = {};
+            if (response.ok) {
+                userAccumulatedScores[userEmail] = data; // Asigna directamente el objeto de puntuaciones
+                console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+            } else {
+                console.error('Error al cargar puntuaciones:', data.message);
+                userAccumulatedScores[userEmail] = {}; // Inicializa vacío en caso de error
+            }
+        } catch (error) {
+            console.error('Error de red al cargar puntuaciones:', error);
+            userAccumulatedScores[userEmail] = {}; // Inicializa vacío en caso de error de red
         }
-        console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
     }
 
-    function saveUserScores(userEmail, category, score) {
+    // CÓDIGO CORRECTO para la función saveUserScores(userEmail, category, score)
+    async function saveUserScores(userEmail, category, score) { // Añade 'async' aquí si no está
         if (!userEmail || !category || typeof score !== 'number') {
             console.error("Error: Datos incompletos para guardar puntuación acumulada.");
             return;
         }
 
-        // Asegurarse de que el usuario existe en el objeto de puntuaciones acumuladas
-        if (!userAccumulatedScores[userEmail]) {
-            userAccumulatedScores[userEmail] = {};
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/scores`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: userEmail, category, score })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log(data.message);
+                // Opcional: Recargar la puntuación después de guardar para mantener userAccumulatedScores sincronizado
+                await loadUserScores(userEmail); // Recarga para actualizar el estado local
+            } else {
+                console.error('Error al guardar puntuación:', data.message);
+            }
+        } catch (error) {
+            console.error('Error de red al guardar puntuación:', error);
         }
-
-        // Sumar los puntos obtenidos en la partida a la categoría correspondiente
-        userAccumulatedScores[userEmail][category] = (userAccumulatedScores[userEmail][category] || 0) + score;
-
-        // Guardar el objeto actualizado en localStorage
-        localStorage.setItem('userScores', JSON.stringify(userAccumulatedScores));
-        console.log(`Puntuación de ${userEmail} actualizada para ${category}: ${userAccumulatedScores[userEmail][category]}`);
     }
 
-    function loadGameHistory() {
-        const storedHistory = JSON.parse(localStorage.getItem('gameHistory')) || [];
-        gameHistory = storedHistory;
-        console.log("Historial de partidas cargado:", gameHistory);
+    // CÓDIGO CORRECTO para la función loadGameHistory(userEmail)
+    async function loadGameHistory(userEmail) { // Añade 'async' aquí y el parámetro
+        try {
+            // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
+            const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
+            const data = await response.json(); // Esto será el array de historial
+
+            if (response.ok) {
+                gameHistory = data; // Asigna directamente el array de historial
+                console.log("Historial de partidas cargado:", gameHistory);
+            } else {
+                console.error('Error al cargar historial:', data.message);
+                gameHistory = []; // Inicializa vacío en caso de error
+            }
+        } catch (error) {
+            console.error('Error de red al cargar historial:', error);
+            gameHistory = []; // Inicializa vacío en caso de error de red
+        }
     }
 
-    function saveGameResult(players, winnerName, category) {
-        // Obtenemos la fecha actual en formato DD/MM/AAAA
+    // CÓDIGO CORRECTO para la función saveGameResult(players, winnerName, category)
+    async function saveGameResult(players, winnerName, category) { // Añade 'async' aquí si no está
         const today = new Date();
         const day = String(today.getDate()).padStart(2, '0');
         const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses son 0-11
@@ -1307,13 +1371,33 @@ series: [
 
         const gameResult = {
             date: formattedDate,
-            players: players.map(p => p.name), // Guardar solo los nombres de los jugadores
+            // Importante: mapea los jugadores para enviar solo lo necesario y el email si existe
+            players: players.map(p => ({ name: p.name, score: p.score, email: p.email || null })),
             winner: winnerName,
             category: category
         };
-        gameHistory.push(gameResult);
-        localStorage.setItem('gameHistory', JSON.stringify(gameHistory));
-        console.log("Resultado de partida guardado:", gameResult);
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/gamehistory`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(gameResult)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log(data.message);
+                // Opcional: Recargar el historial después de guardar, si el currentUser está logueado
+                if (currentUser && currentUser.email) {
+                    await loadGameHistory(currentUser.email);
+                }
+            } else {
+                console.error('Error al guardar historial de partida:', data.message);
+            }
+        } catch (error) {
+            console.error('Error de red al guardar historial de partida:', error);
+        }
     }
 
     // Función para calcular victorias entre dos jugadores específicos (para la futura pantalla de stats)
@@ -1423,6 +1507,7 @@ series: [
             score: 0, 
             questionsAnswered: 0, 
             questions: [] 
+            , email: currentUser.email
         });
 
         // Recopilar nombres de otros jugadores si existen
@@ -1986,30 +2071,42 @@ function renderDuelHistory() {
     // INICIALIZACIÓN (Modificada para gestionar sesión)
     // =====================================================================
 
-    window.onload = () => {
-        generateCategoryButtons();
-        // Intentar cargar la sesión del usuario
-        const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-        if (loggedInUserEmail) {
-            const users = JSON.parse(localStorage.getItem('users')) || {};
-            const user = users[loggedInUserEmail];
-            if (user) {
-                currentUser = { email: loggedInUserEmail, playerName: user.playerName };
+    // Dentro de las etiquetas <script>...</script> en index.html
+
+window.onload = async () => {
+    generateCategoryButtons();
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail'); // Mantenemos esto para saber si hubo una sesión previa
+
+    if (loggedInUserEmail) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/users/${loggedInUserEmail}`);
+            const data = await response.json();
+
+            if (response.ok && data.user) {
+                currentUser = { email: data.user.email, playerName: data.user.playerName };
+                await loadUserScores(currentUser.email);
+                await loadGameHistory(currentUser.email);
+
                 if (currentUser.playerName) {
-                    showScreen('category-screen'); // Si ya tiene nombre, va directo a categorías
+                    showScreen('category-screen');
                 } else {
-                    showScreen('set-player-name-screen'); // Si está logueado pero sin nombre, va a establecer nombre
+                    showScreen('set-player-name-screen');
                 }
-            }
-             else {
-                // Si el email guardado no corresponde a un usuario, limpiar sesión y mostrar login
+            } else {
+                // Si el usuario no se encuentra o hay un error al obtenerlo, limpia el local storage y pide login
+                console.warn(`No se pudo cargar el perfil del usuario ${loggedInUserEmail} desde la API:`, data.message || 'Error desconocido.');
                 localStorage.removeItem('loggedInUserEmail');
                 showScreen('login-screen');
             }
-        } else {
-            showScreen('home-screen'); // Si no hay sesión, ir a la pantalla de inicio (que redirigirá a login)
+        } catch (error) {
+            console.error('Error de red al cargar el perfil del usuario al inicio:', error);
+            localStorage.removeItem('loggedInUserEmail'); // Limpiar para evitar bucles si hay problemas de red
+            showScreen('login-screen');
         }
-    };
+    } else {
+        showScreen('home-screen');
+    }
+};
     </script>
 </body>
 </html>
