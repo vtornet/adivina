@@ -1262,7 +1262,7 @@ async function loginUser() { // Añade 'async' aquí si no está
         if (currentUser) {
             try {
                 // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
-                const response = await fetch(`${API_BASE_URL}/api/users/${currentUser.email}/playername`, {
+                const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/users/</span>{currentUser.email}/playername`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ playerName: newPlayerName })
@@ -1297,7 +1297,7 @@ async function loginUser() { // Añade 'async' aquí si no está
     async function loadUserScores(userEmail) { // Añade 'async' aquí si no está
         try {
             // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
-            const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/scores/</span>{userEmail}`); // <<< CORRECCIÓN CLAVE
+            const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/scores/</span>{userEmail}`);
             const data = await response.json();
 
             if (response.ok) {
@@ -1345,7 +1345,7 @@ async function loginUser() { // Añade 'async' aquí si no está
     async function loadGameHistory(userEmail) { // Añade 'async' aquí y el parámetro
         try {
             // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
-            const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/gamehistory/</span>{userEmail}`); // <--- CORRECCIÓN CLAVE: USA BACKTICKS
+            const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
             const data = await response.json();
 
             if (response.ok) {
