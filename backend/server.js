@@ -7,7 +7,7 @@ const cors = require('cors'); // Importa el módulo CORS
 const path = require('path'); // Módulo para trabajar con rutas de archivos y directorios
 
 const app = express();
-const port = process.env.PORT || 3000; // Usa el puerto de Railway o 3000 por defecto
+const port = process.env.PORT || 3000;
 
 // ** Configuración de CORS **
 // Permite peticiones desde tus orígenes de frontend
@@ -39,18 +39,22 @@ mongoose.connect(dbUri)
   .catch(err => console.error('Error de conexión a MongoDB Atlas:', err));
 
 // Esquemas y Modelos de Mongoose
+
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   playerName: { type: String, default: null }
 });
 
+// MODIFICACIÓN CRUCIAL: Añadido el campo 'decade'
 const scoreSchema = new mongoose.Schema({
     email: { type: String, required: true }, // Referencia al usuario
+    decade: { type: String, required: true }, // NUEVO CAMPO: década de la puntuación
     category: { type: String, required: true },
     score: { type: Number, default: 0 }
 });
 
+// MODIFICACIÓN CRUCIAL: Añadido el campo 'decade'
 const gameHistorySchema = new mongoose.Schema({
     date: { type: String, required: true },
     players: [
@@ -61,6 +65,7 @@ const gameHistorySchema = new mongoose.Schema({
         }
     ],
     winner: { type: String, required: true },
+    decade: { type: String, required: true }, // NUEVO CAMPO: década de la partida
     category: { type: String, required: true }
 });
 
@@ -89,10 +94,10 @@ app.post('/api/register', async (req, res) => {
       password: hashedPassword
     });
 
-    await user.save(); // <-- ¿Se está ejecutando esta línea sin errores?
+    await user.save();
     res.status(201).json({ message: 'Usuario registrado exitosamente.' });
   } catch (err) {
-    console.error('Error en el registro:', err.message); // <-- Si ves esto en los logs de Railway, hay un problema
+    console.error('Error en el registro:', err.message);
     res.status(500).json({ message: 'Error del servidor.' });
   }
 });;
@@ -163,29 +168,32 @@ app.put('/api/users/:email/playername', async (req, res) => {
   }
 });
 
-// Ruta para obtener las puntuaciones acumuladas de un usuario
+// MODIFICACIÓN: Ruta para obtener todas las puntuaciones de un usuario (filtradas por email)
+// Ahora devuelve un array de objetos Score: [{ email, decade, category, score }, ...]
+// NO UN OBJETO AGREGADO POR CATEGORIA COMO ANTES
 app.get('/api/scores/:email', async (req, res) => {
     try {
         const scores = await Score.find({ email: req.params.email });
-        const aggregatedScores = {};
-        scores.forEach(s => {
-            aggregatedScores[s.category] = s.score;
-        });
-        res.status(200).json(aggregatedScores); // Devuelve un objeto { categoria: puntuacion, ... }
+        // Se devuelve directamente el array de scores tal como está en la DB
+        res.status(200).json(scores);
     } catch (err) {
         console.error('Error al obtener puntuaciones:', err.message);
         res.status(500).json({ message: 'Error del servidor.' });
     }
 });
 
-// Ruta para guardar/actualizar una puntuación acumulada
+// MODIFICACIÓN: Ruta para guardar/actualizar una puntuación acumulada con década
 app.post('/api/scores', async (req, res) => {
-    const { email, category, score } = req.body;
+    const { email, decade, category, score } = req.body;
+
+    if (!email || !decade || !category || typeof score === 'undefined') {
+        return res.status(400).json({ message: 'Faltan datos para guardar la puntuación (email, decade, category, score).' });
+    }
 
     try {
         // Encontrar y actualizar la puntuación existente o crear una nueva
         const result = await Score.findOneAndUpdate(
-            { email: email, category: category },
+            { email: email, decade: decade, category: category }, // Clave compuesta por email, decade, category
             { $inc: { score: score } }, // $inc incrementa el valor existente
             { upsert: true, new: true } // upsert: si no existe, lo crea; new: devuelve el doc actualizado
         );
@@ -196,11 +204,11 @@ app.post('/api/scores', async (req, res) => {
     }
 });
 
-// Ruta para obtener el historial de partidas de un usuario logueado
+// MODIFICACIÓN: Ruta para obtener el historial de partidas de un usuario logueado
+// Ahora busca por 'players.email' y devuelve el campo 'decade'
 app.get('/api/gamehistory/:email', async (req, res) => {
     try {
-        // Busca partidas donde el email del usuario logueado esté entre los jugadores
-        const history = await GameHistory.find({ 'players.email': req.params.email }).sort({ date: -1 }); // Ordenar por fecha descendente
+        const history = await GameHistory.find({ 'players.email': req.params.email }).sort({ date: -1 });
         res.status(200).json(history);
     } catch (err) {
         console.error('Error al obtener historial de partidas:', err.message);
@@ -208,15 +216,20 @@ app.get('/api/gamehistory/:email', async (req, res) => {
     }
 });
 
-// Ruta para guardar un resultado de partida multijugador
+// MODIFICACIÓN: Ruta para guardar un resultado de partida multijugador con década
 app.post('/api/gamehistory', async (req, res) => {
-    const { date, players, winner, category } = req.body;
+    const { date, players, winner, decade, category } = req.body; // Recibe la década
+
+    if (!date || !players || !winner || !decade || !category) {
+        return res.status(400).json({ message: 'Faltan datos para guardar el historial de partida (date, players, winner, decade, category).' });
+    }
 
     try {
         const newGame = new GameHistory({
             date,
             players,
             winner,
+            decade, // Guardamos la década
             category
         });
         await newGame.save();
@@ -227,12 +240,10 @@ app.post('/api/gamehistory', async (req, res) => {
     }
 });
 
-// Ruta de prueba para verificar que el servidor está funcionando
 app.get('/', (req, res) => {
   res.send('Servidor de Adivina la Canción está funcionando.');
 });
 
-// Escucha en el puerto configurado
 app.listen(port, () => {
   console.log(`Servidor de Adivina la Canción escuchando en el puerto ${port}`);
 });
