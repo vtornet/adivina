@@ -901,7 +901,7 @@
     { file: 'carros-de-fuego - 1981.mp3', display: 'Carros de Fuego - 1981', listenUrl: 'https://www.youtube.com/results?search_query=Carros+de+Fuego+1981', platform: 'youtube' },
     { file: 'casablanca - 1942.mp3', display: 'Casablanca - 1942', listenUrl: 'https://www.youtube.com/results?search_query=Casablanca+1942', platform: 'youtube' },
     { file: 'cazafantasmas - 1984.mp3', display: 'Cazafantasmas - 1984', listenUrl: 'https://www.youtube.com/results?search_query=Cazafantasmas+1984', platform: 'youtube' },
-    { file: 'conan-el-barbaro - 1982.mp3', display: 'Conan el Bárbaro - 1982', listenUrl: 'https://www.youtube.com/results?search_query=Conan+el+Barbaro+1982', platform: 'youtube' },
+    { file: 'conan-el-barbaro - 1982.mpay', display: 'Conan el Bárbaro - 1982', listenUrl: 'https://www.youtube.com/results?search_query=Conan+el+Barbaro+1982', platform: 'youtube' },
     { file: 'dirty-dancing - 1987.mp3', display: 'Dirty Dancing - 1987', listenUrl: 'https://www.youtube.com/results?search_query=Dirty+Dancing+1987', platform: 'youtube' },
     { file: 'el-bueno-el-feo-y-el-malo - 1966.mp3', display: 'El Bueno, el Feo y el Malo - 1966', listenUrl: 'https://www.youtube.com/results?search_query=El+Bueno+el+Feo+y+el+Malo+1966', platform: 'youtube' },
     { file: 'el-graduado - 1967.mp3', display: 'El Graduado - 1967', listenUrl: 'https://www.youtube.com/results?search_query=El+Graduado+1967', platform: 'youtube' },
@@ -1122,6 +1122,7 @@ series: [
     const sfxAcierto = document.getElementById('sfx-acierto');
     const sfxError = document.getElementById('sfx-error');
 
+    // CORRECCIÓN: Asegúrate de que esta URL sea la de tu backend de Railway
     const API_BASE_URL = 'https://accomplished-balance-production.up.railway.app';
 
     // Estado global para el usuario logueado
@@ -1262,7 +1263,7 @@ async function loginUser() { // Añade 'async' aquí si no está
         if (currentUser) {
             try {
                 // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
-                const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/users/</span>{currentUser.email}/playername`, {
+                const response = await fetch(`${API_BASE_URL}/api/users/${currentUser.email}/playername`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ playerName: newPlayerName })
@@ -1297,7 +1298,7 @@ async function loginUser() { // Añade 'async' aquí si no está
     async function loadUserScores(userEmail) { // Añade 'async' aquí si no está
         try {
             // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
-            const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/scores/</span>{userEmail}`);
+            const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
             const data = await response.json();
 
             if (response.ok) {
@@ -1412,7 +1413,8 @@ async function loginUser() { // Añade 'async' aquí si no está
         gameHistory.forEach(game => {
             // Asegurarse de que el juego sea un "duelo" y que los jugadores coincidan
             if (game.players.length === 2) {
-                const gamePlayersLower = game.players.map(name => name.toLowerCase()).sort(); // Ordenar para comparar independientemente del orden
+                // Modificado para acceder a 'name' dentro del objeto de jugador
+                const gamePlayersLower = game.players.map(p => p.name.toLowerCase()).sort(); 
                 const sortedDuelPlayers = [p1, p2].sort();
 
                 if (gamePlayersLower[0] === sortedDuelPlayers[0] && gamePlayersLower[1] === sortedDuelPlayers[1]) {
@@ -1506,8 +1508,8 @@ async function loginUser() { // Añade 'async' aquí si no está
             name: currentUser.playerName, 
             score: 0, 
             questionsAnswered: 0, 
-            questions: [] 
-            , email: currentUser.email
+            questions: [],
+            email: currentUser.email // Asegura que el email del jugador logueado se guarda
         });
 
         // Recopilar nombres de otros jugadores si existen
@@ -1520,6 +1522,7 @@ async function loginUser() { // Añade 'async' aquí si no está
                 score: 0, 
                 questionsAnswered: 0, 
                 questions: [] 
+                // No hay email para jugadores no logueados
             });
         }
 
@@ -1709,11 +1712,10 @@ async function loginUser() { // Añade 'async' aquí si no está
             // Verificar si hay más jugadores después del actual
             if (gameState.currentPlayerIndex < gameState.players.length) {
                 // Hay otro jugador: mostrar pantalla de transición
-                const nextPlayer = gameState.players[gameState.currentPlayerIndex];
                 document.getElementById('current-player-score-summary').textContent = 
                     `${currentPlayer.name} ha terminado su turno con ${currentPlayer.score} puntos.`;
                 document.getElementById('next-player-prompt').textContent = 
-                    `Siguiente jugador: ${nextPlayer.name}, ¿preparado para comenzar?`;
+                    `Siguiente jugador: ${gameState.players[gameState.currentPlayerIndex].name}, ¿preparado para comenzar?`;
                 showScreen('player-transition-screen');
             } else {
                 // Todos los jugadores han terminado sus preguntas
@@ -1936,7 +1938,7 @@ function displaySongsForCategory(categoryId) {
             
             const textContent = document.createElement('span');
             textContent.style.flexGrow = '1';
-            textContent.innerHTML = `<strong>${parseDisplay(song.display).artist}</strong>${parseDisplay(song.display).title ? `<br>${parseDisplay(song.display).title}` : ''}`;
+            textContent.innerHTML = `<strong>${parseDisplay(song.display).artist}</strong>${parsedDisplay(song.display).title ? `<br>${parseDisplay(song.display).title}` : ''}`;
             songDiv.appendChild(textContent);
 
             // Botón de "Oír" único
@@ -2017,11 +2019,13 @@ function renderDuelHistory() {
     const duelPairs = {}; // Clave: "JugadorA_JugadorB" (ordenado alfabéticamente)
     duels.forEach(game => {
         // Normalizar nombres para la clave del par (insensible a mayúsculas y minúsculas)
-        const playerNames = game.players.map(name => name.toLowerCase()).sort();
+        // CORRECCIÓN: Acceder a la propiedad 'name' de cada objeto jugador en game.players
+        const playerNames = game.players.map(p => p.name.toLowerCase()).sort();
         const pairKey = playerNames.join('_');
 
         if (!duelPairs[pairKey]) {
-            duelPairs[pairKey] = { players: game.players.sort(), games: [] }; // Guardar nombres originales pero ordenados para visualización
+            // CORRECCIÓN: Asegurarse de que `pair.players` sea una copia para evitar mutar `game.players`
+            duelPairs[pairKey] = { players: [...game.players].sort((a,b) => a.name.localeCompare(b.name)), games: [] }; 
         }
         duelPairs[pairKey].games.push(game);
     });
@@ -2029,7 +2033,10 @@ function renderDuelHistory() {
     // Mostrar estadísticas para cada par de duelos
     for (const key in duelPairs) {
         const pair = duelPairs[key];
-        const [p1Name, p2Name] = pair.players; // Nombres ordenados alfabéticamente
+        // CORRECCIÓN: Asegurarse de usar los nombres de los jugadores como strings para calculateDuelWins
+        const [p1Obj, p2Obj] = pair.players; // Son objetos {name, score, email}
+        const p1Name = p1Obj.name;
+        const p2Name = p2Obj.name;
         const duelWins = calculateDuelWins(p1Name, p2Name); // Usa la función ya existente
 
         const duelSummaryDiv = document.createElement('div');
@@ -2051,7 +2058,14 @@ function renderDuelHistory() {
         `;
         const detailsList = duelSummaryDiv.querySelector('ul');
         // Ordenar los juegos dentro del duelo por fecha (más reciente primero)
-        pair.games.sort((a, b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-')));
+        pair.games.sort((a, b) => {
+            // Asumiendo formato DD/MM/YYYY
+            const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+            const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+            const dateA = new Date(yearA, monthA - 1, dayA);
+            const dateB = new Date(yearB, monthB - 1, dayB);
+            return dateB.getTime() - dateA.getTime();
+        });
 
         pair.games.forEach(game => {
             const listItem = document.createElement('li');
@@ -2078,7 +2092,8 @@ window.onload = async () => {
     if (loggedInUserEmail) {
         try {
             // *** ESTA ES LA LÓGICA CORRECTA PARA CARGAR EL USUARIO DESDE LA API ***
-            const response = await fetch(`<span class="math-inline">\{API\_BASE\_URL\}/api/users/</span>{loggedInUserEmail}`);
+            // CORRECCIÓN: Usar correctamente la interpolación de cadenas con backticks (`)
+            const response = await fetch(`${API_BASE_URL}/api/users/${loggedInUserEmail}`);
             const data = await response.json();
 
             if (response.ok && data.user) {
