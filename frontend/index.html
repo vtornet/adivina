@@ -15,6 +15,7 @@
         <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
         <button class="btn" onclick="showScreen('login-screen')">Jugar</button>
     </div>
+
     <div id="login-screen" class="screen">
         <h2>Iniciar Sesión</h2>
         <input type="email" id="login-email" class="text-input" placeholder="Correo electrónico">
@@ -38,18 +39,26 @@
         <input type="text" id="player-name-input" class="text-input" placeholder="Introduce tu nombre de jugador">
         <button class="btn" onclick="setPlayerName()">Continuar</button>
     </div>
+
+    <div id="decade-selection-screen" class="screen">
+        <h2>Elige una Década</h2>
+        <div id="decade-buttons"></div>
+        <button class="btn secondary" onclick="exitGame()">Salir del Juego</button>
+    </div>
+
     <div id="category-screen" class="screen">
-        <h2>Elige una Categoría</h2>
+        <h2 id="category-screen-title">Elige una Categoría (<span id="selected-decade-display"></span>)</h2>
         <div id="category-buttons"></div>
         <button class="btn tertiary" onclick="showStatisticsScreen()">Estadísticas</button>
         <button class="btn tertiary" onclick="showSongsListCategorySelection()">Canciones</button>
+        <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver a Décadas</button>
         <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
     </div>
 
     <div id="statistics-screen" class="screen">
         <h2>Mis Estadísticas</h2>
         <div id="user-total-scores" style="margin-bottom: 20px;">
-            <h3>Puntos Acumulados por Categoría</h3>
+            <h3>Puntos Acumulados por Década y Categoría</h3>
             <div id="category-scores-list">
                 <p>Cargando estadísticas...</p>
             </div>
@@ -66,7 +75,7 @@
     </div>
 
     <div id="songs-list-category-screen" class="screen">
-        <h2>Listado de Canciones por Categoría</h2>
+        <h2>Listado de Canciones por Categoría y Década</h2>
         <div id="songs-list-category-buttons"></div>
         <button class="btn secondary" onclick="showScreen('category-screen')">Volver al Menú</button>
     </div>
@@ -143,7 +152,7 @@
     <audio id="sfx-acierto" src="audio/sfx/acierto.mp3"></audio>
     <audio id="sfx-error" src="audio/sfx/error.mp3"></audio>
 
-    <script src="js/songs.js"></script>
+    <script src="js/songs-loader.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

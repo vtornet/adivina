@@ -1,4 +1,26 @@
-const categoryNames = { espanol: "Canciones en Español", ingles: "Canciones en Inglés", peliculas: "BSO de Películas", series: "BSO de Series", tv: "Programas de TV", infantiles: "Series Infantiles", anuncios: "Anuncios"};
+const decadeNames = {
+    '60s': 'Década de los 60',
+    '70s': 'Década de los 70',
+    '80s': 'Década de los 80',
+    '90s': 'Década de los 90',
+    '00s': 'Década de los 2000',
+    '10s': 'Década de los 2010',
+    'Actual': 'Década Actual', // 2020s en adelante
+    'Variadas': 'Variadas (TV, Infantiles, Anuncios)', // Década para categorías no temporales
+    'Todas': 'Todas las Décadas' // Nueva opción
+};
+
+const categoryNames = {
+    espanol: "Canciones en Español",
+    ingles: "Canciones en Inglés",
+    peliculas: "BSO de Películas",
+    series: "BSO de Series",
+    tv: "Programas de TV",
+    infantiles: "Series Infantiles",
+    anuncios: "Anuncios",
+    consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
+};
+
 let gameState = {};
 let audioPlaybackTimeout;
 const screens = document.querySelectorAll('.screen');
@@ -6,38 +28,32 @@ const audioPlayer = document.getElementById('audio-player');
 const sfxAcierto = document.getElementById('sfx-acierto');
 const sfxError = document.getElementById('sfx-error');
 
-// Asegúrate de que esta URL sea la de tu backend de Railway
 const API_BASE_URL = 'https://accomplished-balance-production.up.railway.app';
 
-// Estado global para el usuario logueado
-let currentUser = null; // Almacenará { email: '', playerName: '' }
-// Objetos para almacenar las puntuaciones acumuladas y el historial de partidas en memoria
-// Su estructura será: { 'email@dominio.com': { 'espanol': 150, 'peliculas': 200, ... } }
-let userAccumulatedScores = {};
-let gameHistory = []; // Almacena resultados de partidas multijugador
+let currentUser = null;
+let userAccumulatedScores = {}; // Ahora almacenará { email: { 'decada': { 'categoria': score } } }
+let gameHistory = []; // Ahora contendrá 'decade' en cada objeto de partida
 
-// Función para mostrar pantallas
 function showScreen(screenId) {
     screens.forEach(screen => screen.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
-    // Ocultar inputs de nombres de jugador al volver a la selección de jugadores
     if (screenId === 'player-selection-screen') {
-        document.getElementById('other-player-names-inputs').innerHTML = ''; // Limpiar inputs
-        document.getElementById('logged-in-player-name').textContent = ''; // Limpiar nombre del jugador logueado
+        document.getElementById('other-player-names-inputs').innerHTML = '';
+        document.getElementById('logged-in-player-name').textContent = '';
+    } else if (screenId === 'category-screen') {
+        document.getElementById('selected-decade-display').textContent = decadeNames[gameState.selectedDecade] || '';
     }
 }
 
 // =====================================================================
-// FUNCIONES DE AUTENTICACIÓN (Registro y Login)
+// FUNCIONES DE AUTENTICACIÓN (Registro y Login) - SIN CAMBIOS DE LÓGICA AQUÍ
 // =====================================================================
 
-// Función para validar formato de email
 function isValidEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 
-// Función de registro de usuario
 async function registerUser() {
     const emailInput = document.getElementById('register-email');
     const passwordInput = document.getElementById('register-password');
@@ -76,7 +92,6 @@ async function registerUser() {
     }
 }
 
-// Función de login de usuario
 async function loginUser() {
     const emailInput = document.getElementById('login-email');
     const passwordInput = document.getElementById('login-password');
@@ -99,18 +114,17 @@ async function loginUser() {
 
         if (response.ok) {
             currentUser = { email: data.user.email, playerName: data.user.playerName };
-            localStorage.setItem('loggedInUserEmail', data.user.email); // Mantén esto para el auto-login
+            localStorage.setItem('loggedInUserEmail', data.user.email);
 
             alert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
             emailInput.value = '';
             passwordInput.value = '';
 
-            // Cargar puntuaciones e historial DE LA BASE DE DATOS
             await loadUserScores(currentUser.email);
             await loadGameHistory(currentUser.email);
 
             if (currentUser.playerName) {
-                showScreen('category-screen');
+                showScreen('decade-selection-screen'); // Ir a la selección de década
             } else {
                 showScreen('set-player-name-screen');
             }
@@ -123,15 +137,13 @@ async function loginUser() {
     }
 }
 
-// Función para cerrar sesión
 function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
     alert('Sesión cerrada correctamente.');
-    showScreen('home-screen'); // Vuelve a la pantalla de inicio
+    showScreen('home-screen');
 }
 
-// Función para establecer el nombre de jugador
 async function setPlayerName() {
     const playerNameInput = document.getElementById('player-name-input');
     const newPlayerName = playerNameInput.value.trim();
@@ -152,10 +164,10 @@ async function setPlayerName() {
             const data = await response.json();
 
             if (response.ok) {
-                currentUser.playerName = newPlayerName; // Actualiza el objeto currentUser en memoria
+                currentUser.playerName = newPlayerName;
                 alert(data.message);
                 playerNameInput.value = '';
-                showScreen('category-screen');
+                showScreen('decade-selection-screen'); // Ir a la selección de década
             } else {
                 alert(`Error al actualizar nombre: ${data.message}`);
             }
@@ -169,34 +181,39 @@ async function setPlayerName() {
     }
 }
 
-
 // =====================================================================
 // FUNCIONES PARA GESTIÓN DE PUNTUACIONES ACUMULADAS Y HISTORIAL
+// (ACTUALIZADAS para incluir 'decade')
 // =====================================================================
 
-// Función para cargar las puntuaciones de un usuario
 async function loadUserScores(userEmail) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
         const data = await response.json();
 
         if (response.ok) {
-            userAccumulatedScores[userEmail] = data;
+            const scoresByDecade = {};
+            data.forEach(item => {
+                if (!scoresByDecade[item.decade]) {
+                    scoresByDecade[item.decade] = {};
+                }
+                scoresByDecade[item.decade][item.category] = item.score;
+            });
+            userAccumulatedScores[userEmail] = scoresByDecade;
             console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
         } else {
             console.error('Error al cargar puntuaciones:', data.message);
-            userAccumulatedScores[userEmail] = {}; // Inicializa vacío en caso de error
+            userAccumulatedScores[userEmail] = {};
         }
     } catch (error) {
         console.error('Error de red al cargar puntuaciones:', error);
-        userAccumulatedScores[userEmail] = {}; // Inicializa vacío en caso de error de red
+        userAccumulatedScores[userEmail] = {};
     }
 }
 
-// Función para guardar una puntuación acumulada
-async function saveUserScores(userEmail, category, score) {
-    if (!userEmail || !category || typeof score !== 'number') {
-        console.error("Error: Datos incompletos para guardar puntuación acumulada.");
+async function saveUserScores(userEmail, decade, category, score) {
+    if (!userEmail || !decade || !category || typeof score === 'undefined') {
+        console.error("Error: Datos incompletos para guardar puntuación acumulada (email, decade, category, score).");
         return;
     }
 
@@ -204,15 +221,14 @@ async function saveUserScores(userEmail, category, score) {
         const response = await fetch(`${API_BASE_URL}/api/scores`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: userEmail, category, score })
+            body: JSON.stringify({ email: userEmail, decade, category, score })
         });
 
         const data = await response.json();
 
         if (response.ok) {
             console.log(data.message);
-            // Opcional: Recargar la puntuación después de guardar para mantener userAccumulatedScores sincronizado
-            await loadUserScores(userEmail); // Recarga para actualizar el estado local
+            await loadUserScores(userEmail);
         } else {
             console.error('Error al guardar puntuación:', data.message);
         }
@@ -221,38 +237,36 @@ async function saveUserScores(userEmail, category, score) {
     }
 }
 
-// Función para cargar el historial de partidas de un usuario
 async function loadGameHistory(userEmail) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
         const data = await response.json();
 
         if (response.ok) {
-            gameHistory = data; // Asigna directamente el array de historial
+            gameHistory = data;
             console.log("Historial de partidas cargado:", gameHistory);
         } else {
             console.error('Error al cargar historial:', data.message);
-            gameHistory = []; // Inicializa vacío en caso de error
+            gameHistory = [];
         }
     } catch (error) {
         console.error('Error de red al cargar historial:', error);
-        gameHistory = []; // Inicializa vacío en caso de error de red
+        gameHistory = [];
     }
 }
 
-// Función para guardar un resultado de partida multijugador
-async function saveGameResult(players, winnerName, category) {
+async function saveGameResult(players, winnerName, decade, category) {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses son 0-11
+    const month = String(today.getMonth() + 1).padStart(2, '0');
     const year = today.getFullYear();
     const formattedDate = `${day}/${month}/${year}`;
 
     const gameResult = {
         date: formattedDate,
-        // Importante: mapea los jugadores para enviar solo lo necesario y el email si existe
         players: players.map(p => ({ name: p.name, score: p.score, email: p.email || null })),
         winner: winnerName,
+        decade: decade,
         category: category
     };
 
@@ -267,7 +281,6 @@ async function saveGameResult(players, winnerName, category) {
 
         if (response.ok) {
             console.log(data.message);
-            // Opcional: Recargar el historial después de guardar, si el currentUser está logueado
             if (currentUser && currentUser.email) {
                 await loadGameHistory(currentUser.email);
             }
@@ -279,24 +292,19 @@ async function saveGameResult(players, winnerName, category) {
     }
 }
 
-// Función para calcular victorias entre dos jugadores específicos (para la futura pantalla de stats)
 function calculateDuelWins(player1Name, player2Name) {
     let wins1 = 0;
     let wins2 = 0;
     
-    // Convertir a minúsculas para una comparación insensible a mayúsculas/minúsculas
     const p1 = player1Name.toLowerCase();
     const p2 = player2Name.toLowerCase();
 
     gameHistory.forEach(game => {
-        // Asegurarse de que el juego sea un "duelo" y que los jugadores coincidan
         if (game.players.length === 2) {
-            // Modificado para acceder a 'name' dentro del objeto de jugador
-            const gamePlayersLower = game.players.map(p => p.name.toLowerCase()).sort(); 
+            const gamePlayersLower = game.players.map(p => p.name.toLowerCase()).sort();
             const sortedDuelPlayers = [p1, p2].sort();
 
             if (gamePlayersLower[0] === sortedDuelPlayers[0] && gamePlayersLower[1] === sortedDuelPlayers[1]) {
-                // Es un duelo entre estos dos jugadores
                 if (game.winner && game.winner.toLowerCase() === p1) {
                     wins1++;
                 } else if (game.winner && game.winner.toLowerCase() === p2) {
@@ -309,7 +317,7 @@ function calculateDuelWins(player1Name, player2Name) {
 }
 
 // =====================================================================
-// FUNCIONES DEL JUEGO (MODIFICADAS: loginUser, endGame, inicialización)
+// FUNCIONES DEL JUEGO (MODIFICADAS para incluir 'decade' y 'Todas')
 // =====================================================================
 
 function parseDisplay(displayText) {
@@ -320,33 +328,105 @@ function parseDisplay(displayText) {
     return { artist: parts[0].trim(), title: parts.slice(1).join(' - ').trim() };
 }
 
+function generateDecadeButtons() {
+    const container = document.getElementById('decade-buttons');
+    container.innerHTML = '';
+    const decadesOrder = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas']; 
+
+    decadesOrder.forEach(decadeId => {
+        // Solo si hay categorías y canciones para esa década
+        if (configuracionCanciones[decadeId] && Object.keys(configuracionCanciones[decadeId]).some(catId => {
+            const songsInCat = configuracionCanciones[decadeId][catId];
+            return Array.isArray(songsInCat) && songsInCat.length >= 4;
+        })) {
+            const button = document.createElement('button');
+            button.className = 'category-btn';
+            button.innerText = decadeNames[decadeId];
+            button.onclick = () => selectDecade(decadeId);
+            container.appendChild(button);
+        }
+    });
+
+    // Añadir el botón "Todas"
+    const allButton = document.createElement('button');
+    allButton.className = 'category-btn tertiary'; // Puedes darle un estilo diferente
+    allButton.innerText = decadeNames['Todas'];
+    allButton.onclick = () => selectDecade('Todas');
+    container.appendChild(allButton);
+}
+
+async function selectDecade(decade) {
+    if (!currentUser || !currentUser.playerName) {
+        alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+        showScreen('login-screen');
+        return;
+    }
+    gameState.selectedDecade = decade;
+    
+    if (decade === 'Todas') {
+        // Si se selecciona "Todas", pasamos directamente a la pantalla de selección de jugadores
+        // con la categoría 'consolidated' y precargamos todas las canciones.
+        gameState.category = 'consolidated'; // Una categoría especial para "Todas"
+        try {
+            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); // Forzamos la carga de todas
+            showScreen('player-selection-screen');
+        } catch (error) {
+            alert('Error al cargar todas las canciones. Intenta de nuevo.');
+            console.error(error);
+            showScreen('decade-selection-screen'); // Volver a la selección de década
+        }
+    } else {
+        // Para décadas específicas, generamos botones de categoría
+        generateCategoryButtons(); 
+        showScreen('category-screen');
+    }
+}
+
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
     container.innerHTML = '';
-    for (const categoryId in categoryNames) {
-        // configuracionCanciones no está definida aquí, ya que se encuentra en songs.js
-        // Asegúrate de que songs.js se cargue ANTES de main.js en index.html
-        if (typeof configuracionCanciones !== 'undefined' && configuracionCanciones[categoryId] && configuracionCanciones[categoryId].length >= 4) {
+    const currentDecadeSongs = configuracionCanciones[gameState.selectedDecade];
+
+    if (!currentDecadeSongs) {
+        container.innerHTML = '<p class="warning-text">No hay categorías disponibles para esta década.</p>';
+        return;
+    }
+
+    const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
+
+    categoryOrder.forEach(categoryId => {
+        if (currentDecadeSongs[categoryId] && currentDecadeSongs[categoryId].length >= 4) {
             const button = document.createElement('button');
             button.className = 'category-btn';
             button.innerText = categoryNames[categoryId];
             button.onclick = () => selectCategory(categoryId);
             container.appendChild(button);
         }
+    });
+
+    if (container.innerHTML === '') {
+        container.innerHTML = '<p class="warning-text">No hay categorías con suficientes canciones para jugar en esta década. Por favor, vuelve y elige otra década o categoría.</p>';
     }
 }
 
-function selectCategory(category) {
+async function selectCategory(category) {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
         return;
     }
     gameState.category = category;
-    showScreen('player-selection-screen');
+
+    try {
+        await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
+        showScreen('player-selection-screen');
+    } catch (error) {
+        alert(`No se pudieron cargar las canciones para la categoría ${categoryNames[category]} en la década ${decadeNames[gameState.selectedDecade]}. Intenta con otra.`);
+        console.error(error);
+        showScreen('category-screen');
+    }
 }
 
-// Función para seleccionar el número de jugadores y generar inputs de nombres
 function selectPlayers(numPlayers) {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
@@ -356,12 +436,10 @@ function selectPlayers(numPlayers) {
 
     gameState.playerCount = numPlayers;
     const otherPlayerNamesInputsDiv = document.getElementById('other-player-names-inputs');
-    otherPlayerNamesInputsDiv.innerHTML = ''; // Limpiar inputs anteriores
+    otherPlayerNamesInputsDiv.innerHTML = '';
     
-    // Mostrar el nombre del usuario logueado como el primer jugador
     document.getElementById('logged-in-player-name').textContent = currentUser.playerName;
 
-    // Generar inputs para los jugadores adicionales (si hay)
     for (let i = 1; i < numPlayers; i++) {
         const input = document.createElement('input');
         input.type = 'text';
@@ -371,28 +449,31 @@ function selectPlayers(numPlayers) {
         otherPlayerNamesInputsDiv.appendChild(input);
     }
 
-    showScreen('player-names-input-screen'); // Mostrar la pantalla para introducir nombres
+    showScreen('player-names-input-screen');
 }
 
 function startGame() {
     if (!currentUser || !currentUser.playerName) {
         alert('Error: No se ha encontrado el nombre del jugador principal. Por favor, inicia sesión de nuevo.');
-        logout(); // Forzar cierre de sesión y redirigir
+        logout();
+        return;
+    }
+    if (!gameState.selectedDecade || !gameState.category) {
+        alert('Error: No se ha seleccionado una década o categoría. Vuelve a empezar.');
+        showScreen('decade-selection-screen');
         return;
     }
 
     gameState.players = [];
-    // Añadir el usuario logueado como el primer jugador
     gameState.players.push({ 
         id: 1, 
         name: currentUser.playerName, 
         score: 0, 
         questionsAnswered: 0, 
         questions: [],
-        email: currentUser.email // Asegura que el email del jugador logueado se guarda
+        email: currentUser.email
     });
 
-    // Recopilar nombres de otros jugadores si existen
     for (let i = 1; i < gameState.playerCount; i++) {
         const input = document.getElementById(`player-${i + 1}-name-input`);
         const name = input.value.trim() || `Jugador ${i + 1}`;
@@ -402,43 +483,44 @@ function startGame() {
             score: 0, 
             questionsAnswered: 0, 
             questions: [] 
-            // No hay email para jugadores no logueados
         });
     }
 
-    gameState.totalQuestionsPerPlayer = 10; // Cada jugador responderá 10 preguntas
-    // Comprobar si hay suficientes canciones para la categoría seleccionada y el número de jugadores
-    // Asegúrate de que `configuracionCanciones` esté disponible (cargando songs.js antes de main.js)
-    const allSongsInCat = [...configuracionCanciones[gameState.category]];
+    gameState.totalQuestionsPerPlayer = 10;
+    
+    let allSongsToChooseFrom;
+    if (gameState.selectedDecade === 'Todas') {
+        allSongsToChooseFrom = [...configuracionCanciones['Todas']['consolidated']];
+    } else {
+        allSongsToChooseFrom = [...configuracionCanciones[gameState.selectedDecade][gameState.category]];
+    }
+
     const requiredSongs = gameState.totalQuestionsPerPlayer * gameState.playerCount;
 
-    if (allSongsInCat.length < requiredSongs) {
-        console.warn(`Advertencia: No hay suficientes canciones en la categoría (${categoryNames[gameState.category]}) para ${gameState.playerCount} jugadores, cada uno con ${gameState.totalQuestionsPerPlayer} preguntas. Se necesitan ${requiredSongs} y solo hay ${allSongsInCat.length}. Ajustando el número de preguntas por jugador.`);
-        gameState.totalQuestionsPerPlayer = Math.floor(allSongsInCat.length / gameState.playerCount);
+    if (allSongsToChooseFrom.length < requiredSongs) {
+        console.warn(`Advertencia: No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`);
+        gameState.totalQuestionsPerPlayer = Math.floor(allSongsToChooseFrom.length / gameState.playerCount);
         if (gameState.totalQuestionsPerPlayer < 1) { 
-             alert('No hay suficientes canciones para que cada jugador tenga al menos una pregunta. Elige otra categoría o menos jugadores.');
-             showScreen('category-screen');
+             alert(`No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]} para que cada jugador tenga al menos una pregunta. Elige otra década o categoría.`);
+             showScreen('decade-selection-screen');
              return;
         }
     }
     
-    let shuffledSongs = allSongsInCat.sort(() => 0.5 - Math.random());
+    let shuffledSongs = allSongsToChooseFrom.sort(() => 0.5 - Math.random());
 
-    // Asignar 10 preguntas aleatorias a cada jugador desde el inicio de la partida
     for (let i = 0; i < gameState.playerCount; i++) {
-        // Asegurarse de que haya suficientes canciones para cortar
         if (shuffledSongs.length >= gameState.totalQuestionsPerPlayer) {
             gameState.players[i].questions = shuffledSongs.splice(0, gameState.totalQuestionsPerPlayer);
         } else {
-            // Si no hay suficientes, asignar las restantes y avisar
             gameState.players[i].questions = [...shuffledSongs];
             console.warn(`No se pudieron asignar ${gameState.totalQuestionsPerPlayer} preguntas al jugador ${gameState.players[i].name}. Solo se asignaron ${shuffledSongs.length} preguntas.`);
-            shuffledSongs = []; // Vaciar el array para asegurar que no se reusen
-            gameState.totalQuestionsPerPlayer = gameState.players[i].questions.length; // Ajustar para este jugador si es necesario
+            shuffledSongs = [];
+            gameState.totalQuestionsPerPlayer = gameState.players[i].questions.length;
         }
     }
     
-    gameState.currentPlayerIndex = 0; // Siempre empezar por el primer jugador
+    gameState.currentPlayerIndex = 0;
     setupQuestion();
     showScreen('game-screen');
 }
@@ -446,23 +528,20 @@ function startGame() {
 function setupQuestion() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
 
-    // Verificar si el jugador actual ha respondido todas sus preguntas
     if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
-        nextPlayerOrEndGame(); // Si ya terminó, pasar al siguiente jugador o finalizar
+        nextPlayerOrEndGame();
         return;
     }
     
     clearTimeout(audioPlaybackTimeout);
-    audioPlayer.pause(); // Pausar cualquier audio en reproducción
+    audioPlayer.pause();
     gameState.attempts = 3;
     gameState.hasPlayed = false;
 
-    // Obtener la pregunta actual para este jugador
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
     
-    // Actualizar la interfaz del juego
     document.getElementById("player-name-display").textContent = currentPlayer.name;
-    document.getElementById('category-display').innerText = categoryNames[gameState.category];
+    document.getElementById('category-display').innerText = `${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}`;
     document.getElementById('question-counter').innerText = `Pregunta ${currentPlayer.questionsAnswered + 1}/${gameState.totalQuestionsPerPlayer}`;
     document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
     document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
@@ -470,14 +549,18 @@ function setupQuestion() {
     updateAttemptsCounter();
 
     const answerButtonsContainer = document.getElementById('answer-buttons');
-    answerButtonsContainer.innerHTML = ''; // Limpiar botones anteriores
+    answerButtonsContainer.innerHTML = '';
 
-    // Asegúrate de que `configuracionCanciones` esté disponible (cargando songs.js antes de main.js)
-    const allSongsInCat = [...configuracionCanciones[gameState.category]];
+    let allSongsToChooseFromForOptions;
+    if (gameState.selectedDecade === 'Todas') {
+        allSongsToChooseFromForOptions = [...configuracionCanciones['Todas']['consolidated']];
+    } else {
+        allSongsToChooseFromForOptions = [...configuracionCanciones[gameState.selectedDecade][gameState.category]];
+    }
+
     let options = [currentQuestion];
     while (options.length < 4) {
-        const randomSong = allSongsInCat[Math.floor(Math.random() * allSongsInCat.length)];
-        // Asegurarse de que la opción aleatoria no sea la respuesta correcta y no esté ya en las opciones
+        const randomSong = allSongsToChooseFromForOptions[Math.floor(Math.random() * allSongsToChooseFromForOptions.length)];
         if (!options.some(opt => opt.file === randomSong.file) && randomSong.file !== currentQuestion.file) {
             options.push(randomSong);
         }
@@ -515,7 +598,22 @@ function playAudioSnippet() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
-    audioPlayer.src = `audio/${gameState.category}/${currentQuestion.file}`;
+    // La ruta del audio ahora incluye la década y la categoría, o solo la categoría si es 'Todas'
+    // Necesitas una forma de saber la década original de la canción si selectedDecade es 'Todas'
+    // Para simplificar, si selectedDecade es 'Todas', asumiremos que los archivos de audio están
+    // en una subcarpeta 'Todas/categoria' o tendremos que hacer una búsqueda más inteligente
+    // de la ruta de audio real. Por ahora, si selectedDecade es 'Todas', la ruta podría no funcionar
+    // a menos que tengas una carpeta 'audio/Todas/consolidated/'.
+    // Una opción más robusta es guardar la década original en el objeto de la canción.
+    // currentQuestion.originalDecade
+    // currentQuestion.originalCategory
+    // audioPlayer.src = `audio/${currentQuestion.originalDecade || gameState.selectedDecade}/${currentQuestion.originalCategory || gameState.category}/${currentQuestion.file}`;
+
+    // Para la opción "Todas", si los archivos de audio están en sus carpetas de décadas originales:
+    // Necesitas que el objeto de la canción tenga la propiedad 'originalDecade' y 'originalCategory'
+    // cuando se consolida en songs-loader.js. Lo implementaré allí.
+    audioPlayer.src = `audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
+
     audioPlayer.currentTime = 0;
     audioPlayer.play();
 
@@ -544,11 +642,9 @@ function checkAnswer(isCorrect, button) {
         const points = { 3: 3, 2: 2, 1: 1 };
         gameState.players[gameState.currentPlayerIndex].score += points[gameState.attempts];
         button.classList.add('correct');
-        // Incrementar las preguntas respondidas para el jugador actual
         gameState.players[gameState.currentPlayerIndex].questionsAnswered++;
         
-        // Esperar antes de pasar al siguiente turno/jugador
-        setTimeout(nextPlayerOrEndGame, 1500); // Llama directamente a la lógica de avance
+        setTimeout(nextPlayerOrEndGame, 1500);
     } else {
         sfxError.currentTime = 0;
         sfxError.play();
@@ -566,9 +662,8 @@ function checkAnswer(isCorrect, button) {
                 playBtn.innerText = "▶";
             }, 1500);
         } else {
-            // Si no quedan intentos, el jugador actual no acertó esta pregunta, pasar al siguiente turno
             gameState.players[gameState.currentPlayerIndex].questionsAnswered++;
-            setTimeout(nextPlayerOrEndGame, 1500); // Llama directamente a la lógica de avance
+            setTimeout(nextPlayerOrEndGame, 1500);
         }
     }
 }
@@ -576,45 +671,36 @@ function checkAnswer(isCorrect, button) {
 function nextPlayerOrEndGame() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
 
-    // Caso de un solo jugador: siempre va directamente a la siguiente pregunta o finaliza
     if (gameState.players.length === 1) {
         if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
-            endGame(); // Si el único jugador ha terminado, finaliza el juego
+            endGame();
         } else {
-            setupQuestion(); // Si el único jugador tiene más preguntas, configura la siguiente para él
+            setupQuestion();
         }
-        return; // Salir de la función después de manejar el caso de un solo jugador
+        return;
     }
 
-    // Lógica para MÚLTIPLES jugadores
-    // Si el jugador actual ha respondido todas sus preguntas
     if (currentPlayer.questionsAnswered >= gameState.totalQuestionsPerPlayer) {
-        gameState.currentPlayerIndex++; // Intentar pasar al siguiente jugador
+        gameState.currentPlayerIndex++;
 
-        // Verificar si hay más jugadores después del actual
         if (gameState.currentPlayerIndex < gameState.players.length) {
-            // Hay otro jugador: mostrar pantalla de transición
             document.getElementById('current-player-score-summary').textContent = 
                 `${currentPlayer.name} ha terminado su turno con ${currentPlayer.score} puntos.`;
             document.getElementById('next-player-prompt').textContent = 
                 `Siguiente jugador: ${gameState.players[gameState.currentPlayerIndex].name}, ¿preparado para comenzar?`;
             showScreen('player-transition-screen');
         } else {
-            // Todos los jugadores han terminado sus preguntas
             endGame();
         }
     } else {
-        // El jugador actual aún tiene preguntas por responder
         setupQuestion();
     }
 }
 
-// Nueva función para continuar el turno del siguiente jugador
 function continueToNextPlayerTurn() {
-    setupQuestion(); // Configurar el juego para el jugador que sigue
-    showScreen('game-screen'); // Volver a la pantalla de juego
+    setupQuestion();
+    showScreen('game-screen');
 }
-
 
 function endGame() {
     const finalScoresContainer = document.getElementById('final-scores');
@@ -624,24 +710,21 @@ function endGame() {
     const winnerDisplay = document.getElementById('winner-display');
 
     if (gameState.players.length === 1) {
-        // Caso de un solo jugador
         const player = gameState.players[0];
         winnerDisplay.textContent = `${player.name} has conseguido ${player.score} puntos.`;
-        // Asegurarse de quitar los estilos de neón si vienen de una partida anterior
         winnerDisplay.style.animation = 'none'; 
         winnerDisplay.style.textShadow = 'none';
         winnerDisplay.style.color = 'var(--light-text-color)'; 
         winnerDisplay.style.border = 'none'; 
         winnerDisplay.style.fontSize = '1.8rem'; 
 
-        // Guardar la puntuación acumulada para el usuario logueado
         if (currentUser && currentUser.email) {
-            saveUserScores(currentUser.email, gameState.category, player.score);
+            // Guardar con década y categoría
+            saveUserScores(currentUser.email, gameState.selectedDecade, gameState.category, player.score);
         }
 
     } else {
-        // Caso de múltiples jugadores (lógica existente para ganador/empate)
-        let winnerName = 'Empate'; // Valor por defecto si hay empate
+        let winnerName = 'Empate';
         if (sortedPlayers.length > 0) {
             const topScore = sortedPlayers[0].score;
             const winners = sortedPlayers.filter(player => player.score === topScore);
@@ -649,16 +732,14 @@ function endGame() {
             if (winners.length > 1) {
                 const winnerNames = winners.map(winner => winner.name).join(' y ');
                 winnerDisplay.textContent = `¡Hay un EMPATE! Los GANADORES son ${winnerNames} con ${topScore} puntos!`;
-                // winnerName ya es 'Empate'
             } else {
                 winnerDisplay.textContent = `¡El GANADOR es ${sortedPlayers[0].name} con ${sortedPlayers[0].score} puntos!`;
-                winnerName = sortedPlayers[0].name; // Obtener el nombre del ganador
+                winnerName = sortedPlayers[0].name;
             }
         } else {
             winnerDisplay.textContent = 'No hay ganador en esta partida.';
-            winnerName = 'Nadie'; // Si no hay jugadores o puntuaciones, lo indicamos así
+            winnerName = 'Nadie';
         }
-        // Asegurarse de que los estilos de neón estén activos para multijugador
         winnerDisplay.style.animation = 'neonGlow 1.5s ease-in-out infinite alternate';
         winnerDisplay.style.textShadow = '0 0 8px var(--secondary-color), 0 0 15px var(--secondary-color)';
         winnerDisplay.style.color = 'var(--secondary-color)';
@@ -666,33 +747,30 @@ function endGame() {
         winnerDisplay.style.borderTop = '2px solid var(--secondary-color)';
         winnerDisplay.style.fontSize = '2.5rem';
 
-        // Guardar la puntuación acumulada para el usuario logueado si participó
         if (currentUser && currentUser.email) {
-            const loggedInPlayer = gameState.players.find(p => p.email === currentUser.email); // Usar email para identificar al jugador logueado
+            const loggedInPlayer = gameState.players.find(p => p.email === currentUser.email);
             if (loggedInPlayer) {
-                saveUserScores(currentUser.email, gameState.category, loggedInPlayer.score);
+                // Guardar con década y categoría
+                saveUserScores(currentUser.email, gameState.selectedDecade, gameState.category, loggedInPlayer.score);
             } else {
-                // Si el jugador logueado no está en gameState.players (ej. en partidas de invitados sin loguearse)
                 console.warn("Usuario logueado no encontrado en la lista de jugadores de la partida.");
             }
         }
         
-        // Guardar el resultado de la partida multijugador
-        saveGameResult(gameState.players, winnerName, gameState.category);
+        // Guardar el resultado de la partida multijugador con década y categoría
+        saveGameResult(gameState.players, winnerName, gameState.selectedDecade, gameState.category);
     }
 
-    // Mostrar todas las puntuaciones (siempre)
     sortedPlayers.forEach((player, index) => {
         const medal = (gameState.players.length > 1) ? ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '') : ''; 
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`; 
     });
     
     document.getElementById('play-again-btn').onclick = () => { 
-        // Reiniciar el estado de los jugadores para una nueva partida
         gameState.players.forEach(player => {
             player.score = 0;
             player.questionsAnswered = 0;
-            player.questions = []; // Importante para que startGame vuelva a asignar nuevas preguntas
+            player.questions = [];
         });
         showScreen('player-selection-screen'); 
     };
@@ -709,12 +787,16 @@ function exitGame() {
 function confirmReturnToMenu() {
     const confirmed = confirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
     if (confirmed) {
-        showScreen('category-screen');
+        if (gameState.selectedDecade === 'Todas') {
+            showScreen('decade-selection-screen'); // Si venía de "Todas", vuelve a la selección de década
+        } else {
+            showScreen('category-screen'); // Si venía de una década específica, vuelve a la selección de categoría
+        }
     }
 }
 
 // =====================================================================
-// FUNCIONES DE PANTALLA DE ESTADÍSTICAS
+// FUNCIONES DE PANTALLA DE ESTADÍSTICAS (ACTUALIZADAS para décadas y categorías)
 // =====================================================================
 
 function showStatisticsScreen() {
@@ -729,44 +811,206 @@ function showStatisticsScreen() {
     renderDuelHistory();
 }
 
+function renderUserTotalScores() {
+    const categoryScoresList = document.getElementById('category-scores-list');
+    categoryScoresList.innerHTML = '';
+
+    const userScores = userAccumulatedScores[currentUser.email];
+
+    if (!userScores || Object.keys(userScores).length === 0) {
+        categoryScoresList.innerHTML = '<p style="color: var(--text-color);">Aún no tienes puntos acumulados. ¡Juega para empezar a sumar!</p>';
+        return;
+    }
+
+    const decadesInOrder = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas', 'Todas']; // Incluir 'Todas' aquí
+    let hasScoresToDisplay = false;
+
+    decadesInOrder.forEach(decadeId => {
+        const categoriesInDecade = userScores[decadeId];
+        if (categoriesInDecade && Object.keys(categoriesInDecade).length > 0) {
+            hasScoresToDisplay = true;
+            const decadeHeader = document.createElement('h4');
+            decadeHeader.style.color = 'var(--secondary-color)';
+            decadeHeader.style.marginTop = '15px';
+            decadeHeader.style.marginBottom = '10px';
+            decadeHeader.textContent = decadeNames[decadeId];
+            categoryScoresList.appendChild(decadeHeader);
+
+            const sortedCategoriesInDecade = Object.entries(categoriesInDecade).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
+
+            sortedCategoriesInDecade.forEach(([categoryId, score]) => {
+                const categoryNameDisplay = categoryNames[categoryId] || categoryId;
+                const p = document.createElement('p');
+                p.className = 'score-item';
+                p.innerHTML = `• ${categoryNameDisplay}: <strong>${score} puntos</strong>`;
+                categoryScoresList.appendChild(p);
+            });
+        }
+    });
+
+    if (!hasScoresToDisplay) {
+        categoryScoresList.innerHTML = '<p style="color: var(--text-color);">Aún no tienes puntos acumulados. ¡Juega para empezar a sumar!</p>';
+    }
+}
+
+
+function renderDuelHistory() {
+    const duelList = document.getElementById('duel-list');
+    duelList.innerHTML = '';
+
+    const duels = gameHistory.filter(game => game.players.length === 2);
+
+    if (duels.length === 0) {
+        duelList.innerHTML = '<p style="color: var(--text-color);">Aún no tienes duelos registrados. ¡Desafía a un amigo!</p>';
+        return;
+    }
+
+    const duelPairs = {};
+    duels.forEach(game => {
+        const playerNames = game.players.map(p => p.name.toLowerCase()).sort();
+        const pairKey = playerNames.join('_');
+
+        if (!duelPairs[pairKey]) {
+            duelPairs[pairKey] = { players: game.players.sort((a,b) => a.name.localeCompare(b.name)), games: [] }; 
+        }
+        duelPairs[pairKey].games.push(game);
+    });
+
+    for (const key in duelPairs) {
+        const pair = duelPairs[key];
+        const [p1Obj, p2Obj] = pair.players;
+        const p1Name = p1Obj.name;
+        const p2Name = p2Obj.name;
+        const duelWins = calculateDuelWins(p1Name, p2Name);
+
+        const duelSummaryDiv = document.createElement('div');
+        duelSummaryDiv.className = 'duel-summary-card';
+        duelSummaryDiv.style.background = 'rgba(0, 0, 0, 0.2)';
+        duelSummaryDiv.style.padding = '10px';
+        duelSummaryDiv.style.borderRadius = '8px';
+        duelSummaryDiv.style.marginBottom = '15px';
+        duelSummaryDiv.style.border = '1px solid var(--primary-color)';
+        
+        duelSummaryDiv.innerHTML = `
+            <p style="font-size: 1.1rem; font-weight: bold; color: var(--secondary-color); margin-bottom: 5px;">${p1Name} vs ${p2Name}</p>
+            <p style="font-size: 0.95rem;">${p1Name}: <strong>${duelWins[p1Name]} victorias</strong> | ${p2Name}: <strong>${duelWins[p2Name]} victorias</strong></p>
+            <details style="margin-top: 10px; text-align: left;">
+                <summary style="font-size: 0.9rem; cursor: pointer; color: var(--warning-color);">Ver historial detallado</summary>
+                <ul style="list-style-type: none; padding-left: 0;">
+                </ul>
+            </details>
+        `;
+        const detailsList = duelSummaryDiv.querySelector('ul');
+        pair.games.sort((a, b) => {
+            const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+            const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+            const dateA = new Date(yearA, monthA - 1, dayA);
+            const dateB = new Date(yearB, monthB - 1, dayB);
+            return dateB.getTime() - dateA.getTime();
+        });
+
+        pair.games.forEach(game => {
+            const listItem = document.createElement('li');
+            listItem.style.fontSize = '0.85rem';
+            listItem.style.marginBottom = '3px';
+            listItem.style.color = 'var(--text-color)';
+            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Década: ${decadeNames[game.decade] || game.decade}, Categoría: ${categoryNames[game.category] || game.category}`;
+            detailsList.appendChild(listItem);
+        });
+
+        duelList.appendChild(duelSummaryDiv);
+    }
+}
+
 // =====================================================================
-// FUNCIONES DE PANTALLA DE LISTADO DE CANCIONES (NUEVAS Y MODIFICADAS)
+// FUNCIONES DE PANTALLA DE LISTADO DE CANCIONES (ACTUALIZADAS para décadas y categorías)
 // =====================================================================
 
 function showSongsListCategorySelection() {
     showScreen('songs-list-category-screen');
     const container = document.getElementById('songs-list-category-buttons');
-    container.innerHTML = ''; // Limpiar botones anteriores
+    container.innerHTML = '';
 
-    for (const categoryId in categoryNames) {
-        if (typeof configuracionCanciones !== 'undefined' && configuracionCanciones[categoryId] && configuracionCanciones[categoryId].length > 0) {
-            const button = document.createElement('button');
-            button.className = 'category-btn';
-            button.innerText = categoryNames[categoryId];
-            button.onclick = () => displaySongsForCategory(categoryId);
-            container.appendChild(button);
+    const decadesOrder = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas', 'Todas']; 
+
+    decadesOrder.forEach(decadeId => {
+        // Para la opción "Todas", solo mostrarla como una categoría general
+        if (decadeId === 'Todas') {
+            const allButtonDiv = document.createElement('div');
+            allButtonDiv.style.gridColumn = '1 / -1'; // Para que ocupe todo el ancho
+            allButtonDiv.style.marginTop = '20px';
+            const allButton = document.createElement('button');
+            allButton.className = 'category-btn tertiary';
+            allButton.innerText = decadeNames[decadeId];
+            allButton.onclick = () => displaySongsForCategory(decadeId, 'consolidated'); // Usar 'consolidated' como categoría especial
+            allButtonDiv.appendChild(allButton);
+            container.appendChild(allButtonDiv);
+            return; // No procesar más categorías para 'Todas' aquí
         }
-    }
+
+        const decadeCategorySongs = configuracionCanciones[decadeId];
+        if (decadeCategorySongs) {
+            const decadeHeader = document.createElement('h3');
+            decadeHeader.textContent = decadeNames[decadeId];
+            decadeHeader.style.color = 'var(--secondary-color)';
+            decadeHeader.style.marginTop = '20px';
+            decadeHeader.style.marginBottom = '10px';
+            container.appendChild(decadeHeader);
+
+            const categoryButtonsForDecadeDiv = document.createElement('div');
+            categoryButtonsForDecadeDiv.style.display = 'grid';
+            categoryButtonsForDecadeDiv.style.gridTemplateColumns = '1fr 1fr';
+            categoryButtonsForDecadeDiv.style.gap = '10px';
+            container.appendChild(categoryButtonsForDecadeDiv);
+
+            const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
+
+            categoryOrder.forEach(categoryId => {
+                const songsArray = decadeCategorySongs[categoryId];
+                if (Array.isArray(songsArray) && songsArray.length > 0) { // Asegurarse de que sea un array y tenga contenido
+                    const button = document.createElement('button');
+                    button.className = 'category-btn';
+                    button.innerText = categoryNames[categoryId];
+                    button.onclick = () => displaySongsForCategory(decadeId, categoryId);
+                    categoryButtonsForDecadeDiv.appendChild(button);
+                }
+            });
+        }
+    });
 }
 
-function displaySongsForCategory(categoryId) {
-    const songs = configuracionCanciones[categoryId];
+async function displaySongsForCategory(decadeId, categoryId) {
+    let songsToDisplay;
+
+    try {
+        if (decadeId === 'Todas') {
+            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); // Carga/consolida todas las canciones
+            songsToDisplay = configuracionCanciones['Todas']['consolidated'];
+        } else {
+            await loadSongsForDecadeAndCategory(decadeId, categoryId); // Carga la específica
+            songsToDisplay = configuracionCanciones[decadeId][categoryId];
+        }
+    } catch (error) {
+        alert(`No se pudo cargar la lista de canciones para ${decadeNames[decadeId]} - ${categoryNames[categoryId]}.`);
+        console.error(error);
+        showScreen('songs-list-category-screen');
+        return;
+    }
 
     const songsListContainer = document.getElementById('songs-list-container');
     const songsListCategoryTitle = document.getElementById('songs-list-category-title');
 
-    songsListContainer.innerHTML = ''; // Limpiar lista anterior
-    songsListCategoryTitle.textContent = `Canciones de ${categoryNames[categoryId]}`; // Título de la categoría
+    songsListContainer.innerHTML = '';
+    songsListCategoryTitle.textContent = `Canciones de ${decadeNames[decadeId]} - ${categoryNames[categoryId]}`;
 
-    if (!songs || songs.length === 0) {
-        songsListContainer.innerHTML = '<p>No hay canciones en esta categoría.</p>';
+    if (!songsToDisplay || songsToDisplay.length === 0) {
+        songsListContainer.innerHTML = '<p>No hay canciones en esta categoría para la década seleccionada.</p>';
         showScreen('songs-list-display-screen');
         return;
     }
 
-    // Agrupar y ordenar canciones por letra inicial del artista/título
     const groupedSongs = {};
-    const sortedSongs = [...songs].sort((a, b) => {
+    const sortedSongs = [...songsToDisplay].sort((a, b) => {
         const nameA = parseDisplay(a.display).artist || parseDisplay(a.display).title;
         const nameB = parseDisplay(b.display).artist || parseDisplay(b.display).title;
         return nameA.localeCompare(nameB);
@@ -781,9 +1025,8 @@ function displaySongsForCategory(categoryId) {
         groupedSongs[firstChar].push(song);
     });
 
-    // Generar índice alfabético
     const alphaIndexDiv = document.createElement('div');
-    alphaIndexDiv.className = 'alpha-index'; // Clase para CSS
+    alphaIndexDiv.className = 'alpha-index';
     songsListContainer.appendChild(alphaIndexDiv);
 
     const sortedLetters = Object.keys(groupedSongs).sort();
@@ -794,7 +1037,6 @@ function displaySongsForCategory(categoryId) {
         alphaIndexDiv.appendChild(link);
     });
 
-    // Mostrar canciones agrupadas por letra
     sortedLetters.forEach(letter => {
         const letterHeader = document.createElement('h3');
         letterHeader.id = `letter-${letter}`;
@@ -816,31 +1058,27 @@ function displaySongsForCategory(categoryId) {
             textContent.innerHTML = `<strong>${parseDisplay(song.display).artist}</strong>${parsedDisplay(song.display).title ? `<br>${parseDisplay(song.display).title}` : ''}`;
             songDiv.appendChild(textContent);
 
-            // Botón de "Oír" único
-            // Solo muestra el botón si listenUrl existe y no es el placeholder de búsqueda
             if (song.listenUrl && song.listenUrl.length > 5 && !song.listenUrl.includes('URL_DE_BÚSQUEDA_PENDIENTE')) {
                 const listenBtn = document.createElement('button');
                 listenBtn.className = 'btn small-listen-btn';
                 
-                let icon = '▶'; // Icono por defecto (YouTube)
-                let bgColor = '#FF0000'; // Rojo de YouTube
+                let icon = '▶';
+                let bgColor = '#FF0000';
                 let shadowColor = '#FF0000';
 
                 if (song.platform === 'spotify') {
-                    icon = '🎧'; // Icono de Spotify
-                    bgColor = '#1DB954'; // Verde de Spotify
+                    icon = '🎧';
+                    bgColor = '#1DB954';
                     shadowColor = '#1DB954';
                 }
 
                 listenBtn.innerHTML = icon;
                 listenBtn.onclick = () => window.open(song.listenUrl, '_blank');
-                // Los estilos inline se mueven a CSS si es posible, pero para los colores dinámicos se pueden mantener aquí
                 listenBtn.style.backgroundImage = `linear-gradient(45deg, ${bgColor}, ${shadowColor})`;
                 listenBtn.style.boxShadow = `0 0 5px ${shadowColor}`;
                 
                 songDiv.appendChild(listenBtn);
             } else {
-                // Opcional: Mostrar un texto "Sin enlace" si no hay URL válida
                 const noLinksText = document.createElement('span');
                 noLinksText.style.fontSize = '0.8rem';
                 noLinksText.style.color = 'var(--warning-color)';
@@ -854,110 +1092,13 @@ function displaySongsForCategory(categoryId) {
 
     showScreen('songs-list-display-screen');
 }
-
-function renderUserTotalScores() {
-    const categoryScoresList = document.getElementById('category-scores-list');
-    categoryScoresList.innerHTML = ''; // Limpiar contenido anterior
-
-    const userScores = userAccumulatedScores[currentUser.email];
-
-    if (!userScores || Object.keys(userScores).length === 0) {
-        categoryScoresList.innerHTML = '<p style="color: var(--text-color);">Aún no tienes puntos acumulados. ¡Juega para empezar a sumar!</p>';
-        return;
-    }
-
-    // Convertir el objeto de puntuaciones a un array para ordenar
-    const sortedCategories = Object.entries(userScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
-
-    sortedCategories.forEach(([categoryId, score]) => {
-        const categoryName = categoryNames[categoryId] || categoryId; // Obtener nombre legible
-        const p = document.createElement('p');
-        p.className = 'score-item'; // Puedes añadir CSS para esto después si quieres
-        p.innerHTML = `${categoryName}: <strong>${score} puntos</strong>`;
-        categoryScoresList.appendChild(p);
-    });
-}
-
-function renderDuelHistory() {
-    const duelList = document.getElementById('duel-list');
-    duelList.innerHTML = ''; // Limpiar contenido anterior
-
-    // Filtrar solo los duelos (partidas de 2 jugadores)
-    const duels = gameHistory.filter(game => game.players.length === 2);
-
-    if (duels.length === 0) {
-        duelList.innerHTML = '<p style="color: var(--text-color);">Aún no tienes duelos registrados. ¡Desafía a un amigo!</p>';
-        return;
-    }
-
-    // Agrupar duelos por pares de jugadores para calcular victorias entre ellos
-    const duelPairs = {}; // Clave: "JugadorA_JugadorB" (ordenado alfabéticamente)
-    duels.forEach(game => {
-        // Normalizar nombres para la clave del par (insensible a mayúsculas y minúsculas)
-        const playerNames = game.players.map(p => p.name.toLowerCase()).sort();
-        const pairKey = playerNames.join('_');
-
-        if (!duelPairs[pairKey]) {
-            duelPairs[pairKey] = { players: [...game.players].sort((a,b) => a.name.localeCompare(b.name)), games: [] }; 
-        }
-        duelPairs[pairKey].games.push(game);
-    });
-
-    // Mostrar estadísticas para cada par de duelos
-    for (const key in duelPairs) {
-        const pair = duelPairs[key];
-        const [p1Obj, p2Obj] = pair.players; // Son objetos {name, score, email}
-        const p1Name = p1Obj.name;
-        const p2Name = p2Obj.name;
-        const duelWins = calculateDuelWins(p1Name, p2Name); // Usa la función ya existente
-
-        const duelSummaryDiv = document.createElement('div');
-        duelSummaryDiv.className = 'duel-summary-card'; // Para CSS
-        duelSummaryDiv.style.background = 'rgba(0, 0, 0, 0.2)';
-        duelSummaryDiv.style.padding = '10px';
-        duelSummaryDiv.style.borderRadius = '8px';
-        duelSummaryDiv.style.marginBottom = '15px';
-        duelSummaryDiv.style.border = '1px solid var(--primary-color)';
-        
-        duelSummaryDiv.innerHTML = `
-            <p style="font-size: 1.1rem; font-weight: bold; color: var(--secondary-color); margin-bottom: 5px;">${p1Name} vs ${p2Name}</p>
-            <p style="font-size: 0.95rem;">${p1Name}: <strong>${duelWins[p1Name]} victorias</strong> | ${p2Name}: <strong>${duelWins[p2Name]} victorias</strong></p>
-            <details style="margin-top: 10px; text-align: left;">
-                <summary style="font-size: 0.9rem; cursor: pointer; color: var(--warning-color);">Ver historial detallado</summary>
-                <ul style="list-style-type: none; padding-left: 0;">
-                </ul>
-            </details>
-        `;
-        const detailsList = duelSummaryDiv.querySelector('ul');
-        // Ordenar los juegos dentro del duelo por fecha (más reciente primero)
-        pair.games.sort((a, b) => {
-            // Asumiendo formato DD/MM/YYYY
-            const [dayA, monthA, yearA] = a.date.split('/').map(Number);
-            const [dayB, monthB, yearB] = b.date.split('/').map(Number);
-            const dateA = new Date(yearA, monthA - 1, dayA);
-            const dateB = new Date(yearB, monthB - 1, dayB);
-            return dateB.getTime() - dateA.getTime();
-        });
-
-        pair.games.forEach(game => {
-            const listItem = document.createElement('li');
-            listItem.style.fontSize = '0.85rem';
-            listItem.style.marginBottom = '3px';
-            listItem.style.color = 'var(--text-color)';
-            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Categoría: ${categoryNames[game.category]}`;
-            detailsList.appendChild(listItem);
-        });
-
-        duelList.appendChild(duelSummaryDiv);
-    }
-}
     
 // =====================================================================
 // INICIALIZACIÓN (Modificada para gestionar sesión)
 // =====================================================================
 
 window.onload = async () => {
-    generateCategoryButtons();
+    generateDecadeButtons(); 
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
 
     if (loggedInUserEmail) {
@@ -971,18 +1112,18 @@ window.onload = async () => {
                 await loadGameHistory(currentUser.email);
 
                 if (currentUser.playerName) {
-                    showScreen('category-screen');
+                    showScreen('decade-selection-screen');
                 } else {
                     showScreen('set-player-name-screen');
                 }
             } else {
                 console.warn(`No se pudo cargar el perfil del usuario ${loggedInUserEmail} desde la API:`, data.message || 'Error desconocido.');
-                localStorage.removeItem('loggedInUserEmail'); // Limpia si la API no lo encuentra
+                localStorage.removeItem('loggedInUserEmail');
                 showScreen('login-screen');
             }
         } catch (error) {
             console.error('Error de red al cargar el perfil del usuario al inicio:', error);
-            localStorage.removeItem('loggedInUserEmail'); // Limpiar si hay problemas de red
+            localStorage.removeItem('loggedInUserEmail');
             showScreen('login-screen');
         }
     } else {
