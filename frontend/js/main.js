@@ -143,6 +143,7 @@ async function loginUser() {
 
             if (currentUser.playerName) {
                 showScreen('decade-selection-screen'); // Ir a la selección de década
+                generateDecadeButtons(); // Generar los botones al ir a esta pantalla
             } else {
                 showScreen('set-player-name-screen');
             }
@@ -192,6 +193,7 @@ async function setPlayerName() {
                 alert(data.message);
                 playerNameInput.value = '';
                 showScreen('decade-selection-screen'); // Ir a la selección de década
+                generateDecadeButtons(); // Generar los botones al ir a esta pantalla
             } else {
                 alert(`Error al actualizar nombre: ${data.message}`);
             }
@@ -397,6 +399,7 @@ function generateDecadeButtons() {
     decadesOrder.forEach(decadeId => {
         // Solo si hay categorías y canciones para esa década
         let hasEnoughSongsInAnyCategory = false;
+        // Verifica si configuracionCanciones[decadeId] existe antes de intentar acceder a sus propiedades
         if (configuracionCanciones[decadeId]) {
             for (const catId in configuracionCanciones[decadeId]) {
                 const songsInCat = configuracionCanciones[decadeId][catId];
@@ -499,7 +502,7 @@ async function selectCategory(category) {
     try {
         await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
         showScreen('player-selection-screen');
-    } catch (error) {
+    }  catch (error) {
         alert(`No se pudieron cargar las canciones para la categoría ${categoryNames[category]} en la década ${decadeNames[gameState.selectedDecade]}. Intenta con otra.`);
         console.error(error);
         showScreen('category-screen');
@@ -902,13 +905,10 @@ function exitGame() {
 function confirmReturnToMenu() {
     const confirmed = confirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
     if (confirmed) {
-        // Redirige a la pantalla de selección de década o categoría según el estado actual
-        if (gameState.selectedDecade && gameState.selectedDecade !== 'Todas') {
-            // Si venía de una década específica, vuelve a su menú de categorías
-            showScreen('category-screen');
-        } else {
-            // Si venía de "Todas" o no tenía década/categoría definida, vuelve a la selección de década
+        if (gameState.selectedDecade === 'Todas') {
             showScreen('decade-selection-screen'); 
+        } else {
+            showScreen('category-screen'); 
         }
     }
 }
@@ -977,6 +977,7 @@ function renderUserTotalScores() {
     }
 }
 
+
 /**
  * Renderiza el historial de duelos del usuario.
  */
@@ -997,6 +998,7 @@ function renderDuelHistory() {
         const pairKey = playerNames.join('_');
 
         if (!duelPairs[pairKey]) {
+            // Usa .slice() para crear una copia de los jugadores antes de ordenar, para no modificar el original
             duelPairs[pairKey] = { players: game.players.slice().sort((a,b) => a.name.localeCompare(b.name)), games: [] }; 
         }
         duelPairs[pairKey].games.push(game);
@@ -1004,6 +1006,7 @@ function renderDuelHistory() {
 
     for (const key in duelPairs) {
         const pair = duelPairs[key];
+        // Asegúrate de que p1Obj y p2Obj sean objetos con la propiedad 'name'
         const [p1Obj, p2Obj] = pair.players;
         const p1Name = p1Obj.name;
         const p2Name = p2Obj.name;
@@ -1063,18 +1066,17 @@ function showSongsListCategorySelection() {
     const decadesOrder = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas', 'Todas']; 
 
     decadesOrder.forEach(decadeId => {
-        // Para la opción "Todas", solo mostrarla como una categoría general
         if (decadeId === 'Todas') {
             const allButtonDiv = document.createElement('div');
-            allButtonDiv.style.gridColumn = '1 / -1'; // Para que ocupe todo el ancho
+            allButtonDiv.style.gridColumn = '1 / -1'; 
             allButtonDiv.style.marginTop = '20px';
             const allButton = document.createElement('button');
             allButton.className = 'category-btn tertiary';
             allButton.innerText = decadeNames[decadeId];
-            allButton.onclick = () => displaySongsForCategory(decadeId, 'consolidated'); // Usar 'consolidated' como categoría especial
+            allButton.onclick = () => displaySongsForCategory(decadeId, 'consolidated');
             allButtonDiv.appendChild(allButton);
             container.appendChild(allButtonDiv);
-            return; // No procesar más categorías para 'Todas' aquí
+            return; 
         }
 
         const decadeCategorySongs = configuracionCanciones[decadeId];
@@ -1096,7 +1098,6 @@ function showSongsListCategorySelection() {
 
             categoryOrder.forEach(categoryId => {
                 const songsArray = decadeCategorySongs[categoryId];
-                // Comprobamos si el array existe y tiene elementos antes de crear el botón
                 if (Array.isArray(songsArray) && songsArray.length > 0) { 
                     const button = document.createElement('button');
                     button.className = 'category-btn';
@@ -1119,10 +1120,10 @@ async function displaySongsForCategory(decadeId, categoryId) {
 
     try {
         if (decadeId === 'Todas') {
-            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); // Carga/consolida todas las canciones
+            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
             songsToDisplay = configuracionCanciones['Todas']['consolidated'];
         } else {
-            await loadSongsForDecadeAndCategory(decadeId, categoryId); // Carga la específica
+            await loadSongsForDecadeAndCategory(decadeId, categoryId); 
             songsToDisplay = configuracionCanciones[decadeId][categoryId];
         }
     } catch (error) {
@@ -1148,7 +1149,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
     const sortedSongs = [...songsToDisplay].sort((a, b) => {
         const nameA = parseDisplay(a.display).artist || parseDisplay(a.display).title;
         const nameB = parseDisplay(b.display).artist || parseDisplay(b.display).title;
-        return nameA.localeCompare(nameB);
+        return nameA.localeCompare(b.display); // Comparar por display completo para ordenar
     });
 
     sortedSongs.forEach(song => {
@@ -1190,7 +1191,6 @@ async function displaySongsForCategory(decadeId, categoryId) {
             
             const textContent = document.createElement('span');
             textContent.style.flexGrow = '1';
-            // Muestra artista y título, o solo artista si no hay título
             textContent.innerHTML = `<strong>${parseDisplay(song.display).artist}</strong>${parseDisplay(song.display).title ? `<br>${parseDisplay(song.display).title}` : ''}`;
             songDiv.appendChild(textContent);
 
@@ -1234,11 +1234,8 @@ async function displaySongsForCategory(decadeId, categoryId) {
 // =====================================================================
 
 window.onload = async () => {
-    // Al cargar la ventana, la primera pantalla que se muestra es la de inicio.
-    // El flujo para ver las décadas comienza al hacer login o al establecer el nombre de jugador.
-    // Por lo tanto, no se llama a generateDecadeButtons aquí directamente.
-    // showScreen('home-screen') es el punto de partida visual.
-
+    // Cuando la página carga, la primera pantalla activa es la de inicio ('home-screen').
+    // El menú de décadas se genera y se muestra después de un login o setPlayerName exitoso.
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
 
     if (loggedInUserEmail) {

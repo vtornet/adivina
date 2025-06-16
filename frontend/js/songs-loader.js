@@ -22,7 +22,7 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
     // Si ya tenemos las canciones cargadas, no las volvemos a cargar
     if (window.allSongsByDecadeAndCategory[decade] && window.allSongsByDecadeAndCategory[decade][category]) {
-        console.log(`Canciones de ${decade}/${category} ya cargadas.`);
+        console.log(`Canciones de <span class="math-inline">\{decade\}/</span>{category} ya cargadas.`);
         return;
     }
 
@@ -30,21 +30,21 @@ async function loadSongsForDecadeAndCategory(decade, category) {
     window.allSongsByDecadeAndCategory[decade] = window.allSongsByDecadeAndCategory[decade] || {};
     window.allSongsByDecadeAndCategory[decade][category] = []; 
 
-    const scriptPath = `data/songs/${decade}/${category}.js`;
-    
+    const scriptPath = `data/songs/<span class="math-inline">\{decade\}/</span>{category}.js`;
+
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = scriptPath;
         script.onload = () => {
-            console.log(`Canciones de ${decade}/${category} cargadas exitosamente.`);
+            console.log(`Canciones de <span class="math-inline">\{decade\}/</span>{category} cargadas exitosamente.`);
             // El script cargado ya habrá poblado `window.allSongsByDecadeAndCategory`
             resolve();
         };
         script.onerror = (e) => {
-            console.error(`Error al cargar las canciones de ${decade}/${category} desde ${scriptPath}:`, e);
+            console.error(`Error al cargar las canciones de <span class="math-inline">\{decade\}/</span>{category} desde ${scriptPath}:`, e);
             // Si la carga falla, asegúrate de que el array quede vacío o lo que prefieras
             window.allSongsByDecadeAndCategory[decade][category] = []; 
-            reject(new Error(`No se pudo cargar el archivo de canciones para ${decade}/${category}.`));
+            reject(new Error(`No se pudo cargar el archivo de canciones para <span class="math-inline">\{decade\}/</span>{category}.`));
         };
         document.head.appendChild(script);
     });
@@ -102,7 +102,7 @@ async function loadAllSongs() {
             }
         }
     }
-    
+
     // Almacenar el resultado consolidado
     window.allSongsByDecadeAndCategory['Todas'] = window.allSongsByDecadeAndCategory['Todas'] || {};
     window.allSongsByDecadeAndCategory['Todas']['consolidated'] = allConsolidatedSongs;
