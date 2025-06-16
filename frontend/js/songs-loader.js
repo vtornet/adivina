@@ -5,8 +5,8 @@ window.allSongsByDecadeAndCategory = {};
 
 // Las categorías que esperamos en cada década
 const allPossibleCategories = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-// Las décadas que esperamos
-const allDecadesDefined = ['80s', '90s', '00s', '10s', 'Actual'];
+// Las décadas que esperamos (ajustado a tus décadas existentes)
+const allDecadesDefined = ['80s', '90s', '00s', '10s', 'Actual']; 
 
 /**
  * Carga las canciones para una década y categoría específica desde un archivo JS.
@@ -22,7 +22,7 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
     // Si ya tenemos las canciones cargadas, no las volvemos a cargar
     if (window.allSongsByDecadeAndCategory[decade] && window.allSongsByDecadeAndCategory[decade][category]) {
-        console.log(`Canciones de <span class="math-inline">\{decade\}/</span>{category} ya cargadas.`);
+        console.log(`Canciones de ${decade}/${category} ya cargadas.`);
         return;
     }
 
@@ -30,21 +30,21 @@ async function loadSongsForDecadeAndCategory(decade, category) {
     window.allSongsByDecadeAndCategory[decade] = window.allSongsByDecadeAndCategory[decade] || {};
     window.allSongsByDecadeAndCategory[decade][category] = []; 
 
-    const scriptPath = `data/songs/<span class="math-inline">\{decade\}/</span>{category}.js`;
-
+    const scriptPath = `data/songs/${decade}/${category}.js`;
+    
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = scriptPath;
         script.onload = () => {
-            console.log(`Canciones de <span class="math-inline">\{decade\}/</span>{category} cargadas exitosamente.`);
+            console.log(`Canciones de ${decade}/${category} cargadas exitosamente.`);
             // El script cargado ya habrá poblado `window.allSongsByDecadeAndCategory`
             resolve();
         };
         script.onerror = (e) => {
-            console.error(`Error al cargar las canciones de <span class="math-inline">\{decade\}/</span>{category} desde ${scriptPath}:`, e);
+            console.error(`Error al cargar las canciones de ${decade}/${category} desde ${scriptPath}:`, e);
             // Si la carga falla, asegúrate de que el array quede vacío o lo que prefieras
             window.allSongsByDecadeAndCategory[decade][category] = []; 
-            reject(new Error(`No se pudo cargar el archivo de canciones para <span class="math-inline">\{decade\}/</span>{category}.`));
+            reject(new Error(`No se pudo cargar el archivo de canciones para ${decade}/${category}.`));
         };
         document.head.appendChild(script);
     });
@@ -71,17 +71,13 @@ async function loadAllSongs() {
     // Cargar todos los archivos de canciones específicos de cada década/categoría
     for (const decade of allDecadesDefined) {
         for (const category of allPossibleCategories) {
-            // Intentar cargar cada combinación década/categoría.
-            // El .catch() en la promesa evitará que Promise.allSettled falle si un archivo no existe.
             loadPromises.push(loadSongsForDecadeAndCategory(decade, category).catch(e => {
-                // El error ya se loguea dentro de loadSongsForDecadeAndCategory
                 return null; 
             }));
         }
     }
 
     // Esperar a que todas las promesas de carga se resuelvan (o rechacen)
-    // `Promise.allSettled` es mejor aquí porque no detiene la ejecución si alguna carga individual falla.
     await Promise.allSettled(loadPromises);
 
     // Consolidar todas las canciones cargadas
@@ -91,8 +87,6 @@ async function loadAllSongs() {
             for (const category in decadeData) {
                 const songsArray = decadeData[category];
                 if (Array.isArray(songsArray)) {
-                    // Añadir las propiedades originalDecade y originalCategory a cada canción
-                    // Esto es VITAL para que playAudioSnippet() pueda encontrar la ruta correcta.
                     songsArray.forEach(song => {
                         if (!song.originalDecade) song.originalDecade = decade;
                         if (!song.originalCategory) song.originalCategory = category;
@@ -102,14 +96,26 @@ async function loadAllSongs() {
             }
         }
     }
-
+    
     // Almacenar el resultado consolidado
     window.allSongsByDecadeAndCategory['Todas'] = window.allSongsByDecadeAndCategory['Todas'] || {};
     window.allSongsByDecadeAndCategory['Todas']['consolidated'] = allConsolidatedSongs;
     console.log(`Consolidado 'Todas' con ${allConsolidatedSongs.length} canciones.`);
 }
 
+/**
+ * Función auxiliar para obtener todas las categorías que existen para una década.
+ * Esto es para que main.js pueda pedir la lista de categorías sin cargarlas todas.
+ * @param {string} decadeId - La década.
+ * @returns {Array<string>} Un array de nombres de categorías esperadas para esa década.
+ */
+function getExpectedCategoriesForDecade(decadeId) {
+    // Esta función debería ser más inteligente si las categorías varían mucho por década.
+    // Por ahora, asumimos que todas las décadas pueden tener todas las categorías.
+    // La verdadera validación de si hay canciones se hace al cargar los archivos.
+    return allPossibleCategories; 
+}
+
+
 // `configuracionCanciones` ahora es un proxy para `window.allSongsByDecadeAndCategory`
-// Esto permite que main.js siga usando 'configuracionCanciones'
-// como si fuera el objeto completo, pero los datos se cargan bajo demanda.
 const configuracionCanciones = window.allSongsByDecadeAndCategory;
