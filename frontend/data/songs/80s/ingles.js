@@ -1,7 +1,7 @@
 // frontend/data/songs/80s/espanol.js
 window.allSongsByDecadeAndCategory = window.allSongsByDecadeAndCategory || {};
 window.allSongsByDecadeAndCategory['80s'] = window.allSongsByDecadeAndCategory['80s'] || {};
-window.allSongsByDecadeAndCategory['80s'].espanol = [
+window.allSongsByDecadeAndCategory['80s'].ingles = [
     { file: 'alejandro-sanz - y-si-fuera-ella.mp3', display: 'Alejandro Sanz - Y Si Fuera Ella', listenUrl: 'https://open.spotify.com/search/Alejandro%20Sanz%20Y%20Si%20Fuera%20Ella', platform: 'spotify' },
     { file: 'alex-ubago - sin-miedo-a-nada.mp3', display: 'Alex Ubago - Sin Miedo A Nada', listenUrl: 'https://open.spotify.com/search/Alex%20Ubago%20Sin%20Miedo%20A%20Nada', platform: 'spotify' },
     { file: 'alvaro-soler - sofia.mp3', display: 'Alvaro Soler - Sofia', listenUrl: 'https://open.spotify.com/search/Alvaro%20Soler%20Sofia', platform: 'spotify' },
