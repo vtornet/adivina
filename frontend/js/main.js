@@ -36,6 +36,11 @@ let userAccumulatedScores = {};
 // gameHistory contendrá 'decade' en cada objeto de partida
 let gameHistory = []; 
 
+/**
+ * Muestra la pantalla especificada y oculta las demás.
+ * También actualiza el título de la pantalla de categoría si es necesario.
+ * @param {string} screenId - El ID de la pantalla a mostrar.
+ */
 function showScreen(screenId) {
     screens.forEach(screen => screen.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
@@ -48,14 +53,22 @@ function showScreen(screenId) {
 }
 
 // =====================================================================
-// FUNCIONES DE AUTENTICACIÓN (Registro y Login) - SIN CAMBIOS DE LÓGICA AQUÍ
+// FUNCIONES DE AUTENTICACIÓN (Registro y Login)
 // =====================================================================
 
+/**
+ * Valida si una cadena de texto es un formato de email válido.
+ * @param {string} email - La cadena de email a validar.
+ * @returns {boolean} True si el email es válido, false en caso contrario.
+ */
 function isValidEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 
+/**
+ * Maneja el registro de nuevos usuarios enviando los datos al backend.
+ */
 async function registerUser() {
     const emailInput = document.getElementById('register-email');
     const passwordInput = document.getElementById('register-password');
@@ -94,6 +107,9 @@ async function registerUser() {
     }
 }
 
+/**
+ * Maneja el inicio de sesión de usuarios existentes, carga sus datos y redirige.
+ */
 async function loginUser() {
     const emailInput = document.getElementById('login-email');
     const passwordInput = document.getElementById('login-password');
@@ -139,6 +155,9 @@ async function loginUser() {
     }
 }
 
+/**
+ * Cierra la sesión del usuario actual y redirige a la pantalla de inicio.
+ */
 function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
@@ -146,6 +165,9 @@ function logout() {
     showScreen('home-screen');
 }
 
+/**
+ * Establece o actualiza el nombre de jugador del usuario logueado.
+ */
 async function setPlayerName() {
     const playerNameInput = document.getElementById('player-name-input');
     const newPlayerName = playerNameInput.value.trim();
@@ -188,6 +210,10 @@ async function setPlayerName() {
 // (ACTUALIZADAS para incluir 'decade')
 // =====================================================================
 
+/**
+ * Carga las puntuaciones acumuladas para un usuario desde el backend.
+ * @param {string} userEmail - El email del usuario.
+ */
 async function loadUserScores(userEmail) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
@@ -214,6 +240,13 @@ async function loadUserScores(userEmail) {
     }
 }
 
+/**
+ * Guarda o actualiza la puntuación acumulada de un usuario para una década y categoría.
+ * @param {string} userEmail - El email del usuario.
+ * @param {string} decade - La década de la partida.
+ * @param {string} category - La categoría de la partida.
+ * @param {number} score - Los puntos a añadir/actualizar.
+ */
 async function saveUserScores(userEmail, decade, category, score) {
     if (!userEmail || !decade || !category || typeof score === 'undefined') {
         console.error("Error: Datos incompletos para guardar puntuación acumulada (email, decade, category, score).");
@@ -240,6 +273,10 @@ async function saveUserScores(userEmail, decade, category, score) {
     }
 }
 
+/**
+ * Carga el historial de partidas para un usuario desde el backend.
+ * @param {string} userEmail - El email del usuario.
+ */
 async function loadGameHistory(userEmail) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
@@ -258,6 +295,13 @@ async function loadGameHistory(userEmail) {
     }
 }
 
+/**
+ * Guarda el resultado de una partida en el historial.
+ * @param {Array<Object>} players - Array de objetos de jugadores con su nombre, puntuación y email (si está logueado).
+ * @param {string} winnerName - El nombre del ganador.
+ * @param {string} decade - La década de la partida.
+ * @param {string} category - La categoría de la partida.
+ */
 async function saveGameResult(players, winnerName, decade, category) {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
@@ -295,6 +339,12 @@ async function saveGameResult(players, winnerName, decade, category) {
     }
 }
 
+/**
+ * Calcula las victorias entre dos jugadores específicos en el historial.
+ * @param {string} player1Name - Nombre del primer jugador.
+ * @param {string} player2Name - Nombre del segundo jugador.
+ * @returns {Object} Un objeto con el número de victorias para cada jugador.
+ */
 function calculateDuelWins(player1Name, player2Name) {
     let wins1 = 0;
     let wins2 = 0;
@@ -323,6 +373,11 @@ function calculateDuelWins(player1Name, player2Name) {
 // FUNCIONES DEL JUEGO (MODIFICADAS para incluir 'decade' y 'Todas')
 // =====================================================================
 
+/**
+ * Parsea el texto de visualización de una canción para extraer artista y título.
+ * @param {string} displayText - El texto de visualización de la canción.
+ * @returns {object} Un objeto con las propiedades `artist` y `title`.
+ */
 function parseDisplay(displayText) {
     const parts = displayText.split(' - ');
     if (parts.length < 2) {
@@ -331,6 +386,9 @@ function parseDisplay(displayText) {
     return { artist: parts[0].trim(), title: parts.slice(1).join(' - ').trim() };
 }
 
+/**
+ * Genera y muestra los botones de selección de década.
+ */
 function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
@@ -338,7 +396,6 @@ function generateDecadeButtons() {
 
     decadesOrder.forEach(decadeId => {
         // Solo si hay categorías y canciones para esa década
-        // Hay que asegurarse de que la década y al menos una de sus categorías tenga 4 canciones
         let hasEnoughSongsInAnyCategory = false;
         if (configuracionCanciones[decadeId]) {
             for (const catId in configuracionCanciones[decadeId]) {
@@ -352,7 +409,7 @@ function generateDecadeButtons() {
 
         if (hasEnoughSongsInAnyCategory) {
             const button = document.createElement('button');
-            button.className = 'category-btn'; // Se puede usar la misma clase de estilo
+            button.className = 'category-btn'; 
             button.innerText = decadeNames[decadeId];
             button.onclick = () => selectDecade(decadeId);
             container.appendChild(button);
@@ -360,21 +417,18 @@ function generateDecadeButtons() {
     });
 
     // Añadir el botón "Todas"
-    // Solo si hay al menos 4 canciones consolidadas en total.
-    // Esto es defensivo; loadAllSongs se encargará de rellenar 'Todas'
-    // La primera vez que se carga la página o se pulsa 'Todas', puede que aún no esté consolidado,
-    // pero selectDecade('Todas') lo forzará.
-    const allSongsCount = (configuracionCanciones['Todas'] && configuracionCanciones['Todas']['consolidated']) 
-                          ? configuracionCanciones['Todas']['consolidated'].length : 0;
-    if (allSongsCount >= 4 || true) { // Permitimos que aparezca siempre y loadAllSongs() lo maneje
-        const allButton = document.createElement('button');
-        allButton.className = 'category-btn tertiary'; 
-        allButton.innerText = decadeNames['Todas'];
-        allButton.onclick = () => selectDecade('Todas');
-        container.appendChild(allButton);
-    }
+    // Lo hacemos aparecer siempre, y la lógica de selectDecade('Todas') se encargará de cargar/consolidar.
+    const allButton = document.createElement('button');
+    allButton.className = 'category-btn tertiary'; 
+    allButton.innerText = decadeNames['Todas'];
+    allButton.onclick = () => selectDecade('Todas');
+    container.appendChild(allButton);
 }
 
+/**
+ * Maneja la selección de una década y redirige a la pantalla de categoría o de jugadores.
+ * @param {string} decade - La década seleccionada.
+ */
 async function selectDecade(decade) {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
@@ -399,6 +453,9 @@ async function selectDecade(decade) {
     }
 }
 
+/**
+ * Genera y muestra los botones de categoría para la década seleccionada.
+ */
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
     container.innerHTML = '';
@@ -427,6 +484,10 @@ function generateCategoryButtons() {
     }
 }
 
+/**
+ * Maneja la selección de una categoría, carga las canciones y redirige a la pantalla de selección de jugadores.
+ * @param {string} category - La categoría seleccionada.
+ */
 async function selectCategory(category) {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
@@ -445,6 +506,10 @@ async function selectCategory(category) {
     }
 }
 
+/**
+ * Permite al usuario seleccionar el número de jugadores y prepara los inputs para sus nombres.
+ * @param {number} numPlayers - El número de jugadores seleccionado.
+ */
 function selectPlayers(numPlayers) {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
@@ -470,6 +535,9 @@ function selectPlayers(numPlayers) {
     showScreen('player-names-input-screen');
 }
 
+/**
+ * Inicia una nueva partida, configurando jugadores y preguntas.
+ */
 function startGame() {
     if (!currentUser || !currentUser.playerName) {
         alert('Error: No se ha encontrado el nombre del jugador principal. Por favor, inicia sesión de nuevo.');
@@ -510,7 +578,6 @@ function startGame() {
     if (gameState.selectedDecade === 'Todas') {
         allSongsToChooseFrom = [...configuracionCanciones['Todas']['consolidated']];
     } else {
-        // Asegurarse de que la propiedad exista antes de intentar acceder a ella
         if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
             alert(`Error: No se encontraron canciones para la década ${decadeNames[gameState.selectedDecade]} y categoría ${categoryNames[gameState.category]}.`);
             showScreen('decade-selection-screen');
@@ -549,6 +616,9 @@ function startGame() {
     showScreen('game-screen');
 }
 
+/**
+ * Configura la siguiente pregunta del juego.
+ */
 function setupQuestion() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
 
@@ -580,10 +650,9 @@ function setupQuestion() {
         allSongsToChooseFromForOptions = [...configuracionCanciones['Todas']['consolidated']];
     } else {
          if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
-            // Esto no debería ocurrir si selectCategory ya hizo el load y validó, pero es una seguridad.
             console.error(`Error: Opciones de canciones no encontradas para ${gameState.selectedDecade} - ${gameState.category}.`);
             alert('Error interno al cargar las opciones de respuesta. Intenta de nuevo.');
-            showScreen('decade-selection-screen'); // Volver al inicio
+            showScreen('decade-selection-screen'); 
             return;
         }
         allSongsToChooseFromForOptions = [...configuracionCanciones[gameState.selectedDecade][gameState.category]];
@@ -613,6 +682,9 @@ function setupQuestion() {
     playBtn.innerText = "▶";
 }
 
+/**
+ * Actualiza el contador de intentos y su color.
+ */
 function updateAttemptsCounter() {
     const counter = document.getElementById('attempts-counter');
     counter.innerText = `Intentos: ${gameState.attempts}`;
@@ -621,6 +693,9 @@ function updateAttemptsCounter() {
     else counter.style.backgroundColor = 'var(--incorrect-color)';
 }
 
+/**
+ * Reproduce un fragmento de audio de la canción actual.
+ */
 function playAudioSnippet() {
     if (gameState.hasPlayed) return;
     gameState.hasPlayed = true;
@@ -633,7 +708,7 @@ function playAudioSnippet() {
     if (!currentQuestion.originalDecade || !currentQuestion.originalCategory) {
         console.error("Error: Canción sin decade/category original para la reproducción:", currentQuestion);
         alert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
-        return; // Detener la reproducción
+        return; 
     }
     audioPlayer.src = `audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
 
@@ -650,6 +725,11 @@ function playAudioSnippet() {
     }, duration);
 }
 
+/**
+ * Verifica la respuesta del jugador.
+ * @param {boolean} isCorrect - True si la respuesta es correcta, false si es incorrecta.
+ * @param {HTMLElement} button - El botón de respuesta que se pulsó.
+ */
 function checkAnswer(isCorrect, button) {
     if (!gameState.hasPlayed) {
         alert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
@@ -691,6 +771,9 @@ function checkAnswer(isCorrect, button) {
     }
 }
 
+/**
+ * Avanza al siguiente jugador o finaliza la partida si todos han jugado.
+ */
 function nextPlayerOrEndGame() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
 
@@ -720,11 +803,17 @@ function nextPlayerOrEndGame() {
     }
 }
 
+/**
+ * Continúa el turno del siguiente jugador después de una pantalla de transición.
+ */
 function continueToNextPlayerTurn() {
     setupQuestion();
     showScreen('game-screen');
 }
 
+/**
+ * Finaliza la partida, calcula el ganador y guarda los resultados.
+ */
 function endGame() {
     const finalScoresContainer = document.getElementById('final-scores');
     finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
@@ -797,6 +886,9 @@ function endGame() {
     showScreen('end-game-screen');
 }
 
+/**
+ * Permite al usuario salir del juego después de una confirmación.
+ */
 function exitGame() {
     const confirmed = confirm('¿Seguro que quieres salir del juego? Se cerrará la sesión actual.');
     if (confirmed) {
@@ -804,13 +896,19 @@ function exitGame() {
     }
 }
 
+/**
+ * Confirma si el usuario desea regresar al menú principal, perdiendo el progreso de la partida actual.
+ */
 function confirmReturnToMenu() {
     const confirmed = confirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
     if (confirmed) {
-        if (gameState.selectedDecade === 'Todas') {
-            showScreen('decade-selection-screen'); 
+        // Redirige a la pantalla de selección de década o categoría según el estado actual
+        if (gameState.selectedDecade && gameState.selectedDecade !== 'Todas') {
+            // Si venía de una década específica, vuelve a su menú de categorías
+            showScreen('category-screen');
         } else {
-            showScreen('category-screen'); 
+            // Si venía de "Todas" o no tenía década/categoría definida, vuelve a la selección de década
+            showScreen('decade-selection-screen'); 
         }
     }
 }
@@ -819,6 +917,9 @@ function confirmReturnToMenu() {
 // FUNCIONES DE PANTALLA DE ESTADÍSTICAS (ACTUALIZADAS para décadas y categorías)
 // =====================================================================
 
+/**
+ * Muestra la pantalla de estadísticas del usuario actual.
+ */
 function showStatisticsScreen() {
     if (!currentUser || !currentUser.email) {
         alert("Debes iniciar sesión para ver tus estadísticas.");
@@ -831,6 +932,9 @@ function showStatisticsScreen() {
     renderDuelHistory();
 }
 
+/**
+ * Renderiza las puntuaciones totales del usuario por década y categoría.
+ */
 function renderUserTotalScores() {
     const categoryScoresList = document.getElementById('category-scores-list');
     categoryScoresList.innerHTML = '';
@@ -873,7 +977,9 @@ function renderUserTotalScores() {
     }
 }
 
-
+/**
+ * Renderiza el historial de duelos del usuario.
+ */
 function renderDuelHistory() {
     const duelList = document.getElementById('duel-list');
     duelList.innerHTML = '';
@@ -891,7 +997,7 @@ function renderDuelHistory() {
         const pairKey = playerNames.join('_');
 
         if (!duelPairs[pairKey]) {
-            duelPairs[pairKey] = { players: game.players.sort((a,b) => a.name.localeCompare(b.name)), games: [] }; 
+            duelPairs[pairKey] = { players: game.players.slice().sort((a,b) => a.name.localeCompare(b.name)), games: [] }; 
         }
         duelPairs[pairKey].games.push(game);
     });
@@ -946,6 +1052,9 @@ function renderDuelHistory() {
 // FUNCIONES DE PANTALLA DE LISTADO DE CANCIONES (ACTUALIZADAS para décadas y categorías)
 // =====================================================================
 
+/**
+ * Muestra la pantalla para seleccionar una categoría y década para ver el listado de canciones.
+ */
 function showSongsListCategorySelection() {
     showScreen('songs-list-category-screen');
     const container = document.getElementById('songs-list-category-buttons');
@@ -987,7 +1096,8 @@ function showSongsListCategorySelection() {
 
             categoryOrder.forEach(categoryId => {
                 const songsArray = decadeCategorySongs[categoryId];
-                if (Array.isArray(songsArray) && songsArray.length > 0) { // Asegurarse de que sea un array y tenga contenido
+                // Comprobamos si el array existe y tiene elementos antes de crear el botón
+                if (Array.isArray(songsArray) && songsArray.length > 0) { 
                     const button = document.createElement('button');
                     button.className = 'category-btn';
                     button.innerText = categoryNames[categoryId];
@@ -999,6 +1109,11 @@ function showSongsListCategorySelection() {
     });
 }
 
+/**
+ * Muestra la lista de canciones para una década y categoría específicas.
+ * @param {string} decadeId - La década de las canciones a mostrar.
+ * @param {string} categoryId - La categoría de las canciones a mostrar.
+ */
 async function displaySongsForCategory(decadeId, categoryId) {
     let songsToDisplay;
 
@@ -1075,7 +1190,8 @@ async function displaySongsForCategory(decadeId, categoryId) {
             
             const textContent = document.createElement('span');
             textContent.style.flexGrow = '1';
-            textContent.innerHTML = `<strong>${parseDisplay(song.display).artist}</strong>${parsedDisplay(song.display).title ? `<br>${parseDisplay(song.display).title}` : ''}`;
+            // Muestra artista y título, o solo artista si no hay título
+            textContent.innerHTML = `<strong>${parseDisplay(song.display).artist}</strong>${parseDisplay(song.display).title ? `<br>${parseDisplay(song.display).title}` : ''}`;
             songDiv.appendChild(textContent);
 
             if (song.listenUrl && song.listenUrl.length > 5 && !song.listenUrl.includes('URL_DE_BÚSQUEDA_PENDIENTE')) {
@@ -1114,16 +1230,19 @@ async function displaySongsForCategory(decadeId, categoryId) {
 }
     
 // =====================================================================
-// INICIALIZACIÓN (Modificada para gestionar sesión)
+// INICIALIZACIÓN
 // =====================================================================
 
 window.onload = async () => {
-    generateCategoryButtons();
+    // Al cargar la ventana, la primera pantalla que se muestra es la de inicio.
+    // El flujo para ver las décadas comienza al hacer login o al establecer el nombre de jugador.
+    // Por lo tanto, no se llama a generateDecadeButtons aquí directamente.
+    // showScreen('home-screen') es el punto de partida visual.
+
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
 
     if (loggedInUserEmail) {
         try {
-            // *** ESTA ES LA LÓGICA CORRECTA PARA CARGAR EL USUARIO DESDE LA API ***
             const response = await fetch(`${API_BASE_URL}/api/users/${loggedInUserEmail}`);
             const data = await response.json();
 
@@ -1133,18 +1252,19 @@ window.onload = async () => {
                 await loadGameHistory(currentUser.email);
 
                 if (currentUser.playerName) {
-                    showScreen('category-screen');
+                    showScreen('decade-selection-screen'); // Redirige a la selección de década si ya tiene nombre
+                    generateDecadeButtons(); // Genera los botones al entrar a esta pantalla
                 } else {
                     showScreen('set-player-name-screen');
                 }
             } else {
                 console.warn(`No se pudo cargar el perfil del usuario ${loggedInUserEmail} desde la API:`, data.message || 'Error desconocido.');
-                localStorage.removeItem('loggedInUserEmail'); // Limpia si la API no lo encuentra
+                localStorage.removeItem('loggedInUserEmail'); 
                 showScreen('login-screen');
             }
         } catch (error) {
             console.error('Error de red al cargar el perfil del usuario al inicio:', error);
-            localStorage.removeItem('loggedInUserEmail'); // Limpiar si hay problemas de red
+            localStorage.removeItem('loggedInUserEmail'); 
             showScreen('login-screen');
         }
     } else {
