@@ -962,7 +962,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Orden de las décadas a mostrar
+    const decadesInOrder = ['80s', '90s', '00s', '10s', 'Actual']; // Orden de las décadas a mostrar
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
@@ -1079,7 +1079,7 @@ function showSongsListCategorySelection() {
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Solo las décadas que quieres mostrar aquí
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual']; // Solo las décadas que quieres mostrar aquí
 
     decadesOrder.forEach(decadeId => {
         if (decadeId === 'Todas') {
