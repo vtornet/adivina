@@ -1,5 +1,4 @@
 const decadeNames = {
-    // Se eliminó '60s' y '70s' si no los vas a usar
     '80s': 'Década de los 80',
     '90s': 'Década de los 90',
     '00s': 'Década de los 2000',
@@ -12,10 +11,10 @@ const categoryNames = {
     espanol: "Canciones en Español",
     ingles: "Canciones en Inglés",
     peliculas: "BSO de Películas",
-    series: "BSO de Series", // Series ahora irán dentro de cada década
-    tv: "Programas de TV",     // TV ahora irán dentro de cada década
-    infantiles: "Series Infantiles", // Infantiles ahora irán dentro de cada década
-    anuncios: "Anuncios",      // Anuncios ahora irán dentro de cada década
+    series: "BSO de Series",
+    tv: "Programas de TV",
+    infantiles: "Series Infantiles",
+    anuncios: "Anuncios",
     consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
 };
 
@@ -32,11 +31,6 @@ let currentUser = null;
 let userAccumulatedScores = {}; 
 let gameHistory = []; 
 
-/**
- * Muestra la pantalla especificada y oculta las demás.
- * También actualiza el título de la pantalla de categoría si es necesario.
- * @param {string} screenId - El ID de la pantalla a mostrar.
- */
 function showScreen(screenId) {
     screens.forEach(screen => screen.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
@@ -52,19 +46,11 @@ function showScreen(screenId) {
 // FUNCIONES DE AUTENTICACIÓN (Registro y Login)
 // =====================================================================
 
-/**
- * Valida si una cadena de texto es un formato de email válido.
- * @param {string} email - La cadena de email a validar.
- * @returns {boolean} True si el email es válido, false en caso contrario.
- */
 function isValidEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 
-/**
- * Maneja el registro de nuevos usuarios enviando los datos al backend.
- */
 async function registerUser() {
     const emailInput = document.getElementById('register-email');
     const passwordInput = document.getElementById('register-password');
@@ -103,9 +89,6 @@ async function registerUser() {
     }
 }
 
-/**
- * Maneja el inicio de sesión de usuarios existentes, carga sus datos y redirige.
- */
 async function loginUser() {
     const emailInput = document.getElementById('login-email');
     const passwordInput = document.getElementById('login-password');
@@ -138,8 +121,9 @@ async function loginUser() {
             await loadGameHistory(currentUser.email);
 
             if (currentUser.playerName) {
-                showScreen('decade-selection-screen'); // Ir a la selección de década
-                generateDecadeButtons(); // Generar los botones al ir a esta pantalla
+                showScreen('decade-selection-screen'); 
+                // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
+                generateDecadeButtons(); 
             } else {
                 showScreen('set-player-name-screen');
             }
@@ -152,9 +136,6 @@ async function loginUser() {
     }
 }
 
-/**
- * Cierra la sesión del usuario actual y redirige a la pantalla de inicio.
- */
 function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
@@ -162,9 +143,6 @@ function logout() {
     showScreen('home-screen');
 }
 
-/**
- * Establece o actualiza el nombre de jugador del usuario logueado.
- */
 async function setPlayerName() {
     const playerNameInput = document.getElementById('player-name-input');
     const newPlayerName = playerNameInput.value.trim();
@@ -188,8 +166,9 @@ async function setPlayerName() {
                 currentUser.playerName = newPlayerName;
                 alert(data.message);
                 playerNameInput.value = '';
-                showScreen('decade-selection-screen'); // Ir a la selección de década
-                generateDecadeButtons(); // Generar los botones al ir a esta pantalla
+                showScreen('decade-selection-screen'); 
+                // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
+                generateDecadeButtons(); 
             } else {
                 alert(`Error al actualizar nombre: ${data.message}`);
             }
@@ -208,10 +187,6 @@ async function setPlayerName() {
 // (ACTUALIZADAS para incluir 'decade')
 // =====================================================================
 
-/**
- * Carga las puntuaciones acumuladas para un usuario desde el backend.
- * @param {string} userEmail - El email del usuario.
- */
 async function loadUserScores(userEmail) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
@@ -219,7 +194,6 @@ async function loadUserScores(userEmail) {
 
         if (response.ok) {
             const scoresByDecade = {};
-            // El backend ahora devuelve un array de objetos { email, decade, category, score }
             data.forEach(item => { 
                 if (!scoresByDecade[item.decade]) {
                     scoresByDecade[item.decade] = {};
@@ -238,13 +212,6 @@ async function loadUserScores(userEmail) {
     }
 }
 
-/**
- * Guarda o actualiza la puntuación acumulada de un usuario para una década y categoría.
- * @param {string} userEmail - El email del usuario.
- * @param {string} decade - La década de la partida.
- * @param {string} category - La categoría de la partida.
- * @param {number} score - Los puntos a añadir/actualizar.
- */
 async function saveUserScores(userEmail, decade, category, score) {
     if (!userEmail || !decade || !category || typeof score === 'undefined') {
         console.error("Error: Datos incompletos para guardar puntuación acumulada (email, decade, category, score).");
@@ -271,10 +238,6 @@ async function saveUserScores(userEmail, decade, category, score) {
     }
 }
 
-/**
- * Carga el historial de partidas para un usuario desde el backend.
- * @param {string} userEmail - El email del usuario.
- */
 async function loadGameHistory(userEmail) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
@@ -293,13 +256,6 @@ async function loadGameHistory(userEmail) {
     }
 }
 
-/**
- * Guarda el resultado de una partida en el historial.
- * @param {Array<Object>} players - Array de objetos de jugadores con su nombre, puntuación y email (si está logueado).
- * @param {string} winnerName - El nombre del ganador.
- * @param {string} decade - La década de la partida.
- * @param {string} category - La categoría de la partida.
- */
 async function saveGameResult(players, winnerName, decade, category) {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
@@ -337,12 +293,6 @@ async function saveGameResult(players, winnerName, decade, category) {
     }
 }
 
-/**
- * Calcula las victorias entre dos jugadores específicos en el historial.
- * @param {string} player1Name - Nombre del primer jugador.
- * @param {string} player2Name - Nombre del segundo jugador.
- * @returns {Object} Un objeto con el número de victorias para cada jugador.
- */
 function calculateDuelWins(player1Name, player2Name) {
     let wins1 = 0;
     let wins2 = 0;
@@ -371,11 +321,6 @@ function calculateDuelWins(player1Name, player2Name) {
 // FUNCIONES DEL JUEGO (MODIFICADAS para incluir 'decade' y 'Todas')
 // =====================================================================
 
-/**
- * Parsea el texto de visualización de una canción para extraer artista y título.
- * @param {string} displayText - El texto de visualización de la canción.
- * @returns {object} Un objeto con las propiedades `artist` y `title`.
- */
 function parseDisplay(displayText) {
     const parts = displayText.split(' - ');
     if (parts.length < 2) {
@@ -387,49 +332,55 @@ function parseDisplay(displayText) {
 /**
  * Genera y muestra los botones de selección de década.
  */
-function generateDecadeButtons() {
+async function generateDecadeButtons() { // Convertir a async
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
-    // Define el orden de las décadas que quieres mostrar
+    // Definimos las décadas que queremos mostrar y que esperamos tener archivos .js
     const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual']; 
+    let generationPromises = [];
 
     decadesOrder.forEach(decadeId => {
-        // Solo si hay categorías y canciones para esa década
-        let hasEnoughSongsInAnyCategory = false;
-        // Verifica si configuracionCanciones[decadeId] existe antes de intentar acceder a sus propiedades
-        if (configuracionCanciones[decadeId]) {
-            for (const catId in configuracionCanciones[decadeId]) {
-                const songsInCat = configuracionCanciones[decadeId][catId];
-                if (Array.isArray(songsInCat) && songsInCat.length >= 4) { // Requiere al menos 4 canciones para aparecer
-                    hasEnoughSongsInAnyCategory = true;
-                    break;
+        // Para cada década, intentamos cargar una categoría principal para ver si hay contenido.
+        // Asumimos 'espanol' como la primera categoría para verificar.
+        // Si no existe 'espanol.js' o no tiene 4 canciones, esta década no se mostrará.
+        const representativeCategory = 'espanol'; // O 'peliculas', la que sea más común
+        
+        // No cargamos todo el contenido de la década aquí, solo intentamos cargar un archivo representativo
+        // para poblar `configuracionCanciones[decadeId][representativeCategory]`
+        generationPromises.push(
+            loadSongsForDecadeAndCategory(decadeId, representativeCategory)
+            .then(() => {
+                // Una vez cargada la categoría representativa, verificamos si la década tiene suficientes canciones
+                const songsInRepresentativeCat = configuracionCanciones[decadeId] && configuracionCanciones[decadeId][representativeCategory]
+                                                ? configuracionCanciones[decadeId][representativeCategory].length : 0;
+                
+                if (songsInRepresentativeCat >= 4) {
+                    const button = document.createElement('button');
+                    button.className = 'category-btn'; 
+                    button.innerText = decadeNames[decadeId];
+                    button.onclick = () => selectDecade(decadeId);
+                    container.appendChild(button);
+                } else {
+                    console.warn(`Década ${decadeId} - Categoría ${representativeCategory} tiene menos de 4 canciones. No se mostrará el botón de la década.`);
                 }
-            }
-        }
-
-        if (hasEnoughSongsInAnyCategory) {
-            const button = document.createElement('button');
-            button.className = 'category-btn'; 
-            button.innerText = decadeNames[decadeId];
-            button.onclick = () => selectDecade(decadeId);
-            container.appendChild(button);
-        }
+            })
+            .catch(error => {
+                console.warn(`No se pudo cargar la categoría representativa (${representativeCategory}) para la década ${decadeId}. No se mostrará el botón de la década.`, error);
+            })
+        );
     });
 
+    // Esperar a que todos los intentos de generación de botones de décadas terminen
+    await Promise.allSettled(generationPromises);
+
     // Añadir el botón "Todas"
-    // Lo hacemos aparecer siempre si hay suficientes canciones combinadas para ello.
-    // Aunque el `|| true` lo fuerce, es bueno que el check inicial esté ahí.
-    const allSongsCount = (configuracionCanciones['Todas'] && configuracionCanciones['Todas']['consolidated']) 
-                          ? configuracionCanciones['Todas']['consolidated'].length : 0;
-    if (allSongsCount >= 4 || true) { // Siempre aparece el botón "Todas"
-        const allButton = document.createElement('button');
-        allButton.className = 'category-btn tertiary'; 
-        allButton.innerText = decadeNames['Todas'];
-        allButton.onclick = () => selectDecade('Todas');
-        container.appendChild(allButton);
-    } else {
-        console.warn("No hay suficientes canciones consolidadas para activar la opción 'Todas las Décadas'.");
-    }
+    // Lo hacemos aparecer siempre, y loadAllSongs() se encargará de consolidar las disponibles.
+    // Verificamos al inicio de startGame si hay suficientes en total.
+    const allButton = document.createElement('button');
+    allButton.className = 'category-btn tertiary'; 
+    allButton.innerText = decadeNames['Todas'];
+    allButton.onclick = () => selectDecade('Todas');
+    container.appendChild(allButton);
 }
 
 /**
@@ -448,7 +399,8 @@ async function selectDecade(decade) {
         gameState.category = 'consolidated'; // Categoría especial para "Todas"
         try {
             await loadSongsForDecadeAndCategory('Todas', 'consolidated'); // Carga/consolida todas las canciones
-            // Verifica que hay suficientes canciones para empezar una partida en modo "Todas"
+            // Verificar que hay suficientes canciones para empezar una partida en modo "Todas"
+            // (10 preguntas por jugador, por lo tanto, mínimo 10 canciones si hay 1 jugador)
             if (configuracionCanciones['Todas']['consolidated'].length < gameState.totalQuestionsPerPlayer) {
                 alert(`No hay suficientes canciones para jugar en la opción '${decadeNames['Todas']}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
                 showScreen('decade-selection-screen'); // Vuelve si no hay suficientes
@@ -461,7 +413,7 @@ async function selectDecade(decade) {
             showScreen('decade-selection-screen'); // Volver a la selección de década
         }
     } else {
-        generateCategoryButtons(); 
+        generateCategoryButtons(); // Genera los botones de categoría para la década seleccionada
         showScreen('category-screen');
     }
 }
@@ -962,7 +914,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['80s', '90s', '00s', '10s', 'Actual']; // Orden de las décadas a mostrar
+    const decadesInOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Orden de las décadas a mostrar
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
@@ -1079,7 +1031,7 @@ function showSongsListCategorySelection() {
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual']; // Solo las décadas que quieres mostrar aquí
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Solo las décadas que quieres mostrar aquí
 
     decadesOrder.forEach(decadeId => {
         if (decadeId === 'Todas') {
