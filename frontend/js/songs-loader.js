@@ -6,7 +6,7 @@ window.allSongsByDecadeAndCategory = {};
 // Las categorías que esperamos en cada década
 const allPossibleCategories = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
 // Las décadas que esperamos
-const allDecadesDefined = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas'];
+const allDecadesDefined = ['80s', '90s', '00s', '10s', 'Actual'];
 
 /**
  * Carga las canciones para una década y categoría específica desde un archivo JS.
