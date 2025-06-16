@@ -1,12 +1,10 @@
 const decadeNames = {
-    '60s': 'Década de los 60',
-    '70s': 'Década de los 70',
+    // Se eliminó '60s' y '70s' si no los vas a usar
     '80s': 'Década de los 80',
     '90s': 'Década de los 90',
     '00s': 'Década de los 2000',
     '10s': 'Década de los 2010',
     'Actual': 'Década Actual', // 2020s en adelante
-    'Variadas': 'Variadas (TV, Infantiles, Anuncios)', // Década para categorías no temporales
     'Todas': 'Todas las Décadas' // Nueva opción
 };
 
@@ -14,10 +12,10 @@ const categoryNames = {
     espanol: "Canciones en Español",
     ingles: "Canciones en Inglés",
     peliculas: "BSO de Películas",
-    series: "BSO de Series",
-    tv: "Programas de TV",
-    infantiles: "Series Infantiles",
-    anuncios: "Anuncios",
+    series: "BSO de Series", // Series ahora irán dentro de cada década
+    tv: "Programas de TV",     // TV ahora irán dentro de cada década
+    infantiles: "Series Infantiles", // Infantiles ahora irán dentro de cada década
+    anuncios: "Anuncios",      // Anuncios ahora irán dentro de cada década
     consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
 };
 
@@ -31,9 +29,7 @@ const sfxError = document.getElementById('sfx-error');
 const API_BASE_URL = 'https://accomplished-balance-production.up.railway.app';
 
 let currentUser = null;
-// userAccumulatedScores almacenará { email: { 'decada': { 'categoria': score } } }
 let userAccumulatedScores = {}; 
-// gameHistory contendrá 'decade' en cada objeto de partida
 let gameHistory = []; 
 
 /**
@@ -394,7 +390,8 @@ function parseDisplay(displayText) {
 function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
-    const decadesOrder = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas']; 
+    // Define el orden de las décadas que quieres mostrar
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual']; 
 
     decadesOrder.forEach(decadeId => {
         // Solo si hay categorías y canciones para esa década
@@ -403,7 +400,7 @@ function generateDecadeButtons() {
         if (configuracionCanciones[decadeId]) {
             for (const catId in configuracionCanciones[decadeId]) {
                 const songsInCat = configuracionCanciones[decadeId][catId];
-                if (Array.isArray(songsInCat) && songsInCat.length >= 4) {
+                if (Array.isArray(songsInCat) && songsInCat.length >= 4) { // Requiere al menos 4 canciones para aparecer
                     hasEnoughSongsInAnyCategory = true;
                     break;
                 }
@@ -420,12 +417,19 @@ function generateDecadeButtons() {
     });
 
     // Añadir el botón "Todas"
-    // Lo hacemos aparecer siempre, y la lógica de selectDecade('Todas') se encargará de cargar/consolidar.
-    const allButton = document.createElement('button');
-    allButton.className = 'category-btn tertiary'; 
-    allButton.innerText = decadeNames['Todas'];
-    allButton.onclick = () => selectDecade('Todas');
-    container.appendChild(allButton);
+    // Lo hacemos aparecer siempre si hay suficientes canciones combinadas para ello.
+    // Aunque el `|| true` lo fuerce, es bueno que el check inicial esté ahí.
+    const allSongsCount = (configuracionCanciones['Todas'] && configuracionCanciones['Todas']['consolidated']) 
+                          ? configuracionCanciones['Todas']['consolidated'].length : 0;
+    if (allSongsCount >= 4 || true) { // Siempre aparece el botón "Todas"
+        const allButton = document.createElement('button');
+        allButton.className = 'category-btn tertiary'; 
+        allButton.innerText = decadeNames['Todas'];
+        allButton.onclick = () => selectDecade('Todas');
+        container.appendChild(allButton);
+    } else {
+        console.warn("No hay suficientes canciones consolidadas para activar la opción 'Todas las Décadas'.");
+    }
 }
 
 /**
@@ -441,14 +445,20 @@ async function selectDecade(decade) {
     gameState.selectedDecade = decade;
     
     if (decade === 'Todas') {
-        gameState.category = 'consolidated'; 
+        gameState.category = 'consolidated'; // Categoría especial para "Todas"
         try {
-            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
+            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); // Carga/consolida todas las canciones
+            // Verifica que hay suficientes canciones para empezar una partida en modo "Todas"
+            if (configuracionCanciones['Todas']['consolidated'].length < gameState.totalQuestionsPerPlayer) {
+                alert(`No hay suficientes canciones para jugar en la opción '${decadeNames['Todas']}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
+                showScreen('decade-selection-screen'); // Vuelve si no hay suficientes
+                return;
+            }
             showScreen('player-selection-screen');
         } catch (error) {
             alert('Error al cargar todas las canciones. Intenta de nuevo.');
             console.error(error);
-            showScreen('decade-selection-screen'); 
+            showScreen('decade-selection-screen'); // Volver a la selección de década
         }
     } else {
         generateCategoryButtons(); 
@@ -501,6 +511,12 @@ async function selectCategory(category) {
 
     try {
         await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
+        // Verificar si la categoría tiene suficientes canciones después de la carga
+        if (configuracionCanciones[gameState.selectedDecade][gameState.category].length < 4) {
+            alert(`No hay suficientes canciones en la categoría '${categoryNames[category]}' para la década ${decadeNames[gameState.selectedDecade]}. Necesitas al menos 4 canciones.`);
+            showScreen('category-screen'); // Volver a la selección de categoría
+            return;
+        }
         showScreen('player-selection-screen');
     }  catch (error) {
         alert(`No se pudieron cargar las canciones para la categoría ${categoryNames[category]} en la década ${decadeNames[gameState.selectedDecade]}. Intenta con otra.`);
@@ -946,7 +962,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas', 'Todas']; 
+    const decadesInOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Orden de las décadas a mostrar
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
@@ -1063,7 +1079,7 @@ function showSongsListCategorySelection() {
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['60s', '70s', '80s', '90s', '00s', '10s', 'Actual', 'Variadas', 'Todas']; 
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Solo las décadas que quieres mostrar aquí
 
     decadesOrder.forEach(decadeId => {
         if (decadeId === 'Todas') {
@@ -1149,7 +1165,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
     const sortedSongs = [...songsToDisplay].sort((a, b) => {
         const nameA = parseDisplay(a.display).artist || parseDisplay(a.display).title;
         const nameB = parseDisplay(b.display).artist || parseDisplay(b.display).title;
-        return nameA.localeCompare(b.display); // Comparar por display completo para ordenar
+        return nameA.localeCompare(nameB); 
     });
 
     sortedSongs.forEach(song => {
