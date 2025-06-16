@@ -170,7 +170,7 @@ app.put('/api/users/:email/playername', async (req, res) => {
 
 // MODIFICACIÓN: Ruta para obtener todas las puntuaciones de un usuario (filtradas por email)
 // Ahora devuelve un array de objetos Score: [{ email, decade, category, score }, ...]
-// NO UN OBJETO AGREGADO POR CATEGORIA COMO ANTES
+// Ya no devuelve un objeto agregado por categoría, sino el formato crudo de la DB.
 app.get('/api/scores/:email', async (req, res) => {
     try {
         const scores = await Score.find({ email: req.params.email });
