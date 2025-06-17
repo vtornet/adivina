@@ -12,4 +12,4 @@ window.allSongsByDecadeAndCategory['80s'].ingles = [
     { file: 'guns-n-roses - sweet-child.mp3', display: 'Guns N\' Roses - Sweet Child O\' Mine', listenUrl: 'https://open.spotify.com/search/Navajita%20Platea%20Noches%20De%20Bohemias/sweet-child', platform: 'spotify', originalDecade: '80s', originalCategory: 'ingles' },
     { file: 'eurythmics - sweet-dreams.mp3', display: 'Eurythmics - Sweet Dreams (Are Made of This)', listenUrl: 'https://open.spotify.com/search/Navajita%20Platea%20Noches%20De%20Bohemias/sweet-dreams', platform: 'spotify', originalDecade: '80s', originalCategory: 'ingles' },
     { file: 'journey - dont-stop-believin.mp3', display: 'Journey - Don\'t Stop Believin\'', listenUrl: 'https://open.spotify.com/search/Navajita%20Platea%20Noches%20De%20Bohemias/dont-stop-believin', platform: 'spotify', originalDecade: '80s', originalCategory: 'ingles' },
-];
+]
