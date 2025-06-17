@@ -413,6 +413,18 @@ async function selectDecade(decade) {
             showScreen('decade-selection-screen'); // Volver a la selección de década
         }
     } else {
+        // *** INICIO DE LA MODIFICACIÓN ***
+        // Antes de mostrar la pantalla de categorías, cargamos todas las categorías de la década.
+        const categoriesToLoadPromises = allPossibleCategories.map(cat => 
+            loadSongsForDecadeAndCategory(decade, cat).catch(error => {
+                console.warn(`No se pudo cargar la categoría ${cat} para la década ${decade}. Puede que no haya canciones o un error de archivo.`, error);
+                return null; // Retorna null para que Promise.allSettled no falle por una única categoría.
+            })
+        );
+        
+        await Promise.allSettled(categoriesToLoadPromises);
+        // *** FIN DE LA MODIFICACIÓN ***
+
         generateCategoryButtons(); // Genera los botones de categoría para la década seleccionada
         showScreen('category-screen');
     }
