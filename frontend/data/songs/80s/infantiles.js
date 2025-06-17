@@ -12,7 +12,7 @@ window.allSongsByDecadeAndCategory['80s'].infantiles = [
         { file: 'delfy-y-sus-amigos - 1992.mp3', display: 'Delfy y sus Amigos - 1992', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DELFY', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
         { file: 'don-gato-y-su-pandilla - 1961.mp3', display: 'Don Gato y su Pandilla - 1961', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DON_GATO', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
         { file: 'don-quijote-dela-mancha - 1979.mp3', display: 'Don Quijote de la Mancha - 1979', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DON_QUIJOTE', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
-        { file: 'doraemon,-el-gato-cosmico - 1983.mp3', display: 'Doraemon, el Gato Cósmico - 1983', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DORAEMON', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
+        { file: 'doraemon-el-gato-cosmico - 1983.mp3', display: 'Doraemon, el Gato Cósmico - 1983', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DORAEMON', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
         { file: 'dragones-y-mazmorras - 1985.mp3', display: 'Dragones y Mazmorras - 1985', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DRAGONES_MAZMORRAS', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
         { file: 'el-bosque-de-tallac - 1977.mp3', display: 'El Bosque de Tallac - 1977', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TALLAC', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
         { file: 'el-inspector-gadget - 1982.mp3', display: 'El Inspector Gadget - 1982', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_INSPECTOR_GADGET', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
@@ -43,6 +43,6 @@ window.allSongsByDecadeAndCategory['80s'].infantiles = [
         { file: 'sherlock-holmes - 1984.mp3', display: 'Sherlock Holmes - 1984', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SHERLOCK_HOLMES', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
         { file: 'ulises-31 - 1981.mp3', display: 'Ulises 31 - 1981', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ULISES_31', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
         { file: 'vickie-el-vikingo - 1974.mp3', display: 'Vickie el Vikingo - 1974', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VICKIE', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
-        { file: 'erase-una-vez...-el-hombre - 1978.mp3', display: 'Érase una Vez... El Hombre - 1978', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ERASE_HOMBRE', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
-        { file: 'erase-una-vez...-la-vida - 1987.mp3', display: 'Érase una Vez... La Vida - 1987', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ERASE_VIDA', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
+        { file: 'erase-una-vez-el-hombre - 1978.mp3', display: 'Érase una Vez... El Hombre - 1978', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ERASE_HOMBRE', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
+        { file: 'erase-una-vez-la-vida - 1987.mp3', display: 'Érase una Vez... La Vida - 1987', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ERASE_VIDA', platform: 'youtube', originalDecade: '80s', originalCategory: 'infantiles' },
     ]
