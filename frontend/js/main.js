@@ -145,11 +145,6 @@ function logout() {
 
 const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
 
- * @param {string} userEmail - El email del usuario.
- * @param {string} decade - La década de la partida.
- * @param {string} category - La categoría de la partida.
- * @param {Array<Object>} playedSongs - Un array de objetos de canción que se acaban de jugar.
- */
 function updateRecentSongsHistory(userEmail, decade, category, playedSongs) {
     if (!userEmail) return;
 
@@ -165,8 +160,6 @@ function updateRecentSongsHistory(userEmail, decade, category, playedSongs) {
     history[decade][category] = history[decade][category].concat(newSongFiles);
 
     // Limitar el historial a la longitud deseada (evita que crezca indefinidamente)
-    // Conservamos solo las últimas RECENT_SONGS_HISTORY_LENGTH * totalQuestionsPerPlayer canciones
-    // para tener un historial de X partidas jugadas en esa combinación.
     const maxSongsInHistory = RECENT_SONGS_HISTORY_LENGTH * gameState.totalQuestionsPerPlayer;
     if (history[decade][category].length > maxSongsInHistory) {
         history[decade][category] = history[decade][category].slice(-maxSongsInHistory);
@@ -175,7 +168,6 @@ function updateRecentSongsHistory(userEmail, decade, category, playedSongs) {
     localStorage.setItem(storageKey, JSON.stringify(history));
     console.log(`Historial de canciones recientes actualizado para ${decade}-${category}.`);
 }
-
 /**
  * Obtiene las canciones jugadas recientemente para un usuario, década y categoría.
  * @param {string} userEmail - El email del usuario.
