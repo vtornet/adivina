@@ -143,6 +143,58 @@ function logout() {
     showScreen('home-screen');
 }
 
+const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
+
+ * @param {string} userEmail - El email del usuario.
+ * @param {string} decade - La década de la partida.
+ * @param {string} category - La categoría de la partida.
+ * @param {Array<Object>} playedSongs - Un array de objetos de canción que se acaban de jugar.
+ */
+function updateRecentSongsHistory(userEmail, decade, category, playedSongs) {
+    if (!userEmail) return;
+
+    const storageKey = `recentSongs_${userEmail}`;
+    let history = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+    // Asegurarse de que la estructura para la década y categoría exista
+    history[decade] = history[decade] || {};
+    history[decade][category] = history[decade][category] || [];
+
+    // Añadir las nuevas canciones jugadas al historial de esta categoría
+    const newSongFiles = playedSongs.map(song => song.file);
+    history[decade][category] = history[decade][category].concat(newSongFiles);
+
+    // Limitar el historial a la longitud deseada (evita que crezca indefinidamente)
+    // Conservamos solo las últimas RECENT_SONGS_HISTORY_LENGTH * totalQuestionsPerPlayer canciones
+    // para tener un historial de X partidas jugadas en esa combinación.
+    const maxSongsInHistory = RECENT_SONGS_HISTORY_LENGTH * gameState.totalQuestionsPerPlayer;
+    if (history[decade][category].length > maxSongsInHistory) {
+        history[decade][category] = history[decade][category].slice(-maxSongsInHistory);
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(history));
+    console.log(`Historial de canciones recientes actualizado para ${decade}-${category}.`);
+}
+
+/**
+ * Obtiene las canciones jugadas recientemente para un usuario, década y categoría.
+ * @param {string} userEmail - El email del usuario.
+ * @param {string} decade - La década de la partida.
+ * @param {string} category - La categoría de la partida.
+ * @returns {Set<string>} Un Set de nombres de archivo de canciones jugadas recientemente.
+ */
+function getRecentSongs(userEmail, decade, category) {
+    if (!userEmail) return new Set();
+
+    const storageKey = `recentSongs_${userEmail}`;
+    const history = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+    if (history[decade] && history[decade][category]) {
+        return new Set(history[decade][category]);
+    }
+    return new Set();
+}
+
 async function setPlayerName() {
     const playerNameInput = document.getElementById('player-name-input');
     const newPlayerName = playerNameInput.value.trim();
@@ -581,22 +633,57 @@ function startGame() {
         }
     }
     
-    let shuffledSongs = allSongsToChooseFrom.sort(() => 0.5 - Math.random());
+    // ... (dentro de startGame function)
 
+    // Obtener el historial de canciones recientes para el usuario y la categoría/década actuales
+    const recentSongFiles = getRecentSongs(currentUser.email, gameState.selectedDecade, gameState.category);
+    console.log("Canciones recientes a evitar:", recentSongFiles);
+
+    // Separar canciones en "no recientes" y "recientes"
+    let nonRecentSongs = allSongsToChooseFrom.filter(song => !recentSongFiles.has(song.file));
+    let recentSongs = allSongsToChooseFrom.filter(song => recentSongFiles.has(song.file));
+
+    console.log("Canciones no recientes:", nonRecentSongs.length);
+    console.log("Canciones recientes (para usar si es necesario):", recentSongs.length);
+
+    // Priorizar canciones no recientes, luego añadir de las recientes si no hay suficientes
+    let songsForThisGame = nonRecentSongs.sort(() => 0.5 - Math.random()); // Baraja las no recientes
+
+    const totalRequiredSongs = requiredSongs; // Usamos la variable ya calculada
+
+    // Si no hay suficientes canciones "no recientes", añadimos de las "recientes"
+    if (songsForThisGame.length < totalRequiredSongs) {
+        const needed = totalRequiredSongs - songsForThisGame.length;
+        // Barajamos las recientes y tomamos las más antiguas (si el slice(-maxSongsInHistory) funcionó bien)
+        // O simplemente tomamos las que queden para asegurar la cantidad
+        const additionalSongs = recentSongs.sort(() => 0.5 - Math.random()).slice(0, needed); 
+        songsForThisGame = songsForThisGame.concat(additionalSongs);
+        console.warn(`Advertencia: No hay suficientes canciones no recientes. Se han añadido ${additionalSongs.length} canciones recientes.`);
+    }
+
+    // Asegurarse de que el array final esté barajado si se combinaron listas
+    songsForThisGame.sort(() => 0.5 - Math.random());
+
+    // Asignar preguntas a los jugadores
     for (let i = 0; i < gameState.playerCount; i++) {
-        if (shuffledSongs.length >= gameState.totalQuestionsPerPlayer) {
-            gameState.players[i].questions = shuffledSongs.splice(0, gameState.totalQuestionsPerPlayer);
+        if (songsForThisGame.length >= gameState.totalQuestionsPerPlayer) {
+            gameState.players[i].questions = songsForThisGame.splice(0, gameState.totalQuestionsPerPlayer);
         } else {
-            gameState.players[i].questions = [...shuffledSongs];
-            console.warn(`No se pudieron asignar ${gameState.totalQuestionsPerPlayer} preguntas al jugador ${gameState.players[i].name}. Solo se asignaron ${shuffledSongs.length} preguntas.`);
-            shuffledSongs = [];
-            gameState.totalQuestionsPerPlayer = gameState.players[i].questions.length;
+            gameState.players[i].questions = [...songsForThisGame];
+            console.warn(`No se pudieron asignar ${gameState.totalQuestionsPerPlayer} preguntas al jugador ${gameState.players[i].name}. Solo se asignaron ${songsForThisGame.length} preguntas.`);
+            songsForThisGame = [];
+            gameState.totalQuestionsPerPlayer = gameState.players[i].questions.length; // Ajusta si se asignan menos
         }
     }
-    
+
     gameState.currentPlayerIndex = 0;
     setupQuestion();
     showScreen('game-screen');
+
+    // **IMPORTANTE**: Actualizar el historial de canciones recientes DESPUÉS de que la partida comience
+    // y se asignen las canciones.
+    // Esto se hará cuando la partida termine en `endGame()` o cuando un turno de jugador finalice.
+    // Para simplificar, lo haremos al final de la partida en `endGame()`.
 }
 
 /**
@@ -866,6 +953,18 @@ function endGame() {
         });
         showScreen('player-selection-screen'); 
     };
+    // ... (dentro de endGame function, casi al final)
+    // Recopilar todas las canciones jugadas en esta partida por todos los jugadores
+    let allPlayedSongsInThisGame = [];
+    gameState.players.forEach(player => {
+        allPlayedSongsInThisGame = allPlayedSongsInThisGame.concat(player.questions);
+    });
+
+    // Actualizar el historial de canciones recientes para el usuario logueado
+    if (currentUser && currentUser.email) {
+        updateRecentSongsHistory(currentUser.email, gameState.selectedDecade, gameState.category, allPlayedSongsInThisGame);
+    }
+    
     showScreen('end-game-screen');
 }
 
