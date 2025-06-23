@@ -33,7 +33,6 @@ window.allSongsByDecadeAndCategory['10s'].espanol = [
   { file: 'estopa - me-quedare.mp3', display: 'Estopa - Me Quedaré', listenUrl: 'URL_PENDIENTE_ESTOPA', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: 'fito-y-fitipaldis -antes-de-que-cuente-diez.mp3', display: 'Fito y Fitipaldis - Antes De Que Cuente Diez', listenUrl: 'URL_PENDIENTE_FITO', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: 'gente-de-zona-y-marc-anthony - la-gozadera.mp3', display: 'Gente De Zona y Marc Anthony - La Gozadera', listenUrl: 'URL_PENDIENTE_GOZADERA', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
-  { file: 'india-martinez - los-gatos-no-ladran.mp3', display: 'India Martínez - Los Gatos No Ladran', listenUrl: 'URL_PENDIENTE_INDIA_MARTINEZ', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: 'j-balvin-y-willy-william -mi-gente.mp3', display: 'J Balvin y Willy William - Mi Gente', listenUrl: 'URL_PENDIENTE_MI_GENTE', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: 'jennifer-lopez - el-anillo.mp3', display: 'Jennifer López - El Anillo', listenUrl: 'URL_PENDIENTE_EL_ANILLO', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: 'jesse-y-joy - corre.mp3', display: 'Jesse y Joy - Corre', listenUrl: 'URL_PENDIENTE_JESSE_Y_JOY', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
@@ -79,5 +78,8 @@ window.allSongsByDecadeAndCategory['10s'].espanol = [
   { file: 'shakira - tu.mp3', display: 'Shakira - Tú', listenUrl: 'URL_PENDIENTE_TU_SHAKIRA', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: 'shakira - waka-waka.mp3', display: 'Shakira - Waka Waka', listenUrl: 'URL_PENDIENTE_WAKA_WAKA', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: 'shakira-ft-maluma - chantaje.mp3', display: 'Shakira ft. Maluma - Chantaje', listenUrl: 'URL_PENDIENTE_CHANTAJE', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
-  { file: 'vetusta-morla - la-deriva.mp3', display: 'Vetusta Morla - La Deriva', listenUrl: 'URL_PENDIENTE_LA_DERIVA', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' }
+  { file: 'vetusta-morla - la-deriva.mp3', display: 'Vetusta Morla - La Deriva', listenUrl: 'URL_PENDIENTE_LA_DERIVA', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
+  { file: 'alejandro-sanz - mi-marciana.mp3', display: 'Alejandro Sabz - Mi Marciaana', listenUrl: 'URL_PENDIENTE_MI_MARCIANA', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
+  { file: 'maldita-nerea - el-secreto-de-las-tortugas.mp3', display: 'Maldita Nerea - El Secreto de las Tortugas', listenUrl: 'URL_PENDIENTE_SECRETO_TORTUGAS', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
+  { file: 'manuel-carrasco - que-bonito-es-querer.mp3', display: 'Manuel Carrasco - Qué Bonito es Querer', listenUrl: 'URL_PENDIENTE_QUE BONITO', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' }
 ]
