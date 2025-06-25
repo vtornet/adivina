@@ -51,8 +51,57 @@
         <div id="category-buttons"></div>
         <button class="btn tertiary" onclick="showStatisticsScreen()">Estadísticas</button>
         <button class="btn tertiary" onclick="showSongsListCategorySelection()">Canciones</button>
+        <button class="btn tertiary" onclick="showScreen('online-mode-screen')">Jugar Online</button>
         <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver a Décadas</button>
         <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
+    </div>
+
+    <div id="online-mode-screen" class="screen">
+        <h2>Jugar Online</h2>
+        <button class="btn" onclick="showScreen('create-online-screen')">Crear Partida</button>
+        <button class="btn" onclick="showScreen('pending-games-screen')">Ver Partidas Recibidas</button>
+        <button class="btn" onclick="showScreen('join-online-screen')">Unirse a Partida</button>
+        <button class="btn" onclick="showScreen('invite-online-screen')">Invitar por Nombre</button>
+        <button class="btn secondary" onclick="showScreen('category-screen')">Volver</button>
+        
+        
+    </div>
+
+    <div id="create-online-screen" class="screen">
+        <h2>Crear Partida Online</h2>
+        <p>Selecciona década y categoría:</p>
+        <select id="online-decade-select" class="text-input"></select>
+        <select id="online-category-select" class="text-input"></select>
+        <button class="btn" onclick="createOnlineGame()">Crear y Compartir Código</button>
+        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+    </div>
+
+    <div id="join-online-screen" class="screen">
+        <h2>Unirse a Partida</h2>
+        <input type="text" id="join-code-input" class="text-input" placeholder="Código de Partida">
+        <button class="btn" onclick="joinOnlineGame()">Unirse</button>
+        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+    </div>
+
+    <div id="invite-online-screen" class="screen">
+        <h2>Invitar a Jugador</h2>
+        <input type="text" id="rival-name-input" class="text-input" placeholder="Nombre del rival">
+        <select id="invite-decade-select" class="text-input"></select>
+        <select id="invite-category-select" class="text-input"></select>
+        <button class="btn" onclick="invitePlayerByName()">Invitar</button>
+        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+    </div>
+
+    <div id="pending-games-screen" class="screen">
+        <h2>Partidas Recibidas</h2>
+        <div id="pending-games-list"></div>
+        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+    </div>
+
+
+    <div id="online-wait-screen" class="screen">
+        <h2>Esperando al Otro Jugador...</h2>
+        <p id="online-status-text">Una vez ambos hayan terminado, verás el resultado.</p>
     </div>
 
     <div id="statistics-screen" class="screen">
