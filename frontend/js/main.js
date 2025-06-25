@@ -1673,8 +1673,20 @@ async function loadPendingGames() {
     }
 }
 
+function showStats() {
+  showScreen("stats-screen");
+}
+function showAllSongs() {
+  showScreen("songs-screen");
+}
+function showOnlineMenu() {
+  showScreen("online-mode-screen");
+}
 
-    
+window.showStats = showStats;
+window.showAllSongs = showAllSongs;
+window.showOnlineMenu = showOnlineMenu;
+
 // =====================================================================
 // INICIALIZACIÓN
 // =====================================================================
