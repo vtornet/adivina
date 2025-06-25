@@ -1725,4 +1725,7 @@ window.onload = async () => {
     } else {
         showScreen('home-screen');
     }
+window.showStatisticsScreen = showStatisticsScreen;
+window.showSongsListCategorySelection = showSongsListCategorySelection;
+
 };
