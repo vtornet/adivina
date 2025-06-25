@@ -41,17 +41,20 @@
     </div>
 
     <div id="decade-selection-screen" class="screen">
-        <h2>Elige una Década</h2>
-        <div id="decade-buttons"></div>
-        <button class="btn secondary" onclick="exitGame()">Salir del Juego</button>
+        <h2>Selecciona una década</h2>
+        <div id="decade-buttons" class="button-container"></div>
+
+        <button class="btn" onclick="showOnlineMenu()">Jugar Online</button>
+        <button class="btn" onclick="showStats()">Estadísticas</button>
+        <button class="btn" onclick="showAllSongs()">Canciones</button>
+
+        <button class="btn secondary" onclick="showScreen('player-selection-screen')">Volver</button>
     </div>
+
 
     <div id="category-screen" class="screen">
         <h2 id="category-screen-title">Elige una Categoría (<span id="selected-decade-display"></span>)</h2>
         <div id="category-buttons"></div>
-        <button class="btn tertiary" onclick="showStatisticsScreen()">Estadísticas</button>
-        <button class="btn tertiary" onclick="showSongsListCategorySelection()">Canciones</button>
-        <button class="btn tertiary" onclick="showScreen('online-mode-screen')">Jugar Online</button>
         <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver a Décadas</button>
         <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
     </div>
