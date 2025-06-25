@@ -31,6 +31,12 @@ let currentUser = null;
 let userAccumulatedScores = {}; 
 let gameHistory = []; 
 
+function getCurrentUserData() {
+    const userData = localStorage.getItem("userData");
+    if (!userData) return null;
+    return JSON.parse(userData);
+}
+
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
@@ -1333,7 +1339,7 @@ async function createOnlineGame() {
     }
 
     try {
-        const response = await fetch(`${API_URL}/api/online-games`, {
+        const response = await fetch(`${API_BASE_URL}/api/online-games`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1376,7 +1382,7 @@ async function joinOnlineGame() {
     }
 
     try {
-        const response = await fetch(`${API_URL}/api/online-games/join`, {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/join`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1427,7 +1433,7 @@ function startOnlineGame() {
 // ========== ENVIAR RESULTADO AL TERMINAR ==========
 async function submitOnlineScore() {
     try {
-        const response = await fetch(`${API_URL}/api/online-games/submit`, {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/submit`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1468,7 +1474,7 @@ async function submitOnlineScore() {
 function pollOnlineGameStatus() {
     const interval = setInterval(async () => {
         try {
-            const response = await fetch(`${API_URL}/api/online-games/${currentOnlineGameCode}`);
+            const response = await fetch(`${API_BASE_URL}/api/online-games/${currentOnlineGameCode}`);
             const result = await response.json();
             if (response.ok && result.finished) {
                 clearInterval(interval);
@@ -1532,7 +1538,7 @@ async function saveOnlineGameToHistory(gameData) {
             category: gameData.category
         };
 
-        await fetch(`${API_URL}/api/gamehistory`, {
+        await fetch(`${API_BASE_URL}/api/gamehistory`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -1601,7 +1607,7 @@ async function invitePlayerByName() {
     }
 
     try {
-        const response = await fetch(`${API_URL}/api/online-games/by-username`, {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/by-username`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1632,7 +1638,7 @@ async function loadPendingGames() {
     if (!playerData || !playerData.playerName) return;
 
     try {
-        const response = await fetch(`${API_URL}/api/online-games/pending/${playerData.playerName}`);
+        const response = await fetch(`${API_BASE_URL}/api/online-games/pending/${playerData.playerName}`);
         const games = await response.json();
         const container = document.getElementById('pending-games-list');
         container.innerHTML = '';
