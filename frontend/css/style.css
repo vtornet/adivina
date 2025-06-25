@@ -33,6 +33,11 @@ body {
     overflow: hidden;
 }
 
+html, body {
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch; /* mejora en iOS */
+}
+
 .screen {
     display: none;
     width: 100%;
@@ -494,4 +499,10 @@ h1 {
 /* Estilos para el contenedor interno de canciones, si necesitas padding extra o diseño */
 #songs-list-container {
     padding: 10px 0;
+}
+
+/* ✅ Permite hacer scroll vertical en pantallas si el contenido excede la altura de la ventana */
+.screen {
+    overflow-y: auto;
+    max-height: 100vh;
 }
