@@ -1674,10 +1674,10 @@ async function loadPendingGames() {
 }
 
 function showStats() {
-  showScreen("stats-screen");
+  showStatisticsScreen();
 }
 function showAllSongs() {
-  showScreen("songs-screen");
+  showSongsListCategorySelection();
 }
 function showOnlineMenu() {
   showScreen("online-mode-screen");
