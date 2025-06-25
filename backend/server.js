@@ -43,7 +43,7 @@ mongoose.connect(dbUri)
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  playerName: { type: String, default: null }
+  playerName: { type: String, unique: true, sparse: true }
 });
 
 // MODIFICACIÓN CRUCIAL: Añadido el campo 'decade'
@@ -73,6 +73,27 @@ const gameHistorySchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 const Score = mongoose.model('Score', scoreSchema);
 const GameHistory = mongoose.model('GameHistory', gameHistorySchema);
+
+const onlineGameSchema = new mongoose.Schema({
+  code: { type: String, required: true, unique: true },
+  creatorEmail: String,
+  category: String,
+  decade: String,
+  songsUsed: [Object], // Lista fija de canciones comunes
+  players: [
+    {
+      name: String,
+      email: String,
+      score: Number,
+      finished: Boolean
+    }
+  ],
+  createdAt: { type: Date, default: Date.now },
+  finished: { type: Boolean, default: false }
+});
+
+const OnlineGame = mongoose.model('OnlineGame', onlineGameSchema);
+
 
 // Rutas de la API
 
@@ -148,10 +169,15 @@ app.put('/api/users/:email/playername', async (req, res) => {
   const { email } = req.params;
 
   try {
+    const existing = await User.findOne({ playerName });
+    if (existing && existing.email !== email) {
+      return res.status(400).json({ message: 'Ese nombre de jugador ya está en uso.' });
+    }
+
     const user = await User.findOneAndUpdate(
       { email },
       { $set: { playerName } },
-      { new: true } // Devuelve el documento actualizado
+      { new: true }
     ).select('-password');
 
     if (!user) {
@@ -167,6 +193,7 @@ app.put('/api/users/:email/playername', async (req, res) => {
     res.status(500).json({ message: 'Error del servidor.' });
   }
 });
+
 
 // MODIFICACIÓN: Ruta para obtener todas las puntuaciones de un usuario (filtradas por email)
 // Ahora devuelve un array de objetos Score: [{ email, decade, category, score }, ...]
@@ -246,4 +273,104 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Servidor de Adivina la Canción escuchando en el puerto ${port}`);
+});
+
+app.get('/api/online-games/pending/:playerName', async (req, res) => {
+  try {
+    const games = await OnlineGame.find({
+      waitingFor: req.params.playerName,
+      finished: false,
+      'players.1': { $exists: false } // Aún no tiene segundo jugador
+    });
+
+    res.json(games);
+  } catch (err) {
+    console.error('Error al buscar partidas pendientes:', err.message);
+    res.status(500).json({ message: 'Error del servidor.' });
+  }
+});
+
+
+app.post('/api/online-games', async (req, res) => {
+  const { creatorEmail, category, decade, songsUsed, playerName } = req.body;
+
+  const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+  const game = new OnlineGame({
+    code,
+    creatorEmail,
+    category,
+    decade,
+    songsUsed,
+    players: [{ name: playerName, email: creatorEmail, score: 0, finished: false }],
+    createdAt: new Date(),
+    finished: false
+  });
+
+  await game.save();
+  res.status(201).json({ code });
+});
+
+app.post('/api/online-games/by-username', async (req, res) => {
+  const { creatorEmail, rivalPlayerName, category, decade, songsUsed, playerName } = req.body;
+
+  if (!creatorEmail || !rivalPlayerName || !category || !decade || !songsUsed || !playerName) {
+    return res.status(400).json({ message: 'Faltan datos para crear la partida.' });
+  }
+
+  try {
+    const rival = await User.findOne({ playerName: rivalPlayerName });
+    if (!rival) {
+      return res.status(404).json({ message: 'El rival no existe.' });
+    }
+
+    const game = new OnlineGame({
+      creatorEmail,
+      category,
+      decade,
+      songsUsed,
+      players: [
+        { name: playerName, email: creatorEmail, score: 0, finished: false }
+      ],
+      waitingFor: rivalPlayerName,
+      createdAt: new Date(),
+      finished: false
+    });
+
+    await game.save();
+    res.status(201).json({ message: 'Partida creada con éxito.' });
+  } catch (err) {
+    console.error('Error al crear partida por nombre:', err.message);
+    res.status(500).json({ message: 'Error del servidor.' });
+  }
+});
+
+
+app.post('/api/online-games/join', async (req, res) => {
+  const { code, playerName, email } = req.body;
+  const game = await OnlineGame.findOne({ code });
+
+  if (!game || game.finished) return res.status(404).json({ message: 'Partida no disponible' });
+  if (game.players.length >= 2) return res.status(403).json({ message: 'Partida llena' });
+
+  game.players.push({ name: playerName, email, score: 0, finished: false });
+  await game.save();
+  res.json({ game });
+});
+
+app.post('/api/online-games/submit', async (req, res) => {
+  const { code, email, score } = req.body;
+  const game = await OnlineGame.findOne({ code });
+  if (!game) return res.status(404).json({ message: 'Partida no encontrada' });
+
+  const player = game.players.find(p => p.email === email);
+  if (!player) return res.status(404).json({ message: 'Jugador no encontrado' });
+
+  player.score = score;
+  player.finished = true;
+
+  game.finished = game.players.every(p => p.finished);
+  await game.save();
+
+  res.json({ finished: game.finished, game });
 });

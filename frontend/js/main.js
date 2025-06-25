@@ -32,14 +32,22 @@ let userAccumulatedScores = {};
 let gameHistory = []; 
 
 function showScreen(screenId) {
-    screens.forEach(screen => screen.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
     document.getElementById(screenId).classList.add('active');
-    if (screenId === 'player-selection-screen') {
-        document.getElementById('other-player-names-inputs').innerHTML = '';
-        document.getElementById('logged-in-player-name').textContent = '';
-    } else if (screenId === 'category-screen') {
-        document.getElementById('selected-decade-display').textContent = decadeNames[gameState.selectedDecade] || '';
+
+    // Si es la pantalla de crear partida online, cargar selects
+    if (screenId === 'create-online-screen') {
+        populateOnlineSelectors();
     }
+    if (screenId === 'invite-online-screen') {
+        populateInviteSelectors();
+    }
+    if (screenId === 'pending-games-screen') {
+        loadPendingGames();
+    }
+
 }
 
 // =====================================================================
@@ -1299,6 +1307,362 @@ async function displaySongsForCategory(decadeId, categoryId) {
 
     showScreen('songs-list-display-screen');
 }
+
+// ========== VARIABLES PARA EL MODO ONLINE ==========
+let currentOnlineGameCode = null;
+let currentOnlineSongs = [];
+let currentOnlineEmail = null;
+let currentOnlinePlayerName = null;
+let isOnlineMode = false;
+
+// ========== CREAR PARTIDA ONLINE ==========
+async function createOnlineGame() {
+    const decade = document.getElementById('online-decade-select').value;
+    const category = document.getElementById('online-category-select').value;
+
+    const playerData = getCurrentUserData();
+    if (!playerData) {
+        alert("Debes estar logueado para jugar online.");
+        return;
+    }
+
+    const songsArray = await getSongsForOnlineMatch(decade, category);
+    if (!songsArray || songsArray.length < 10) {
+        alert("No hay suficientes canciones en esta categoría.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/online-games`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                creatorEmail: playerData.email,
+                category,
+                decade,
+                songsUsed: songsArray,
+                playerName: playerData.playerName
+            })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            currentOnlineGameCode = result.code;
+            currentOnlineSongs = songsArray;
+            currentOnlineEmail = playerData.email;
+            currentOnlinePlayerName = playerData.playerName;
+            isOnlineMode = true;
+
+            alert(`Comparte este código: ${currentOnlineGameCode}`);
+            startOnlineGame();
+        } else {
+            alert(result.message || 'Error al crear la partida.');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error al crear la partida online.');
+    }
+}
+
+// ========== UNIRSE A UNA PARTIDA ONLINE ==========
+async function joinOnlineGame() {
+    const code = document.getElementById('join-code-input').value.trim().toUpperCase();
+    if (!code) return alert("Introduce un código válido.");
+
+    const playerData = getCurrentUserData();
+    if (!playerData) {
+        alert("Debes estar logueado para jugar online.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/online-games/join`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                code,
+                playerName: playerData.playerName,
+                email: playerData.email
+            })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            currentOnlineGameCode = code;
+            currentOnlineSongs = result.game.songsUsed;
+            currentOnlineEmail = playerData.email;
+            currentOnlinePlayerName = playerData.playerName;
+            isOnlineMode = true;
+
+            startOnlineGame();
+        } else {
+            alert(result.message || 'Error al unirse a la partida.');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error al unirse a la partida.');
+    }
+}
+
+// ========== OBTENER CANCIONES PARA LA PARTIDA ONLINE ==========
+async function getSongsForOnlineMatch(decade, category) {
+    await loadSongsForDecadeAndCategory(decade, category);
+    const songs = configuracionCanciones[decade][category];
+    const shuffled = [...songs].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 10);
+}
+
+// ========== EMPEZAR PARTIDA ONLINE ==========
+function startOnlineGame() {
+    selectedSongs = [...currentOnlineSongs]; // Usar canciones compartidas
+    currentSongIndex = 0;
+    currentScore = 0;
+    currentAttempt = 1;
+    updateScoreDisplay();
+    updateQuestionCounter();
+    showScreen('game-screen');
+    loadNextSong();
+}
+
+// ========== ENVIAR RESULTADO AL TERMINAR ==========
+async function submitOnlineScore() {
+    try {
+        const response = await fetch(`${API_URL}/api/online-games/submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                code: currentOnlineGameCode,
+                email: currentOnlineEmail,
+                score: currentScore
+            })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            if (result.finished) {
+                // Mostrar comparación de resultados
+                const players = result.game.players;
+                const winner = players[0].score > players[1].score
+                    ? players[0].name
+                    : players[1].score > players[0].score
+                    ? players[1].name
+                    : "Empate";
+
+                showResults(); // Se mostrará pantalla con puntos, intentos y ganadores como en modo normal
+                saveOnlineGameToHistory(result.game);
+
+            } else {
+                showScreen('online-wait-screen');
+                pollOnlineGameStatus(); // Empieza a revisar si terminó
+            }
+        } else {
+            alert(result.message || 'Error al enviar resultado.');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error al guardar la puntuación online.');
+    }
+}
+
+// ========== CONSULTAR ESTADO HASTA QUE AMBOS TERMINEN ==========
+function pollOnlineGameStatus() {
+    const interval = setInterval(async () => {
+        try {
+            const response = await fetch(`${API_URL}/api/online-games/${currentOnlineGameCode}`);
+            const result = await response.json();
+            if (response.ok && result.finished) {
+                clearInterval(interval);
+                const players = result.players;
+                const winner = players[0].score > players[1].score
+                    ? players[0].name
+                    : players[1].score > players[0].score
+                    ? players[1].name
+                    : "Empate";
+
+                document.getElementById('winner-display').innerText = `Ganador: ${winner}`;
+                showScreen('results-screen');
+            }
+        } catch (err) {
+            console.error('Error comprobando estado online:', err);
+        }
+    }, 5000); // Comprueba cada 5 segundos
+}
+
+function populateOnlineSelectors() {
+    const decadeSelect = document.getElementById('online-decade-select');
+    const categorySelect = document.getElementById('online-category-select');
+
+    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
+    const categories = [
+        { value: 'espanol', text: 'Canciones en Español' },
+        { value: 'ingles', text: 'Canciones en Inglés' },
+        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
+        { value: 'series', text: 'Intros de Series' },
+        { value: 'infantiles', text: 'Series y Programas Infantiles' },
+        { value: 'anuncios', text: 'Anuncios de TV' },
+        { value: 'tv', text: 'Programas de Televisión' }
+    ];
+
+    // Limpiar y añadir décadas
+    decadeSelect.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = dec;
+        decadeSelect.appendChild(option);
+    });
+
+    // Limpiar y añadir categorías
+    categorySelect.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.value;
+        option.textContent = cat.text;
+        categorySelect.appendChild(option);
+    });
+}
+
+async function saveOnlineGameToHistory(gameData) {
+    try {
+        const payload = {
+            date: new Date().toISOString(),
+            players: gameData.players,
+            winner: getWinnerName(gameData.players),
+            decade: gameData.decade,
+            category: gameData.category
+        };
+
+        await fetch(`${API_URL}/api/gamehistory`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+    } catch (err) {
+        console.error("Error al guardar historial online:", err);
+    }
+}
+
+function getWinnerName(players) {
+    if (players.length !== 2) return "Desconocido";
+    const [a, b] = players;
+    if (a.score > b.score) return a.name;
+    if (b.score > a.score) return b.name;
+    return "Empate";
+}
+
+function populateInviteSelectors() {
+    const decadeSelect = document.getElementById('invite-decade-select');
+    const categorySelect = document.getElementById('invite-category-select');
+
+    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
+    const categories = [
+        { value: 'espanol', text: 'Canciones en Español' },
+        { value: 'ingles', text: 'Canciones en Inglés' },
+        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
+        { value: 'series', text: 'Intros de Series' },
+        { value: 'infantiles', text: 'Series y Programas Infantiles' },
+        { value: 'anuncios', text: 'Anuncios de TV' },
+        { value: 'tv', text: 'Programas de Televisión' }
+    ];
+
+    decadeSelect.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = dec;
+        decadeSelect.appendChild(option);
+    });
+
+    categorySelect.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.value;
+        option.textContent = cat.text;
+        categorySelect.appendChild(option);
+    });
+}
+
+async function invitePlayerByName() {
+    const rivalName = document.getElementById('rival-name-input').value.trim();
+    const decade = document.getElementById('invite-decade-select').value;
+    const category = document.getElementById('invite-category-select').value;
+
+    const playerData = getCurrentUserData();
+    if (!rivalName || !playerData) {
+        alert("Faltan datos o no estás logueado.");
+        return;
+    }
+
+    const songsArray = await getSongsForOnlineMatch(decade, category);
+    if (!songsArray || songsArray.length < 10) {
+        alert("No hay suficientes canciones.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/online-games/by-username`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                creatorEmail: playerData.email,
+                rivalPlayerName: rivalName,
+                category,
+                decade,
+                songsUsed: songsArray,
+                playerName: playerData.playerName
+            })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert("Invitación enviada a " + rivalName);
+            showScreen('online-mode-screen');
+        } else {
+            alert(result.message || "Error al invitar.");
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error al enviar la invitación.");
+    }
+}
+
+async function loadPendingGames() {
+    const playerData = getCurrentUserData();
+    if (!playerData || !playerData.playerName) return;
+
+    try {
+        const response = await fetch(`${API_URL}/api/online-games/pending/${playerData.playerName}`);
+        const games = await response.json();
+        const container = document.getElementById('pending-games-list');
+        container.innerHTML = '';
+
+        if (games.length === 0) {
+            container.innerHTML = "<p>No tienes partidas pendientes.</p>";
+            return;
+        }
+
+        games.forEach((game, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = `Jugar con ${game.players[0].name} (${game.decade} - ${game.category})`;
+            btn.onclick = () => {
+                currentOnlineGameCode = game.code;
+                currentOnlineSongs = game.songsUsed;
+                currentOnlineEmail = playerData.email;
+                currentOnlinePlayerName = playerData.playerName;
+                isOnlineMode = true;
+                startOnlineGame();
+            };
+            container.appendChild(btn);
+        });
+
+    } catch (err) {
+        console.error("Error cargando partidas pendientes:", err);
+    }
+}
+
+
     
 // =====================================================================
 // INICIALIZACIÓN
