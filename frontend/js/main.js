@@ -222,6 +222,11 @@ async function setPlayerName() {
 
             if (response.ok) {
                 currentUser.playerName = newPlayerName;
+
+                localStorage.setItem("userData", JSON.stringify({
+                    email: currentUser.email,
+                    playerName: newPlayerName
+                }));
                 alert(data.message);
                 playerNameInput.value = '';
                 showScreen('decade-selection-screen'); 
