@@ -282,7 +282,7 @@ app.get('/api/online-games/pending/:playerName', async (req, res) => {
       finished: false,
       'players.1': { $exists: false } // Aún no tiene segundo jugador
     });
-
+    const code = generateCode()
     res.json(games);
   } catch (err) {
     console.error('Error al buscar partidas pendientes:', err.message);
@@ -302,6 +302,7 @@ app.post('/api/online-games', async (req, res) => {
     category,
     decade,
     songsUsed,
+    code,
     players: [{ name: playerName, email: creatorEmail, score: 0, finished: false }],
     createdAt: new Date(),
     finished: false
@@ -324,11 +325,15 @@ app.post('/api/online-games/by-username', async (req, res) => {
       return res.status(404).json({ message: 'El rival no existe.' });
     }
 
+    // ✅ Generar código de partida (reutiliza generateCode ya definida)
+    const code = generateCode();
+
     const game = new OnlineGame({
       creatorEmail,
       category,
       decade,
       songsUsed,
+      code, // 🔥 campo obligatorio añadido
       players: [
         { name: playerName, email: creatorEmail, score: 0, finished: false }
       ],
@@ -340,10 +345,11 @@ app.post('/api/online-games/by-username', async (req, res) => {
     await game.save();
     res.status(201).json({ message: 'Partida creada con éxito.' });
   } catch (err) {
-    console.error('Error al crear partida por nombre:', err.message);
-    res.status(500).json({ message: 'Error del servidor.' });
+    console.error('Error al crear partida por nombre:', err);
+    res.status(500).json({ message: 'Error del servidor.', details: err.message });
   }
 });
+
 
 
 app.post('/api/online-games/join', async (req, res) => {
