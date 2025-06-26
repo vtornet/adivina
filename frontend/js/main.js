@@ -32,9 +32,9 @@ let userAccumulatedScores = {};
 let gameHistory = []; 
 
 function getCurrentUserData() {
-    const userData = localStorage.getItem("userData");
-    if (!userData) return null;
-    return JSON.parse(userData);
+    const userDataString = localStorage.getItem("userData");
+    if (!userDataString) return null;
+    return JSON.parse(userDataString);
 }
 
 function showScreen(screenId) {
@@ -154,8 +154,30 @@ async function loginUser() {
 function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
+    localStorage.removeItem('userData'); // <-- AÑADE ESTA LÍNEA
+    localStorage.removeItem('currentOnlineGameData'); // <-- AÑADE ESTA LÍNEA
     alert('Sesión cerrada correctamente.');
     showScreen('home-screen');
+}
+
+// main.js - Añade esta nueva función
+function endOnlineModeAndGoHome() {
+    if (isOnlineMode) {
+        isOnlineMode = false;
+        currentOnlineGameCode = null;
+        currentOnlineSongs = [];
+        currentOnlineEmail = null;
+        currentOnlinePlayerName = null;
+        localStorage.removeItem('currentOnlineGameData');
+        showScreen('online-mode-screen'); // Vuelve al menú online
+    } else {
+        // Lógica para el modo offline, volver a la selección de década/categoría
+        if (gameState.selectedDecade === 'Todas') {
+            showScreen('decade-selection-screen');
+        } else {
+            showScreen('category-screen');
+        }
+    }
 }
 
 const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
@@ -892,11 +914,15 @@ function continueToNextPlayerTurn() {
  * Finaliza la partida, calcula el ganador y guarda los resultados.
  */
 function endGame() {
+    if (isOnlineMode) {
+        submitOnlineScore(); // Si es online, envía la puntuación al servidor y espera/muestra resultados
+        return; // Detener la ejecución de esta función
+    }
+
     const finalScoresContainer = document.getElementById('final-scores');
     finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
-    
-    const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
     const winnerDisplay = document.getElementById('winner-display');
+    
 
     if (gameState.players.length === 1) {
         const player = gameState.players[0];
@@ -988,13 +1014,25 @@ function exitGame() {
 /**
  * Confirma si el usuario desea regresar al menú principal, perdiendo el progreso de la partida actual.
  */
+// main.js - confirmReturnToMenu
 function confirmReturnToMenu() {
     const confirmed = confirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
     if (confirmed) {
-        if (gameState.selectedDecade === 'Todas') {
-            showScreen('decade-selection-screen'); 
+        if (isOnlineMode) { // <-- AÑADE ESTA CONDICIÓN
+            // Limpiar estado online al salir
+            isOnlineMode = false;
+            currentOnlineGameCode = null;
+            currentOnlineSongs = [];
+            currentOnlineEmail = null;
+            currentOnlinePlayerName = null;
+            localStorage.removeItem('currentOnlineGameData');
+            showScreen('online-mode-screen'); // Volver al menú online
         } else {
-            showScreen('category-screen'); 
+            if (gameState.selectedDecade === 'Todas') {
+                showScreen('decade-selection-screen');
+            } else {
+                showScreen('category-screen');
+            }
         }
     }
 }
@@ -1327,9 +1365,10 @@ async function createOnlineGame() {
     const decade = document.getElementById('online-decade-select').value;
     const category = document.getElementById('online-category-select').value;
 
-    const playerData = getCurrentUserData();
-    if (!playerData || !playerData.email || !playerData.playerName) { // Asegurarse de tener playerName
-        alert("Debes estar logueado con un nombre de jugador para crear partidas online.");
+    const playerData = getCurrentUserData(); // <-- OBTENER DATOS AQUÍ
+    if (!playerData || !playerData.email || !playerData.playerName) {
+        alert("Debes iniciar sesión con tu nombre de jugador para crear partidas online.");
+        showScreen('login-screen'); // <-- Redirigir a login si no está logueado
         return;
     }
 
@@ -1360,6 +1399,13 @@ async function createOnlineGame() {
             currentOnlinePlayerName = playerData.playerName;
             isOnlineMode = true;
 
+            localStorage.setItem('currentOnlineGameData', JSON.stringify({
+                code: result.code,
+                songsUsed: songsArray,
+                decade: decade, // <-- AÑADE ESTO
+                category: category // <-- AÑADE ESTO
+    }));
+
             alert(`Partida creada con éxito. Comparte este código con tu amigo: ${currentOnlineGameCode}`);
             startOnlineGame();
         } else {
@@ -1376,9 +1422,10 @@ async function joinOnlineGame() {
     const code = document.getElementById('join-code-input').value.trim().toUpperCase();
     if (!code) return alert("Introduce un código válido.");
 
-    const playerData = getCurrentUserData();
-    if (!playerData) {
-        alert("Debes estar logueado para jugar online.");
+    const playerData = getCurrentUserData(); // <-- OBTENER DATOS AQUÍ
+    if (!playerData || !playerData.email || !playerData.playerName) { // <<-- ¡CUIDADO! AQUÍ DICE 'player.playerName', debe ser playerData.playerName
+        alert("Debes iniciar sesión con tu nombre de jugador para jugar online.");
+        showScreen('login-screen'); // <-- Redirigir a login si no está logueado
         return;
     }
 
@@ -1400,7 +1447,12 @@ async function joinOnlineGame() {
             currentOnlineEmail = playerData.email;
             currentOnlinePlayerName = playerData.playerName;
             isOnlineMode = true;
-
+            localStorage.setItem('currentOnlineGameData', JSON.stringify({
+                code: code,
+                songsUsed: result.game.songsUsed,
+                decade: result.game.decade, // <-- AÑADE ESTO
+                category: result.game.category // <-- AÑADE ESTO
+            }));
             startOnlineGame();
         } else {
             alert(result.message || 'Error al unirse a la partida.');
@@ -1408,6 +1460,48 @@ async function joinOnlineGame() {
     } catch (err) {
         console.error(err);
         alert('Error al unirse a la partida.');
+    }
+}
+
+// main.js - AÑADE ESTA NUEVA FUNCIÓN COMPLETA
+// Nueva función para unirse a una partida pendiente (reutiliza lógica de joinOnlineGame)
+async function joinOnlineGameFromPending(code, playerName, email) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/join`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                code: code,
+                playerName: playerName,
+                email: email
+            })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            // Si la unión es exitosa, establece las variables de juego online
+            currentOnlineGameCode = code;
+            currentOnlineSongs = result.game.songsUsed;
+            currentOnlineEmail = email; // Usar el email del jugador actual
+            currentOnlinePlayerName = playerName; // Usar el nombre del jugador actual
+            isOnlineMode = true;
+
+            // Guardar info del juego online para usarla en startOnlineGame
+            localStorage.setItem('currentOnlineGameData', JSON.stringify({
+                code: code,
+                songsUsed: result.game.songsUsed,
+                decade: result.game.decade,
+                category: result.game.category
+            }));
+
+            startOnlineGame(); // Inicia el juego
+        } else {
+            alert(result.message || 'Error al unirse a la partida pendiente.');
+            loadPendingGames(); // Recarga la lista por si el estado cambió
+        }
+    } catch (err) {
+        console.error('Error de red al unirse a la partida pendiente:', err);
+        alert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
@@ -1420,47 +1514,87 @@ async function getSongsForOnlineMatch(decade, category) {
 }
 
 // ========== EMPEZAR PARTIDA ONLINE ==========
+// main.js - startOnlineGame
 function startOnlineGame() {
-    selectedSongs = [...currentOnlineSongs]; // Usar canciones compartidas
-    currentSongIndex = 0;
-    currentScore = 0;
-    currentAttempt = 1;
-    updateScoreDisplay();
-    updateQuestionCounter();
+    // Reiniciar el gameState para una partida online
+    gameState = {
+        players: [],
+        totalQuestionsPerPlayer: 10, // Por ahora, fijo para online
+        currentPlayerIndex: 0,
+        selectedDecade: null,
+        category: null,
+        isOnline: true, // Indica que es una partida online
+        onlineGameCode: currentOnlineGameCode // Almacenar el código aquí también
+    };
+
+    const localPlayer = {
+        id: 1,
+        name: currentOnlinePlayerName,
+        score: 0,
+        questionsAnswered: 0,
+        questions: currentOnlineSongs, // Las canciones ya vienen del servidor
+        email: currentOnlineEmail,
+        finishedOnline: false // Nuevo campo para controlar el estado online del jugador
+    };
+    gameState.players.push(localPlayer);
+
+    // Si es una partida de dos jugadores, necesitaríamos al rival aquí.
+    // Por ahora, solo tenemos al jugador local, la lógica del rival se manejará en el submit/poll
+    // (La lógica del rival en el cliente puede ser más compleja o se maneja desde el servidor al comparar scores)
+
+    // Configurar la primera pregunta
+    // La información de decade y category debe venir con currentOnlineGame
+    // Para esto, necesitaríamos que `joinOnlineGameFromPending` pase también la década y categoría.
+    // O que `currentOnlineGame` las almacene globalmente.
+
+    // Añadir decade y category a gameState desde el juego online
+    const gameData = JSON.parse(localStorage.getItem('currentOnlineGameData')); // Recuperar datos del juego
+    if (gameData) {
+        gameState.selectedDecade = gameData.decade;
+        gameState.category = gameData.category;
+    } else {
+        console.error("No se encontraron datos de la partida online en localStorage.");
+        alert("Error: No se pudo cargar la información de la década/categoría para la partida online.");
+        showScreen('online-mode-screen');
+        return;
+    }
+
+
+    setupQuestion();
     showScreen('game-screen');
-    loadNextSong();
 }
 
 // ========== ENVIAR RESULTADO AL TERMINAR ==========
 async function submitOnlineScore() {
+    // Asegurarse de que tenemos los datos del jugador actual
+    const localPlayer = gameState.players.find(p => p.email === currentOnlineEmail);
+    if (!localPlayer) {
+        console.error("Error: Jugador local no encontrado en gameState para submitOnlineScore.");
+        alert("Error interno al enviar la puntuación.");
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/submit`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 code: currentOnlineGameCode,
-                email: currentOnlineEmail,
-                score: currentScore
+                email: localPlayer.email, // Usar el email del jugador del gameState
+                score: localPlayer.score // Usar la puntuación del jugador del gameState
             })
         });
 
         const result = await response.json();
         if (response.ok) {
             if (result.finished) {
-                // Mostrar comparación de resultados
-                const players = result.game.players;
-                const winner = players[0].score > players[1].score
-                    ? players[0].name
-                    : players[1].score > players[0].score
-                    ? players[1].name
-                    : "Empate";
-
-                showResults(); // Se mostrará pantalla con puntos, intentos y ganadores como en modo normal
-                saveOnlineGameToHistory(result.game);
-
+                // Si ambos jugadores terminaron, mostrar resultados
+                // Aquí llamaremos a una función de final de juego online
+                showOnlineResults(result.game); // Nueva función para resultados online
             } else {
+                // Si el otro jugador aún no termina, esperar
                 showScreen('online-wait-screen');
-                pollOnlineGameStatus(); // Empieza a revisar si terminó
+                pollOnlineGameStatus();
             }
         } else {
             alert(result.message || 'Error al enviar resultado.');
@@ -1595,9 +1729,10 @@ async function invitePlayerByName() {
     const decade = document.getElementById('invite-decade-select').value;
     const category = document.getElementById('invite-category-select').value;
 
-    const playerData = getCurrentUserData();
-    if (!rivalName || !playerData) {
-        alert("Faltan datos o no estás logueado.");
+     const playerData = getCurrentUserData(); // <-- OBTENER DATOS AQUÍ
+    if (!rivalName || !playerData || !playerData.email || !playerData.playerName) {
+        alert("Faltan datos o no estás logueado con un nombre de jugador.");
+        showScreen('login-screen'); // <-- Redirigir a login si no está logueado
         return;
     }
 
@@ -1639,7 +1774,8 @@ async function loadPendingGames() {
     if (!playerData || !playerData.playerName) {
          console.warn("No hay datos de jugador para cargar partidas pendientes.");
          document.getElementById('pending-games-list').innerHTML = "<p>Debes iniciar sesión con tu nombre de jugador para ver las partidas.</p>";
-         return; // Salir si no hay jugador logueado
+         showScreen('login-screen');
+         return;
     }
 
     try {
@@ -1661,7 +1797,7 @@ async function loadPendingGames() {
             btn.textContent = `Jugar con ${invitingPlayerName} (${decadeNames[game.decade]} - ${categoryNames[game.category]})`;
             btn.onclick = () => {
                 // Al hacer clic, se unen a la partida en la base de datos
-                joinOnlineGameFromPending(game.code, playerData.playerName, playerData.email);
+                joinOnlineGameFromPending(game.code, playerData.playerName, playerData.email); // <-- LÍNEA MODIFICADA
             };
             container.appendChild(btn);
         });
@@ -1670,6 +1806,60 @@ async function loadPendingGames() {
         console.error("Error cargando partidas pendientes:", err);
         container.innerHTML = "<p>Error al cargar partidas pendientes.</p>";
     }
+}
+
+// main.js - Añade esta nueva función
+function showOnlineResults(gameData) {
+    const finalScoresContainer = document.getElementById('final-scores');
+    finalScoresContainer.innerHTML = '<h3>Resultados de la Partida Online</h3>';
+
+    const sortedPlayers = [...gameData.players].sort((a, b) => b.score - a.score);
+    const winnerDisplay = document.getElementById('winner-display');
+
+    let winnerName = 'Empate';
+    if (sortedPlayers.length > 0) {
+        const topScore = sortedPlayers[0].score;
+        const winners = sortedPlayers.filter(player => player.score === topScore);
+
+        if (winners.length > 1) {
+            const winnerNames = winners.map(winner => winner.name).join(' y ');
+            winnerDisplay.textContent = `¡Hay un EMPATE! Los GANADORES son ${winnerNames} con ${topScore} puntos!`;
+        } else {
+            winnerDisplay.textContent = `¡El GANADOR es ${sortedPlayers[0].name} con ${sortedPlayers[0].score} puntos!`;
+            winnerName = sortedPlayers[0].name;
+        }
+    } else {
+        winnerDisplay.textContent = 'No hay ganador en esta partida.';
+        winnerName = 'Nadie';
+    }
+    winnerDisplay.style.animation = 'neonGlow 1.5s ease-in-out infinite alternate';
+    winnerDisplay.style.textShadow = '0 0 8px var(--secondary-color), 0 0 15px var(--secondary-color)';
+    winnerDisplay.style.color = 'var(--secondary-color)';
+    winnerDisplay.style.borderBottom = '2px solid var(--secondary-color)';
+    winnerDisplay.style.borderTop = '2px solid var(--secondary-color)';
+    winnerDisplay.style.fontSize = '2.5rem';
+
+
+    sortedPlayers.forEach((player, index) => {
+        const medal = ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '');
+        finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
+    });
+
+    // Opciones de botón después de partida online: Volver al menú principal
+    document.getElementById('play-again-btn').onclick = () => {
+        // Limpiar estado online
+        currentOnlineGameCode = null;
+        currentOnlineSongs = [];
+        isOnlineMode = false;
+        localStorage.removeItem('currentOnlineGameData');
+        showScreen('online-mode-screen'); // Volver al menú online
+    };
+    document.getElementById('play-again-btn').textContent = "Jugar Otra Vez Online"; // Cambiar texto del botón
+
+    // También hay que llamar a saveOnlineGameToHistory
+    saveOnlineGameToHistory(gameData);
+
+    showScreen('end-game-screen'); // Reutilizar la pantalla de fin de juego
 }
 
 function showStats() {
