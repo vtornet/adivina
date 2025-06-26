@@ -88,6 +88,7 @@ const onlineGameSchema = new mongoose.Schema({
       finished: Boolean
     }
   ],
+  waitingFor: { type: String, default: null },
   createdAt: { type: Date, default: Date.now },
   finished: { type: Boolean, default: false }
 });
@@ -282,7 +283,6 @@ app.get('/api/online-games/pending/:playerName', async (req, res) => {
       finished: false,
       'players.1': { $exists: false } // Aún no tiene segundo jugador
     });
-    const code = generateCode()
     res.json(games);
   } catch (err) {
     console.error('Error al buscar partidas pendientes:', err.message);
