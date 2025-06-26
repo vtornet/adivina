@@ -126,6 +126,7 @@ async function loginUser() {
         if (response.ok) {
             currentUser = { email: data.user.email, playerName: data.user.playerName };
             localStorage.setItem('loggedInUserEmail', data.user.email);
+            localStorage.setItem('userData', JSON.stringify(currentUser));
 
             alert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
             emailInput.value = '';
@@ -222,16 +223,11 @@ async function setPlayerName() {
 
             if (response.ok) {
                 currentUser.playerName = newPlayerName;
-
-                localStorage.setItem("userData", JSON.stringify({
-                    email: currentUser.email,
-                    playerName: newPlayerName
-                }));
+                localStorage.setItem("userData", JSON.stringify(currentUser));
                 alert(data.message);
                 playerNameInput.value = '';
-                showScreen('decade-selection-screen'); 
-                // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
-                generateDecadeButtons(); 
+                showScreen('decade-selection-screen');
+                generateDecadeButtons();
             } else {
                 alert(`Error al actualizar nombre: ${data.message}`);
             }
@@ -1332,14 +1328,14 @@ async function createOnlineGame() {
     const category = document.getElementById('online-category-select').value;
 
     const playerData = getCurrentUserData();
-    if (!playerData) {
-        alert("Debes estar logueado para jugar online.");
+    if (!playerData || !playerData.email || !playerData.playerName) { // Asegurarse de tener playerName
+        alert("Debes estar logueado con un nombre de jugador para crear partidas online.");
         return;
     }
 
     const songsArray = await getSongsForOnlineMatch(decade, category);
     if (!songsArray || songsArray.length < 10) {
-        alert("No hay suficientes canciones en esta categoría.");
+        alert("No hay suficientes canciones en esta categoría para crear una partida (mínimo 10).");
         return;
     }
 
@@ -1352,7 +1348,7 @@ async function createOnlineGame() {
                 category,
                 decade,
                 songsUsed: songsArray,
-                playerName: playerData.playerName
+                playerName: playerData.playerName // Asegurarse de enviar el playerName
             })
         });
 
@@ -1364,14 +1360,14 @@ async function createOnlineGame() {
             currentOnlinePlayerName = playerData.playerName;
             isOnlineMode = true;
 
-            alert(`Comparte este código: ${currentOnlineGameCode}`);
+            alert(`Partida creada con éxito. Comparte este código con tu amigo: ${currentOnlineGameCode}`);
             startOnlineGame();
         } else {
             alert(result.message || 'Error al crear la partida.');
         }
     } catch (err) {
         console.error(err);
-        alert('Error al crear la partida online.');
+        alert('Error al crear la partida online. Por favor, revisa tu conexión o intenta de nuevo.'); 
     }
 }
 
@@ -1640,7 +1636,11 @@ async function invitePlayerByName() {
 
 async function loadPendingGames() {
     const playerData = getCurrentUserData();
-    if (!playerData || !playerData.playerName) return;
+    if (!playerData || !playerData.playerName) {
+         console.warn("No hay datos de jugador para cargar partidas pendientes.");
+         document.getElementById('pending-games-list').innerHTML = "<p>Debes iniciar sesión con tu nombre de jugador para ver las partidas.</p>";
+         return; // Salir si no hay jugador logueado
+    }
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/pending/${playerData.playerName}`);
@@ -1653,23 +1653,22 @@ async function loadPendingGames() {
             return;
         }
 
-        games.forEach((game, index) => {
+        games.forEach((game) => {
             const btn = document.createElement('button');
             btn.className = 'btn';
-            btn.textContent = `Jugar con ${game.players[0].name} (${game.decade} - ${game.category})`;
+            // Muestra el nombre del jugador que te invitó (el creador de la partida)
+            const invitingPlayerName = game.players[0] ? game.players[0].name : 'Desconocido';
+            btn.textContent = `Jugar con ${invitingPlayerName} (${decadeNames[game.decade]} - ${categoryNames[game.category]})`;
             btn.onclick = () => {
-                currentOnlineGameCode = game.code;
-                currentOnlineSongs = game.songsUsed;
-                currentOnlineEmail = playerData.email;
-                currentOnlinePlayerName = playerData.playerName;
-                isOnlineMode = true;
-                startOnlineGame();
+                // Al hacer clic, se unen a la partida en la base de datos
+                joinOnlineGameFromPending(game.code, playerData.playerName, playerData.email);
             };
             container.appendChild(btn);
         });
 
     } catch (err) {
         console.error("Error cargando partidas pendientes:", err);
+        container.innerHTML = "<p>Error al cargar partidas pendientes.</p>";
     }
 }
 
@@ -1692,40 +1691,24 @@ window.showOnlineMenu = showOnlineMenu;
 // =====================================================================
 
 window.onload = async () => {
-    // Cuando la página carga, la primera pantalla activa es la de inicio ('home-screen').
-    // El menú de décadas se genera y se muestra después de un login o setPlayerName exitoso.
-    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    const userDataString = localStorage.getItem('userData'); // <-- LEER userData
+    if (userDataString) {
+        const storedUser = JSON.parse(userDataString);
+        currentUser = storedUser; // <-- ASIGNAR EL OBJETO COMPLETO A currentUser
 
-    if (loggedInUserEmail) {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/users/${loggedInUserEmail}`);
-            const data = await response.json();
+        // Cargamos las estadísticas y el historial siempre que haya un usuario logueado
+        await loadUserScores(currentUser.email);
+        await loadGameHistory(currentUser.email);
 
-            if (response.ok && data.user) {
-                currentUser = { email: data.user.email, playerName: data.user.playerName };
-                await loadUserScores(currentUser.email);
-                await loadGameHistory(currentUser.email);
-
-                if (currentUser.playerName) {
-                    showScreen('decade-selection-screen'); // Redirige a la selección de década si ya tiene nombre
-                    generateDecadeButtons(); // Genera los botones al entrar a esta pantalla
-                } else {
-                    showScreen('set-player-name-screen');
-                }
-            } else {
-                console.warn(`No se pudo cargar el perfil del usuario ${loggedInUserEmail} desde la API:`, data.message || 'Error desconocido.');
-                localStorage.removeItem('loggedInUserEmail'); 
-                showScreen('login-screen');
-            }
-        } catch (error) {
-            console.error('Error de red al cargar el perfil del usuario al inicio:', error);
-            localStorage.removeItem('loggedInUserEmail'); 
-            showScreen('login-screen');
+        if (currentUser.playerName) {
+            showScreen('decade-selection-screen');
+            generateDecadeButtons();
+        } else {
+            showScreen('set-player-name-screen');
         }
     } else {
-        showScreen('home-screen');
+        showScreen('home-screen'); // Si no hay userData, vamos a la pantalla de inicio
     }
 window.showStatisticsScreen = showStatisticsScreen;
 window.showSongsListCategorySelection = showSongsListCategorySelection;
-
 };
