@@ -321,6 +321,12 @@ function generateCode(length = 6) {
   return code;
 }
 
+function updateScoreDisplay() {
+  const scoreDisplay = document.getElementById('score-display');
+  if (scoreDisplay) {
+    scoreDisplay.textContent = currentScore;
+  }
+}
 
 app.post('/api/online-games/by-username', async (req, res) => {
   const { creatorEmail, rivalPlayerName, category, decade, songsUsed, playerName } = req.body;
