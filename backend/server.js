@@ -312,6 +312,16 @@ app.post('/api/online-games', async (req, res) => {
   res.status(201).json({ code });
 });
 
+function generateCode(length = 6) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+}
+
+
 app.post('/api/online-games/by-username', async (req, res) => {
   const { creatorEmail, rivalPlayerName, category, decade, songsUsed, playerName } = req.body;
 
