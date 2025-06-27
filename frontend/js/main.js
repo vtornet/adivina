@@ -1788,7 +1788,6 @@ async function invitePlayerByName() {
             }));
 
             startOnlineGame(); // <-- AÑADE ESTA LÍNEA
-            showScreen('online-mode-screen');
         } else {
             alert(result.message || "Error al invitar.");
         }
