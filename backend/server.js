@@ -302,7 +302,6 @@ app.post('/api/online-games', async (req, res) => {
     category,
     decade,
     songsUsed,
-    code,
     players: [{ name: playerName, email: creatorEmail, score: 0, finished: false }],
     createdAt: new Date(),
     finished: false
@@ -349,7 +348,7 @@ app.post('/api/online-games/by-username', async (req, res) => {
       category,
       decade,
       songsUsed,
-      code, // 🔥 campo obligatorio añadido
+      code: code,
       players: [
         { name: playerName, email: creatorEmail, score: 0, finished: false }
       ],
