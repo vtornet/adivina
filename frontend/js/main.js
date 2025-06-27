@@ -1605,28 +1605,42 @@ async function submitOnlineScore() {
     }
 }
 
-// ========== CONSULTAR ESTADO HASTA QUE AMBOS TERMINEN ==========
 function pollOnlineGameStatus() {
     const interval = setInterval(async () => {
         try {
+            // currentOnlineGameCode debe estar disponible globalmente
+            if (!currentOnlineGameCode) {
+                clearInterval(interval);
+                console.error("No hay código de partida online para consultar.");
+                // Podríamos redirigir a una pantalla de error o menú principal aquí
+                showScreen('online-mode-screen');
+                return;
+            }
+
             const response = await fetch(`${API_BASE_URL}/api/online-games/${currentOnlineGameCode}`);
             const result = await response.json();
-            if (response.ok && result.finished) {
-                clearInterval(interval);
-                const players = result.players;
-                const winner = players[0].score > players[1].score
-                    ? players[0].name
-                    : players[1].score > players[0].score
-                    ? players[1].name
-                    : "Empate";
 
-                document.getElementById('winner-display').innerText = `Ganador: ${winner}`;
-                showScreen('results-screen');
+            if (!response.ok) {
+                console.error('Error al consultar estado de partida:', result.message);
+                // Podrías mostrar una alerta o simplemente dejar que siga intentando
+                return;
+            }
+
+            if (result.finished) {
+                clearInterval(interval); // Detener la consulta
+                // Aquí, ambos jugadores han terminado. Mostrar los resultados.
+                showOnlineResults(result); // result ya contiene game.players, game.decade, etc.
+            } else {
+                // Si aún no han terminado, podríamos actualizar el estado en pantalla si quisiéramos
+                // Por ahora, el mensaje "Esperando..." es suficiente.
+                console.log("Esperando al otro jugador...");
             }
         } catch (err) {
-            console.error('Error comprobando estado online:', err);
+            console.error('Error de red al comprobar estado online:', err);
+            // Si hay un error de red persistente, podríamos ofrecer una opción al usuario.
+            // clearInterval(interval); // No limpiar el intervalo en errores de red temporales.
         }
-    }, 5000); // Comprueba cada 5 segundos
+    }, 3000); // Comprueba cada 3 segundos (antes 5 segundos, 3 es más rápido)
 }
 
 function populateOnlineSelectors() {
@@ -1759,6 +1773,21 @@ async function invitePlayerByName() {
         const result = await response.json();
         if (response.ok) {
             alert("Invitación enviada a " + rivalName);
+            currentOnlineGameCode = result.code; // El código debe ser devuelto por el servidor en by-username
+            currentOnlineSongs = songsArray; // Las canciones ya las tenemos
+            currentOnlineEmail = playerData.email;
+            currentOnlinePlayerName = playerData.playerName;
+            isOnlineMode = true;
+
+            // Guardar la información del juego online para usarla en startOnlineGame
+            localStorage.setItem('currentOnlineGameData', JSON.stringify({
+                code: result.code,
+                songsUsed: songsArray,
+                decade: decade,
+                category: category
+            }));
+
+            startOnlineGame(); // <-- AÑADE ESTA LÍNEA
             showScreen('online-mode-screen');
         } else {
             alert(result.message || "Error al invitar.");
