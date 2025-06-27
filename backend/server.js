@@ -359,7 +359,7 @@ app.post('/api/online-games/by-username', async (req, res) => {
     });
 
     await game.save();
-    res.status(201).json({ message: 'Partida creada con éxito.' });
+    res.status(201).json({ message: 'Partida creada con éxito.', code: game.code });
   } catch (err) {
     console.error('Error al crear partida por nombre:', err);
     res.status(500).json({ message: 'Error del servidor.', details: err.message });
@@ -395,4 +395,24 @@ app.post('/api/online-games/submit', async (req, res) => {
   await game.save();
 
   res.json({ finished: game.finished, game });
+});
+
+app.get('/api/online-games/:code', async (req, res) => {
+    try {
+        const game = await OnlineGame.findOne({ code: req.params.code });
+        if (!game) {
+            return res.status(404).json({ message: 'Partida no encontrada.' });
+        }
+        // Devuelve el estado actual de la partida, incluyendo si está terminada y los jugadores.
+        res.status(200).json({
+            finished: game.finished,
+            players: game.players,
+            decade: game.decade,
+            category: game.category,
+            songsUsed: game.songsUsed // También podemos devolver las canciones por si acaso
+        });
+    } catch (err) {
+        console.error('Error al obtener estado de partida online:', err.message);
+        res.status(500).json({ message: 'Error del servidor.' });
+    }
 });
