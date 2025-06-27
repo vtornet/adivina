@@ -415,3 +415,22 @@ app.get('/api/online-games/:code', async (req, res) => {
         res.status(500).json({ message: 'Error del servidor.' });
     }
 });
+
+app.get('/api/online-games/player/:playerEmail', async (req, res) => {
+    try {
+        const playerEmail = req.params.playerEmail;
+
+        // Buscar partidas donde el jugador es el creador O donde el jugador está en la lista de jugadores
+        const games = await OnlineGame.find({
+            $or: [
+                { creatorEmail: playerEmail },
+                { 'players.email': playerEmail }
+            ]
+        }).sort({ createdAt: -1 }); // Ordenar por las más recientes primero
+
+        res.status(200).json(games);
+    } catch (err) {
+        console.error('Error al obtener partidas del jugador:', err.message);
+        res.status(500).json({ message: 'Error del servidor.' });
+    }
+});

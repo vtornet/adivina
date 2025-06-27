@@ -37,6 +37,7 @@ function getCurrentUserData() {
     return JSON.parse(userDataString);
 }
 
+// main.js - Función showScreen
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
@@ -50,10 +51,10 @@ function showScreen(screenId) {
     if (screenId === 'invite-online-screen') {
         populateInviteSelectors();
     }
-    if (screenId === 'pending-games-screen') {
-        loadPendingGames();
+    // MODIFICACIÓN CLAVE AQUÍ:
+    if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
+        loadPlayerOnlineGames(); //
     }
-
 }
 
 // =====================================================================
@@ -1797,42 +1798,183 @@ async function invitePlayerByName() {
     }
 }
 
-async function loadPendingGames() {
+async function loadPlayerOnlineGames() {
     const playerData = getCurrentUserData();
-    if (!playerData || !playerData.playerName) {
-         console.warn("No hay datos de jugador para cargar partidas pendientes.");
-         document.getElementById('pending-games-list').innerHTML = "<p>Debes iniciar sesión con tu nombre de jugador para ver las partidas.</p>";
+    if (!playerData || !playerData.email || !playerData.playerName) {
+         console.warn("No hay datos de jugador para cargar partidas online.");
+         document.getElementById('pending-games-list').innerHTML = "<p>Debes iniciar sesión para ver tus partidas online.</p>";
          showScreen('login-screen');
          return;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/online-games/pending/${playerData.playerName}`);
+        const response = await fetch(`${API_BASE_URL}/api/online-games/player/${playerData.email}`);
         const games = await response.json();
-        const container = document.getElementById('pending-games-list');
+        const container = document.getElementById('pending-games-list'); // Mantener el mismo ID de contenedor
         container.innerHTML = '';
 
         if (games.length === 0) {
-            container.innerHTML = "<p>No tienes partidas pendientes.</p>";
+            container.innerHTML = "<p>No tienes partidas online activas.</p>";
             return;
         }
 
+        // Encabezado para las partidas
+        container.innerHTML += '<h3>Tus Partidas Online</h3>';
+
         games.forEach((game) => {
-            const btn = document.createElement('button');
-            btn.className = 'btn';
-            // Muestra el nombre del jugador que te invitó (el creador de la partida)
+            const gameDiv = document.createElement('div');
+            gameDiv.className = 'online-game-item'; // Clase para estilos CSS (opcional)
+
             const invitingPlayerName = game.players[0] ? game.players[0].name : 'Desconocido';
-            btn.textContent = `Jugar con ${invitingPlayerName} (${decadeNames[game.decade]} - ${categoryNames[game.category]})`;
-            btn.onclick = () => {
-                // Al hacer clic, se unen a la partida en la base de datos
-                joinOnlineGameFromPending(game.code, playerData.playerName, playerData.email); // <-- LÍNEA MODIFICADA
-            };
-            container.appendChild(btn);
+            const isCreator = game.creatorEmail === playerData.email;
+            const otherPlayer = game.players.find(p => p.email !== playerData.email);
+            const otherPlayerName = otherPlayer ? otherPlayer.name : 'Esperando rival';
+            const currentPlayerFinished = game.players.find(p => p.email === playerData.email)?.finished;
+            const otherPlayerFinished = otherPlayer?.finished;
+
+            let statusText = '';
+            let buttonHtml = '';
+
+            if (game.finished) {
+                statusText = 'FINALIZADA';
+                buttonHtml = `<button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>`;
+            } else if (game.players.length === 1) {
+                statusText = 'Esperando a que un rival se una...';
+                buttonHtml = `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`;
+            } else if (game.players.length === 2) {
+                if (currentPlayerFinished && !otherPlayerFinished) {
+                    statusText = `Esperando a que ${otherPlayerName} termine...`;
+                    buttonHtml = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
+                } else if (!currentPlayerFinished && otherPlayerFinished) {
+                    statusText = `¡Tu turno! ${otherPlayerName} ha terminado.`;
+                    buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                } else if (!currentPlayerFinished && !otherPlayerFinished) {
+                    statusText = `Partida en curso con ${otherPlayerName}.`;
+                    buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                }
+            }
+
+            gameDiv.innerHTML = `
+                <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
+                <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                <p><strong>Estado:</strong> ${statusText}</p>
+                ${buttonHtml}
+            `;
+            container.appendChild(gameDiv);
         });
 
     } catch (err) {
-        console.error("Error cargando partidas pendientes:", err);
-        container.innerHTML = "<p>Error al cargar partidas pendientes.</p>";
+        console.error("Error cargando partidas online del jugador:", err);
+        container.innerHTML = "<p>Error al cargar tus partidas online.</p>";
+    }
+}
+
+// main.js - AÑADE ESTAS NUEVAS FUNCIONES
+function copyOnlineGameCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+        alert(`Código de partida copiado: ${code}`);
+    }).catch(err => {
+        console.error('Error al copiar el código:', err);
+        alert(`No se pudo copiar el código. Por favor, cópialo manualmente: ${code}`);
+    });
+}
+
+async function viewOnlineGameResults(code) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/${code}`);
+        const result = await response.json();
+        if (response.ok && result.finished) {
+            // Limpiar el estado de la partida actual para evitar conflictos
+            currentOnlineGameCode = null;
+            currentOnlineSongs = [];
+            isOnlineMode = false;
+            localStorage.removeItem('currentOnlineGameData');
+
+            showOnlineResults(result); // Reutiliza la función existente para mostrar resultados
+        } else {
+            alert(result.message || 'La partida aún no ha terminado o no se encontraron resultados.');
+            // Recargar la lista por si el estado cambió
+            loadPlayerOnlineGames();
+        }
+    } catch (err) {
+        console.error('Error al ver resultados de partida online:', err);
+        alert('Error de conexión al cargar los resultados.');
+    }
+}
+
+async function goToOnlineWaitScreen(code) {
+    currentOnlineGameCode = code; // Establecer el código para que pollOnlineGameStatus funcione
+    showScreen('online-wait-screen');
+    pollOnlineGameStatus(); // Iniciar el polling
+}
+
+async function continueOnlineGame(code, playerName, email) {
+    try {
+        // Obtener los datos completos de la partida del servidor
+        const response = await fetch(`${API_BASE_URL}/api/online-games/${code}`);
+        const result = await response.json();
+
+        if (response.ok) {
+            // Establecer las variables globales para la partida
+            currentOnlineGameCode = code;
+            currentOnlineSongs = result.songsUsed; // Las canciones vienen de la respuesta del servidor
+            currentOnlineEmail = email;
+            currentOnlinePlayerName = playerName;
+            isOnlineMode = true;
+
+            // Guardar la información del juego online para usarla en startOnlineGame
+            localStorage.setItem('currentOnlineGameData', JSON.stringify({
+                code: code,
+                songsUsed: result.songsUsed,
+                decade: result.decade,
+                category: result.category
+            }));
+
+            // Limpiar el gameState actual antes de iniciar una nueva/continuar
+            gameState = {
+                players: [],
+                totalQuestionsPerPlayer: 10,
+                currentPlayerIndex: 0,
+                selectedDecade: null,
+                category: null,
+                isOnline: true,
+                onlineGameCode: currentOnlineGameCode
+            };
+
+            // Añadir al jugador local al gameState
+            const localPlayer = {
+                id: 1,
+                name: currentOnlinePlayerName,
+                score: 0, // La puntuación se actualizará desde el servidor si ya ha jugado
+                questionsAnswered: 0, // Las preguntas respondidas también se actualizarán
+                questions: currentOnlineSongs,
+                email: currentOnlineEmail,
+                finishedOnline: false
+            };
+            gameState.players.push(localPlayer);
+
+            // Si la partida ya tiene datos de jugadores, actualiza el gameState con ellos
+            const serverPlayer = result.players.find(p => p.email === currentOnlineEmail);
+            if (serverPlayer) {
+                localPlayer.score = serverPlayer.score;
+                localPlayer.finishedOnline = serverPlayer.finished;
+                // Necesitamos saber cuántas preguntas ha respondido para continuar
+                // Esto requeriría que el servidor guarde 'questionsAnswered' o 'currentQuestionIndex'
+                // Por ahora, asumimos que si no ha terminado, está en la siguiente pregunta.
+                // Esto es una simplificación. Un sistema robusto guardaría el progreso.
+                // Para simplificar, si no ha terminado, simplemente reiniciamos desde la primera pregunta
+                // o la siguiente si el servidor guarda el progreso.
+                // Por ahora, si no ha terminado, simplemente lo lleva a la pantalla de juego.
+            }
+
+            startOnlineGame(); // Inicia el juego con los datos cargados
+        } else {
+            alert(result.message || 'Error al cargar la partida para continuar.');
+            loadPlayerOnlineGames(); // Recargar la lista por si el estado cambió
+        }
+    } catch (err) {
+        console.error('Error de red al continuar partida online:', err);
+        alert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
