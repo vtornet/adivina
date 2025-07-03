@@ -923,16 +923,19 @@ function endGame() {
     const finalScoresContainer = document.getElementById('final-scores');
     finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
     const winnerDisplay = document.getElementById('winner-display');
-    
+
+    // === MODIFICACIÓN CLAVE: Definir sortedPlayers aquí ===
+    const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
+    // ====================================================
 
     if (gameState.players.length === 1) {
         const player = gameState.players[0];
         winnerDisplay.textContent = `${player.name} has conseguido ${player.score} puntos.`;
-        winnerDisplay.style.animation = 'none'; 
+        winnerDisplay.style.animation = 'none';
         winnerDisplay.style.textShadow = 'none';
-        winnerDisplay.style.color = 'var(--light-text-color)'; 
-        winnerDisplay.style.border = 'none'; 
-        winnerDisplay.style.fontSize = '1.8rem'; 
+        winnerDisplay.style.color = 'var(--light-text-color)';
+        winnerDisplay.style.border = 'none';
+        winnerDisplay.style.fontSize = '1.8rem';
 
         if (currentUser && currentUser.email) {
             saveUserScores(currentUser.email, gameState.selectedDecade, gameState.category, player.score);
@@ -970,22 +973,22 @@ function endGame() {
                 console.warn("Usuario logueado no encontrado en la lista de jugadores de la partida.");
             }
         }
-        
+
         saveGameResult(gameState.players, winnerName, gameState.selectedDecade, gameState.category);
     }
 
     sortedPlayers.forEach((player, index) => {
-        const medal = (gameState.players.length > 1) ? ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '') : ''; 
-        finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`; 
+        const medal = (gameState.players.length > 1) ? ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '') : '';
+        finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
-    
-    document.getElementById('play-again-btn').onclick = () => { 
+
+    document.getElementById('play-again-btn').onclick = () => {
         gameState.players.forEach(player => {
             player.score = 0;
             player.questionsAnswered = 0;
             player.questions = [];
         });
-        showScreen('player-selection-screen'); 
+        showScreen('player-selection-screen');
     };
     // ... (dentro de endGame function, casi al final)
     // Recopilar todas las canciones jugadas en esta partida por todos los jugadores
@@ -998,7 +1001,7 @@ function endGame() {
     if (currentUser && currentUser.email) {
         updateRecentSongsHistory(currentUser.email, gameState.selectedDecade, gameState.category, allPlayedSongsInThisGame);
     }
-    
+
     showScreen('end-game-screen');
 }
 
