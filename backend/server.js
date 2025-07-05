@@ -434,3 +434,27 @@ app.get('/api/online-games/player/:playerEmail', async (req, res) => {
         res.status(500).json({ message: 'Error del servidor.' });
     }
 });
+
+// server.js - Nueva ruta para borrar el historial de partidas online de un jugador
+app.delete('/api/online-games/clear-history/:playerEmail', async (req, res) => {
+    try {
+        const playerEmail = req.params.playerEmail;
+
+        // Eliminar todas las partidas donde el jugador sea el creador o esté en la lista de jugadores
+        const result = await OnlineGame.deleteMany({
+            $or: [
+                { creatorEmail: playerEmail },
+                { 'players.email': playerEmail }
+            ]
+        });
+
+        if (result.deletedCount > 0) {
+            res.status(200).json({ message: `Se eliminaron ${result.deletedCount} partidas de tu historial online.` });
+        } else {
+            res.status(200).json({ message: 'No se encontraron partidas online para eliminar.' });
+        }
+    } catch (err) {
+        console.error('Error al borrar historial de partidas online:', err.message);
+        res.status(500).json({ message: 'Error del servidor.' });
+    }
+});

@@ -98,7 +98,22 @@
 
     <div id="pending-games-screen" class="screen">
         <h2>Mis Partidas Online</h2>
-        <div id="pending-games-list"></div>
+
+        <div id="active-games-section" style="margin-bottom: 30px;">
+            <h3>Partidas Activas y Pendientes</h3>
+            <div id="active-games-list">
+                <p>Cargando partidas activas...</p>
+            </div>
+        </div>
+
+        <div id="finished-games-section">
+            <h3>Partidas Finalizadas</h3>
+            <div id="finished-games-list">
+                <p>Cargando partidas finalizadas...</p>
+            </div>
+        </div>
+
+        <button class="btn danger" onclick="confirmClearOnlineGameHistory()" style="margin-top: 20px;">Borrar Historial Online</button>
         <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
     </div>
 

@@ -161,6 +161,42 @@ function logout() {
     showScreen('home-screen');
 }
 
+// main.js - Nuevas funciones para borrar historial de partidas online
+function confirmClearOnlineGameHistory() {
+    const confirmed = confirm("¿Estás seguro de que quieres borrar TODO tu historial de partidas online? Esta acción es irreversible.");
+    if (confirmed) {
+        clearOnlineGameHistory();
+    }
+}
+
+async function clearOnlineGameHistory() {
+    const playerData = getCurrentUserData();
+    if (!playerData || !playerData.email) {
+        alert("Debes iniciar sesión para borrar tu historial.");
+        showScreen('login-screen');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/clear-history/${playerData.email}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message);
+            loadPlayerOnlineGames(); // Recargar la lista de partidas para mostrar el cambio
+        } else {
+            alert(`Error al borrar historial: ${result.message}`);
+        }
+    } catch (error) {
+        console.error('Error de red al borrar historial de partidas online:', error);
+        alert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
 // main.js - Añade esta nueva función
 function endOnlineModeAndGoHome() {
     if (isOnlineMode) {
@@ -1805,7 +1841,8 @@ async function loadPlayerOnlineGames() {
     const playerData = getCurrentUserData();
     if (!playerData || !playerData.email || !playerData.playerName) {
          console.warn("No hay datos de jugador para cargar partidas online.");
-         document.getElementById('pending-games-list').innerHTML = "<p>Debes iniciar sesión para ver tus partidas online.</p>";
+         document.getElementById('active-games-list').innerHTML = "<p>Debes iniciar sesión para ver tus partidas online.</p>";
+         document.getElementById('finished-games-list').innerHTML = ""; // Limpiar el otro contenedor
          showScreen('login-screen');
          return;
     }
@@ -1813,62 +1850,95 @@ async function loadPlayerOnlineGames() {
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/player/${playerData.email}`);
         const games = await response.json();
-        const container = document.getElementById('pending-games-list'); // Mantener el mismo ID de contenedor
-        container.innerHTML = '';
+
+        const activeGamesContainer = document.getElementById('active-games-list');
+        const finishedGamesContainer = document.getElementById('finished-games-list');
+        
+        activeGamesContainer.innerHTML = ''; // Limpiar ambos contenedores
+        finishedGamesContainer.innerHTML = '';
 
         if (games.length === 0) {
-            container.innerHTML = "<p>No tienes partidas online activas.</p>";
+            activeGamesContainer.innerHTML = "<p>No tienes partidas online activas.</p>";
+            finishedGamesContainer.innerHTML = "<p>No tienes partidas online finalizadas.</p>";
             return;
         }
 
-        // Encabezado para las partidas
-        container.innerHTML += '<h3>Tus Partidas Online</h3>';
+        const activeGames = games.filter(game => !game.finished);
+        const finishedGames = games.filter(game => game.finished);
 
-        games.forEach((game) => {
-            const gameDiv = document.createElement('div');
-            gameDiv.className = 'online-game-item'; // Clase para estilos CSS (opcional)
+        // Renderizar partidas activas
+        if (activeGames.length > 0) {
+            activeGames.forEach((game) => {
+                const gameDiv = document.createElement('div');
+                gameDiv.className = 'online-game-item'; // Clase para estilos CSS (opcional)
 
-            const invitingPlayerName = game.players[0] ? game.players[0].name : 'Desconocido';
-            const isCreator = game.creatorEmail === playerData.email;
-            const otherPlayer = game.players.find(p => p.email !== playerData.email);
-            const otherPlayerName = otherPlayer ? otherPlayer.name : 'Esperando rival';
-            const currentPlayerFinished = game.players.find(p => p.email === playerData.email)?.finished;
-            const otherPlayerFinished = otherPlayer?.finished;
+                const invitingPlayerName = game.players[0] ? game.players[0].name : 'Desconocido';
+                const isCreator = game.creatorEmail === playerData.email;
+                const otherPlayer = game.players.find(p => p.email !== playerData.email);
+                const otherPlayerName = otherPlayer ? otherPlayer.name : 'Esperando rival';
+                const currentPlayerFinished = game.players.find(p => p.email === playerData.email)?.finished;
+                const otherPlayerFinished = otherPlayer?.finished;
 
-            let statusText = '';
-            let buttonHtml = '';
+                let statusText = '';
+                let buttonHtml = '';
 
-            if (game.finished) {
-                statusText = 'FINALIZADA';
-                buttonHtml = `<button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>`;
-            } else if (game.players.length === 1) {
-                statusText = 'Esperando a que un rival se una...';
-                buttonHtml = `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`;
-            } else if (game.players.length === 2) {
-                if (currentPlayerFinished && !otherPlayerFinished) {
-                    statusText = `Esperando a que ${otherPlayerName} termine...`;
-                    buttonHtml = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
-                } else if (!currentPlayerFinished && otherPlayerFinished) {
-                    statusText = `¡Tu turno! ${otherPlayerName} ha terminado.`;
-                    buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
-                } else if (!currentPlayerFinished && !otherPlayerFinished) {
-                    statusText = `Partida en curso con ${otherPlayerName}.`;
-                    buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                if (game.players.length === 1) {
+                    statusText = 'Esperando a que un rival se una...';
+                    buttonHtml = `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`;
+                } else if (game.players.length === 2) {
+                    if (currentPlayerFinished && !otherPlayerFinished) {
+                        statusText = `Esperando a que ${otherPlayerName} termine...`;
+                        buttonHtml = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
+                    } else if (!currentPlayerFinished && otherPlayerFinished) {
+                        statusText = `¡Tu turno! ${otherPlayerName} ha terminado.`;
+                        // Se necesitan los datos del jugador actual para continuar la partida
+                        buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                    } else if (!currentPlayerFinished && !otherPlayerFinished) {
+                        statusText = `Partida en curso con ${otherPlayerName}.`;
+                        buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                    }
                 }
-            }
 
-            gameDiv.innerHTML = `
-                <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
-                <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
-                <p><strong>Estado:</strong> ${statusText}</p>
-                ${buttonHtml}
-            `;
-            container.appendChild(gameDiv);
-        });
+                gameDiv.innerHTML = `
+                    <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
+                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Estado:</strong> ${statusText}</p>
+                    ${buttonHtml}
+                `;
+                activeGamesContainer.appendChild(gameDiv);
+            });
+        } else {
+            activeGamesContainer.innerHTML = "<p>No tienes partidas online activas.</p>";
+        }
+
+        // Renderizar partidas finalizadas
+        if (finishedGames.length > 0) {
+            finishedGames.forEach((game) => {
+                const gameDiv = document.createElement('div');
+                gameDiv.className = 'online-game-item';
+
+                const invitingPlayerName = game.players[0] ? game.players[0].name : 'Desconocido';
+                const otherPlayer = game.players.find(p => p.email !== playerData.email);
+                const otherPlayerName = otherPlayer ? otherPlayer.name : 'Rival Desconocido'; // Por si el rival no está
+                const isCreator = game.creatorEmail === playerData.email;
+
+
+                gameDiv.innerHTML = `
+                    <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
+                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Estado:</strong> FINALIZADA</p>
+                    <button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>
+                `;
+                finishedGamesContainer.appendChild(gameDiv);
+            });
+        } else {
+            finishedGamesContainer.innerHTML = "<p>No tienes partidas online finalizadas.</p>";
+        }
 
     } catch (err) {
         console.error("Error cargando partidas online del jugador:", err);
-        container.innerHTML = "<p>Error al cargar tus partidas online.</p>";
+        document.getElementById('active-games-list').innerHTML = "<p>Error al cargar tus partidas activas.</p>";
+        document.getElementById('finished-games-list').innerHTML = "<p>Error al cargar tus partidas finalizadas.</p>";
     }
 }
 
