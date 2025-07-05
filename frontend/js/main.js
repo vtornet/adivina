@@ -1505,6 +1505,7 @@ async function joinOnlineGame() {
 
 // main.js - AÑADE ESTA NUEVA FUNCIÓN COMPLETA
 // Nueva función para unirse a una partida pendiente (reutiliza lógica de joinOnlineGame)
+// main.js - Función joinOnlineGameFromPending (VERIFICAR ESTA LÍNEA)
 async function joinOnlineGameFromPending(code, playerName, email) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/join`, {
@@ -1517,19 +1518,19 @@ async function joinOnlineGameFromPending(code, playerName, email) {
             })
         });
 
-        const result = await response.json();
+        const result = await response.json(); // result es { game: {...} }
         if (response.ok) {
             // Si la unión es exitosa, establece las variables de juego online
             currentOnlineGameCode = code;
-            currentOnlineSongs = result.game.songsUsed;
-            currentOnlineEmail = email; // Usar el email del jugador actual
-            currentOnlinePlayerName = playerName; // Usar el nombre del jugador actual
+            currentOnlineSongs = result.game.songsUsed; // <-- VERIFICA ESTA LÍNEA. Si el server devuelve { game: {...} }, entonces es result.game.songsUsed
+            currentOnlineEmail = email;
+            currentOnlinePlayerName = playerName;
             isOnlineMode = true;
 
             // Guardar info del juego online para usarla en startOnlineGame
             localStorage.setItem('currentOnlineGameData', JSON.stringify({
                 code: code,
-                songsUsed: result.game.songsUsed,
+                songsUsed: result.game.songsUsed, // <-- VERIFICA ESTA LÍNEA
                 decade: result.game.decade,
                 category: result.game.category
             }));
@@ -1537,7 +1538,7 @@ async function joinOnlineGameFromPending(code, playerName, email) {
             startOnlineGame(); // Inicia el juego
         } else {
             alert(result.message || 'Error al unirse a la partida pendiente.');
-            loadPendingGames(); // Recarga la lista por si el estado cambió
+            loadPlayerOnlineGames(); // Recarga la lista por si el estado cambió
         }
     } catch (err) {
         console.error('Error de red al unirse a la partida pendiente:', err);
@@ -1827,7 +1828,6 @@ async function invitePlayerByName() {
                 category: category
             }));
 
-            startOnlineGame(); // <-- AÑADE ESTA LÍNEA
         } else {
             alert(result.message || "Error al invitar.");
         }
@@ -1881,11 +1881,15 @@ async function loadPlayerOnlineGames() {
 
                 let statusText = '';
                 let buttonHtml = '';
+                 const isWaitingForCurrentPlayer = game.waitingFor === playerData.email && game.players.every(p => p.email !== playerData.email);
 
-                if (game.players.length === 1) {
+                if (isWaitingForCurrentPlayer) {
+                    statusText = `¡Te han invitado a jugar contra ${invitingPlayerName}!`;
+                    buttonHtml = `<button class="btn" onclick="joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${playerData.email}')">Aceptar y Unirse</button>`;
+                } else if (game.players.length === 1) { // Partida creada por el jugador actual, esperando rival
                     statusText = 'Esperando a que un rival se una...';
                     buttonHtml = `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`;
-                } else if (game.players.length === 2) {
+                } else if (game.players.length === 2) { // Partida con dos jugadores
                     if (currentPlayerFinished && !otherPlayerFinished) {
                         statusText = `Esperando a que ${otherPlayerName} termine...`;
                         buttonHtml = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
@@ -1981,11 +1985,12 @@ async function goToOnlineWaitScreen(code) {
     pollOnlineGameStatus(); // Iniciar el polling
 }
 
+// main.js - Función continueOnlineGame
 async function continueOnlineGame(code, playerName, email) {
     try {
         // Obtener los datos completos de la partida del servidor
         const response = await fetch(`${API_BASE_URL}/api/online-games/${code}`);
-        const result = await response.json();
+        const result = await response.json(); // result es { finished: ..., players: [...], decade: ..., category: ..., songsUsed: [...] }
 
         if (response.ok) {
             // Establecer las variables globales para la partida
@@ -2018,7 +2023,7 @@ async function continueOnlineGame(code, playerName, email) {
             const localPlayer = {
                 id: 1,
                 name: currentOnlinePlayerName,
-                score: 0, // La puntuación se actualizará desde el servidor si ya ha jugado
+                score: 0, // La puntuación se actualizará desde el servidor
                 questionsAnswered: 0, // Las preguntas respondidas también se actualizarán
                 questions: currentOnlineSongs,
                 email: currentOnlineEmail,
@@ -2031,13 +2036,25 @@ async function continueOnlineGame(code, playerName, email) {
             if (serverPlayer) {
                 localPlayer.score = serverPlayer.score;
                 localPlayer.finishedOnline = serverPlayer.finished;
-                // Necesitamos saber cuántas preguntas ha respondido para continuar
-                // Esto requeriría que el servidor guarde 'questionsAnswered' o 'currentQuestionIndex'
-                // Por ahora, asumimos que si no ha terminado, está en la siguiente pregunta.
-                // Esto es una simplificación. Un sistema robusto guardaría el progreso.
-                // Para simplificar, si no ha terminado, simplemente reiniciamos desde la primera pregunta
-                // o la siguiente si el servidor guarda el progreso.
-                // Por ahora, si no ha terminado, simplemente lo lleva a la pantalla de juego.
+                // Si el servidor guarda el progreso de las preguntas respondidas, lo aplicaríamos aquí.
+                // Por ahora, asumimos que si está en curso, el jugador simplemente retoma su turno.
+                // Si la partida tiene un player.currentQuestionIndex, se usaría aquí.
+                // Como no lo tiene, se inicializa a 0. Esto es una simplificación.
+                // Un sistema robusto persistiría el currentQuestionIndex por jugador.
+            }
+
+            // También añade al otro jugador al gameState para que `endGame` sepa que hay 2 jugadores
+            const otherPlayer = result.players.find(p => p.email !== currentOnlineEmail);
+            if (otherPlayer) {
+                gameState.players.push({
+                    id: 2, // Asignar un ID diferente
+                    name: otherPlayer.name,
+                    score: otherPlayer.score,
+                    questionsAnswered: otherPlayer.questionsAnswered || 0, // Si no se guarda, inicializar a 0
+                    questions: [], // Las canciones del rival no son relevantes para el juego local
+                    email: otherPlayer.email,
+                    finishedOnline: otherPlayer.finished
+                });
             }
 
             startOnlineGame(); // Inicia el juego con los datos cargados
