@@ -340,7 +340,7 @@ app.post('/api/online-games/by-username', async (req, res) => {
       return res.status(404).json({ message: 'El rival no existe.' });
     }
 
-    // ✅ Generar código de partida (reutiliza generateCode ya definida)
+    // Generar código de partida
     const code = generateCode();
 
     const game = new OnlineGame({
@@ -349,16 +349,18 @@ app.post('/api/online-games/by-username', async (req, res) => {
       decade,
       songsUsed,
       code: code,
+      // Solo el creador está en el array de players inicialmente
       players: [
         { name: playerName, email: creatorEmail, score: 0, finished: false }
       ],
-      waitingFor: rivalPlayerName,
+      // Importante: Asignar el email del rival en waitingFor para que pueda encontrar la partida
+      waitingFor: rival.email, // <-- CAMBIO IMPORTANTE AQUÍ: Guardar el email del rival, no solo el nombre.
       createdAt: new Date(),
       finished: false
     });
 
     await game.save();
-    res.status(201).json({ message: 'Partida creada con éxito.', code: game.code });
+    res.status(201).json({ message: 'Invitación enviada con éxito.', code: game.code }); // No devolvemos 'game', solo 'code'
   } catch (err) {
     console.error('Error al crear partida por nombre:', err);
     res.status(500).json({ message: 'Error del servidor.', details: err.message });
@@ -420,11 +422,12 @@ app.get('/api/online-games/player/:playerEmail', async (req, res) => {
     try {
         const playerEmail = req.params.playerEmail;
 
-        // Buscar partidas donde el jugador es el creador O donde el jugador está en la lista de jugadores
+        // Buscar partidas donde el jugador es el creador O donde el jugador está en la lista de jugadores O está esperando unirse
         const games = await OnlineGame.find({
             $or: [
                 { creatorEmail: playerEmail },
-                { 'players.email': playerEmail }
+                { 'players.email': playerEmail },
+                { waitingFor: playerEmail, 'players.email': { $ne: playerEmail } } // Es invitado, aún no en players array
             ]
         }).sort({ createdAt: -1 }); // Ordenar por las más recientes primero
 
