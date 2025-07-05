@@ -197,26 +197,21 @@ async function clearOnlineGameHistory() {
     }
 }
 
-// main.js - Función endOnlineModeAndGoHome
-// main.js - Función endOnlineModeAndGoHome
 function endOnlineModeAndGoHome() {
-    if (isOnlineMode) {
-        isOnlineMode = false;
-        currentOnlineGameCode = null;
-        currentOnlineSongs = [];
-        currentOnlineEmail = null;
-        currentOnlinePlayerName = null;
-        localStorage.removeItem('currentOnlineGameData');
-        // Redirigir a la selección de década cuando se sale del modo online por este botón
-        showScreen('decade-selection-screen'); // <--- DEBE SER ESTA LÍNEA
-    } else {
-        // Lógica para el modo offline, volver a la selección de década/categoría
-        if (gameState.selectedDecade === 'Todas') {
-            showScreen('decade-selection-screen');
-        } else {
-            showScreen('category-screen');
-        }
-    }
+    // Siempre resetear el estado de la partida online al ir al menú principal
+    isOnlineMode = false;
+    currentOnlineGameCode = null;
+    currentOnlineSongs = [];
+    currentOnlineEmail = null;
+    currentOnlinePlayerName = null;
+    localStorage.removeItem('currentOnlineGameData');
+
+    // Resetear también el estado del juego general para evitar confusiones
+    gameState = {}; 
+    
+    // Y siempre redirigir a la pantalla de selección de década
+    showScreen('decade-selection-screen'); 
+    generateDecadeButtons(); // Asegurarse de que los botones de década se generen correctamente
 }
 
 const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
