@@ -197,7 +197,7 @@ async function clearOnlineGameHistory() {
     }
 }
 
-// main.js - Añade esta nueva función
+// main.js - Función endOnlineModeAndGoHome
 function endOnlineModeAndGoHome() {
     if (isOnlineMode) {
         isOnlineMode = false;
@@ -206,7 +206,8 @@ function endOnlineModeAndGoHome() {
         currentOnlineEmail = null;
         currentOnlinePlayerName = null;
         localStorage.removeItem('currentOnlineGameData');
-        showScreen('online-mode-screen'); // Vuelve al menú online
+        // Aquí es donde cambia la redirección para el modo online
+        showScreen('decade-selection-screen'); // <--- CAMBIO AQUÍ: Redirigir a la selección de década
     } else {
         // Lógica para el modo offline, volver a la selección de década/categoría
         if (gameState.selectedDecade === 'Todas') {
