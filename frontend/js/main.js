@@ -198,6 +198,7 @@ async function clearOnlineGameHistory() {
 }
 
 // main.js - Función endOnlineModeAndGoHome
+// main.js - Función endOnlineModeAndGoHome
 function endOnlineModeAndGoHome() {
     if (isOnlineMode) {
         isOnlineMode = false;
@@ -206,8 +207,8 @@ function endOnlineModeAndGoHome() {
         currentOnlineEmail = null;
         currentOnlinePlayerName = null;
         localStorage.removeItem('currentOnlineGameData');
-        // Aquí es donde cambia la redirección para el modo online
-        showScreen('decade-selection-screen'); // <--- CAMBIO AQUÍ: Redirigir a la selección de década
+        // Redirigir a la selección de década cuando se sale del modo online por este botón
+        showScreen('decade-selection-screen'); // <--- DEBE SER ESTA LÍNEA
     } else {
         // Lógica para el modo offline, volver a la selección de década/categoría
         if (gameState.selectedDecade === 'Todas') {
@@ -2070,6 +2071,7 @@ async function continueOnlineGame(code, playerName, email) {
 }
 
 // main.js - Añade esta nueva función
+// main.js - Función showOnlineResults
 function showOnlineResults(gameData) {
     const finalScoresContainer = document.getElementById('final-scores');
     finalScoresContainer.innerHTML = '<h3>Resultados de la Partida Online</h3>';
@@ -2108,17 +2110,22 @@ function showOnlineResults(gameData) {
 
     // Opciones de botón después de partida online: Volver al menú principal
     document.getElementById('play-again-btn').onclick = () => {
-        // Limpiar estado online
+        // Limpiar estado online y volver al menú online para jugar otra partida online
         currentOnlineGameCode = null;
         currentOnlineSongs = [];
-        isOnlineMode = false;
+        isOnlineMode = false; // Importante resetear este estado
         localStorage.removeItem('currentOnlineGameData');
-        showScreen('online-mode-screen'); // Volver al menú online
+        showScreen('online-mode-screen'); // <--- ESTO LLEVA AL MENÚ ONLINE
     };
     document.getElementById('play-again-btn').textContent = "Jugar Otra Vez Online"; // Cambiar texto del botón
 
-    // También hay que llamar a saveOnlineGameToHistory
+    // Aquí guardamos el resultado de la partida online
     saveOnlineGameToHistory(gameData);
+
+    // Asegurarse de que el botón "Menú Principal" de la pantalla end-game-screen
+    // (que está en index.html) sigue apuntando a endOnlineModeAndGoHome()
+    // que a su vez te llevará a decade-selection-screen.
+    // No necesitamos modificarlo aquí, solo asegurarnos de que la función existe y funciona.
 
     showScreen('end-game-screen'); // Reutilizar la pantalla de fin de juego
 }
