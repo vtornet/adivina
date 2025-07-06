@@ -444,55 +444,21 @@ function parseDisplay(displayText) {
     return { artist: parts[0].trim(), title: parts.slice(1).join(' - ').trim() };
 }
 
-/**
- * Genera y muestra los botones de selección de década.
- */
-async function generateDecadeButtons() { // Convertir a async
+async function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
-    // Definimos las décadas que queremos mostrar y que esperamos tener archivos .js
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual']; 
-    let generationPromises = [];
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual']; // Aquí está 'Actual'
 
     decadesOrder.forEach(decadeId => {
-        // Para cada década, intentamos cargar una categoría principal para ver si hay contenido.
-        // Asumimos 'espanol' como la primera categoría para verificar.
-        // Si no existe 'espanol.js' o no tiene 4 canciones, esta década no se mostrará.
-        const representativeCategory = 'espanol'; // O 'peliculas', la que sea más común
-        
-        // No cargamos todo el contenido de la década aquí, solo intentamos cargar un archivo representativo
-        // para poblar `configuracionCanciones[decadeId][representativeCategory]`
-        generationPromises.push(
-            loadSongsForDecadeAndCategory(decadeId, representativeCategory)
-            .then(() => {
-                // Una vez cargada la categoría representativa, verificamos si la década tiene suficientes canciones
-                const songsInRepresentativeCat = configuracionCanciones[decadeId] && configuracionCanciones[decadeId][representativeCategory]
-                                                ? configuracionCanciones[decadeId][representativeCategory].length : 0;
-                
-                if (songsInRepresentativeCat >= 4) {
-                    const button = document.createElement('button');
-                    button.className = 'category-btn'; 
-                    button.innerText = decadeNames[decadeId];
-                    button.onclick = () => selectDecade(decadeId);
-                    container.appendChild(button);
-                } else {
-                    console.warn(`Década ${decadeId} - Categoría ${representativeCategory} tiene menos de 4 canciones. No se mostrará el botón de la década.`);
-                }
-            })
-            .catch(error => {
-                console.warn(`No se pudo cargar la categoría representativa (${representativeCategory}) para la década ${decadeId}. No se mostrará el botón de la década.`, error);
-            })
-        );
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+        button.innerText = decadeNames[decadeId];
+        button.onclick = () => selectDecade(decadeId);
+        container.appendChild(button);
     });
 
-    // Esperar a que todos los intentos de generación de botones de décadas terminen
-    await Promise.allSettled(generationPromises);
-
-    // Añadir el botón "Todas"
-    // Lo hacemos aparecer siempre, y loadAllSongs() se encargará de consolidar las disponibles.
-    // Verificamos al inicio de startGame si hay suficientes en total.
     const allButton = document.createElement('button');
-    allButton.className = 'category-btn tertiary'; 
+    allButton.className = 'category-btn tertiary';
     allButton.innerText = decadeNames['Todas'];
     allButton.onclick = () => selectDecade('Todas');
     container.appendChild(allButton);
