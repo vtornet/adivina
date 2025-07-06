@@ -82,5 +82,4 @@ window.allSongsByDecadeAndCategory['actual'].ingles = [
         { file: 'coldplay - viva-la-vida.mp3', display: 'Coldplay - Viva La Vida', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIVA_LA_VIDA_00S_4', platform: 'spotify', originalDecade: 'Actual', originalCategory: 'ingles' },
         { file: 'black-eyed-peas - where-is-the-love.mp3', display: 'Black Eyed Peas - Where Is The Love?', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WHERE_IS_THE_LOVE_4', platform: 'spotify', originalDecade: 'Actual', originalCategory: 'ingles' },
         { file: 'westlife - you-raise-me-up.mp3', display: 'Westlife - You Raise Me Up', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YOU_RAISE_ME_UP_3', platform: 'spotify', originalDecade: 'Actual', originalCategory: 'ingles' },
-        { file: 'john-mayer - gravity.mp3', display: 'John Mayer - Gravity', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GRAVITY_3', platform: 'spotify', originalDecade: 'Actual', originalCategory: 'ingles' },
     ]
