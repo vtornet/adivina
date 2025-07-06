@@ -4,6 +4,7 @@ const decadeNames = {
     '00s': 'Década de los 2000',
     '10s': 'Década de los 2010',
     'Actual': 'Década Actual', // 2020s en adelante
+    'actual': 'Década Actual', // AÑADE ESTO PARA HACERLO RESISTENTE
     'Todas': 'Todas las Décadas' // Nueva opción
 };
 
@@ -447,7 +448,7 @@ function parseDisplay(displayText) {
 async function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual']; // Aquí está 'Actual'
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'actual']; // Aquí está 'Actual'
 
     decadesOrder.forEach(decadeId => {
         const button = document.createElement('button');
@@ -1073,7 +1074,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Orden de las décadas a mostrar
+    const decadesInOrder = ['80s', '90s', '00s', '10s', 'actual', 'Todas']; // Orden de las décadas a mostrar
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
