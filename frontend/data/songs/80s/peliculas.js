@@ -1,7 +1,7 @@
 // frontend/data/songs/80s/espanol.js
 window.allSongsByDecadeAndCategory = window.allSongsByDecadeAndCategory || {};
 window.allSongsByDecadeAndCategory['80s'] = window.allSongsByDecadeAndCategory['80s'] || {};
-window.allSongsByDecadeAndCategory['80s'].espanol = [
+window.allSongsByDecadeAndCategory['80s'].peliculas = [
         { file: '007-octopussy - 1983.mp3', display: '007 Octopussy - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_007_OCTOPUSSY___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: '007-licencia-para-matar - 1989.mp3', display: '007 Licencia Para Matar - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_007_LICENCIA_PARA_MATAR___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'agarralo-como-puedas - 1988.mp3', display: 'Agárralo Como Puedas - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AGARRALO_COMO_PUEDAS___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
