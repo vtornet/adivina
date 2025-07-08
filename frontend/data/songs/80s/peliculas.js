@@ -1,102 +1,96 @@
-// frontend/data/songs/80s/peliculas.js
-
-(function() {
-    if (typeof window.songs === 'undefined') {
-        window.songs = {};
-    }
-    if (typeof window.songs['80s'] === 'undefined') {
-        window.songs['80s'] = {};
-    }
-    window.songs['80s'].peliculas = [
-        {
-            title: "Aventura Galáctica",
-            artist: "BSO - El Viaje Estelar",
-            audio: "BSO---El-Viaje-Estelar.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "Misterio Urbano",
-            artist: "BSO - Sombras en la Ciudad",
-            audio: "BSO---Sombras-en-la-Ciudad.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "Persecución Nocturna",
-            artist: "BSO - El Escape Imposible",
-            audio: "BSO---El-Escape-Imposible.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "Corazones de Acero",
-            artist: "BSO - Vientos de Guerra",
-            audio: "BSO---Vientos-de-Guerra.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "El Secreto del Templo",
-            artist: "BSO - Aventuras en la Jungla",
-            audio: "BSO---Aventuras-en-la-Jungla.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "Máquinas del Tiempo",
-            artist: "BSO - Paradigma Futuro",
-            audio: "BSO---Paradigma-Futuro.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "Amor Estelar",
-            artist: "BSO - Destino Compartido",
-            audio: "BSO---Destino-Compartido.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "El Hechizo Olvidado",
-            artist: "BSO - El Bosque Encantado",
-            audio: "BSO---El-Bosque-Encantado.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "La Venganza del Robot",
-            artist: "BSO - Código Cibernético",
-            audio: "BSO---Codigo-Cibernetico.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        },
-        {
-            title: "Sueños de Medianoche",
-            artist: "BSO - El Refugio Secreto",
-            audio: "BSO---El-Refugio-Secreto.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "peliculas"
-        }
-    ];
-})();
+// frontend/data/songs/80s/espanol.js
+window.allSongsByDecadeAndCategory = window.allSongsByDecadeAndCategory || {};
+window.allSongsByDecadeAndCategory['80s'] = window.allSongsByDecadeAndCategory['80s'] || {};
+window.allSongsByDecadeAndCategory['80s'].espanol = [
+        { file: '007-octopussy - 1983.mp3', display: '007 Octopussy - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_007_OCTOPUSSY___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: '007-licencia-para-matar - 1989.mp3', display: '007 Licencia Para Matar - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_007_LICENCIA_PARA_MATAR___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'agarralo-como-puedas - 1988.mp3', display: 'Agárralo Como Puedas - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AGARRALO_COMO_PUEDAS___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'amadeus - 1984.mp3', display: 'Amadeus - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AMADEUS___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'american-gigolo - 1980.mp3', display: 'American Gigolo - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AMERICAN_GIGOLO___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'amor-sin-fin - 1981.mp3', display: 'Amor Sin Fin - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AMOR_SIN_FIN___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'arizona-baby - 1987.mp3', display: 'Arizona Baby - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ARIZONA_BABY___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'beetlejuice -  1988.mp3', display: 'Beetlejuice - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BEETLEJUICE___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'blade-runner - 1982.mp3', display: 'Blade Runner - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BLADE_RUNNER___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'bso-fama - 1980.mp3', display: 'Fama - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_FAMA___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'bso-flashdance - 1983.mp3', display: 'Flashdance - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_FLASHDANCE___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'bso-top-gun-idolos-del-aire - 1986.mp3', display: 'Bso Top Gun Idolos Del Aire - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_TOP_GUN_IDOLOS_DEL_AIRE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'carmen - 1984.mp3', display: 'Carmen - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CARMEN___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'carros-de-fuego - 1981.mp3', display: 'Carros De Fuego - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CARROS_DE_FUEGO___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'cazafantasmas - 1984.mp3', display: 'Cazafantasmas - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAZAFANTASMAS___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'cinema-paradiso - 1988.mp3', display: 'Cinema Paradiso - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CINEMA_PARADISO___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'conan-el-bárbaro - 1982.mp3', display: 'Conan El Bárbaro - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CONAN_EL_BÁRBARO___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'cuando-harry-encontro-a-sally - 1989.mp3', display: 'Cuando Harry Encontró A Sally - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CUANDO_HARRY_ENCONTRO_A_SALLY___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'cuenta-conmigo - 1986.mp3', display: 'Cuenta Conmigo - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CUENTA_CONMIGO___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'deprisa-deprisa - 1981.mp3', display: 'Deprisa Deprisa - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DEPRISA_DEPRISA___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' }
+        { file: 'devuelveme-a-mi-chica - 1987.mp3', display: 'Devuelveme A Mi Chica - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DEVUELVEME_A_MI_CHICA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'dias-de-radio - 1987.mp3', display: 'Días De Radio - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DIAS_DE_RADIO___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'dirty-dancing - 1987.mp3', display: 'Dirty Dancing - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DIRTY_DANCING___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-club-de-los-cinco - 1985.mp3', display: 'El Club De Los Cinco - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_CLUB_DE_LOS_CINCO___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-club-de-los-poetas-muertos - 1989.mp3', display: 'El Club De Los Poetas Muertos - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_CLUB_DE_LOS_POETAS_MUERTOS___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-color-del-dinero - 1986.mp3', display: 'El Color Del Dinero - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_COLOR_DEL_DINERO___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-color-purpura - 1985.mp3', display: 'El Color PÚrpura - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_COLOR_PURPURA___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-lago-azul - 1980.mp3', display: 'El Lago Azul (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_LAGO_AZUL___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-profesional - 1981.mp3', display: 'El Profesional - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_PROFESIONAL___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-secreto-de-la-piramide - 1985.mp3', display: 'El Secreto De La Piramide - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_SECRETO_DE_LA_PIRAMIDE___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-turista-accidental - 1988.mp3', display: 'El Turista Accidental - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_TURISTA_ACCIDENTAL___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'en-el-estanque-dorado - 1981.mp3', display: 'En El Estanque Dorado - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EN_EL_ESTANQUE_DORADO___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'erase-una-vez-america - 1984.mp3', display: 'Érase Una Vez America - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ERASE_UNA_VEZ_AMERICA___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'et-el-extraterrestre - 1982.mp3', display: 'Et El Extraterrestre - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ET_EL_EXTRATERRESTRE___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'flash-gordon - 1980.mp3', display: 'Flash Gordon - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FLASH_GORDON___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'flashdance - 1983.mp3', display: 'Flashdance - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FLASHDANCE___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'good-mornig-vietnam - 1987.mp3', display: 'Good Mornig Vietnam - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GOOD_MORNIG_VIETNAM___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'granujas-a-todo-ritmo - 1980.mp3', display: 'Granujas A Todo Ritmo - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GRANUJAS_A_TODO_RITMO___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'gremlins - 1984.mp3', display: 'Gremlins - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GREMLINS___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'halloween-3 - 1982.mp3', display: 'Halloween 3 - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_HALLOWEEN_3___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'indiana-jones - 1981.mp3', display: 'Indiana Jones - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_INDIANA_JONES___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'james-bond-panorama-para-matar - 1985.mp3', display: 'James Bond Panorama Para Matar - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_JAMES_BOND_PANORAMA_PARA_MATAR___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'jinetes-de-leyenda - 1987.mp3', display: 'Jinetes De Leyenda - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_JINETES_DE_LEYENDA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'karate-kid - 1984.mp3', display: 'Karate Kid - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_KARATE_KID___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' }
+        { file: 'la-bamba - 1987.mp3', display: 'La Bamba - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_BAMBA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'bso-la-bamba - 1987.mp3', display: 'La Bamba - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_LA_BAMBA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-chaqueta-metalica - 1987.mp3', display: 'La Chaqueta Metalica - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_CHAQUETA_METALICA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-historia-interminable - 1984.mp3', display: 'La Historia Interminable - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_HISTORIA_INTERMINABLE___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-joya-del-nilo - 1985.mp3', display: 'La Joya Del Nilo - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_JOYA_DEL_NILO___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-jungla-de-cristal - 1988.mp3', display: 'La Jungla De Cristal - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_JUNGLA_DE_CRISTAL___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-misión - 1986.mp3', display: 'La Misión - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_MISIÓN___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-mujer-de-rojo - 1980.mp3', display: 'La Mujer De Rojo - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_MUJER_DE_ROJO___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-princesa-prometida - 1987.mp3', display: 'La Princesa Prometida - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_PRINCESA_PROMETIDA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-selva-esmeralda - 1985.mp3', display: 'La Selva Esmeralda - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_SELVA_ESMERALDA___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-sirenita - 1989.mp3', display: 'La Sirenita - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_SIRENITA___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'lady-halcon - 1985.mp3', display: 'Lady Halcón - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LADY_HALCON___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'las-brujas-de-eastwick - 1987.mp3', display: 'Las Brujas De Eastwick - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LAS_BRUJAS_DE_EASTWICK___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'las-cosas-del-querer - 1989.mp3', display: 'Las Cosas Del Querer - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LAS_COSAS_DEL_QUERER___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'los-goonies - 1985.mp3', display: 'Los Goonies - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LOS_GOONIES___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'los-inmortales - 1986.mp3', display: 'Los Inmortales - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LOS_INMORTALES___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'mad-max-mas-alla-de-la-cupula-del-trueno - 1985.mp3', display: 'Mad Max Mas Allá De La Cúpula Del Trueno - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MAD_MAX_MAS_ALLA_DE_LA_CUPULA_DEL_TRUENO___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'memorias-de-áfrica - 1985.mp3', display: 'Memorias De África - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MEMORIAS_DE_ÁFRICA___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'mujeres-al-borde-de-un-ataque-de-nervios - 1988.mp3', display: 'Mujeres Al Borde De Un Ataque De Nervios - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MUJERES_AL_BORDE_DE_UN_ATAQUE_DE_NERVIOS___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'noches-de-sol - 1985.mp3', display: 'Noches De Sol - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NOCHES_DE_SOL___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'nueve-semanas-y-media - 1986.mp3', display: 'Nueve Semanas Y Media - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NUEVE_SEMANAS_Y_MEDIA___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'oficial-y-caballero - 1982.mp3', display: 'Oficial Y Caballero - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_OFICIAL_Y_CABALLERO___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'paseando-a-miss-daisy - 1989.mp3', display: 'Paseando A Miss Daisy - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PASEANDO_A_MISS_DAISY___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'pesadilla-en-elm-street - 1984.mp3', display: 'Pesadilla En Elm Street - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PESADILLA_EN_ELM_STREET___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' }
+        { file: 'pink-floyd-the-wall - 1982.mp3', display: 'Pink Floyd The Wall - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PINK_FLOYD_THE_WALL___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'platoon - 1986.mp3', display: 'Platoon - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PLATOON___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'bso-platoon - 1986.mp3', display: 'Platoon - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_PLATOON___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'quien-angaño-a-rogert-rabbit - 1988.mp3', display: '¿Quién Angaño A Rogert Rabbit? - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUIEN_ANGAÑO_A_ROGERT_RABBIT___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'quien-es-esa-chica - 1987.mp3', display: 'Quien Es Esa Chica - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUIEN_ES_ESA_CHICA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'reencuentro - 1983.mp3', display: 'Reencuentro - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_REENCUENTRO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'regreso-al-futuro - 1985.mp3', display: 'Regreso Al Futuro - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_REGRESO_AL_FUTURO___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'regreso-al-futuro-(inicio) - 1985.mp3', display: 'Regreso Al Futuro (Inicio) - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_REGRESO_AL_FUTURO_(INICIO)___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'robocop - 1987.mp3', display: 'Robocop - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ROBOCOP___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'rocky-iii - 1982.mp3', display: 'Rocky III - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ROCKY_III___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'star-wars-el-imperio-contraataca - 1980.mp3', display: 'Star Wars El Imperio Contraataca - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_STAR_WARS_EL_IMPERIO_CONTRAATACA___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'star-wars-el-retorno-del-jedi - 1983.mp3', display: 'Star Wars El Retorno Del Jedi - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_STAR_WARS_EL_RETORNO_DEL_JEDI___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'superdetective-en-hollywood - 1984.mp3', display: 'Superdetective En Hollywood - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SUPERDETECTIVE_EN_HOLLYWOOD___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'superman-ii - 1980.mp3', display: 'Superman II (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SUPERMAN_II___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'terminator - 1984.mp3', display: 'Terminator - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TERMINATOR___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'toro-salvaje - 1980.mp3', display: 'Toro Salvaje - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TORO_SALVAJE___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'tras-la-pista-de-la-pantera-rosa - 1982.mp3', display: 'Tras La Pista De La Pantera Rosa - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TRAS_LA_PISTA_DE_LA_PANTERA_ROSA___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'una-habitacion-con-vistas - 1985.mp3', display: 'Una Habitacion Con Vistas - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_UNA_HABITACION_CON_VISTAS___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'una-maravilla-con-clase - 1987.mp3', display: 'Una Maravilla Con Clase - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_UNA_MARAVILLA_CON_CLASE___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'viernes-13 - 1980.mp3', display: 'Viernes 13 - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIERNES_13___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'wall-street - 1987.mp3', display: 'Wall Street - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WALL_STREET___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'willow-1988.mp3', display: 'Willow - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WILLOW__1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'xanadu - 1980.mp3', display: 'Xanadu - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_XANADU___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' }
+    ]
