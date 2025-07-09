@@ -13,7 +13,7 @@ window.allSongsByDecadeAndCategory['80s'].peliculas = [
         { file: 'blade-runner - 1982.mp3', display: 'Blade Runner - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BLADE_RUNNER___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'bso-fama - 1980.mp3', display: 'Fama - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_FAMA___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'bso-flashdance - 1983.mp3', display: 'Flashdance - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_FLASHDANCE___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
-        { file: 'bso-top-gun-idolos-del-aire - 1986.mp3', display: 'Bso Top Gun Idolos Del Aire - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_TOP_GUN_IDOLOS_DEL_AIRE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'bso-top-gun-idolos-del-aire - 1986.mp3', display: 'Top Gun Idolos Del Aire - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BSO_TOP_GUN_IDOLOS_DEL_AIRE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'carmen - 1984.mp3', display: 'Carmen - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CARMEN___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'carros-de-fuego - 1981.mp3', display: 'Carros De Fuego - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CARROS_DE_FUEGO___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'cazafantasmas - 1984.mp3', display: 'Cazafantasmas - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAZAFANTASMAS___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
@@ -29,7 +29,7 @@ window.allSongsByDecadeAndCategory['80s'].peliculas = [
         { file: 'el-club-de-los-poetas-muertos - 1989.mp3', display: 'El Club De Los Poetas Muertos - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_CLUB_DE_LOS_POETAS_MUERTOS___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'el-color-del-dinero - 1986.mp3', display: 'El Color Del Dinero - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_COLOR_DEL_DINERO___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'el-color-purpura - 1985.mp3', display: 'El Color PÚrpura - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_COLOR_PURPURA___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
-        { file: 'el-lago-azul - 1980.mp3', display: 'El Lago Azul (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_LAGO_AZUL___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'el-lago-azul - 1980.mp3', display: 'El Lago Azul- (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_LAGO_AZUL___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'el-profesional - 1981.mp3', display: 'El Profesional - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_PROFESIONAL___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'el-secreto-de-la-piramide - 1985.mp3', display: 'El Secreto De La Piramide - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_SECRETO_DE_LA_PIRAMIDE___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'el-turista-accidental - 1988.mp3', display: 'El Turista Accidental - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_TURISTA_ACCIDENTAL___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
@@ -91,6 +91,8 @@ window.allSongsByDecadeAndCategory['80s'].peliculas = [
         { file: 'una-maravilla-con-clase - 1987.mp3', display: 'Una Maravilla Con Clase - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_UNA_MARAVILLA_CON_CLASE___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'viernes-13 - 1980.mp3', display: 'Viernes 13 - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIERNES_13___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
         { file: 'wall-street - 1987.mp3', display: 'Wall Street - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WALL_STREET___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
-        { file: 'willow-1988.mp3', display: 'Willow - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WILLOW__1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
-        { file: 'xanadu - 1980.mp3', display: 'Xanadu - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_XANADU___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' }
+        { file: 'willow - 1988.mp3', display: 'Willow - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WILLOW__1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'xanadu - 1980.mp3', display: 'Xanadu - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_XANADU___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' },
+        { file: 'la-mascara - 1989.mp3', display: 'La Máscara - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_XANADU___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'peliculas' }
     ]
+    
