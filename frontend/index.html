@@ -217,6 +217,22 @@
         <button class="btn tertiary" onclick="logout()">Salir del Juego</button>
     </div>
 
+    <div id="elderly-mode-intro-screen" class="screen">
+        <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
+        <h2>Modo Fácil</h2>
+        <p class="small-text">Bienvenido al juego simplificado. Introduce los nombres de los jugadores.</p>
+        <input type="text" id="elderly-player-1-name" class="text-input" placeholder="Nombre del Jugador 1">
+        <div id="elderly-other-player-names-inputs"></div>
+        
+    <div class="player-selection-grid" style="margin-top: 20px;">
+        <button class="player-btn" onclick="addElderlyPlayerInput(1)">1 Jugador</button>
+        <button class="player-btn" onclick="addElderlyPlayerInput(2)">2 Jugadores</button>
+        <button class="player-btn" onclick="addElderlyPlayerInput(3)">3 Jugadores</button>
+        <button class="player-btn" onclick="addElderlyPlayerInput(4)">4 Jugadores</button>
+    </div>
+    <button class="btn" onclick="startElderlyModeGame()" style="margin-top: 20px;">Comenzar Partida</button>
+</div>
+
     <audio id="audio-player"></audio>
     <audio id="sfx-acierto" src="audio/sfx/acierto.mp3"></audio>
     <audio id="sfx-error" src="audio/sfx/error.mp3"></audio>
