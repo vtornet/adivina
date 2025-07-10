@@ -5,7 +5,8 @@ const decadeNames = {
     '10s': 'Década de los 2010',
     'Actual': 'Década Actual', // 2020s en adelante
     'actual': 'Década Actual', // AÑADE ESTO PARA HACERLO RESISTENTE
-    'Todas': 'Todas las Décadas' // Nueva opción
+    'Todas': 'Todas las Décadas', // Nueva opción
+    'elderly': 'Modo Fácil'
 };
 
 const categoryNames = {
@@ -621,6 +622,7 @@ function addElderlyPlayerInput(numPlayers) {
     }
 }
 
+// main.js - startElderlyModeGame (MODIFICAR)
 async function startElderlyModeGame() {
     const player1Name = document.getElementById('elderly-player-1-name').value.trim();
     if (!player1Name) {
@@ -653,19 +655,21 @@ async function startElderlyModeGame() {
         });
     }
 
-    // Configuración fija para este modo (Todas las Décadas - Todas las Categorías)
-    gameState.selectedDecade = 'Todas';
-    gameState.category = 'consolidated';
     gameState.totalQuestionsPerPlayer = 10; // O la cantidad que desees para este modo
-    gameState.isOnline = false; // Este modo no es online
+
+    // *** CAMBIO CRUCIAL AQUÍ: Usar 'elderly' como década y 'consolidated' como categoría ***
+    gameState.selectedDecade = 'elderly';      // <--- AHORA SÍ USA LA DÉCADA 'elderly'
+    gameState.category = 'consolidated'; // <--- Y SU CATEGORÍA 'consolidated'
 
     try {
-        // Cargar y consolidar todas las canciones
-        await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
-        const allSongsToChooseFrom = configuracionCanciones['Todas']['consolidated'];
+        // Cargar las canciones específicas para el modo fácil
+        // Ahora, loadSongsForDecadeAndCategory cargará desde data/songs/elderly/consolidated.js
+        await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category); 
+        const allSongsToChooseFrom = configuracionCanciones[gameState.selectedDecade][gameState.category];
 
-        if (allSongsToChooseFrom.length < gameState.totalQuestionsPerPlayer * gameState.players.length) {
-            alert(`No hay suficientes canciones para que todos los jugadores jueguen en el modo fácil. Se necesitan ${gameState.totalQuestionsPerPlayer * gameState.players.length} y solo hay ${allSongsToChooseFrom.length}.`);
+        if (!allSongsToChooseFrom || allSongsToChooseFrom.length < gameState.totalQuestionsPerPlayer * gameState.players.length) {
+            alert(`No hay suficientes canciones en el modo fácil para ${elderlyPlayerCount} jugador(es). Se necesitan ${gameState.totalQuestionsPerPlayer * gameState.players.length} y solo hay ${allSongsToChooseFrom ? allSongsToChooseFrom.length : 0}. Por favor, añade más canciones a la carpeta 'elderly/consolidated'.`); // Mensaje actualizado
+            showScreen('elderly-mode-intro-screen');
             return;
         }
 
