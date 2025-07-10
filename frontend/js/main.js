@@ -600,6 +600,93 @@ function selectPlayers(numPlayers) {
     showScreen('player-names-input-screen');
 }
 
+// main.js - Funciones para el modo "elderly"
+let elderlyPlayerCount = 1; // Por defecto 1 jugador para el input inicial
+
+function addElderlyPlayerInput(numPlayers) {
+    elderlyPlayerCount = numPlayers;
+    const otherPlayerNamesInputsDiv = document.getElementById('elderly-other-player-names-inputs');
+    otherPlayerNamesInputsDiv.innerHTML = ''; // Limpiar inputs anteriores
+
+    // Asegurarse de que el input del Jugador 1 sea editable si lo fuera
+    document.getElementById('elderly-player-1-name').readOnly = false;
+
+    for (let i = 1; i < numPlayers; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'text-input';
+        input.placeholder = `Nombre del Jugador ${i + 1}`;
+        input.id = `elderly-player-${i + 1}-name-input`;
+        otherPlayerNamesInputsDiv.appendChild(input);
+    }
+}
+
+async function startElderlyModeGame() {
+    const player1Name = document.getElementById('elderly-player-1-name').value.trim();
+    if (!player1Name) {
+        alert('Por favor, introduce al menos el nombre del Jugador 1.');
+        return;
+    }
+    gameState.isOnline = false; // Este modo no es online
+    isElderlyMode = true; // <-- ESTABLECE ESTO A TRUE
+    gameState.players = [];
+    // El jugador 1 siempre es el primer input
+    gameState.players.push({ 
+        id: 1, 
+        name: player1Name, 
+        score: 0, 
+        questionsAnswered: 0, 
+        questions: [],
+        email: null // No hay email en este modo
+    });
+
+    // Recoger nombres de jugadores adicionales
+    for (let i = 1; i < elderlyPlayerCount; i++) {
+        const input = document.getElementById(`elderly-player-${i + 1}-name-input`);
+        const name = input.value.trim() || `Jugador ${i + 1}`; // Nombre por defecto si está vacío
+        gameState.players.push({ 
+            id: i + 1, 
+            name: name, 
+            score: 0, 
+            questionsAnswered: 0, 
+            questions: [] 
+        });
+    }
+
+    // Configuración fija para este modo (Todas las Décadas - Todas las Categorías)
+    gameState.selectedDecade = 'Todas';
+    gameState.category = 'consolidated';
+    gameState.totalQuestionsPerPlayer = 10; // O la cantidad que desees para este modo
+    gameState.isOnline = false; // Este modo no es online
+
+    try {
+        // Cargar y consolidar todas las canciones
+        await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
+        const allSongsToChooseFrom = configuracionCanciones['Todas']['consolidated'];
+
+        if (allSongsToChooseFrom.length < gameState.totalQuestionsPerPlayer * gameState.players.length) {
+            alert(`No hay suficientes canciones para que todos los jugadores jueguen en el modo fácil. Se necesitan ${gameState.totalQuestionsPerPlayer * gameState.players.length} y solo hay ${allSongsToChooseFrom.length}.`);
+            return;
+        }
+
+        // Asignar preguntas aleatorias a cada jugador (igual que en startGame)
+        let shuffledSongs = [...allSongsToChooseFrom].sort(() => 0.5 - Math.random());
+        
+        for (let i = 0; i < gameState.players.length; i++) {
+            gameState.players[i].questions = shuffledSongs.splice(0, gameState.totalQuestionsPerPlayer);
+        }
+
+        gameState.currentPlayerIndex = 0;
+        setupQuestion();
+        showScreen('game-screen');
+
+    } catch (error) {
+        console.error('Error al iniciar el modo fácil:', error);
+        alert('Error al cargar las canciones para el modo fácil. Intenta de nuevo más tarde.');
+        showScreen('elderly-mode-intro-screen'); // Volver a la pantalla de inicio del modo fácil
+    }
+}
+
 /**
  * Inicia una nueva partida, configurando jugadores y preguntas.
  */
@@ -924,10 +1011,9 @@ function endGame() {
     finalScoresContainer.innerHTML = '<h3>Puntuaciones Finales</h3>';
     const winnerDisplay = document.getElementById('winner-display');
 
-    // === MODIFICACIÓN CLAVE: Definir sortedPlayers aquí ===
     const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
-    // ====================================================
 
+    // Lógica para determinar el ganador y mostrar el mensaje
     if (gameState.players.length === 1) {
         const player = gameState.players[0];
         winnerDisplay.textContent = `${player.name} has conseguido ${player.score} puntos.`;
@@ -937,11 +1023,12 @@ function endGame() {
         winnerDisplay.style.border = 'none';
         winnerDisplay.style.fontSize = '1.8rem';
 
-        if (currentUser && currentUser.email) {
+        // Solo guardar puntuaciones acumuladas si es un usuario logueado (no modo elderly)
+        if (currentUser && currentUser.email && !isElderlyMode) {
             saveUserScores(currentUser.email, gameState.selectedDecade, gameState.category, player.score);
         }
 
-    } else {
+    } else { // Más de un jugador (multijugador local o online, pero online se gestiona arriba)
         let winnerName = 'Empate';
         if (sortedPlayers.length > 0) {
             const topScore = sortedPlayers[0].score;
@@ -965,7 +1052,8 @@ function endGame() {
         winnerDisplay.style.borderTop = '2px solid var(--secondary-color)';
         winnerDisplay.style.fontSize = '2.5rem';
 
-        if (currentUser && currentUser.email) {
+        // Solo guardar puntuaciones acumuladas si es un usuario logueado (no modo elderly)
+        if (currentUser && currentUser.email && !isElderlyMode) {
             const loggedInPlayer = gameState.players.find(p => p.email === currentUser.email);
             if (loggedInPlayer) {
                 saveUserScores(currentUser.email, gameState.selectedDecade, gameState.category, loggedInPlayer.score);
@@ -974,23 +1062,17 @@ function endGame() {
             }
         }
 
-        saveGameResult(gameState.players, winnerName, gameState.selectedDecade, gameState.category);
-    }
+        // Solo guardar historial de partida si no es el modo fácil y es multijugador offline
+        if (!isElderlyMode && gameState.players.length > 1 && !isOnlineMode) {
+            saveGameResult(gameState.players, winnerName, gameState.selectedDecade, gameState.category, 'offline');
+        }
+    } // <-- ESTE CORCHETE ESTABA DUPLICADO O MAL COLOCADO PREVIAMENTE
 
     sortedPlayers.forEach((player, index) => {
         const medal = (gameState.players.length > 1) ? ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '') : '';
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
 
-    document.getElementById('play-again-btn').onclick = () => {
-        gameState.players.forEach(player => {
-            player.score = 0;
-            player.questionsAnswered = 0;
-            player.questions = [];
-        });
-        showScreen('player-selection-screen');
-    };
-    // ... (dentro de endGame function, casi al final)
     // Recopilar todas las canciones jugadas en esta partida por todos los jugadores
     let allPlayedSongsInThisGame = [];
     gameState.players.forEach(player => {
@@ -998,9 +1080,44 @@ function endGame() {
     });
 
     // Actualizar el historial de canciones recientes para el usuario logueado
+    // Esto se mantiene, ya que guarda en localStorage y solo aplica si currentUser existe.
     if (currentUser && currentUser.email) {
         updateRecentSongsHistory(currentUser.email, gameState.selectedDecade, gameState.category, allPlayedSongsInThisGame);
     }
+
+    // Ajustar el comportamiento de los botones de la pantalla de fin de juego
+    document.getElementById('play-again-btn').textContent = "Jugar Otra Vez"; // Texto genérico por defecto
+    document.getElementById('play-again-btn').onclick = () => {
+        // Lógica para jugar de nuevo, basada en el modo
+        if (isElderlyMode) {
+            // Reiniciar inputs y volver a la pantalla de inicio del modo fácil
+            document.getElementById('elderly-player-1-name').value = '';
+            document.getElementById('elderly-other-player-names-inputs').innerHTML = '';
+            elderlyPlayerCount = 1; // Resetear a 1 jugador
+            showScreen('elderly-mode-intro-screen');
+        } else if (isOnlineMode) {
+            // Limpiar estado online y volver al menú online
+            isOnlineMode = false;
+            currentOnlineGameCode = null;
+            currentOnlineSongs = [];
+            currentOnlineEmail = null;
+            currentOnlinePlayerName = null;
+            localStorage.removeItem('currentOnlineGameData');
+            showScreen('online-mode-screen');
+        } else {
+            // Modo offline normal, volver a selección de jugadores/categoría
+            gameState.players.forEach(player => {
+                player.score = 0;
+                player.questionsAnswered = 0;
+                player.questions = [];
+            });
+            showScreen('player-selection-screen');
+        }
+    };
+
+    // La función endOnlineModeAndGoHome() se llama desde el botón "Menú Principal" en index.html.
+    // Esa función ya maneja la lógica de redirección y limpieza para online/normal.
+    // El botón "Salir del Juego" llama a 'logout()'.
 
     showScreen('end-game-screen');
 }
@@ -1019,11 +1136,11 @@ function exitGame() {
  * Confirma si el usuario desea regresar al menú principal, perdiendo el progreso de la partida actual.
  */
 // main.js - confirmReturnToMenu
+// main.js - confirmReturnToMenu
 function confirmReturnToMenu() {
     const confirmed = confirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
     if (confirmed) {
-        if (isOnlineMode) { // <-- AÑADE ESTA CONDICIÓN
-            // Limpiar estado online al salir
+        if (isOnlineMode) {
             isOnlineMode = false;
             currentOnlineGameCode = null;
             currentOnlineSongs = [];
@@ -1031,7 +1148,14 @@ function confirmReturnToMenu() {
             currentOnlinePlayerName = null;
             localStorage.removeItem('currentOnlineGameData');
             showScreen('online-mode-screen'); // Volver al menú online
-        } else {
+        } else if (isElderlyMode) { // <--- NUEVA CONDICIÓN PARA MODO ELDERLY
+            isElderlyMode = false; // Resetear el estado
+            gameState = {}; // Limpiar gameState
+            document.getElementById('elderly-player-1-name').value = ''; // Limpiar input principal
+            document.getElementById('elderly-other-player-names-inputs').innerHTML = ''; // Limpiar inputs extra
+            showScreen('elderly-mode-intro-screen'); // Volver a la pantalla de inicio del modo fácil
+        }
+        else { // Modo offline normal
             if (gameState.selectedDecade === 'Todas') {
                 showScreen('decade-selection-screen');
             } else {
@@ -1363,6 +1487,7 @@ let currentOnlineSongs = [];
 let currentOnlineEmail = null;
 let currentOnlinePlayerName = null;
 let isOnlineMode = false;
+let isElderlyMode = false;
 
 // ========== CREAR PARTIDA ONLINE ==========
 async function createOnlineGame() {
@@ -2110,25 +2235,35 @@ window.showOnlineMenu = showOnlineMenu;
 // INICIALIZACIÓN
 // =====================================================================
 
+// ... (resto del código)
+
 window.onload = async () => {
-    const userDataString = localStorage.getItem('userData'); // <-- LEER userData
-    if (userDataString) {
-        const storedUser = JSON.parse(userDataString);
-        currentUser = storedUser; // <-- ASIGNAR EL OBJETO COMPLETO A currentUser
-
-        // Cargamos las estadísticas y el historial siempre que haya un usuario logueado
-        await loadUserScores(currentUser.email);
-        await loadGameHistory(currentUser.email);
-
-        if (currentUser.playerName) {
-            showScreen('decade-selection-screen');
-            generateDecadeButtons();
-        } else {
-            showScreen('set-player-name-screen');
-        }
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'elderly') {
+        showScreen('elderly-mode-intro-screen');
+        // Asegúrate de que el input del jugador 1 esté siempre visible al entrar a esta pantalla
+        document.getElementById('elderly-player-1-name').value = ''; 
+        document.getElementById('elderly-other-player-names-inputs').innerHTML = ''; // Limpiar inputs extra
     } else {
-        showScreen('home-screen'); // Si no hay userData, vamos a la pantalla de inicio
+        const userDataString = localStorage.getItem('userData');
+        if (userDataString) {
+            const storedUser = JSON.parse(userDataString);
+            currentUser = storedUser;
+
+            await loadUserScores(currentUser.email);
+            await loadGameHistory(currentUser.email);
+
+            if (currentUser.playerName) {
+                showScreen('decade-selection-screen');
+                generateDecadeButtons();
+            } else {
+                showScreen('set-player-name-screen');
+            }
+        } else {
+            showScreen('home-screen');
+        }
     }
-window.showStatisticsScreen = showStatisticsScreen;
-window.showSongsListCategorySelection = showSongsListCategorySelection;
+    window.showStatisticsScreen = showStatisticsScreen;
+    window.showSongsListCategorySelection = showSongsListCategorySelection;
+    window.showOnlineMenu = showOnlineMenu;
 };
