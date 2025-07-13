@@ -1,102 +1,81 @@
 // frontend/data/songs/80s/tv.js
-
-(function() {
-    if (typeof window.songs === 'undefined') {
-        window.songs = {};
-    }
-    if (typeof window.songs['80s'] === 'undefined') {
-        window.songs['80s'] = {};
-    }
-    window.songs['80s'].tv = [
-        {
-            title: "Noticias del Futuro",
-            artist: "BSO - Telediario 2000",
-            audio: "BSO---Telediario-2000.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "El Gran Concurso",
-            artist: "BSO - Saber y Ganar",
-            audio: "BSO---Saber-y-Ganar.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "Show de Variedades",
-            artist: "BSO - La Noche Mágica",
-            audio: "BSO---La-Noche-Magica.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "Dibujos Animados Clásicos",
-            artist: "BSO - Aventuras de Sparky",
-            audio: "BSO---Aventuras-de-Sparky.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "El Debate Decisivo",
-            artist: "BSO - Mesa Abierta",
-            audio: "BSO---Mesa-Abierta.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "Vivir la Vida",
-            artist: "BSO - Magazine Matinal",
-            audio: "BSO---Magazine-Matinal.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "El Show de las Mascotas",
-            artist: "BSO - Mundo Animal",
-            audio: "BSO---Mundo-Animal.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "Deporte y Acción",
-            artist: "BSO - Marcador Final",
-            audio: "BSO---Marcador-Final.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "Viajes Inesperados",
-            artist: "BSO - El Globo Aventurero",
-            audio: "BSO---El-Globo-Aventurero.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        },
-        {
-            title: "Concierto en Directo",
-            artist: "BSO - Escenario Abierto",
-            audio: "BSO---Escenario-Abierto.mp2", // ERROR INTENCIONADO para probar la robustez
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "tv"
-        }
+window.allSongsByDecadeAndCategory = window.allSongsByDecadeAndCategory || {};
+window.allSongsByDecadeAndCategory['80s'] = window.allSongsByDecadeAndCategory['80s'] || {};
+window.allSongsByDecadeAndCategory['80s'].tv = [
+        { file: '3-x-4 - 1988.mp3', display: '3X4 - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_3_4___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: '200-millones - 1977.mp3', display: '200 Millones - (1977)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_100_MILLONES___1977', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'a-la-caza-del-tesoro - 1989.mp3', display: 'A La Caza Del Tesoro - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_A_LA_CAZA_DEL_TESORO___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'a-mi-manera - 1989.mp3', display: 'A Mi Manera - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_A_MI_MANERA___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'a-uan-ba-buluba-balam-bambu - 1985.mp3', display: 'Auanbabulubabalambambú - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_A_LA_BAMBU_BA_BAMBU_BA_BAMBU___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'a-vista-de-pajaro - 1986.mp3', display: 'A Vista De Pájaro - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_A_VISTA_DE_PAJARO___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'ahi-te-quiero-ver - 1984.mp3', display: 'Ahí Te Quiero Ver - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AHI_TE_QUIERO_VER___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'aplauso - 1978.mp3', display: 'Aplauso - (1978)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_APLAUSO___1978', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'autoretrato - 1984.mp3', display: 'Autoretrato - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AUTODIRACTA___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'bla-bla-bla - 1981.mp3', display: 'Bla Bla Bla - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BLA_BLA_BLA___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'buenas-noches - 1982.mp3', display: 'Buenas Noches - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BUENAS_NOCHES___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'buenos-dias - 1986.mp3', display: 'Buenos Días - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CABECERA_DIAS___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'cabecera-de-deportes - años-80.mp3', display: 'Cabecera De Deportes - (Años 80)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CABECERA_DE_CIERRE_AÑOS_80___1980S', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'caja-de-ritmos - 1983.mp3', display: 'Caja De Ritmos - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAJA_DE_RITMOS___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'como-pedro-por-su-casa - 1985.mp3', display: 'Como Pedro Por Su Casa - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_COMO_PEDRO_POR_SU_CASA___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'con-las-manos-en-la-masa - 1984.mp3', display: 'Con Las Manos En La Masa - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CON_LAS_MANOS_EN_LA_MASA___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'ding-dong - 1980.mp3', display: 'Ding Dong - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DING_DONG___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'directo-en-la-noche - 1986.mp3', display: 'Directo En La Noche - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DIRECTO_EN_LA_NOCHE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'documentos-tv - 1986.mp3', display: 'Documentos TV - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DOCUMENTOS_TV___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'el-arca-de-noe - 1983.mp3', display: 'El Arca de Noé - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_ARBOL_DEL_TERROR___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'el-dia-del-señor - años-80.mp3', display: 'El Día Del Señor - (Años 80)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_DIA_DEL_SEÑOR_AÑOS_80___1980S', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'el-dia-por-delante - 1989.mp3', display: 'El Día Por delante - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_DIA_QUE_LO_DEJAMOS___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'el-hombre-y-la-tierra - 1974.mp3', display: 'El Hombre Y La Tierra - (1974)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_HOMBRE_Y_LA_TIERRA___1974', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'el-precio-justo - 1988.mp3', display: 'El Precio Justo - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_PRECIO_JUSTO___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'el-tiempo-es-oro - 1987.mp3', display: 'El Tiempo Es Oro - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_TIEMPO_ES_ORO___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'esta-noche-pedro - 1985.mp3', display: 'Esta Noche... Pedro - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ESTA_NOCHE_PEDRO___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'estudio-estadio - 1974.mp3', display: 'Estudio Estadio - (1974)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ESTUDIO_ESTADIO___1974', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'eurovision - años-80.mp3', display: 'Eurovisión - (Años 80)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EUROVISION_AÑOS_80___1980S', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'fiomoteca-tv - 1987.mp3', display: 'Filmoteca TV - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FONOTECA_TV___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'follow-me - 1978', display: 'Follow Me - (1978)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FORO___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'jazz-entre-amigos - 1984.mp3', display: 'Jazz Entre Amigos - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_JAZZ_ENTRE_AMIGOS___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'juegos-sin-fronteras - 1988.mp3', display: 'Juegos Sin Fronteras - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_JUEGOS_SIN_FRONTERAS___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'la-buena-musica - 1987.mp3', display: 'La Buena Música - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_HORA_DEL_LECTOR___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'la-clave - 1976.mp3', display: 'La Clave - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_CLAVE___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'la-luna - 1989.mp3', display: 'La Luna - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_LUNA___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'la-segunda-oportunidad - 1978.mp3', display: 'La Segunda Oportunidad - (1978)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_SEGUNDA_OPORTUNIDAD___1978', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'la-tarde - 1984.mp3', display: 'La Tarde - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_TARDE___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'los-sabios - 1984.mp3', display: 'Los Sabios - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LOS_SABIOS___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'mas-vale-prevenir - 1979.mp3', display: 'Más Vale Prevenir - (1979)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MAS_VALE_PREVENIR___1979', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'metropolis - 1985.mp3', display: 'Metrópolis - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_METROPOLI_M___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'musica-golfa - 1988.mp3', display: 'Música Golfa - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MUSICA_GOLFA___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'musical-express - 1980.mp3', display: 'Musical Expres - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MUSICA_EXPRES___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'ni-en-vivo-ni-en-directo - 1983.mp3', display: 'Ni En Vivo Ni En Directo - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NI_EN_VIVO_NI_EN_DIRECTO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'otros-lugares-otros-caminos - 1985.mp3', display: 'Otros Lugares, Otros Caminos - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_OTROS_LUGARES_OTROS_CAMINOS___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'planta-baja - 1986.mp3', display: 'Planta Baja - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PLANTA_BAJA___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'pista-libre - 1982.mp3', display: 'Pista Libre - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PLATA_LIBRE___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'planeta-imaginario - 1983.mp3', display: 'Planeta Imaginario - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PLANETA_IMAGINARIO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'popgrama - 1977.mp3', display: 'Popgrama - (1977)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PROGRAMA_1___1977', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'por-la-mañana - 1987.mp3', display: 'Por La Mañana - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_POR_LA_MAÑANA___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'primera-sesion - 1989.mp3', display: 'Primera Sesión - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PRIMERA_SESION___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'pueblo-de-dios - 1982.mp3', display: 'Pueblo De Dios - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PUEBLO_DE_DIOS___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'puesta-a-punto - 1983.mp3', display: 'Puesta A Punto - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PUESTA_A_PUNTO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'que-noche-la-del-año - 1987.mp3', display: '¡Qué Noche La Del Año! - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUE_NOCHE_LA_DEL_AÑO___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'rockopop - 1986.mp3', display: 'Rockopop - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ROCKOPOP___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'sabado-cine - 1986.mp3', display: 'Sábado Cine - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_CINE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'sabado-noche - 1987.mp3', display: 'Sábado Noche - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_NOCHE___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'sabado-revista - 1989.mp3', display: 'Sábado Revista - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_REVISTA___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'sesion-de-noche - 1989.mp3', display: 'Sesión De Noche - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SESION_DE_NOCHE___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'sintonia-fin-de-amision-años-80.mp3', display: 'Sintonía Fin De Emisión Años 80 - (1980s)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SINTONIA_FIN_DE_AMISION_AÑOS_80___1980S', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'su-turno - 1981.mp3', display: 'Su Turno - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SINTONIA_2___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'sábado-cine - 1976.mp3', display: 'Sábado Cine - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_CINE___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'tariro-tariro - 1989.mp3', display: 'Tariro Tariro - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TARRO_TARRO___1988', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'teledeporte - 1989.mp3', display: 'Teledeporte - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TELEDIARIO_1___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'telediario - 1984.mp3', display: 'Telediario - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TELEDIARIO___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'telediario - 1986.mp3', display: 'Telediario - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TELEDIARIO___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'telediario - 1987.mp3', display: 'Telediario - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TELEDIARIO___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'telediario - 1989.mp3', display: 'Telediario - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TELEDIARIO___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'tiempo-y-marca - 1981.mp3', display: 'Tiempo y Marca - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TIEMPOS_MODERNOS___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'tocata - 1983.mp3', display: 'Tocata - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TOCATA___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'ultima-sesion - 1989.mp3', display: 'Última Sesión - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ULTIMA_SESION___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'un-dos-tres - 1982.mp3', display: 'Un Dos Tres - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_UN_DOS_TRES___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'un-mundo-feliz - 1981.mp3', display: '¿Un Mundo Feliz? - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_UN_MUNDO_FELIZ___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'vamos-a-ver - 1981.mp3', display: 'Vamos A Ver - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VAMOS_A_VER___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'vivir-cada-dia - 1984.mp3', display: 'Vivir Cada Día - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIVIR_CADA_DIA___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'waku-waku - 1989.mp3', display: 'Waku Waku - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WAKU_WAKU___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'y-sin-embargo-te-quiero - 1983.mp3', display: 'Y Sin Embargo Te Quiero - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_Y_SIN_EMBARGO_TE_QUIERO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' }
     ];
-})();
