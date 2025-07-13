@@ -1,102 +1,102 @@
 // frontend/data/songs/80s/anuncios.js
+window.allSongsByDecadeAndCategory = window.allSongsByDecadeAndCategory || {};
+window.allSongsByDecadeAndCategory['80s'] = window.allSongsByDecadeAndCategory['80s'] || {};
+window.allSongsByDecadeAndCategory['80s'].anuncios = [
+    { file: 'abanderado.mp3', display: 'Abanderado', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ABANDERADO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'aceite-la-masia.mp3', display: 'Aceite La Masia', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ACEITE_LA_MASIA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'apolo-de-avidesa.mp3', display: 'Apolo De Avidesa', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_APOLO_DE_AVIDESA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'bicicletas -gac.mp3', display: 'Bicicletas G.A.C', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BICICLETAS__GAC', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'bodegas-osborne.mp3', display: 'Bodegas Osborne', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BODEGAS_OSBORNE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'bolígrafos-bic.mp3', display: 'Bolígrafos Bic', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BOLÍGRAFOS_BIC', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'cafe-monky.mp3', display: 'Cafe Monky', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAFE_MONKY', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'calmante-vitaminado.mp3', display: 'Calmante Vitaminado', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CALMANTE_VITAMINADO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'camel.mp3', display: 'Camel', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAMEL', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'caramelos-halls.mp3', display: 'Caramelos Halls', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CARAMELOS_HALLS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'caramelos-praims.mp3', display: 'Caramelos Praims', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CARAMELOS_PRAIMS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'cerveza-skol.mp3', display: 'Cerveza Skol', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CERVEZA_SKOL', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'cervezas-aguila.mp3', display: 'Cervezas Aguila', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CERVEZAS_AGUILA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'chicles-cheiw.mp3', display: 'Chicles Cheiw', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CHICLES_CHEIW', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'chicles-trex.mp3', display: 'Chicles Trex', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CHICLES_TREX', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'chocolate-milka.mp3', display: 'Chocolate Milka', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CHOCOLATE_MILKA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'chorizo-revilla.mp3', display: 'Chorizo Revilla', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CHORIZO_REVILLA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'cinzano.mp3', display: 'Cinzano', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CINZANO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'close-up.mp3', display: 'Close Up', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CLOSE_UP', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'colacao.mp3', display: 'Cola Cao', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_COLACAO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'colonia-andros.mp3', display: 'Colonia Andros', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_COLONIA_ANDROS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'colonia-brando.mp3', display: 'Colonia Brando', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_COLONIA_BRANDO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'colonia-chispas.mp3', display: 'Colonia Chispas', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_COLONIA_CHISPAS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'colonia-farala.mp3', display: 'Colonia Farala', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_COLONIA_FARALA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'colonia-jacks.mp3', display: 'Colonia Jacks', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_COLONIA_JACKS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'conguitos.mp3', display: 'Conguitos', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CONGUITOS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'cupon-de-la-once.mp3', display: 'Cupon De La Once', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CUPON_DE_LA_ONCE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'damart-thermolactyl.mp3', display: 'Damart Thermolactyl', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DAMART_THERMOLACTYL', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'detergente-colón.mp3', display: 'Detergente Colón', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DETERGENTE_COLÓN', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'dgt.mp3', display: 'Dgt', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DGT', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'dias-azules-de-renfe.mp3', display: 'Dias Azules De Renfe', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DIAS_AZULES_DE_RENFE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'eau-de-toillette-giovanna.mp3', display: 'Eau De Toillette Giovanna', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EAU_DE_TOILLETTE_GIOVANNA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'eau-jeune.mp3', display: 'Eau Jeune', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EAU_JEUNE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'fanta.mp3', display: 'Fanta', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FANTA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'filvit-champu.mp3', display: 'Filvit Champu', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FILVIT_CHAMPU', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'flan-danone.mp3', display: 'Flan Danone', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FLAN_DANONE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'fritos-de-maiz.mp3', display: 'Fritos De Maiz', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FRITOS_DE_MAIZ', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'gel-fa.mp3', display: 'Gel Fa', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GEL_FA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'kas-limon.mp3', display: 'Kas Limón', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_KAS_LIMON', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'kinder-sorpresa.mp3', display: 'Kinder Sorpresa', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_KINDER_SORPRESA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'la-casera.mp3', display: 'La Casera', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_CASERA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'lacasitos.mp3', display: 'Lacasitos', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LACASITOS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'lejia-estrella.mp3', display: 'Lejía Estrella', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LEJIA_ESTRELLA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'licor-del-polo.mp3', display: 'Licor Del Polo', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LICOR_DEL_POLO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'lois.mp3', display: 'Lois', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LOIS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'lou-lou.mp3', display: 'Lou Lou', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LOU_LOU', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'lucky-strike.mp3', display: 'Lucky Strike', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LUCKY_STRIKE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'marbu-dorada.mp3', display: 'Marbú Dorada', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MARBU_DORADA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'mimosin.mp3', display: 'Mimosin', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MIMOSIN', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'ministerio-de-agricultura-y-pesca.mp3', display: 'Ministerio De Agricultura Y Pesca', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MINISTERIO_DE_AGRICULTURA_Y_PESCA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'ministerio-de-medio-ambiente.mp3', display: 'Ministerio De Medio Ambiente', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MINISTERIO_DE_MEDIO_AMBIENTE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'monix.mp3', display: 'Monix', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MONIX', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'muñecas-famosa.mp3', display: 'Muñecas de Famosa', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MUÑECAS_FAMOSA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'muñeco-gugu-de-berjusa.mp3', display: 'Muñeco Gugu De Berjusa', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MUÑECO_GUGU_DE_BERJUSA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'natillas-danone.mp3', display: 'Natillas Danone', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NATILLAS_DANONE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'neoclor.mp3', display: 'Neoclor', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NEOCLOR', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'nescafe.mp3', display: 'Nescafé', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NESCAFE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'nestle-extrafino.mp3', display: 'Nestlé Extrafino', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NESTLE_EXTRAFINO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'nocilla.mp3', display: 'Nocilla', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NOCILLA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'opel-corsa.mp3', display: 'Opel Corsa', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_OPEL_CORSA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'pato-wc.mp3', display: 'Pato Wc', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PATO_WC', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'pavofrio.mp3', display: 'Pavofrío', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PAVOFRIO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'perfume-tess.mp3', display: 'Perfume Tess', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PERFUME_TESS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'perfume-vereda-fleur.mp3', display: 'Perfume Vereda Fleur', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PERFUME_VEREDA_FLEUR', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'perlan.mp3', display: 'Perlán', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PERLAN', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'petit-yopsuiss.mp3', display: 'Petit Yopsuiss', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PETIT_YOPSUISS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'pin-y-pon.mp3', display: 'Pin Y Pon', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PIN_Y_PON', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'platano-de-canarias.mp3', display: 'Plátano De Canarias', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PLATANO_DE_CANARIAS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'pronto.mp3', display: 'Pronto', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PRONTO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'pryca.mp3', display: 'Pryca', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PRYCA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'queso-el-cigarral.mp3', display: 'Queso El Cigarral', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUESO_EL_CIGARRAL', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'reloj-flik-flak.mp3', display: 'Reloj Flik Flak', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_RELOJ_FLIK_FLAK', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'saba.mp3', display: 'Saba', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'saniclor.mp3', display: 'Saniclor', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SANICLOR', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'sanyo.mp3', display: 'Sanyo', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SANYO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'scotch-brite.mp3', display: 'Scotch Brite', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SCOTCH_BRITE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'tabaco-fortuna.mp3', display: 'Tabaco Fortuna', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TABACO_FORTUNA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'teen.mp3', display: 'Teen', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TEEN', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'tio-pepe.mp3', display: 'Tio Pepe', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TIO_PEPE', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'tiovivo-de-barriguitas.mp3', display: 'Tiovivo De Barriguitas', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TIOVIVO_DE_BARRIGUITAS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'titanlux.mp3', display: 'Titanlux', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TITANLUX', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'tomate-frito-apis.mp3', display: 'Tomate Frito Apis', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TOMATE_FRITO_APIS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'trina-con-gas.mp3', display: 'Trina Con Gas', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TRINA_CON_GAS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'trina-pina-colada.mp3', display: 'Trina Piña Colada', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TRINA_PIÑA_COLADA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'turron-1880.mp3', display: 'Turrón 1880', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TURRON_1880', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'turrones-el-almendro.mp3', display: 'Turrones El Almendro', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TURRONES_EL_ALMENDRO', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'turrones-la-jijonenca.mp3', display: 'Turrones La Jijonenca', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TURRONES_LA_JIJONENCA', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'wipp-express.mp3', display: 'Wipp Express', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WIPP_EXPRESS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'yogur-danone-con-frutas.mp3', display: 'Yogur Danone Con Frutas', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YOGUR_DANONE_CON_FRUTAS', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'yoplait.mp3', display: 'Yoplait', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YOPLAIT', platform: 'spotify', originalDecade: '80s', originalCategory: 'anuncios' }
+];
 
-(function() {
-    if (typeof window.songs === 'undefined') {
-        window.songs = {};
-    }
-    if (typeof window.songs['80s'] === 'undefined') {
-        window.songs['80s'] = {};
-    }
-    window.songs['80s'].anuncios = [
-        {
-            title: "Sabor a fresa",
-            artist: "Anuncio - Chicle Bomba",
-            audio: "Anuncio---Chicle-Bomba.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "La bebida refrescante",
-            artist: "Anuncio - Cola Feliz",
-            audio: "Anuncio---Cola-Feliz.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "Tu coche ideal",
-            artist: "Anuncio - Auto Genial",
-            audio: "Anuncio---Auto-Genial.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "El chocolate que te da energía",
-            artist: "Anuncio - Barra Mágica",
-            audio: "Anuncio---Barra-Magica.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "Limpia más blanco",
-            artist: "Anuncio - Detergente Brillante",
-            audio: "Anuncio---Detergente-Brillante.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "La fragancia de tu vida",
-            artist: "Anuncio - Perfume Eterno",
-            audio: "Anuncio---Perfume-Eterno.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "El teléfono del futuro",
-            artist: "Anuncio - TecnoPhone",
-            audio: "Anuncio---TecnoPhone.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "Galletas crujientes",
-            artist: "Anuncio - Dulces Tentaciones",
-            audio: "Anuncio---Dulces-Tentaciones.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "Tu banco de confianza",
-            artist: "Anuncio - Banco Seguro",
-            audio: "Anuncio---Banco-Seguro.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        },
-        {
-            title: "El café que te despierta",
-            artist: "Anuncio - Café Vital",
-            audio: "Anuncio---Cafe-Vital.mp3",
-            spotify: "https://open.spotify.com/track/PLACEHOLDER",
-            youtube: "https://www.youtube.com/watch?v=PLACEHOLDER",
-            originalDecade: "80s",
-            originalCategory: "anuncios"
-        }
-    ];
-})();
+
+
+    
+
+
+
