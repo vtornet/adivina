@@ -121,6 +121,13 @@ window.allSongsByDecadeAndCategory['80s'].anuncios = [
     { file: 'tronkito-de-panrico.mp3', display: 'Tronkito De Panrico', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TRONKITO_DE_PANRICO', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
     { file: 'yogur-natural-danone.mp3', display: 'Yogur Natural Danone', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YOGUR_NATURAL_DANONE', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
     { file: 'yogures-pmi.mp3', display: 'Yogures PMI', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YOGURES_PMI', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'avecrem.mp3', display: 'Avecrem', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AVECREM', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'muñeca-nancy.mp3', display: 'Muñeca Nancy', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MUÑECA_NANCY', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'pates-la-piara.mp3', display: 'Patés La Piara', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PATES_LA_PIARA', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'petit-cheri-le-grain.mp3', display: 'Petit Cheri Le Grain', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PETIT_CHERI_LE_GRAIN', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'turrones-antiu-xixona.mp3', display: 'Turrones Antiu Xixona', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TURRONES_ANTIU_XIXONA', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'turrones-el-lobo.mp3', display: 'Turrones El Lobo', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TURRONES_EL_LOBO', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
+    { file: 'turron-suchard.mp3', display: 'Turrón Suchard', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_TURRON_SUCHARD', platform: 'youtube', originalDecade: '80s', originalCategory: 'anuncios' },
   
 ];
 
