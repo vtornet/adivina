@@ -89,6 +89,10 @@ window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: 'vanilla-ice - ice-ice-baby.mp3', display: 'Vanilla Ice - Ice Ice Baby', listenUrl: 'URL_PENDIENTE_VANILLA ICE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: 'whitney-houston - i-will-always-love-you.mp3', display: 'Whitney Houston - I Will Always Love you', listenUrl: 'URL_PENDIENTE_WHITNEY HOUSTON', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: 'will-smith - gettin-jiggy-wit-it.mp3', display: 'Will Smith - Gettin Jiggy Wit It', listenUrl: 'URL_PENDIENTE_WILL SMITH', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  { file: 'youssou-n-dour-y-neneh-cherry - 7-seconds.mp3', display: 'Youssou N Dour y Neneh Cherry - 7 Seconds', listenUrl: 'URL_PENDIENTE_YOUSSOU_N_DOUR_Y_NENEH_CHERRY', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' }
+  { file: 'apollo-440 - stop-the-rock.mp3', display: 'Apollo 440 - 7 Stopo The Rock', listenUrl: 'URL_PENDIENTE_APOLLO_440', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: 'fatboy-slim - rockafeller-skank.mp3', display: 'Fatboy Slim - Rockafeller Skank', listenUrl: 'URL_PENDIENTE_FATBOY_SLIM', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: 'the-prodigy - breathe.mp3', display: 'The Prodigy - Breathe', listenUrl: 'URL_PENDIENTE_THE PRODIGY', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: 'the-wiseguys - ooh-la-la.mp3', display: 'The Wiseguys - Ooh La La', listenUrl: 'URL_PENDIENTE_THE WISEGUYS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' }
+  
 ]
  

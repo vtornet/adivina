@@ -106,4 +106,8 @@ window.allSongsByDecadeAndCategory['00s'].ingles = [
         { file: 'usher - yeah.mp3', display: 'Usher - Yeah!', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YEAH_USHER', platform: 'spotify', originalDecade: '00s', originalCategory: 'ingles' },
         { file: 'vanessa-carlton - a-thousand-miles.mp3', display: 'Vanessa Carlton - A Thousand Miles', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_1000MILES_VANESSA', platform: 'spotify', originalDecade: '00s', originalCategory: 'ingles' },
         { file: 'kylie-minogue - cant-get-you-out-of-my-head.mp3', display: 'Kylie Minogue - Can\'t Get You Out Of My Head', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GET_YOU_OUT_OF_MY_HEAD', platform: 'spotify', originalDecade: '00s', originalCategory: 'ingles' },
+        { file: 'barthezz - on-the-move.mp3', display: 'barthezz - on the move', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ON_THE_MOVE', platform: 'spotify', originalDecade: '00s', originalCategory: 'ingles' },
+        { file: 'dave-soerensen - arma-la-vida.mp3', display: 'Dave Soerensen - Arma La Vida', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ARMA_LA_VIDA', platform: 'spotify', originalDecade: '00s', originalCategory: 'ingles' },
+        { file: 'jerk-it-out - caesars-palace.mp3', display: 'Jerk It Out - Caesars Palace', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAESARS_PALACE', platform: 'spotify', originalDecade: '00s', originalCategory: 'ingles' },
+        { file: 'safri-duo - played-a-live.mp3', display: 'Safri Duo - Played A Live', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PLAYED_A-LIVE', platform: 'spotify', originalDecade: '00s', originalCategory: 'ingles' },
     ];

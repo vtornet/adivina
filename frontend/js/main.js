@@ -6,7 +6,8 @@ const decadeNames = {
     'Actual': 'Década Actual', // 2020s en adelante
     'actual': 'Década Actual', // AÑADE ESTO PARA HACERLO RESISTENTE
     'Todas': 'Todas las Décadas', // Nueva opción
-    'elderly': 'Modo Fácil'
+    'elderly': 'Modo Fácil',
+    'verano': 'Canciones del Verano'
 };
 
 const categoryNames = {
@@ -691,6 +692,61 @@ async function startElderlyModeGame() {
     }
 }
 
+// main.js - Nueva función para el modo "Canciones del Verano"
+async function startSummerSongsGame() {
+    if (!currentUser || !currentUser.playerName) {
+        alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+        showScreen('login-screen');
+        return;
+    }
+
+    gameState = {}; // Limpiar el estado anterior del juego
+    isOnlineMode = false;
+    isElderlyMode = false;
+    isSummerSongsMode = true; // Establecer el modo de verano
+
+    gameState.selectedDecade = 'verano';      // Década especial para el verano
+    gameState.category = 'consolidated'; // Categoría 'consolidated' para el verano
+    gameState.playerCount = 1; // Por defecto, una partida de un solo jugador para este modo directo
+
+    gameState.players = [];
+    gameState.players.push({
+        id: 1,
+        name: currentUser.playerName,
+        score: 0,
+        questionsAnswered: 0,
+        questions: [],
+        email: currentUser.email
+    });
+
+    gameState.totalQuestionsPerPlayer = 10; // O la cantidad que desees para este modo
+
+    try {
+        // Cargar las canciones específicas para el modo de verano
+        await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
+        const allSongsToChooseFrom = configuracionCanciones[gameState.selectedDecade][gameState.category];
+
+        if (!allSongsToChooseFrom || allSongsToChooseFrom.length < gameState.totalQuestionsPerPlayer) {
+            alert(`No hay suficientes canciones para el modo "Canciones del Verano". Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones.`);
+            showScreen('decade-selection-screen'); // Volver si no hay suficientes
+            return;
+        }
+
+        // Asignar preguntas aleatorias al jugador
+        let shuffledSongs = [...allSongsToChooseFrom].sort(() => 0.5 - Math.random());
+        gameState.players[0].questions = shuffledSongs.splice(0, gameState.totalQuestionsPerPlayer);
+
+        gameState.currentPlayerIndex = 0;
+        setupQuestion();
+        showScreen('game-screen');
+
+    } catch (error) {
+        console.error('Error al iniciar el modo "Canciones del Verano":', error);
+        alert('Error al cargar las canciones para el modo "Canciones del Verano". Intenta de nuevo más tarde.');
+        showScreen('decade-selection-screen'); // Volver a la selección de década
+    }
+}
+
 /**
  * Inicia una nueva partida, configurando jugadores y preguntas.
  */
@@ -1027,8 +1083,8 @@ function endGame() {
         winnerDisplay.style.border = 'none';
         winnerDisplay.style.fontSize = '1.8rem';
 
-        // Solo guardar puntuaciones acumuladas si es un usuario logueado (no modo elderly)
-        if (currentUser && currentUser.email && !isElderlyMode) {
+        // Solo guardar puntuaciones acumuladas si es un usuario logueado (no modo elderly ni verano)
+        if (currentUser && currentUser.email && !isElderlyMode && !isSummerSongsMode) { // <-- AÑADE !isSummerSongsMode
             saveUserScores(currentUser.email, gameState.selectedDecade, gameState.category, player.score);
         }
 
@@ -1056,8 +1112,8 @@ function endGame() {
         winnerDisplay.style.borderTop = '2px solid var(--secondary-color)';
         winnerDisplay.style.fontSize = '2.5rem';
 
-        // Solo guardar puntuaciones acumuladas si es un usuario logueado (no modo elderly)
-        if (currentUser && currentUser.email && !isElderlyMode) {
+        // Solo guardar puntuaciones acumuladas si es un usuario logueado (no modo elderly ni verano)
+        if (currentUser && currentUser.email && !isElderlyMode && !isSummerSongsMode) { // <-- AÑADE !isSummerSongsMode
             const loggedInPlayer = gameState.players.find(p => p.email === currentUser.email);
             if (loggedInPlayer) {
                 saveUserScores(currentUser.email, gameState.selectedDecade, gameState.category, loggedInPlayer.score);
@@ -1066,8 +1122,8 @@ function endGame() {
             }
         }
 
-        // Solo guardar historial de partida si no es el modo fácil y es multijugador offline
-        if (!isElderlyMode && gameState.players.length > 1 && !isOnlineMode) {
+        // Solo guardar historial de partida si no es el modo fácil, verano y es multijugador offline
+        if (!isElderlyMode && !isSummerSongsMode && gameState.players.length > 1 && !isOnlineMode) { // <-- AÑADE !isSummerSongsMode
             saveGameResult(gameState.players, winnerName, gameState.selectedDecade, gameState.category, 'offline');
         }
     } // <-- ESTE CORCHETE ESTABA DUPLICADO O MAL COLOCADO PREVIAMENTE
@@ -1086,6 +1142,7 @@ function endGame() {
     // Actualizar el historial de canciones recientes para el usuario logueado
     // Esto se mantiene, ya que guarda en localStorage y solo aplica si currentUser existe.
     if (currentUser && currentUser.email) {
+        // La función `updateRecentSongsHistory` ya maneja bien el `selectedDecade` y `category`
         updateRecentSongsHistory(currentUser.email, gameState.selectedDecade, gameState.category, allPlayedSongsInThisGame);
     }
 
@@ -1099,7 +1156,12 @@ function endGame() {
             document.getElementById('elderly-other-player-names-inputs').innerHTML = '';
             elderlyPlayerCount = 1; // Resetear a 1 jugador
             showScreen('elderly-mode-intro-screen');
-        } else if (isOnlineMode) {
+        } else if (isSummerSongsMode) { // <-- NUEVA LÓGICA PARA MODO VERANO
+            isSummerSongsMode = false; // Resetear el estado
+            gameState = {}; // Limpiar gameState
+            startSummerSongsGame(); // Volver a iniciar una partida de verano
+        }
+        else if (isOnlineMode) {
             // Limpiar estado online y volver al menú online
             isOnlineMode = false;
             currentOnlineGameCode = null;
@@ -1152,12 +1214,16 @@ function confirmReturnToMenu() {
             currentOnlinePlayerName = null;
             localStorage.removeItem('currentOnlineGameData');
             showScreen('online-mode-screen'); // Volver al menú online
-        } else if (isElderlyMode) { // <--- NUEVA CONDICIÓN PARA MODO ELDERLY
+        } else if (isElderlyMode) {
             isElderlyMode = false; // Resetear el estado
             gameState = {}; // Limpiar gameState
             document.getElementById('elderly-player-1-name').value = ''; // Limpiar input principal
             document.getElementById('elderly-other-player-names-inputs').innerHTML = ''; // Limpiar inputs extra
             showScreen('elderly-mode-intro-screen'); // Volver a la pantalla de inicio del modo fácil
+        } else if (isSummerSongsMode) { // <-- NUEVA CONDICIÓN PARA MODO VERANO
+            isSummerSongsMode = false; // Resetear el estado
+            gameState = {}; // Limpiar gameState
+            showScreen('decade-selection-screen'); // Volver a la selección de década
         }
         else { // Modo offline normal
             if (gameState.selectedDecade === 'Todas') {
@@ -1319,10 +1385,10 @@ function showSongsListCategorySelection() {
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas']; // Solo las décadas que quieres mostrar aquí
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas', 'verano'];// Solo las décadas que quieres mostrar aquí
 
     decadesOrder.forEach(decadeId => {
-        if (decadeId === 'Todas') {
+         if (decadeId === 'Todas' || decadeId === 'verano') {
             const allButtonDiv = document.createElement('div');
             allButtonDiv.style.gridColumn = '1 / -1'; 
             allButtonDiv.style.marginTop = '20px';
@@ -1492,6 +1558,7 @@ let currentOnlineEmail = null;
 let currentOnlinePlayerName = null;
 let isOnlineMode = false;
 let isElderlyMode = false;
+let isSummerSongsMode = false;
 
 // ========== CREAR PARTIDA ONLINE ==========
 async function createOnlineGame() {
