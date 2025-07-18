@@ -693,6 +693,7 @@ async function startElderlyModeGame() {
 }
 
 // main.js - Nueva función para el modo "Canciones del Verano"
+// main.js - Función MODIFICADA para el modo "Canciones del Verano"
 async function startSummerSongsGame() {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
@@ -700,53 +701,45 @@ async function startSummerSongsGame() {
         return;
     }
 
-    gameState = {}; // Limpiar el estado anterior del juego
+    // Limpiar el estado anterior del juego y establecer el modo de verano
+    gameState = {}; // Limpiar completamente el gameState para el nuevo modo
     isOnlineMode = false;
     isElderlyMode = false;
-    isSummerSongsMode = true; // Establecer el modo de verano
+    isSummerSongsMode = true; // Establecer esto a TRUE para que la lógica de retorno y fin de juego lo reconozca
 
     gameState.selectedDecade = 'verano';      // Década especial para el verano
     gameState.category = 'consolidated'; // Categoría 'consolidated' para el verano
-    gameState.playerCount = 1; // Por defecto, una partida de un solo jugador para este modo directo
 
-    gameState.players = [];
-    gameState.players.push({
-        id: 1,
-        name: currentUser.playerName,
-        score: 0,
-        questionsAnswered: 0,
-        questions: [],
-        email: currentUser.email
-    });
-
-    gameState.totalQuestionsPerPlayer = 10; // O la cantidad que desees para este modo
-
+    // Aquí precargamos las canciones y hacemos la validación ANTES de ir a la selección de jugadores.
+    // Esto asegura que solo permitimos continuar si hay suficientes canciones para este modo.
     try {
-        // Cargar las canciones específicas para el modo de verano
         await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
         const allSongsToChooseFrom = configuracionCanciones[gameState.selectedDecade][gameState.category];
 
-        if (!allSongsToChooseFrom || allSongsToChooseFrom.length < gameState.totalQuestionsPerPlayer) {
-            alert(`No hay suficientes canciones para el modo "Canciones del Verano". Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones.`);
+        // Para este modo, asumiremos que se necesitan al menos 10 canciones en total para poder jugar
+        // con un mínimo de 1 jugador y que tenga al menos 10 preguntas.
+        // Si tienes en mente un mínimo de canciones diferente (ej. para 2 jugadores, 20 canciones),
+        // ajusta este número. Por ahora, 10 es un buen mínimo para un juego de una ronda.
+        const minimumSongsRequired = 10; // Mínimo de canciones para empezar una partida de 1 jugador
+
+        if (!allSongsToChooseFrom || allSongsToChooseFrom.length < minimumSongsRequired) {
+            alert(`No hay suficientes canciones en el modo "Canciones del Verano". Necesitas al menos ${minimumSongsRequired} canciones para jugar.`);
             showScreen('decade-selection-screen'); // Volver si no hay suficientes
             return;
         }
 
-        // Asignar preguntas aleatorias al jugador
-        let shuffledSongs = [...allSongsToChooseFrom].sort(() => 0.5 - Math.random());
-        gameState.players[0].questions = shuffledSongs.splice(0, gameState.totalQuestionsPerPlayer);
+        console.log(`Canciones de verano precargadas: ${allSongsToChooseFrom.length} canciones disponibles.`);
 
-        gameState.currentPlayerIndex = 0;
-        setupQuestion();
-        showScreen('game-screen');
+        // Si hay suficientes canciones, pasamos a la pantalla de selección de jugadores.
+        // La función `selectPlayers` y luego `startGame` se encargarán de asignar las preguntas.
+        showScreen('player-selection-screen');
 
     } catch (error) {
-        console.error('Error al iniciar el modo "Canciones del Verano":', error);
+        console.error('Error al precargar canciones para el modo "Canciones del Verano":', error);
         alert('Error al cargar las canciones para el modo "Canciones del Verano". Intenta de nuevo más tarde.');
         showScreen('decade-selection-screen'); // Volver a la selección de década
     }
 }
-
 /**
  * Inicia una nueva partida, configurando jugadores y preguntas.
  */
