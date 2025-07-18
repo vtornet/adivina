@@ -1261,7 +1261,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['80s', '90s', '00s', '10s', 'actual', 'Todas']; // Orden de las décadas a mostrar
+    const decadesInOrder = ['80s', '90s', '00s', '10s', 'actual', 'Todas', 'verano'];
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
