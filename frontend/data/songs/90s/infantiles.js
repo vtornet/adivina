@@ -1,7 +1,7 @@
 // frontend/data/songs/90s/infantil.js
 window.allSongsByDecadeAndCategory = window.allSongsByDecadeAndCategory || {};
 window.allSongsByDecadeAndCategory['90s'] = window.allSongsByDecadeAndCategory['90s'] || {};
-window.allSongsByDecadeAndCategory['90s'].infantil = [
+window.allSongsByDecadeAndCategory['90s'].infantiles = [
         { file: '101-dalmatas-la-serie - 1997.mp3',                display: '101 Dálmatas: La Serie - 1997',                listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_101DALMATAS',            platform: 'spotify', originalDecade: '90s', originalCategory: 'infantil' },
         { file: 'agallas-el-perro-cobarde - 1999.mp3',             display: 'Agallas, el Perro Cobarde - 1999',             listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AGALLAS',                platform: 'spotify', originalDecade: '90s', originalCategory: 'infantil' },
         { file: 'animaniacs - 1993.mp3',                           display: 'Animaniacs - 1993',                            listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ANIMANIACS',             platform: 'spotify', originalDecade: '90s', originalCategory: 'infantil' },
