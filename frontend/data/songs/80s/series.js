@@ -59,7 +59,7 @@ window.allSongsByDecadeAndCategory['80s'].series = [
         { file: 'matrimonio-con-hijos - 1987.mp3', display: 'Matrimonio Con Hijos - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MATRIMONIO_CON_HIJOS___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'norte-y-sur - 1985.mp3', display: 'Norte Y Sur - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NORTE_Y_SUR___1985', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'nuevos-policias - 1987.mp3', display: 'Nuevos Policías - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NUEVOS_POLICIAS___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
-        { file: 'orzowei - 1977', display: 'Orzowei - (1977)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PASIONES___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: 'orzowei - 1977', display: 'Orzowei - (1977)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ORZOWEI___1977', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'padres-forzosos - 1987.mp3', display: 'Padres Forzosos - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PADRES_FORZOSOS___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'primos-lejanos - 1986.mp3', display: 'Primos Lejanos - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PRIMOS_LEJANOS___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'remintong-steele - 1982.mp3', display: 'Remington Steele - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_REMINGTON_STEELE___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
