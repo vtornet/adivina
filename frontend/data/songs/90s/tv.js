@@ -92,7 +92,8 @@ window.allSongsByDecadeAndCategory['90s'].tv = [
         { file: 'version-espanola - 1998.mp3',         display: 'Versión Española - 1998',        listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VERSION_ESPANOLA',platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: 'videos-videos - 1994.mp3',            display: 'Vídeos Vídeos - 1994',           listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIDEOS_VIDEOS',   platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: 'vip-noche - 1990.mp3',                display: 'VIP Noche - 1990',               listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIP_NOCHE',       platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
-        { file: 'videos-de-primera - 1990.mp3',        display: 'Vídeos de Primera - 1990',       listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIDEOS_PRIMERA',  platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' }
+        { file: 'videos-de-primera - 1990.mp3',        display: 'Vídeos de Primera - 1990',       listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIDEOS_PRIMERA',  platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
+        { file: 'menudo-show - 1995.mp3',        display: 'Menudo Show - 1995',       listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MENUDO_SHOW',  platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' }
 ];
 
 
