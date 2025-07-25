@@ -92,7 +92,8 @@ window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: 'apollo-440 - stop-the-rock.mp3', display: 'Apollo 440 - 7 Stopo The Rock', listenUrl: 'URL_PENDIENTE_APOLLO_440', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: 'fatboy-slim - rockafeller-skank.mp3', display: 'Fatboy Slim - Rockafeller Skank', listenUrl: 'URL_PENDIENTE_FATBOY_SLIM', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: 'the-prodigy - breathe.mp3', display: 'The Prodigy - Breathe', listenUrl: 'URL_PENDIENTE_THE PRODIGY', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  { file: 'the-wiseguys - ooh-la-la.mp3', display: 'The Wiseguys - Ooh La La', listenUrl: 'URL_PENDIENTE_THE WISEGUYS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' }
+  { file: 'the-wiseguys - ooh-la-la.mp3', display: 'The Wiseguys - Ooh La La', listenUrl: 'URL_PENDIENTE_THE_WISEGUYS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: 'willy-deville -  hey-joe.mp3', display: 'Willy Devilla - Hey Joe', listenUrl: 'URL_PENDIENTE_WILLY_DEVILLE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   
 ]
  

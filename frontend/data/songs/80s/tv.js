@@ -56,7 +56,7 @@ window.allSongsByDecadeAndCategory['80s'].tv = [
         { file: 'puesta-a-punto - 1983.mp3', display: 'Puesta A Punto - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PUESTA_A_PUNTO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: 'que-noche-la-de-aquel-ano - 1987.mp3', display: '¡Qué Noche La Del Año! - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUE_NOCHE_LA_DEL_AÑO___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: 'rockopop - 1988.mp3', display: 'Rockopop - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ROCKOPOP___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
-        { file: 'sabado-cine - 19766.mp3', display: 'Sábado Cine - (19766)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_CINE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: 'sabado-cine - 1976.mp3', display: 'Sábado Cine - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_CINE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: 'sabado-noche - 1987.mp3', display: 'Sábado Noche - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_NOCHE___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: 'sabado-revista - 1989.mp3', display: 'Sábado Revista - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_REVISTA___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: 'sesion-de-noche - 1989.mp3', display: 'Sesión De Noche - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SESION_DE_NOCHE___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },

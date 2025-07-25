@@ -21,7 +21,7 @@ window.allSongsByDecadeAndCategory['80s'].series = [
         { file: 'el-coche-fantastico - 1982.mp3', display: 'El Coche Fantástico - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_COCHE_FANTASTICO___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'el-chapulin-colorado - 1973.mp3', display: 'El Chapulín Colorado - (1973)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_CHAPULIN_COLORADO___1973', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'el-chavo-del-ocho - 1973.mp3', display: 'El Chavo Del Ocho - (1973)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_CHAVO_DEL_OCHO___1972', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
-        { file: 'el-coche-fantastico - 1983.mp3', display: 'El Coche Fantástico - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_CONTRAATAQUE___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: 'el-coche-fantastico - 1982.mp3', display: 'El Coche Fantástico - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_CONTRAATAQUE___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'el-equipo-a - 1983.mp3', display: 'El Equipo A - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_EQUIPO_A___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'el-gran-heroe-americano - 1981.mp3', display: 'El Gran Héroe Americano - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_GRAN_HEROE_AMERICANO___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'el-increible-hulk - 1978.mp3', display: 'El Increíble Hulk - (1978)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_INCREIBLE_HULK___1978', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
@@ -79,7 +79,8 @@ window.allSongsByDecadeAndCategory['80s'].series = [
         { file: 'vacaciones-en-el-mar - 1976.mp3', display: 'Vacaciones En El Mar - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VACACIONES_EN_EL_MAR___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'verano-azul - 1981.mp3', display: 'Verano Azul - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VERANO_AZUL___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: 'webster - 1983.mp3', display: 'Webster - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WEBSTER___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
-        { file: 'yo-claudio - 1976.mp3', display: 'Yo Claudio - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YO_CLAUDIO___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' }
-
+        { file: 'yo-claudio - 1976.mp3', display: 'Yo Claudio - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YO_CLAUDIO___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: 'el-halcon-callejero - 1985.mp3', display: 'El Halcón Callejero - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_HALCON_CALLEJERO___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: 'el-show-de-benny-hill - 1955.mp3', display: 'El Show de Benny Hill - (1955)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL-SHOW_DE_BENNY_HILL___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
     ];
     

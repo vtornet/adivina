@@ -103,5 +103,6 @@ window.allSongsByDecadeAndCategory['00s'].espanol = [
     { file: 'shakira-y-alejandro-sanz - la-tortura.mp3', display: 'Shakira Y Alejandro Sanz - La Tortura', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_TORTURA', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: 'son-by-four - a-puro-dolor.mp3', display: 'Son By Four - A Puro Dolor', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_A_PURO_DOLOR', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: 'sonia-y-selena - yo-quiero-bailar.mp3', display: 'Sonia Y Selena - Yo Quiero Bailar', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YO_QUIERO_BAILAR', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
-    { file: 'zucchero - baila-morena.mp3', display: 'Zucchero - Baila Morena', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BAILA_MORENA', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
+    { file: 'queco - tengo.mp3', display: 'Queco - tengo', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUECO_TENGO', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
+    
     ]
