@@ -21,6 +21,15 @@ const categoryNames = {
     consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
 };
 
+const BASE_DECADES = Array.isArray(window.allDecadesDefined)
+    ? window.allDecadesDefined
+    : ['80s', '90s', '00s', '10s', 'actual', 'verano'];
+const DECADES_ORDER = BASE_DECADES.filter(decade => decade !== 'verano');
+const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas', 'verano'];
+const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
+    ? window.allPossibleCategories
+    : ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
+
 let gameState = {};
 let audioPlaybackTimeout;
 const screens = document.querySelectorAll('.screen');
@@ -58,6 +67,26 @@ function showScreen(screenId) {
     if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
         loadPlayerOnlineGames(); //
     }
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = decadeNames[dec] || dec;
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = categoryNames[cat] || cat;
+        selectElement.appendChild(option);
+    });
 }
 
 // =====================================================================
@@ -450,9 +479,7 @@ function parseDisplay(displayText) {
 async function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'actual']; // Aquí está 'Actual'
-
-    decadesOrder.forEach(decadeId => {
+    DECADES_ORDER.forEach(decadeId => {
         const button = document.createElement('button');
         button.className = 'category-btn';
         button.innerText = decadeNames[decadeId];
@@ -527,9 +554,7 @@ function generateCategoryButtons() {
         return;
     }
 
-    const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-
-    categoryOrder.forEach(categoryId => {
+    CATEGORY_ORDER.forEach(categoryId => {
         const songsArray = currentDecadeSongs[categoryId]; // Asegurarse de obtener el array de canciones
         if (Array.isArray(songsArray) && songsArray.length >= 4) { // Validar que sea un array y tenga suficientes canciones
             const button = document.createElement('button');
@@ -1261,7 +1286,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['80s', '90s', '00s', '10s', 'actual', 'Todas', 'verano'];
+    const decadesInOrder = DECADES_WITH_SPECIALS;
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
@@ -1378,9 +1403,7 @@ function showSongsListCategorySelection() {
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas', 'verano'];// Solo las décadas que quieres mostrar aquí
-
-    decadesOrder.forEach(decadeId => {
+    DECADES_WITH_SPECIALS.forEach(decadeId => {
          if (decadeId === 'Todas' || decadeId === 'verano') {
             const allButtonDiv = document.createElement('div');
             allButtonDiv.style.gridColumn = '1 / -1'; 
@@ -1409,9 +1432,7 @@ function showSongsListCategorySelection() {
             categoryButtonsForDecadeDiv.style.gap = '10px';
             container.appendChild(categoryButtonsForDecadeDiv);
 
-            const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-
-            categoryOrder.forEach(categoryId => {
+            CATEGORY_ORDER.forEach(categoryId => {
                 const songsArray = decadeCategorySongs[categoryId];
                 if (Array.isArray(songsArray) && songsArray.length > 0) { 
                     const button = document.createElement('button');
@@ -1658,7 +1679,6 @@ async function joinOnlineGame() {
 
 // main.js - AÑADE ESTA NUEVA FUNCIÓN COMPLETA
 // Nueva función para unirse a una partida pendiente (reutiliza lógica de joinOnlineGame)
-// main.js - Función joinOnlineGameFromPending (VERIFICAR ESTA LÍNEA)
 async function joinOnlineGameFromPending(code, playerName, email) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/join`, {
@@ -1675,7 +1695,7 @@ async function joinOnlineGameFromPending(code, playerName, email) {
         if (response.ok) {
             // Si la unión es exitosa, establece las variables de juego online
             currentOnlineGameCode = code;
-            currentOnlineSongs = result.game.songsUsed; // <-- VERIFICA ESTA LÍNEA. Si el server devuelve { game: {...} }, entonces es result.game.songsUsed
+            currentOnlineSongs = result.game.songsUsed;
             currentOnlineEmail = email;
             currentOnlinePlayerName = playerName;
             isOnlineMode = true;
@@ -1683,7 +1703,7 @@ async function joinOnlineGameFromPending(code, playerName, email) {
             // Guardar info del juego online para usarla en startOnlineGame
             localStorage.setItem('currentOnlineGameData', JSON.stringify({
                 code: code,
-                songsUsed: result.game.songsUsed, // <-- VERIFICA ESTA LÍNEA
+                songsUsed: result.game.songsUsed,
                 decade: result.game.decade,
                 category: result.game.category
             }));
@@ -1841,34 +1861,8 @@ function populateOnlineSelectors() {
     const decadeSelect = document.getElementById('online-decade-select');
     const categorySelect = document.getElementById('online-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
-    const categories = [
-        { value: 'espanol', text: 'Canciones en Español' },
-        { value: 'ingles', text: 'Canciones en Inglés' },
-        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
-        { value: 'series', text: 'Intros de Series' },
-        { value: 'infantiles', text: 'Series y Programas Infantiles' },
-        { value: 'anuncios', text: 'Anuncios de TV' },
-        { value: 'tv', text: 'Programas de Televisión' }
-    ];
-
-    // Limpiar y añadir décadas
-    decadeSelect.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = dec;
-        decadeSelect.appendChild(option);
-    });
-
-    // Limpiar y añadir categorías
-    categorySelect.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.value;
-        option.textContent = cat.text;
-        categorySelect.appendChild(option);
-    });
+    populateDecadeOptions(decadeSelect, DECADES_ORDER);
+    populateCategoryOptions(categorySelect, CATEGORY_ORDER);
 }
 
 async function saveOnlineGameToHistory(gameData) {
@@ -1904,32 +1898,8 @@ function populateInviteSelectors() {
     const decadeSelect = document.getElementById('invite-decade-select');
     const categorySelect = document.getElementById('invite-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
-    const categories = [
-        { value: 'espanol', text: 'Canciones en Español' },
-        { value: 'ingles', text: 'Canciones en Inglés' },
-        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
-        { value: 'series', text: 'Intros de Series' },
-        { value: 'infantiles', text: 'Series y Programas Infantiles' },
-        { value: 'anuncios', text: 'Anuncios de TV' },
-        { value: 'tv', text: 'Programas de Televisión' }
-    ];
-
-    decadeSelect.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = dec;
-        decadeSelect.appendChild(option);
-    });
-
-    categorySelect.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.value;
-        option.textContent = cat.text;
-        categorySelect.appendChild(option);
-    });
+    populateDecadeOptions(decadeSelect, DECADES_ORDER);
+    populateCategoryOptions(categorySelect, CATEGORY_ORDER);
 }
 
 async function invitePlayerByName() {
