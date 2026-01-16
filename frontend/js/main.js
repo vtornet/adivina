@@ -1378,7 +1378,7 @@ function showSongsListCategorySelection() {
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas', 'verano'];// Solo las décadas que quieres mostrar aquí
+    const decadesOrder = ['80s', '90s', '00s', '10s', 'actual', 'Todas', 'verano']; // Solo las décadas que quieres mostrar aquí
 
     decadesOrder.forEach(decadeId => {
          if (decadeId === 'Todas' || decadeId === 'verano') {
@@ -1841,7 +1841,7 @@ function populateOnlineSelectors() {
     const decadeSelect = document.getElementById('online-decade-select');
     const categorySelect = document.getElementById('online-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
+    const decades = ['80s', '90s', '00s', '10s', 'actual'];
     const categories = [
         { value: 'espanol', text: 'Canciones en Español' },
         { value: 'ingles', text: 'Canciones en Inglés' },
@@ -1857,7 +1857,7 @@ function populateOnlineSelectors() {
     decades.forEach(dec => {
         const option = document.createElement('option');
         option.value = dec;
-        option.textContent = dec;
+        option.textContent = decadeNames[dec] || dec;
         decadeSelect.appendChild(option);
     });
 
@@ -1904,7 +1904,7 @@ function populateInviteSelectors() {
     const decadeSelect = document.getElementById('invite-decade-select');
     const categorySelect = document.getElementById('invite-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
+    const decades = ['80s', '90s', '00s', '10s', 'actual'];
     const categories = [
         { value: 'espanol', text: 'Canciones en Español' },
         { value: 'ingles', text: 'Canciones en Inglés' },
@@ -1919,7 +1919,7 @@ function populateInviteSelectors() {
     decades.forEach(dec => {
         const option = document.createElement('option');
         option.value = dec;
-        option.textContent = dec;
+        option.textContent = decadeNames[dec] || dec;
         decadeSelect.appendChild(option);
     });
 
