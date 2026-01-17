@@ -21,6 +21,23 @@ const categoryNames = {
     consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
 };
 
+function getDecadeLabel(decadeId) {
+    return decadeNames[decadeId] || decadeId;
+}
+
+function getCategoryLabel(categoryId) {
+    return categoryNames[categoryId] || categoryId;
+}
+
+const BASE_DECADES = Array.isArray(window.allDecadesDefined)
+    ? window.allDecadesDefined
+    : ['80s', '90s', '00s', '10s', 'actual', 'verano'];
+const DECADES_ORDER = BASE_DECADES.filter(decade => decade !== 'verano');
+const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas', 'verano'];
+const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
+    ? window.allPossibleCategories
+    : ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
+
 let gameState = {};
 let audioPlaybackTimeout;
 const screens = document.querySelectorAll('.screen');
@@ -57,7 +74,50 @@ function showScreen(screenId) {
     // MODIFICACIÓN CLAVE AQUÍ:
     if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
         loadPlayerOnlineGames(); //
+        requestInviteNotificationPermission();
     }
+}
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    alert('La recuperación de contraseña estará disponible próximamente. Si necesitas ayuda, contacta con el administrador.');
 }
 
 // =====================================================================
@@ -450,19 +510,17 @@ function parseDisplay(displayText) {
 async function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'actual']; // Aquí está 'Actual'
-
-    decadesOrder.forEach(decadeId => {
+    DECADES_ORDER.forEach(decadeId => {
         const button = document.createElement('button');
         button.className = 'category-btn';
-        button.innerText = decadeNames[decadeId];
+        button.innerText = getDecadeLabel(decadeId);
         button.onclick = () => selectDecade(decadeId);
         container.appendChild(button);
     });
 
     const allButton = document.createElement('button');
     allButton.className = 'category-btn tertiary';
-    allButton.innerText = decadeNames['Todas'];
+    allButton.innerText = getDecadeLabel('Todas');
     allButton.onclick = () => selectDecade('Todas');
     container.appendChild(allButton);
 }
@@ -486,7 +544,7 @@ async function selectDecade(decade) {
             // Verificar que hay suficientes canciones para empezar una partida en modo "Todas"
             // (10 preguntas por jugador, por lo tanto, mínimo 10 canciones si hay 1 jugador)
             if (configuracionCanciones['Todas']['consolidated'].length < gameState.totalQuestionsPerPlayer) {
-                alert(`No hay suficientes canciones para jugar en la opción '${decadeNames['Todas']}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
+                alert(`No hay suficientes canciones para jugar en la opción '${getDecadeLabel('Todas')}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
                 showScreen('decade-selection-screen'); // Vuelve si no hay suficientes
                 return;
             }
@@ -527,14 +585,12 @@ function generateCategoryButtons() {
         return;
     }
 
-    const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-
-    categoryOrder.forEach(categoryId => {
+    CATEGORY_ORDER.forEach(categoryId => {
         const songsArray = currentDecadeSongs[categoryId]; // Asegurarse de obtener el array de canciones
         if (Array.isArray(songsArray) && songsArray.length >= 4) { // Validar que sea un array y tenga suficientes canciones
             const button = document.createElement('button');
             button.className = 'category-btn';
-            button.innerText = categoryNames[categoryId];
+            button.innerText = getCategoryLabel(categoryId);
             button.onclick = () => selectCategory(categoryId);
             container.appendChild(button);
         }
@@ -561,13 +617,13 @@ async function selectCategory(category) {
         await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
         // Verificar si la categoría tiene suficientes canciones después de la carga
         if (configuracionCanciones[gameState.selectedDecade][gameState.category].length < 4) {
-            alert(`No hay suficientes canciones en la categoría '${categoryNames[category]}' para la década ${decadeNames[gameState.selectedDecade]}. Necesitas al menos 4 canciones.`);
+            alert(`No hay suficientes canciones en la categoría '${getCategoryLabel(category)}' para la década ${getDecadeLabel(gameState.selectedDecade)}. Necesitas al menos 4 canciones.`);
             showScreen('category-screen'); // Volver a la selección de categoría
             return;
         }
         showScreen('player-selection-screen');
     }  catch (error) {
-        alert(`No se pudieron cargar las canciones para la categoría ${categoryNames[category]} en la década ${decadeNames[gameState.selectedDecade]}. Intenta con otra.`);
+        alert(`No se pudieron cargar las canciones para la categoría ${getCategoryLabel(category)} en la década ${getDecadeLabel(gameState.selectedDecade)}. Intenta con otra.`);
         console.error(error);
         showScreen('category-screen');
     }
@@ -597,6 +653,11 @@ function selectPlayers(numPlayers) {
         input.placeholder = `Nombre del Jugador ${i + 1}`;
         input.id = `player-${i + 1}-name-input`;
         otherPlayerNamesInputsDiv.appendChild(input);
+    }
+
+    if (numPlayers === 1) {
+        startGame();
+        return;
     }
 
     showScreen('player-names-input-screen');
@@ -784,7 +845,7 @@ function startGame() {
         allSongsToChooseFrom = [...configuracionCanciones['Todas']['consolidated']];
     } else {
         if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
-            alert(`Error: No se encontraron canciones para la década ${decadeNames[gameState.selectedDecade]} y categoría ${categoryNames[gameState.category]}.`);
+            alert(`Error: No se encontraron canciones para la década ${getDecadeLabel(gameState.selectedDecade)} y categoría ${getCategoryLabel(gameState.category)}.`);
             showScreen('decade-selection-screen');
             return;
         }
@@ -794,10 +855,10 @@ function startGame() {
     const requiredSongs = gameState.totalQuestionsPerPlayer * gameState.playerCount;
 
     if (allSongsToChooseFrom.length < requiredSongs) {
-        console.warn(`Advertencia: No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`);
+        console.warn(`Advertencia: No hay suficientes canciones en ${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`);
         gameState.totalQuestionsPerPlayer = Math.floor(allSongsToChooseFrom.length / gameState.playerCount);
         if (gameState.totalQuestionsPerPlayer < 1) { 
-             alert(`No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]} para que cada jugador tenga al menos una pregunta. Elige otra década o categoría.`);
+             alert(`No hay suficientes canciones en ${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)} para que cada jugador tenga al menos una pregunta. Elige otra década o categoría.`);
              showScreen('decade-selection-screen');
              return;
         }
@@ -875,7 +936,7 @@ function setupQuestion() {
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
     
     document.getElementById("player-name-display").textContent = currentPlayer.name;
-    document.getElementById('category-display').innerText = `${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}`;
+    document.getElementById('category-display').innerText = `${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}`;
     document.getElementById('question-counter').innerText = `Pregunta ${currentPlayer.questionsAnswered + 1}/${gameState.totalQuestionsPerPlayer}`;
     document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
     document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
@@ -1261,7 +1322,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['80s', '90s', '00s', '10s', 'actual', 'Todas', 'verano'];
+    const decadesInOrder = DECADES_WITH_SPECIALS;
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
@@ -1272,13 +1333,13 @@ function renderUserTotalScores() {
             decadeHeader.style.color = 'var(--secondary-color)';
             decadeHeader.style.marginTop = '15px';
             decadeHeader.style.marginBottom = '10px';
-            decadeHeader.textContent = decadeNames[decadeId];
+            decadeHeader.textContent = getDecadeLabel(decadeId);
             categoryScoresList.appendChild(decadeHeader);
 
             const sortedCategoriesInDecade = Object.entries(categoriesInDecade).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
 
             sortedCategoriesInDecade.forEach(([categoryId, score]) => {
-                const categoryNameDisplay = categoryNames[categoryId] || categoryId;
+                const categoryNameDisplay = getCategoryLabel(categoryId);
                 const p = document.createElement('p');
                 p.className = 'score-item';
                 p.innerHTML = `• ${categoryNameDisplay}: <strong>${score} puntos</strong>`;
@@ -1358,7 +1419,7 @@ function renderDuelHistory() {
             listItem.style.fontSize = '0.85rem';
             listItem.style.marginBottom = '3px';
             listItem.style.color = 'var(--text-color)';
-            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Década: ${decadeNames[game.decade] || game.decade}, Categoría: ${categoryNames[game.category] || game.category}`;
+            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Década: ${getDecadeLabel(game.decade)}, Categoría: ${getCategoryLabel(game.category)}`;
             detailsList.appendChild(listItem);
         });
 
@@ -1373,21 +1434,31 @@ function renderDuelHistory() {
 /**
  * Muestra la pantalla para seleccionar una categoría y década para ver el listado de canciones.
  */
-function showSongsListCategorySelection() {
+async function showSongsListCategorySelection() {
     showScreen('songs-list-category-screen');
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas', 'verano'];// Solo las décadas que quieres mostrar aquí
+    const decadesToLoad = DECADES_WITH_SPECIALS.filter(decadeId => decadeId !== 'Todas' && decadeId !== 'verano');
+    const loadPromises = decadesToLoad.flatMap(decadeId => (
+        CATEGORY_ORDER.map(categoryId => (
+            loadSongsForDecadeAndCategory(decadeId, categoryId).catch(error => {
+                console.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
+                return null;
+            })
+        ))
+    ));
 
-    decadesOrder.forEach(decadeId => {
+    await Promise.allSettled(loadPromises);
+
+    DECADES_WITH_SPECIALS.forEach(decadeId => {
          if (decadeId === 'Todas' || decadeId === 'verano') {
             const allButtonDiv = document.createElement('div');
             allButtonDiv.style.gridColumn = '1 / -1'; 
             allButtonDiv.style.marginTop = '20px';
             const allButton = document.createElement('button');
             allButton.className = 'category-btn tertiary';
-            allButton.innerText = decadeNames[decadeId];
+            allButton.innerText = getDecadeLabel(decadeId);
             allButton.onclick = () => displaySongsForCategory(decadeId, 'consolidated');
             allButtonDiv.appendChild(allButton);
             container.appendChild(allButtonDiv);
@@ -1397,7 +1468,7 @@ function showSongsListCategorySelection() {
         const decadeCategorySongs = configuracionCanciones[decadeId];
         if (decadeCategorySongs) {
             const decadeHeader = document.createElement('h3');
-            decadeHeader.textContent = decadeNames[decadeId];
+            decadeHeader.textContent = getDecadeLabel(decadeId);
             decadeHeader.style.color = 'var(--secondary-color)';
             decadeHeader.style.marginTop = '20px';
             decadeHeader.style.marginBottom = '10px';
@@ -1409,14 +1480,12 @@ function showSongsListCategorySelection() {
             categoryButtonsForDecadeDiv.style.gap = '10px';
             container.appendChild(categoryButtonsForDecadeDiv);
 
-            const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-
-            categoryOrder.forEach(categoryId => {
+            CATEGORY_ORDER.forEach(categoryId => {
                 const songsArray = decadeCategorySongs[categoryId];
                 if (Array.isArray(songsArray) && songsArray.length > 0) { 
                     const button = document.createElement('button');
                     button.className = 'category-btn';
-                    button.innerText = categoryNames[categoryId];
+                    button.innerText = getCategoryLabel(categoryId);
                     button.onclick = () => displaySongsForCategory(decadeId, categoryId);
                     categoryButtonsForDecadeDiv.appendChild(button);
                 }
@@ -1442,7 +1511,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
             songsToDisplay = configuracionCanciones[decadeId][categoryId];
         }
     } catch (error) {
-        alert(`No se pudo cargar la lista de canciones para ${decadeNames[decadeId]} - ${categoryNames[categoryId]}.`);
+        alert(`No se pudo cargar la lista de canciones para ${getDecadeLabel(decadeId)} - ${getCategoryLabel(categoryId)}.`);
         console.error(error);
         showScreen('songs-list-category-screen');
         return;
@@ -1452,7 +1521,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
     const songsListCategoryTitle = document.getElementById('songs-list-category-title');
 
     songsListContainer.innerHTML = '';
-    songsListCategoryTitle.textContent = `Canciones de ${decadeNames[decadeId]} - ${categoryNames[categoryId]}`;
+    songsListCategoryTitle.textContent = `Canciones de ${getDecadeLabel(decadeId)} - ${getCategoryLabel(categoryId)}`;
 
     if (!songsToDisplay || songsToDisplay.length === 0) {
         songsListContainer.innerHTML = '<p>No hay canciones en esta categoría para la década seleccionada.</p>';
@@ -1552,6 +1621,8 @@ let currentOnlinePlayerName = null;
 let isOnlineMode = false;
 let isElderlyMode = false;
 let isSummerSongsMode = false;
+let onlineInvitePollInterval = null;
+let lastInviteCodes = new Set();
 
 // ========== CREAR PARTIDA ONLINE ==========
 async function createOnlineGame() {
@@ -1658,7 +1729,6 @@ async function joinOnlineGame() {
 
 // main.js - AÑADE ESTA NUEVA FUNCIÓN COMPLETA
 // Nueva función para unirse a una partida pendiente (reutiliza lógica de joinOnlineGame)
-// main.js - Función joinOnlineGameFromPending (VERIFICAR ESTA LÍNEA)
 async function joinOnlineGameFromPending(code, playerName, email) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/join`, {
@@ -1675,7 +1745,7 @@ async function joinOnlineGameFromPending(code, playerName, email) {
         if (response.ok) {
             // Si la unión es exitosa, establece las variables de juego online
             currentOnlineGameCode = code;
-            currentOnlineSongs = result.game.songsUsed; // <-- VERIFICA ESTA LÍNEA. Si el server devuelve { game: {...} }, entonces es result.game.songsUsed
+            currentOnlineSongs = result.game.songsUsed;
             currentOnlineEmail = email;
             currentOnlinePlayerName = playerName;
             isOnlineMode = true;
@@ -1683,7 +1753,7 @@ async function joinOnlineGameFromPending(code, playerName, email) {
             // Guardar info del juego online para usarla en startOnlineGame
             localStorage.setItem('currentOnlineGameData', JSON.stringify({
                 code: code,
-                songsUsed: result.game.songsUsed, // <-- VERIFICA ESTA LÍNEA
+                songsUsed: result.game.songsUsed,
                 decade: result.game.decade,
                 category: result.game.category
             }));
@@ -1841,34 +1911,8 @@ function populateOnlineSelectors() {
     const decadeSelect = document.getElementById('online-decade-select');
     const categorySelect = document.getElementById('online-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
-    const categories = [
-        { value: 'espanol', text: 'Canciones en Español' },
-        { value: 'ingles', text: 'Canciones en Inglés' },
-        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
-        { value: 'series', text: 'Intros de Series' },
-        { value: 'infantiles', text: 'Series y Programas Infantiles' },
-        { value: 'anuncios', text: 'Anuncios de TV' },
-        { value: 'tv', text: 'Programas de Televisión' }
-    ];
-
-    // Limpiar y añadir décadas
-    decadeSelect.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = dec;
-        decadeSelect.appendChild(option);
-    });
-
-    // Limpiar y añadir categorías
-    categorySelect.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.value;
-        option.textContent = cat.text;
-        categorySelect.appendChild(option);
-    });
+    populateDecadeOptions(decadeSelect, DECADES_ORDER);
+    populateCategoryOptions(categorySelect, CATEGORY_ORDER);
 }
 
 async function saveOnlineGameToHistory(gameData) {
@@ -1904,32 +1948,8 @@ function populateInviteSelectors() {
     const decadeSelect = document.getElementById('invite-decade-select');
     const categorySelect = document.getElementById('invite-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
-    const categories = [
-        { value: 'espanol', text: 'Canciones en Español' },
-        { value: 'ingles', text: 'Canciones en Inglés' },
-        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
-        { value: 'series', text: 'Intros de Series' },
-        { value: 'infantiles', text: 'Series y Programas Infantiles' },
-        { value: 'anuncios', text: 'Anuncios de TV' },
-        { value: 'tv', text: 'Programas de Televisión' }
-    ];
-
-    decadeSelect.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = dec;
-        decadeSelect.appendChild(option);
-    });
-
-    categorySelect.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.value;
-        option.textContent = cat.text;
-        categorySelect.appendChild(option);
-    });
+    populateDecadeOptions(decadeSelect, DECADES_ORDER);
+    populateCategoryOptions(categorySelect, CATEGORY_ORDER);
 }
 
 async function invitePlayerByName() {
@@ -2018,6 +2038,16 @@ async function loadPlayerOnlineGames() {
 
         const activeGames = games.filter(game => !game.finished);
         const finishedGames = games.filter(game => game.finished);
+        const pendingInvites = activeGames.filter(game =>
+            game.waitingFor === playerData.email &&
+            game.players.every(p => p.email !== playerData.email)
+        );
+
+        updateOnlineInviteBadge(pendingInvites.length);
+
+        if (!document.getElementById('pending-games-screen')?.classList.contains('active')) {
+            showInviteToast(pendingInvites, playerData.playerName);
+        }
 
         // Renderizar partidas activas
         if (activeGames.length > 0) {
@@ -2058,7 +2088,7 @@ async function loadPlayerOnlineGames() {
 
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
-                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> ${statusText}</p>
                     ${buttonHtml}
                 `;
@@ -2082,7 +2112,7 @@ async function loadPlayerOnlineGames() {
 
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
-                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> FINALIZADA</p>
                     <button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>
                 `;
@@ -2097,6 +2127,100 @@ async function loadPlayerOnlineGames() {
         document.getElementById('active-games-list').innerHTML = "<p>Error al cargar tus partidas activas.</p>";
         document.getElementById('finished-games-list').innerHTML = "<p>Error al cargar tus partidas finalizadas.</p>";
     }
+}
+
+function updateOnlineInviteBadge(count) {
+    const badge = document.getElementById('online-invite-count');
+    if (!badge) return;
+
+    if (count > 0) {
+        badge.textContent = count;
+        badge.hidden = false;
+    } else {
+        badge.hidden = true;
+    }
+}
+
+function showInviteToast(invites) {
+    if (!invites || invites.length === 0) return;
+
+    const newInvites = invites.filter(invite => !lastInviteCodes.has(invite.code));
+    if (newInvites.length === 0) return;
+
+    newInvites.forEach(invite => lastInviteCodes.add(invite.code));
+
+    const invite = newInvites[0];
+    const invitingPlayerName = invite.players[0] ? invite.players[0].name : 'Alguien';
+    sendInviteNotification(invitingPlayerName);
+    const toast = document.createElement('div');
+    toast.className = 'invite-toast';
+    toast.innerHTML = `
+        <p>¡Nueva invitación de <strong>${invitingPlayerName}</strong>!</p>
+        <button class="btn" type="button">Ver partidas recibidas</button>
+    `;
+
+    const button = toast.querySelector('button');
+    button.addEventListener('click', () => {
+        toast.remove();
+        showScreen('pending-games-screen');
+    });
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 200);
+    }, 6000);
+}
+
+function requestInviteNotificationPermission() {
+    if (!('Notification' in window)) return;
+
+    const dismissed = localStorage.getItem('inviteNotificationsDismissed');
+    if (dismissed === 'true' || Notification.permission !== 'default') {
+        return;
+    }
+
+    const allowed = confirm('¿Quieres recibir notificaciones cuando tengas invitaciones online?');
+    if (!allowed) {
+        localStorage.setItem('inviteNotificationsDismissed', 'true');
+        return;
+    }
+
+    Notification.requestPermission().catch(error => {
+        console.warn('No se pudo solicitar permiso de notificaciones:', error);
+    });
+}
+
+function sendInviteNotification(invitingPlayerName) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+
+    const notification = new Notification('Nueva invitación online', {
+        body: `Te ha invitado ${invitingPlayerName}.`,
+        icon: 'img/adivina.png'
+    });
+
+    notification.onclick = () => {
+        window.focus();
+        showScreen('pending-games-screen');
+        notification.close();
+    };
+}
+
+function startOnlineInvitePolling() {
+    if (onlineInvitePollInterval) return;
+    onlineInvitePollInterval = setInterval(() => {
+        if (currentUser && currentUser.email) {
+            loadPlayerOnlineGames();
+        }
+    }, 15000);
+}
+
+function stopOnlineInvitePolling() {
+    if (!onlineInvitePollInterval) return;
+    clearInterval(onlineInvitePollInterval);
+    onlineInvitePollInterval = null;
 }
 
 // main.js - AÑADE ESTAS NUEVAS FUNCIONES
@@ -2330,4 +2454,5 @@ window.onload = async () => {
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
+    startOnlineInvitePolling();
 };
