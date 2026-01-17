@@ -106,6 +106,20 @@ function populateCategoryOptions(selectElement, categories) {
     });
 }
 
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    alert('La recuperación de contraseña estará disponible próximamente. Si necesitas ayuda, contacta con el administrador.');
+}
+
 // =====================================================================
 // FUNCIONES DE AUTENTICACIÓN (Registro y Login)
 // =====================================================================
