@@ -632,6 +632,11 @@ function selectPlayers(numPlayers) {
         otherPlayerNamesInputsDiv.appendChild(input);
     }
 
+    if (numPlayers === 1) {
+        startGame();
+        return;
+    }
+
     showScreen('player-names-input-screen');
 }
 
