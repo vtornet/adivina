@@ -74,6 +74,7 @@ function showScreen(screenId) {
     // MODIFICACIÓN CLAVE AQUÍ:
     if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
         loadPlayerOnlineGames(); //
+        requestInviteNotificationPermission();
     }
 }
 
@@ -2136,6 +2137,7 @@ function showInviteToast(invites) {
 
     const invite = newInvites[0];
     const invitingPlayerName = invite.players[0] ? invite.players[0].name : 'Alguien';
+    sendInviteNotification(invitingPlayerName);
     const toast = document.createElement('div');
     toast.className = 'invite-toast';
     toast.innerHTML = `
@@ -2155,6 +2157,41 @@ function showInviteToast(invites) {
         toast.classList.add('hide');
         setTimeout(() => toast.remove(), 200);
     }, 6000);
+}
+
+function requestInviteNotificationPermission() {
+    if (!('Notification' in window)) return;
+
+    const dismissed = localStorage.getItem('inviteNotificationsDismissed');
+    if (dismissed === 'true' || Notification.permission !== 'default') {
+        return;
+    }
+
+    const allowed = confirm('¿Quieres recibir notificaciones cuando tengas invitaciones online?');
+    if (!allowed) {
+        localStorage.setItem('inviteNotificationsDismissed', 'true');
+        return;
+    }
+
+    Notification.requestPermission().catch(error => {
+        console.warn('No se pudo solicitar permiso de notificaciones:', error);
+    });
+}
+
+function sendInviteNotification(invitingPlayerName) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+
+    const notification = new Notification('Nueva invitación online', {
+        body: `Te ha invitado ${invitingPlayerName}.`,
+        icon: 'img/adivina.png'
+    });
+
+    notification.onclick = () => {
+        window.focus();
+        showScreen('pending-games-screen');
+        notification.close();
+    };
 }
 
 function startOnlineInvitePolling() {
