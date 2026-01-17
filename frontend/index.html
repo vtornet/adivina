@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adivina la Canción</title>
+    <meta name="theme-color" content="#3b1b52">
+    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -64,7 +66,7 @@
     <div id="online-mode-screen" class="screen">
         <h2>Jugar Online</h2>
         <button class="btn" onclick="showScreen('create-online-screen')">Crear Partida</button>
-        <button class="btn" onclick="showScreen('pending-games-screen')">Ver Partidas Recibidas</button>
+        <button class="btn" onclick="showScreen('pending-games-screen')">Ver Partidas Recibidas <span id="online-invite-count" class="badge" hidden>0</span></button>
         <button class="btn" onclick="showScreen('join-online-screen')">Unirse a Partida</button>
         <button class="btn" onclick="showScreen('invite-online-screen')">Invitar por Nombre</button>
         <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
