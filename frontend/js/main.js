@@ -1606,6 +1606,8 @@ let currentOnlinePlayerName = null;
 let isOnlineMode = false;
 let isElderlyMode = false;
 let isSummerSongsMode = false;
+let onlineInvitePollInterval = null;
+let lastInviteCodes = new Set();
 
 // ========== CREAR PARTIDA ONLINE ==========
 async function createOnlineGame() {
@@ -2021,6 +2023,16 @@ async function loadPlayerOnlineGames() {
 
         const activeGames = games.filter(game => !game.finished);
         const finishedGames = games.filter(game => game.finished);
+        const pendingInvites = activeGames.filter(game =>
+            game.waitingFor === playerData.email &&
+            game.players.every(p => p.email !== playerData.email)
+        );
+
+        updateOnlineInviteBadge(pendingInvites.length);
+
+        if (!document.getElementById('pending-games-screen')?.classList.contains('active')) {
+            showInviteToast(pendingInvites, playerData.playerName);
+        }
 
         // Renderizar partidas activas
         if (activeGames.length > 0) {
@@ -2100,6 +2112,64 @@ async function loadPlayerOnlineGames() {
         document.getElementById('active-games-list').innerHTML = "<p>Error al cargar tus partidas activas.</p>";
         document.getElementById('finished-games-list').innerHTML = "<p>Error al cargar tus partidas finalizadas.</p>";
     }
+}
+
+function updateOnlineInviteBadge(count) {
+    const badge = document.getElementById('online-invite-count');
+    if (!badge) return;
+
+    if (count > 0) {
+        badge.textContent = count;
+        badge.hidden = false;
+    } else {
+        badge.hidden = true;
+    }
+}
+
+function showInviteToast(invites) {
+    if (!invites || invites.length === 0) return;
+
+    const newInvites = invites.filter(invite => !lastInviteCodes.has(invite.code));
+    if (newInvites.length === 0) return;
+
+    newInvites.forEach(invite => lastInviteCodes.add(invite.code));
+
+    const invite = newInvites[0];
+    const invitingPlayerName = invite.players[0] ? invite.players[0].name : 'Alguien';
+    const toast = document.createElement('div');
+    toast.className = 'invite-toast';
+    toast.innerHTML = `
+        <p>¡Nueva invitación de <strong>${invitingPlayerName}</strong>!</p>
+        <button class="btn" type="button">Ver partidas recibidas</button>
+    `;
+
+    const button = toast.querySelector('button');
+    button.addEventListener('click', () => {
+        toast.remove();
+        showScreen('pending-games-screen');
+    });
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 200);
+    }, 6000);
+}
+
+function startOnlineInvitePolling() {
+    if (onlineInvitePollInterval) return;
+    onlineInvitePollInterval = setInterval(() => {
+        if (currentUser && currentUser.email) {
+            loadPlayerOnlineGames();
+        }
+    }, 15000);
+}
+
+function stopOnlineInvitePolling() {
+    if (!onlineInvitePollInterval) return;
+    clearInterval(onlineInvitePollInterval);
+    onlineInvitePollInterval = null;
 }
 
 // main.js - AÑADE ESTAS NUEVAS FUNCIONES
@@ -2333,4 +2403,5 @@ window.onload = async () => {
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
+    startOnlineInvitePolling();
 };
