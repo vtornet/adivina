@@ -21,9 +21,22 @@ const categoryNames = {
     consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
 };
 
-const DECADES_ORDER = ['80s', '90s', '00s', '10s', 'actual'];
+function getDecadeLabel(decadeId) {
+    return decadeNames[decadeId] || decadeId;
+}
+
+function getCategoryLabel(categoryId) {
+    return categoryNames[categoryId] || categoryId;
+}
+
+const BASE_DECADES = Array.isArray(window.allDecadesDefined)
+    ? window.allDecadesDefined
+    : ['80s', '90s', '00s', '10s', 'actual', 'verano'];
+const DECADES_ORDER = BASE_DECADES.filter(decade => decade !== 'verano');
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas', 'verano'];
-const CATEGORY_ORDER = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
+const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
+    ? window.allPossibleCategories
+    : ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
 
 let gameState = {};
 let audioPlaybackTimeout;
@@ -69,7 +82,7 @@ function populateDecadeOptions(selectElement, decades) {
     decades.forEach(dec => {
         const option = document.createElement('option');
         option.value = dec;
-        option.textContent = decadeNames[dec] || dec;
+        option.textContent = getDecadeLabel(dec);
         selectElement.appendChild(option);
     });
 }
@@ -79,7 +92,7 @@ function populateCategoryOptions(selectElement, categories) {
     categories.forEach(cat => {
         const option = document.createElement('option');
         option.value = cat;
-        option.textContent = categoryNames[cat] || cat;
+        option.textContent = getCategoryLabel(cat);
         selectElement.appendChild(option);
     });
 }
@@ -477,14 +490,14 @@ async function generateDecadeButtons() {
     DECADES_ORDER.forEach(decadeId => {
         const button = document.createElement('button');
         button.className = 'category-btn';
-        button.innerText = decadeNames[decadeId];
+        button.innerText = getDecadeLabel(decadeId);
         button.onclick = () => selectDecade(decadeId);
         container.appendChild(button);
     });
 
     const allButton = document.createElement('button');
     allButton.className = 'category-btn tertiary';
-    allButton.innerText = decadeNames['Todas'];
+    allButton.innerText = getDecadeLabel('Todas');
     allButton.onclick = () => selectDecade('Todas');
     container.appendChild(allButton);
 }
@@ -508,7 +521,7 @@ async function selectDecade(decade) {
             // Verificar que hay suficientes canciones para empezar una partida en modo "Todas"
             // (10 preguntas por jugador, por lo tanto, mínimo 10 canciones si hay 1 jugador)
             if (configuracionCanciones['Todas']['consolidated'].length < gameState.totalQuestionsPerPlayer) {
-                alert(`No hay suficientes canciones para jugar en la opción '${decadeNames['Todas']}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
+                alert(`No hay suficientes canciones para jugar en la opción '${getDecadeLabel('Todas')}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
                 showScreen('decade-selection-screen'); // Vuelve si no hay suficientes
                 return;
             }
@@ -554,7 +567,7 @@ function generateCategoryButtons() {
         if (Array.isArray(songsArray) && songsArray.length >= 4) { // Validar que sea un array y tenga suficientes canciones
             const button = document.createElement('button');
             button.className = 'category-btn';
-            button.innerText = categoryNames[categoryId];
+            button.innerText = getCategoryLabel(categoryId);
             button.onclick = () => selectCategory(categoryId);
             container.appendChild(button);
         }
@@ -581,13 +594,13 @@ async function selectCategory(category) {
         await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
         // Verificar si la categoría tiene suficientes canciones después de la carga
         if (configuracionCanciones[gameState.selectedDecade][gameState.category].length < 4) {
-            alert(`No hay suficientes canciones en la categoría '${categoryNames[category]}' para la década ${decadeNames[gameState.selectedDecade]}. Necesitas al menos 4 canciones.`);
+            alert(`No hay suficientes canciones en la categoría '${getCategoryLabel(category)}' para la década ${getDecadeLabel(gameState.selectedDecade)}. Necesitas al menos 4 canciones.`);
             showScreen('category-screen'); // Volver a la selección de categoría
             return;
         }
         showScreen('player-selection-screen');
     }  catch (error) {
-        alert(`No se pudieron cargar las canciones para la categoría ${categoryNames[category]} en la década ${decadeNames[gameState.selectedDecade]}. Intenta con otra.`);
+        alert(`No se pudieron cargar las canciones para la categoría ${getCategoryLabel(category)} en la década ${getDecadeLabel(gameState.selectedDecade)}. Intenta con otra.`);
         console.error(error);
         showScreen('category-screen');
     }
@@ -804,7 +817,7 @@ function startGame() {
         allSongsToChooseFrom = [...configuracionCanciones['Todas']['consolidated']];
     } else {
         if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
-            alert(`Error: No se encontraron canciones para la década ${decadeNames[gameState.selectedDecade]} y categoría ${categoryNames[gameState.category]}.`);
+            alert(`Error: No se encontraron canciones para la década ${getDecadeLabel(gameState.selectedDecade)} y categoría ${getCategoryLabel(gameState.category)}.`);
             showScreen('decade-selection-screen');
             return;
         }
@@ -814,10 +827,10 @@ function startGame() {
     const requiredSongs = gameState.totalQuestionsPerPlayer * gameState.playerCount;
 
     if (allSongsToChooseFrom.length < requiredSongs) {
-        console.warn(`Advertencia: No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`);
+        console.warn(`Advertencia: No hay suficientes canciones en ${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`);
         gameState.totalQuestionsPerPlayer = Math.floor(allSongsToChooseFrom.length / gameState.playerCount);
         if (gameState.totalQuestionsPerPlayer < 1) { 
-             alert(`No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]} para que cada jugador tenga al menos una pregunta. Elige otra década o categoría.`);
+             alert(`No hay suficientes canciones en ${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)} para que cada jugador tenga al menos una pregunta. Elige otra década o categoría.`);
              showScreen('decade-selection-screen');
              return;
         }
@@ -895,7 +908,7 @@ function setupQuestion() {
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
     
     document.getElementById("player-name-display").textContent = currentPlayer.name;
-    document.getElementById('category-display').innerText = `${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}`;
+    document.getElementById('category-display').innerText = `${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}`;
     document.getElementById('question-counter').innerText = `Pregunta ${currentPlayer.questionsAnswered + 1}/${gameState.totalQuestionsPerPlayer}`;
     document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
     document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
@@ -1292,13 +1305,13 @@ function renderUserTotalScores() {
             decadeHeader.style.color = 'var(--secondary-color)';
             decadeHeader.style.marginTop = '15px';
             decadeHeader.style.marginBottom = '10px';
-            decadeHeader.textContent = decadeNames[decadeId];
+            decadeHeader.textContent = getDecadeLabel(decadeId);
             categoryScoresList.appendChild(decadeHeader);
 
             const sortedCategoriesInDecade = Object.entries(categoriesInDecade).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
 
             sortedCategoriesInDecade.forEach(([categoryId, score]) => {
-                const categoryNameDisplay = categoryNames[categoryId] || categoryId;
+                const categoryNameDisplay = getCategoryLabel(categoryId);
                 const p = document.createElement('p');
                 p.className = 'score-item';
                 p.innerHTML = `• ${categoryNameDisplay}: <strong>${score} puntos</strong>`;
@@ -1378,7 +1391,7 @@ function renderDuelHistory() {
             listItem.style.fontSize = '0.85rem';
             listItem.style.marginBottom = '3px';
             listItem.style.color = 'var(--text-color)';
-            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Década: ${decadeNames[game.decade] || game.decade}, Categoría: ${categoryNames[game.category] || game.category}`;
+            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Década: ${getDecadeLabel(game.decade)}, Categoría: ${getCategoryLabel(game.category)}`;
             detailsList.appendChild(listItem);
         });
 
@@ -1393,10 +1406,22 @@ function renderDuelHistory() {
 /**
  * Muestra la pantalla para seleccionar una categoría y década para ver el listado de canciones.
  */
-function showSongsListCategorySelection() {
+async function showSongsListCategorySelection() {
     showScreen('songs-list-category-screen');
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
+
+    const decadesToLoad = DECADES_WITH_SPECIALS.filter(decadeId => decadeId !== 'Todas' && decadeId !== 'verano');
+    const loadPromises = decadesToLoad.flatMap(decadeId => (
+        CATEGORY_ORDER.map(categoryId => (
+            loadSongsForDecadeAndCategory(decadeId, categoryId).catch(error => {
+                console.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
+                return null;
+            })
+        ))
+    ));
+
+    await Promise.allSettled(loadPromises);
 
     DECADES_WITH_SPECIALS.forEach(decadeId => {
          if (decadeId === 'Todas' || decadeId === 'verano') {
@@ -1405,7 +1430,7 @@ function showSongsListCategorySelection() {
             allButtonDiv.style.marginTop = '20px';
             const allButton = document.createElement('button');
             allButton.className = 'category-btn tertiary';
-            allButton.innerText = decadeNames[decadeId];
+            allButton.innerText = getDecadeLabel(decadeId);
             allButton.onclick = () => displaySongsForCategory(decadeId, 'consolidated');
             allButtonDiv.appendChild(allButton);
             container.appendChild(allButtonDiv);
@@ -1415,7 +1440,7 @@ function showSongsListCategorySelection() {
         const decadeCategorySongs = configuracionCanciones[decadeId];
         if (decadeCategorySongs) {
             const decadeHeader = document.createElement('h3');
-            decadeHeader.textContent = decadeNames[decadeId];
+            decadeHeader.textContent = getDecadeLabel(decadeId);
             decadeHeader.style.color = 'var(--secondary-color)';
             decadeHeader.style.marginTop = '20px';
             decadeHeader.style.marginBottom = '10px';
@@ -1432,7 +1457,7 @@ function showSongsListCategorySelection() {
                 if (Array.isArray(songsArray) && songsArray.length > 0) { 
                     const button = document.createElement('button');
                     button.className = 'category-btn';
-                    button.innerText = categoryNames[categoryId];
+                    button.innerText = getCategoryLabel(categoryId);
                     button.onclick = () => displaySongsForCategory(decadeId, categoryId);
                     categoryButtonsForDecadeDiv.appendChild(button);
                 }
@@ -1458,7 +1483,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
             songsToDisplay = configuracionCanciones[decadeId][categoryId];
         }
     } catch (error) {
-        alert(`No se pudo cargar la lista de canciones para ${decadeNames[decadeId]} - ${categoryNames[categoryId]}.`);
+        alert(`No se pudo cargar la lista de canciones para ${getDecadeLabel(decadeId)} - ${getCategoryLabel(categoryId)}.`);
         console.error(error);
         showScreen('songs-list-category-screen');
         return;
@@ -1468,7 +1493,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
     const songsListCategoryTitle = document.getElementById('songs-list-category-title');
 
     songsListContainer.innerHTML = '';
-    songsListCategoryTitle.textContent = `Canciones de ${decadeNames[decadeId]} - ${categoryNames[categoryId]}`;
+    songsListCategoryTitle.textContent = `Canciones de ${getDecadeLabel(decadeId)} - ${getCategoryLabel(categoryId)}`;
 
     if (!songsToDisplay || songsToDisplay.length === 0) {
         songsListContainer.innerHTML = '<p>No hay canciones en esta categoría para la década seleccionada.</p>';
@@ -2023,7 +2048,7 @@ async function loadPlayerOnlineGames() {
 
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
-                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> ${statusText}</p>
                     ${buttonHtml}
                 `;
@@ -2047,7 +2072,7 @@ async function loadPlayerOnlineGames() {
 
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
-                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> FINALIZADA</p>
                     <button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>
                 `;
