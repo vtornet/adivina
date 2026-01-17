@@ -77,6 +77,14 @@ function showScreen(screenId) {
     }
 }
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
 function populateDecadeOptions(selectElement, decades) {
     selectElement.innerHTML = '';
     decades.forEach(dec => {
