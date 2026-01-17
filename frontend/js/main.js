@@ -1406,10 +1406,22 @@ function renderDuelHistory() {
 /**
  * Muestra la pantalla para seleccionar una categoría y década para ver el listado de canciones.
  */
-function showSongsListCategorySelection() {
+async function showSongsListCategorySelection() {
     showScreen('songs-list-category-screen');
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
+
+    const decadesToLoad = DECADES_WITH_SPECIALS.filter(decadeId => decadeId !== 'Todas' && decadeId !== 'verano');
+    const loadPromises = decadesToLoad.flatMap(decadeId => (
+        CATEGORY_ORDER.map(categoryId => (
+            loadSongsForDecadeAndCategory(decadeId, categoryId).catch(error => {
+                console.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
+                return null;
+            })
+        ))
+    ));
+
+    await Promise.allSettled(loadPromises);
 
     DECADES_WITH_SPECIALS.forEach(decadeId => {
          if (decadeId === 'Todas' || decadeId === 'verano') {
