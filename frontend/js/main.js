@@ -479,6 +479,48 @@ async function changePassword() {
     }
 }
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    showAppAlert('La recuperación de contraseña estará disponible próximamente. Si necesitas ayuda, contacta con el administrador.');
+}
+
 // =====================================================================
 // FUNCIONES DE AUTENTICACIÓN (Registro y Login)
 // =====================================================================
