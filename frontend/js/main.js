@@ -1839,7 +1839,7 @@ async function createOnlineGame() {
     }));
 
             alert(`Partida creada con éxito. Comparte este código con tu amigo: ${currentOnlineGameCode}`);
-            startOnlineGame();
+            await startOnlineGame();
         } else {
             alert(result.message || 'Error al crear la partida.');
         }
@@ -1885,7 +1885,7 @@ async function joinOnlineGame() {
                 decade: result.game.decade, // <-- AÑADE ESTO
                 category: result.game.category // <-- AÑADE ESTO
             }));
-            startOnlineGame();
+            await startOnlineGame();
         } else {
             alert(result.message || 'Error al unirse a la partida.');
         }
@@ -1926,7 +1926,7 @@ async function joinOnlineGameFromPending(code, playerName, email) {
                 category: result.game.category
             }));
 
-            startOnlineGame(); // Inicia el juego
+            await startOnlineGame(); // Inicia el juego
         } else {
             alert(result.message || 'Error al unirse a la partida pendiente.');
             loadPlayerOnlineGames(); // Recarga la lista por si el estado cambió
@@ -1947,7 +1947,7 @@ async function getSongsForOnlineMatch(decade, category) {
 
 // ========== EMPEZAR PARTIDA ONLINE ==========
 // main.js - startOnlineGame
-function startOnlineGame() {
+async function startOnlineGame() {
     // Reiniciar el gameState para una partida online
     gameState = {
         players: [],
@@ -1990,7 +1990,14 @@ function startOnlineGame() {
         showScreen('online-mode-screen');
         return;
     }
-
+    try {
+        await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
+    } catch (error) {
+        console.error('Error al cargar las canciones para la partida online:', error);
+        alert('Error al cargar las canciones para la partida online. Intenta de nuevo más tarde.');
+        showScreen('online-mode-screen');
+        return;
+    }
 
     setupQuestion();
     showScreen('game-screen');
@@ -2506,7 +2513,7 @@ async function continueOnlineGame(code, playerName, email) {
                 });
             }
 
-            startOnlineGame(); // Inicia el juego con los datos cargados
+            await startOnlineGame(); // Inicia el juego con los datos cargados
         } else {
             alert(result.message || 'Error al cargar la partida para continuar.');
             loadPlayerOnlineGames(); // Recargar la lista por si el estado cambió
