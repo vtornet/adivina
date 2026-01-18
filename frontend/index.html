@@ -133,7 +133,8 @@
     <div id="online-wait-screen" class="screen">
         <h2>Esperando al Otro Jugador...</h2>
         <p id="online-status-text">Una vez ambos hayan terminado, verás el resultado.</p>
-         <button class="btn secondary" onclick="endOnlineModeAndGoHome()">Volver al Menú Online</button> </div>
+        <button class="btn secondary" onclick="goToOnlineMenu()">Volver al Menú Online</button>
+        <button class="btn tertiary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
     </div>
 
     <div id="statistics-screen" class="screen">
@@ -225,7 +226,8 @@
         <div id="winner-display"></div>
         <div id="final-scores"></div>
         <button class="btn" id="play-again-btn">Volver a Jugar</button>
-        <button class="btn secondary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
+        <button class="btn secondary" onclick="goToOnlineMenu()">Volver al Menú Online</button>
+        <button class="btn tertiary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
         <button class="btn tertiary" onclick="logout()">Salir del Juego</button>
     </div>
 

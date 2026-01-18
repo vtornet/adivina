@@ -413,6 +413,16 @@ function endOnlineModeAndGoHome() {
     generateDecadeButtons(); // Asegurarse de que los botones de década se generen correctamente
 }
 
+function goToOnlineMenu() {
+    isOnlineMode = false;
+    currentOnlineGameCode = null;
+    currentOnlineSongs = [];
+    currentOnlineEmail = null;
+    currentOnlinePlayerName = null;
+    localStorage.removeItem('currentOnlineGameData');
+    showScreen('online-mode-screen');
+}
+
 const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
 
 function updateRecentSongsHistory(userEmail, decade, category, playedSongs) {
