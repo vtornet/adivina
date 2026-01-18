@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/style.css"> 
 </head>
 <body>
+    <button class="hamburger-btn" type="button" onclick="toggleHamburgerMenu()" aria-label="Abrir menú">☰</button>
     <div id="home-screen" class="screen active">
         <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
         <button class="btn" onclick="showScreen('login-screen')">Jugar</button>
@@ -56,12 +57,6 @@
 
         <button id="summer-songs-btn" class="category-btn" onclick="startSummerSongsGame()">Canciones del Verano</button>
         <button class="btn tertiary" onclick="showOnlineMenu()">Jugar Online</button>
-        <button class="btn tertiary" onclick="showStats()">Estadísticas</button>
-        <button class="btn tertiary" onclick="showAllSongs()">Canciones</button>
-        <button class="btn tertiary" onclick="showInstructions()">Instrucciones</button>
-
-
-        <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
     </div>
 
 
@@ -69,7 +64,6 @@
         <h2 id="category-screen-title">Elige una Categoría (<span id="selected-decade-display"></span>)</h2>
         <div id="category-buttons"></div>
         <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver a Décadas</button>
-        <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
     </div>
 
     <div id="online-mode-screen" class="screen">
@@ -229,8 +223,6 @@
         <div id="final-scores"></div>
         <button class="btn" id="play-again-btn">Volver a Jugar</button>
         <button class="btn secondary" id="online-menu-btn" onclick="goToOnlineMenu()">Volver al Menú Online</button>
-        <button class="btn tertiary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
-        <button class="btn tertiary" onclick="logout()">Salir del Juego</button>
     </div>
 
     <div id="elderly-mode-intro-screen" class="screen">
@@ -406,6 +398,51 @@
                 <button class="btn" id="app-modal-confirm" type="button">Aceptar</button>
                 <button class="btn secondary" id="app-modal-cancel" type="button">Cancelar</button>
             </div>
+        </div>
+    </div>
+
+    <div id="hamburger-menu" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="hamburger-menu-title">
+        <div class="modal-content">
+            <h3 id="hamburger-menu-title">Menú</h3>
+            <div class="modal-body">
+                <button class="btn secondary" type="button" onclick="showStats()">Estadísticas</button>
+                <button class="btn secondary" type="button" onclick="showAllSongs()">Canciones</button>
+                <button class="btn secondary" type="button" onclick="showInstructions()">Instrucciones</button>
+                <button class="btn secondary" type="button" onclick="showPasswordRecoveryInfo()">Recuperar contraseña</button>
+                <button class="btn secondary" type="button" onclick="showChangePasswordModal()">Cambiar contraseña</button>
+                <button class="btn secondary" type="button" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
+                <button class="btn tertiary" type="button" onclick="exitGame()">Salir del Juego</button>
+            </div>
+            <button class="btn" type="button" onclick="closeHamburgerMenu()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="password-reset-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="password-reset-title">
+        <div class="modal-content">
+            <h3 id="password-reset-title">Recuperar contraseña</h3>
+            <div class="modal-body">
+                <input type="email" id="password-reset-email" class="text-input" placeholder="Correo electrónico">
+                <button class="btn secondary" type="button" onclick="requestPasswordReset()">Enviar token</button>
+                <p id="password-reset-token-info" class="small-text" style="margin-top: 8px;"></p>
+                <input type="text" id="password-reset-token" class="text-input" placeholder="Token de recuperación">
+                <input type="password" id="password-reset-new-password" class="text-input" placeholder="Nueva contraseña">
+                <input type="password" id="password-reset-confirm-password" class="text-input" placeholder="Repite la nueva contraseña">
+                <button class="btn" type="button" onclick="confirmPasswordReset()">Cambiar contraseña</button>
+            </div>
+            <button class="btn secondary" type="button" onclick="closePasswordResetModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="password-change-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="password-change-title">
+        <div class="modal-content">
+            <h3 id="password-change-title">Cambiar contraseña</h3>
+            <div class="modal-body">
+                <input type="password" id="password-change-current" class="text-input" placeholder="Contraseña actual">
+                <input type="password" id="password-change-new" class="text-input" placeholder="Nueva contraseña">
+                <input type="password" id="password-change-confirm" class="text-input" placeholder="Repite la nueva contraseña">
+                <button class="btn" type="button" onclick="changePassword()">Actualizar contraseña</button>
+            </div>
+            <button class="btn secondary" type="button" onclick="closeChangePasswordModal()">Cerrar</button>
         </div>
     </div>
 
