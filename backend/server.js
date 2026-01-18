@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const cors = require('cors'); // Importa el módulo CORS
+const crypto = require('crypto');
 const path = require('path'); // Módulo para trabajar con rutas de archivos y directorios
 
 const app = express();
@@ -43,7 +44,9 @@ mongoose.connect(dbUri)
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  playerName: { type: String, unique: true, sparse: true }
+  playerName: { type: String, unique: true, sparse: true },
+  resetTokenHash: { type: String, default: null },
+  resetTokenExpires: { type: Date, default: null }
 });
 
 // MODIFICACIÓN CRUCIAL: Añadido el campo 'decade'
@@ -90,7 +93,8 @@ const onlineGameSchema = new mongoose.Schema({
   ],
   waitingFor: { type: String, default: null },
   createdAt: { type: Date, default: Date.now },
-  finished: { type: Boolean, default: false }
+  finished: { type: Boolean, default: false },
+  finishedAt: { type: Date, default: null }
 });
 
 const OnlineGame = mongoose.model('OnlineGame', onlineGameSchema);
@@ -146,6 +150,97 @@ app.post('/api/login', async (req, res) => {
     });
   } catch (err) {
     console.error('Error en el login:', err.message);
+    res.status(500).json({ message: 'Error del servidor.' });
+  }
+});
+
+app.post('/api/password-reset/request', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Debes indicar un email válido.' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(200).json({ message: 'Si el email existe, recibirás un token de recuperación.' });
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    user.resetTokenHash = tokenHash;
+    user.resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000);
+    await user.save();
+
+    res.status(200).json({
+      message: 'Token de recuperación generado. Introduce el token para cambiar la contraseña.',
+      token
+    });
+  } catch (err) {
+    console.error('Error al generar token de recuperación:', err.message);
+    res.status(500).json({ message: 'Error del servidor.' });
+  }
+});
+
+app.post('/api/password-reset/confirm', async (req, res) => {
+  const { email, token, newPassword } = req.body;
+
+  if (!email || !token || !newPassword) {
+    return res.status(400).json({ message: 'Faltan datos para cambiar la contraseña.' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !user.resetTokenHash || !user.resetTokenExpires) {
+      return res.status(400).json({ message: 'Token inválido o expirado.' });
+    }
+
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    if (tokenHash !== user.resetTokenHash || user.resetTokenExpires < new Date()) {
+      return res.status(400).json({ message: 'Token inválido o expirado.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashedPassword;
+    user.resetTokenHash = null;
+    user.resetTokenExpires = null;
+    await user.save();
+
+    res.status(200).json({ message: 'Contraseña actualizada correctamente.' });
+  } catch (err) {
+    console.error('Error al confirmar reset de contraseña:', err.message);
+    res.status(500).json({ message: 'Error del servidor.' });
+  }
+});
+
+app.post('/api/password-change', async (req, res) => {
+  const { email, currentPassword, newPassword } = req.body;
+
+  if (!email || !currentPassword || !newPassword) {
+    return res.status(400).json({ message: 'Faltan datos para cambiar la contraseña.' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado.' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'La contraseña actual no es correcta.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Contraseña actualizada correctamente.' });
+  } catch (err) {
+    console.error('Error al cambiar contraseña:', err.message);
     res.status(500).json({ message: 'Error del servidor.' });
   }
 });
@@ -206,6 +301,16 @@ app.get('/api/scores/:email', async (req, res) => {
         res.status(200).json(scores);
     } catch (err) {
         console.error('Error al obtener puntuaciones:', err.message);
+        res.status(500).json({ message: 'Error del servidor.' });
+    }
+});
+
+app.delete('/api/scores/:email', async (req, res) => {
+    try {
+        await Score.deleteMany({ email: req.params.email });
+        res.status(200).json({ message: 'Estadísticas borradas correctamente.' });
+    } catch (err) {
+        console.error('Error al borrar puntuaciones:', err.message);
         res.status(500).json({ message: 'Error del servidor.' });
     }
 });
@@ -393,6 +498,9 @@ app.post('/api/online-games/submit', async (req, res) => {
   player.finished = true;
 
   game.finished = game.players.every(p => p.finished);
+  if (game.finished && !game.finishedAt) {
+    game.finishedAt = new Date();
+  }
   await game.save();
 
   res.json({ finished: game.finished, game });
@@ -434,6 +542,37 @@ app.get('/api/online-games/player/:playerEmail', async (req, res) => {
         res.status(200).json(games);
     } catch (err) {
         console.error('Error al obtener partidas del jugador:', err.message);
+        res.status(500).json({ message: 'Error del servidor.' });
+    }
+});
+
+app.post('/api/online-games/decline', async (req, res) => {
+    const { code, email } = req.body;
+
+    if (!code || !email) {
+        return res.status(400).json({ message: 'Faltan datos para declinar la partida.' });
+    }
+
+    try {
+        const game = await OnlineGame.findOne({ code });
+        if (!game) {
+            return res.status(404).json({ message: 'Partida no encontrada.' });
+        }
+        if (game.finished) {
+            return res.status(400).json({ message: 'La partida ya ha finalizado.' });
+        }
+
+        const isCreator = game.creatorEmail === email;
+        const isInvitee = game.waitingFor === email;
+
+        if (game.players.length >= 2 || (!isCreator && !isInvitee)) {
+            return res.status(403).json({ message: 'No puedes declinar esta partida.' });
+        }
+
+        await OnlineGame.deleteOne({ _id: game._id });
+        res.status(200).json({ message: 'Partida declinada correctamente.' });
+    } catch (err) {
+        console.error('Error al declinar partida online:', err.message);
         res.status(500).json({ message: 'Error del servidor.' });
     }
 });
