@@ -51,10 +51,141 @@ let currentUser = null;
 let userAccumulatedScores = {}; 
 let gameHistory = []; 
 
+const PREMIUM_CATEGORIES = new Set(['peliculas', 'series', 'tv', 'infantiles', 'anuncios']);
+const PREMIUM_DECADES = new Set(['Todas', 'verano']);
+const ADMIN_EMAIL = 'vtornet@gmail.com';
+const NOTIFICATIONS_STORAGE_KEY = 'localNotifications';
+const PERMISSIONS_STORAGE_KEY = 'userPermissions';
+
 function getCurrentUserData() {
     const userDataString = localStorage.getItem("userData");
     if (!userDataString) return null;
     return JSON.parse(userDataString);
+}
+
+function getUserPermissions(email) {
+    const storedPermissions = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+    if (!storedPermissions[email]) {
+        storedPermissions[email] = {
+            email,
+            unlocked_sections: [],
+            no_ads: false,
+            is_admin: false
+        };
+    }
+
+    if (email === ADMIN_EMAIL) {
+        storedPermissions[email] = {
+            email,
+            unlocked_sections: ['premium_all'],
+            no_ads: true,
+            is_admin: true
+        };
+    }
+
+    localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(storedPermissions));
+    return storedPermissions[email];
+}
+
+function hasPremiumAccess() {
+    if (!currentUser || !currentUser.email) return false;
+    const permissions = getUserPermissions(currentUser.email);
+    return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
+}
+
+function isPremiumCategory(categoryId) {
+    return PREMIUM_CATEGORIES.has(categoryId);
+}
+
+function isPremiumDecade(decadeId) {
+    return PREMIUM_DECADES.has(decadeId);
+}
+
+function isPremiumSelection(decadeId, categoryId) {
+    if (isPremiumDecade(decadeId)) return true;
+    if (isPremiumCategory(categoryId)) return true;
+    return false;
+}
+
+function showPremiumModal(message) {
+    const modal = document.getElementById('premium-modal');
+    const text = document.getElementById('premium-modal-message');
+    if (!modal || !text) return;
+    text.textContent = message || 'Contenido premium. Próximamente disponible mediante desbloqueo.';
+    modal.classList.remove('hidden');
+}
+
+function closePremiumModal() {
+    const modal = document.getElementById('premium-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function showInstructions() {
+    const modal = document.getElementById('instructions-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeInstructions() {
+    const modal = document.getElementById('instructions-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function getNotifications() {
+    const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
+    if (stored) {
+        return JSON.parse(stored);
+    }
+
+    const initial = [
+        {
+            id: 'welcome-premium',
+            message: 'Próximamente podrás desbloquear nuevas categorías.',
+            date: new Date().toLocaleDateString()
+        }
+    ];
+    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(initial));
+    return initial;
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notifications-list');
+    if (!list) return;
+    const notifications = getNotifications();
+    list.innerHTML = '';
+    if (notifications.length === 0) {
+        list.innerHTML = '<p>No hay notificaciones todavía.</p>';
+        return;
+    }
+
+    notifications.forEach(note => {
+        const item = document.createElement('div');
+        item.className = 'notification-item';
+        item.innerHTML = `<p>${note.message}</p><small>${note.date}</small>`;
+        list.appendChild(item);
+    });
+}
+
+function toggleNotificationsPanel() {
+    const panel = document.getElementById('notifications-panel');
+    if (!panel) return;
+    const isHidden = panel.classList.contains('hidden');
+    if (isHidden) {
+        renderNotifications();
+        panel.classList.remove('hidden');
+    } else {
+        panel.classList.add('hidden');
+    }
+}
+
+function updatePremiumButtonsState() {
+    const summerButton = document.getElementById('summer-songs-btn');
+    if (!summerButton) return;
+
+    if (hasPremiumAccess()) {
+        summerButton.classList.remove('locked');
+    } else {
+        summerButton.classList.add('locked');
+    }
 }
 
 // main.js - Función showScreen
@@ -70,6 +201,9 @@ function showScreen(screenId) {
     }
     if (screenId === 'invite-online-screen') {
         populateInviteSelectors();
+    }
+    if (screenId === 'decade-selection-screen') {
+        updatePremiumButtonsState();
     }
     // MODIFICACIÓN CLAVE AQUÍ:
     if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
@@ -189,6 +323,7 @@ async function loginUser() {
 
         if (response.ok) {
             currentUser = { email: data.user.email, playerName: data.user.playerName };
+            getUserPermissions(currentUser.email);
             localStorage.setItem('loggedInUserEmail', data.user.email);
             localStorage.setItem('userData', JSON.stringify(currentUser));
 
@@ -203,6 +338,7 @@ async function loginUser() {
                 showScreen('decade-selection-screen'); 
                 // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
                 generateDecadeButtons(); 
+                updatePremiumButtonsState();
             } else {
                 showScreen('set-player-name-screen');
             }
@@ -522,6 +658,9 @@ async function generateDecadeButtons() {
     allButton.className = 'category-btn tertiary';
     allButton.innerText = getDecadeLabel('Todas');
     allButton.onclick = () => selectDecade('Todas');
+    if (!hasPremiumAccess()) {
+        allButton.classList.add('locked');
+    }
     container.appendChild(allButton);
 }
 
@@ -533,6 +672,10 @@ async function selectDecade(decade) {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
+        return;
+    }
+    if (isPremiumDecade(decade) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
     gameState.selectedDecade = decade;
@@ -592,6 +735,9 @@ function generateCategoryButtons() {
             button.className = 'category-btn';
             button.innerText = getCategoryLabel(categoryId);
             button.onclick = () => selectCategory(categoryId);
+            if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
+                button.classList.add('locked');
+            }
             container.appendChild(button);
         }
     });
@@ -609,6 +755,10 @@ async function selectCategory(category) {
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
+        return;
+    }
+    if (isPremiumCategory(category) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
     gameState.category = category;
@@ -756,6 +906,10 @@ async function startElderlyModeGame() {
 // main.js - Nueva función para el modo "Canciones del Verano"
 // main.js - Función MODIFICADA para el modo "Canciones del Verano"
 async function startSummerSongsGame() {
+    if (!hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
+        return;
+    }
     if (!currentUser || !currentUser.playerName) {
         alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
@@ -1452,7 +1606,7 @@ async function showSongsListCategorySelection() {
     await Promise.allSettled(loadPromises);
 
     DECADES_WITH_SPECIALS.forEach(decadeId => {
-         if (decadeId === 'Todas' || decadeId === 'verano') {
+        if (decadeId === 'Todas' || decadeId === 'verano') {
             const allButtonDiv = document.createElement('div');
             allButtonDiv.style.gridColumn = '1 / -1'; 
             allButtonDiv.style.marginTop = '20px';
@@ -1460,6 +1614,9 @@ async function showSongsListCategorySelection() {
             allButton.className = 'category-btn tertiary';
             allButton.innerText = getDecadeLabel(decadeId);
             allButton.onclick = () => displaySongsForCategory(decadeId, 'consolidated');
+            if (!hasPremiumAccess()) {
+                allButton.classList.add('locked');
+            }
             allButtonDiv.appendChild(allButton);
             container.appendChild(allButtonDiv);
             return; 
@@ -1487,6 +1644,9 @@ async function showSongsListCategorySelection() {
                     button.className = 'category-btn';
                     button.innerText = getCategoryLabel(categoryId);
                     button.onclick = () => displaySongsForCategory(decadeId, categoryId);
+                    if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
+                        button.classList.add('locked');
+                    }
                     categoryButtonsForDecadeDiv.appendChild(button);
                 }
             });
@@ -1503,6 +1663,10 @@ async function displaySongsForCategory(decadeId, categoryId) {
     let songsToDisplay;
 
     try {
+        if (isPremiumSelection(decadeId, categoryId) && !hasPremiumAccess()) {
+            showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
+            return;
+        }
         if (decadeId === 'Todas') {
             await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
             songsToDisplay = configuracionCanciones['Todas']['consolidated'];
@@ -1633,6 +1797,10 @@ async function createOnlineGame() {
     if (!playerData || !playerData.email || !playerData.playerName) {
         alert("Debes iniciar sesión con tu nombre de jugador para crear partidas online.");
         showScreen('login-screen'); // <-- Redirigir a login si no está logueado
+        return;
+    }
+    if (isPremiumSelection(decade, category) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
 
@@ -1961,6 +2129,10 @@ async function invitePlayerByName() {
     if (!rivalName || !playerData || !playerData.email || !playerData.playerName) {
         alert("Faltan datos o no estás logueado con un nombre de jugador.");
         showScreen('login-screen'); // <-- Redirigir a login si no está logueado
+        return;
+    }
+    if (isPremiumSelection(decade, category) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
 
@@ -2437,6 +2609,7 @@ window.onload = async () => {
         if (userDataString) {
             const storedUser = JSON.parse(userDataString);
             currentUser = storedUser;
+            getUserPermissions(currentUser.email);
 
             await loadUserScores(currentUser.email);
             await loadGameHistory(currentUser.email);
@@ -2444,6 +2617,7 @@ window.onload = async () => {
             if (currentUser.playerName) {
                 showScreen('decade-selection-screen');
                 generateDecadeButtons();
+                updatePremiumButtonsState();
             } else {
                 showScreen('set-player-name-screen');
             }
