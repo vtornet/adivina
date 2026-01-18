@@ -224,6 +224,14 @@ h1 {
     margin-bottom: 6px;
 }
 
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 .notification-item {
     padding: 10px 12px;
     border-radius: 10px;

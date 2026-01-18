@@ -153,6 +153,8 @@
             </div>
         </div>
 
+        <p class="small-text" style="margin-top: 16px;">Si borras las estadísticas, comenzarán de cero desde este momento y no podrás recuperar las actuales.</p>
+        <button class="btn secondary" onclick="confirmResetStatistics()">Borrar estadísticas</button>
         <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
     </div>
 
@@ -226,7 +228,7 @@
         <div id="winner-display"></div>
         <div id="final-scores"></div>
         <button class="btn" id="play-again-btn">Volver a Jugar</button>
-        <button class="btn secondary" onclick="goToOnlineMenu()">Volver al Menú Online</button>
+        <button class="btn secondary" id="online-menu-btn" onclick="goToOnlineMenu()">Volver al Menú Online</button>
         <button class="btn tertiary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
         <button class="btn tertiary" onclick="logout()">Salir del Juego</button>
     </div>
@@ -392,6 +394,17 @@
             <h3 id="notifications-title">Notificaciones</h3>
             <div id="notifications-list" class="modal-body"></div>
             <button class="btn secondary" type="button" onclick="toggleNotificationsPanel()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="app-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="app-modal-title">
+        <div class="modal-content">
+            <h3 id="app-modal-title">Aviso</h3>
+            <p id="app-modal-message" class="modal-body"></p>
+            <div class="modal-actions">
+                <button class="btn" id="app-modal-confirm" type="button">Aceptar</button>
+                <button class="btn secondary" id="app-modal-cancel" type="button">Cancelar</button>
+            </div>
         </div>
     </div>
 
