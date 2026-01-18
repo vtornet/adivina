@@ -2179,6 +2179,7 @@ async function invitePlayerByName() {
                 decade: decade,
                 category: category
             }));
+            await startOnlineGame();
 
         } else {
             alert(result.message || "Error al invitar.");
