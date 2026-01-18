@@ -90,7 +90,8 @@ const onlineGameSchema = new mongoose.Schema({
   ],
   waitingFor: { type: String, default: null },
   createdAt: { type: Date, default: Date.now },
-  finished: { type: Boolean, default: false }
+  finished: { type: Boolean, default: false },
+  finishedAt: { type: Date, default: null }
 });
 
 const OnlineGame = mongoose.model('OnlineGame', onlineGameSchema);
@@ -403,6 +404,9 @@ app.post('/api/online-games/submit', async (req, res) => {
   player.finished = true;
 
   game.finished = game.players.every(p => p.finished);
+  if (game.finished && !game.finishedAt) {
+    game.finishedAt = new Date();
+  }
   await game.save();
 
   res.json({ finished: game.finished, game });
@@ -444,6 +448,37 @@ app.get('/api/online-games/player/:playerEmail', async (req, res) => {
         res.status(200).json(games);
     } catch (err) {
         console.error('Error al obtener partidas del jugador:', err.message);
+        res.status(500).json({ message: 'Error del servidor.' });
+    }
+});
+
+app.post('/api/online-games/decline', async (req, res) => {
+    const { code, email } = req.body;
+
+    if (!code || !email) {
+        return res.status(400).json({ message: 'Faltan datos para declinar la partida.' });
+    }
+
+    try {
+        const game = await OnlineGame.findOne({ code });
+        if (!game) {
+            return res.status(404).json({ message: 'Partida no encontrada.' });
+        }
+        if (game.finished) {
+            return res.status(400).json({ message: 'La partida ya ha finalizado.' });
+        }
+
+        const isCreator = game.creatorEmail === email;
+        const isInvitee = game.waitingFor === email;
+
+        if (game.players.length >= 2 || (!isCreator && !isInvitee)) {
+            return res.status(403).json({ message: 'No puedes declinar esta partida.' });
+        }
+
+        await OnlineGame.deleteOne({ _id: game._id });
+        res.status(200).json({ message: 'Partida declinada correctamente.' });
+    } catch (err) {
+        console.error('Error al declinar partida online:', err.message);
         res.status(500).json({ message: 'Error del servidor.' });
     }
 });

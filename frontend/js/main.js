@@ -2251,6 +2251,13 @@ function populateInviteSelectors() {
     populateCategoryOptions(categorySelect, CATEGORY_ORDER);
 }
 
+function formatOnlineGameDate(dateValue) {
+    if (!dateValue) return '';
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+}
+
 async function invitePlayerByName() {
     const rivalName = document.getElementById('rival-name-input').value.trim();
     const decade = document.getElementById('invite-decade-select').value;
@@ -2367,26 +2374,28 @@ async function loadPlayerOnlineGames() {
                 const otherPlayerFinished = otherPlayer?.finished;
 
                 let statusText = '';
-                let buttonHtml = '';
-                 const isWaitingForCurrentPlayer = game.waitingFor === playerData.email && game.players.every(p => p.email !== playerData.email);
+                const actionButtons = [];
+                const isWaitingForCurrentPlayer = game.waitingFor === playerData.email && game.players.every(p => p.email !== playerData.email);
 
                 if (isWaitingForCurrentPlayer) {
                     statusText = `¡Te han invitado a jugar contra ${invitingPlayerName}!`;
-                    buttonHtml = `<button class="btn" onclick="joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${playerData.email}')">Aceptar y Unirse</button>`;
+                    actionButtons.push(`<button class="btn" onclick="joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${playerData.email}')">Aceptar y Unirse</button>`);
+                    actionButtons.push(`<button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar invitación</button>`);
                 } else if (game.players.length === 1) { // Partida creada por el jugador actual, esperando rival
                     statusText = 'Esperando a que un rival se una...';
-                    buttonHtml = `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`;
+                    actionButtons.push(`<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`);
+                    actionButtons.push(`<button class="btn tertiary" onclick="declineOnlineGame('${game.code}')">Declinar partida</button>`);
                 } else if (game.players.length === 2) { // Partida con dos jugadores
                     if (currentPlayerFinished && !otherPlayerFinished) {
                         statusText = `Esperando a que ${otherPlayerName} termine...`;
-                        buttonHtml = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
+                        actionButtons.push(`<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`);
                     } else if (!currentPlayerFinished && otherPlayerFinished) {
                         statusText = `¡Tu turno! ${otherPlayerName} ha terminado.`;
                         // Se necesitan los datos del jugador actual para continuar la partida
-                        buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                        actionButtons.push(`<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`);
                     } else if (!currentPlayerFinished && !otherPlayerFinished) {
                         statusText = `Partida en curso con ${otherPlayerName}.`;
-                        buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                        actionButtons.push(`<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`);
                     }
                 }
 
@@ -2394,7 +2403,7 @@ async function loadPlayerOnlineGames() {
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
                     <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> ${statusText}</p>
-                    ${buttonHtml}
+                    ${actionButtons.length > 0 ? `<div class="online-game-actions">${actionButtons.join('')}</div>` : ''}
                 `;
                 activeGamesContainer.appendChild(gameDiv);
             });
@@ -2414,9 +2423,12 @@ async function loadPlayerOnlineGames() {
                 const isCreator = game.creatorEmail === playerData.email;
 
 
+                const finishedDateLabel = formatOnlineGameDate(game.finishedAt || game.createdAt);
+
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
                     <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
+                    ${finishedDateLabel ? `<p><strong>Fecha:</strong> ${finishedDateLabel}</p>` : ''}
                     <p><strong>Estado:</strong> FINALIZADA</p>
                     <button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>
                 `;
@@ -2532,6 +2544,37 @@ function stopOnlineInvitePolling() {
     if (!onlineInvitePollInterval) return;
     clearInterval(onlineInvitePollInterval);
     onlineInvitePollInterval = null;
+}
+
+async function declineOnlineGame(code) {
+    const playerData = getCurrentUserData();
+    if (!playerData?.email) {
+        showAppAlert('Debes iniciar sesión para declinar una partida.');
+        showScreen('login-screen');
+        return;
+    }
+
+    const confirmed = await showAppConfirm('¿Quieres declinar esta partida online? Se eliminará la invitación pendiente.');
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/decline`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, email: playerData?.email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Partida declinada.');
+            loadPlayerOnlineGames();
+        } else {
+            showAppAlert(result.message || 'No se pudo declinar la partida.');
+        }
+    } catch (err) {
+        console.error('Error al declinar partida online:', err);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
 }
 
 // main.js - AÑADE ESTAS NUEVAS FUNCIONES
@@ -2689,8 +2732,16 @@ function showOnlineResults(gameData) {
     winnerDisplay.style.fontSize = '2.5rem';
 
 
+    const topScore = sortedPlayers[0]?.score ?? null;
+    const hasTieForFirst = sortedPlayers.filter(player => player.score === topScore).length > 1;
+
     sortedPlayers.forEach((player, index) => {
-        const medal = ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '');
+        let medal = '';
+        if (hasTieForFirst && player.score === topScore) {
+            medal = '🥇';
+        } else {
+            medal = ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '');
+        }
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
 
