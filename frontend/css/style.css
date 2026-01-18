@@ -5,14 +5,14 @@
     --secondary-color: #00eaff;
     --background-start: #1a0033;
     --background-end: #000000;
-    --card-background: rgba(255, 255, 255, 0.08);
-    --text-color: #e0e0e0;
+    --card-background: rgba(255, 255, 255, 0.12);
+    --text-color: #f0f0f0;
     --light-text-color: #ffffff;
     --correct-color: #00cc00;
     --incorrect-color: #e6006e;
     --warning-color: #e6e600;
-    --shadow-base: 0 0 8px rgba(0, 255, 255, 0.25);
-    --button-shadow-neon: 0 0 8px var(--secondary-color), 0 0 12px var(--secondary-color);
+    --shadow-base: 0 0 6px rgba(0, 255, 255, 0.2);
+    --button-shadow-neon: 0 0 6px rgba(0, 234, 255, 0.5), 0 0 10px rgba(123, 0, 255, 0.35);
     --border-radius: 15px;
 }
 
@@ -47,9 +47,10 @@ html, body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-base);
     text-align: center;
-    animation: fadeIn .7s ease-in-out;
+    animation: fadeIn .45s ease-out;
     border: 1px solid var(--secondary-color);
     backdrop-filter: blur(3px);
+    position: relative;
 }
 
 .screen.active {
@@ -57,8 +58,8 @@ html, body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 h1, h2, h3 {
@@ -86,6 +87,7 @@ h1 {
 .btn, .category-btn, .player-btn {
     display: block;
     width: 100%;
+    min-height: 52px;
     padding: 15px;
     margin-bottom: 15px;
     border: none;
@@ -127,17 +129,178 @@ h1 {
     box-shadow: 0 0 12px rgba(255, 193, 7, 0.7);
 }
 
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.password-field .text-input {
+    margin-bottom: 0;
+    flex: 1;
+}
+
+.icon-btn {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    margin-bottom: 0;
+    border-radius: 12px;
+    font-size: 1.2rem;
+}
+
+.small-link {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+}
+
+.bell-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--secondary-color);
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--light-text-color);
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-base);
+}
+
+.bell-btn:hover {
+    box-shadow: 0 0 10px var(--secondary-color);
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1200;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    width: min(420px, 100%);
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--secondary-color);
+    box-shadow: var(--shadow-base);
+    padding: 20px;
+    text-align: center;
+}
+
+.modal-body {
+    text-align: left;
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.notification-item {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notification-item small {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.locked {
+    opacity: 0.7;
+    position: relative;
+}
+
+.locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 0.95rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    margin-left: 8px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--incorrect-color);
+    color: var(--light-text-color);
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 0 6px rgba(230, 0, 110, 0.6);
+}
+
+.invite-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 320px;
+    background: rgba(0, 0, 0, 0.85);
+    color: var(--light-text-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: 12px;
+    padding: 14px 16px;
+    z-index: 1000;
+    box-shadow: var(--shadow-base);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    animation: toastSlideIn 0.25s ease-out;
+}
+
+.invite-toast p {
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.invite-toast .btn {
+    margin-bottom: 0;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+}
+
+.invite-toast.hide {
+    animation: toastFadeOut 0.2s ease-in forwards;
+}
+
+@keyframes toastSlideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastFadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
 /* Ajustes para el recuadro del encabezado del juego */
 .game-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding: 15px 20px;
+    padding: 18px 22px;
     min-height: 80px;
     background: rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     border: 1px solid var(--secondary-color);
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.2);
 }
 
 .game-header div {
@@ -209,7 +372,8 @@ h1 {
     align-items: center;
     justify-content: center;
     font-size: 3rem;
-    padding-left: 0px;
+    line-height: 1;
+    padding-left: 4px;
     box-shadow: 0 0 10px var(--secondary-color);
     border: 1px solid var(--secondary-color);
 }

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adivina la Canción</title>
+    <meta name="theme-color" content="#3b1b52">
+    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -19,15 +21,22 @@
     <div id="login-screen" class="screen">
         <h2>Iniciar Sesión</h2>
         <input type="email" id="login-email" class="text-input" placeholder="Correo electrónico">
-        <input type="password" id="login-password" class="text-input" placeholder="Contraseña">
+        <div class="password-field">
+            <input type="password" id="login-password" class="text-input" placeholder="Contraseña">
+            <button class="btn icon-btn" type="button" onclick="togglePasswordVisibility('login-password', this)">👁️</button>
+        </div>
         <button class="btn" onclick="loginUser()">Entrar</button>
+        <button class="btn tertiary small-link" type="button" onclick="showPasswordRecoveryInfo()">¿Olvidaste tu contraseña?</button>
         <p class="small-text">¿No tienes cuenta? <a href="#" onclick="showScreen('register-screen')">Regístrate aquí</a></p>
     </div>
 
     <div id="register-screen" class="screen">
         <h2>Registro</h2>
         <input type="email" id="register-email" class="text-input" placeholder="Correo electrónico">
-        <input type="password" id="register-password" class="text-input" placeholder="Contraseña">
+        <div class="password-field">
+            <input type="password" id="register-password" class="text-input" placeholder="Contraseña">
+            <button class="btn icon-btn" type="button" onclick="togglePasswordVisibility('register-password', this)">👁️</button>
+        </div>
         <button class="btn" onclick="registerUser()">Registrar</button>
         <p class="small-text">¿Ya tienes cuenta? <a href="#" onclick="showScreen('login-screen')">Inicia sesión</a></p>
     </div>
@@ -41,13 +50,15 @@
     </div>
 
     <div id="decade-selection-screen" class="screen">
+        <button class="bell-btn" type="button" onclick="toggleNotificationsPanel()" aria-label="Ver notificaciones">🔔</button>
         <h2>Selecciona una década</h2>
         <div id="decade-buttons" class="button-container"></div>
 
-        <button class="category-btn" onclick="startSummerSongsGame()">Canciones del Verano</button>
+        <button id="summer-songs-btn" class="category-btn" onclick="startSummerSongsGame()">Canciones del Verano</button>
         <button class="btn tertiary" onclick="showOnlineMenu()">Jugar Online</button>
         <button class="btn tertiary" onclick="showStats()">Estadísticas</button>
         <button class="btn tertiary" onclick="showAllSongs()">Canciones</button>
+        <button class="btn tertiary" onclick="showInstructions()">Instrucciones</button>
 
 
         <button class="btn tertiary" onclick="exitGame()">Salir del Juego</button>
@@ -64,7 +75,7 @@
     <div id="online-mode-screen" class="screen">
         <h2>Jugar Online</h2>
         <button class="btn" onclick="showScreen('create-online-screen')">Crear Partida</button>
-        <button class="btn" onclick="showScreen('pending-games-screen')">Ver Partidas Recibidas</button>
+        <button class="btn" onclick="showScreen('pending-games-screen')">Ver Partidas Recibidas <span id="online-invite-count" class="badge" hidden>0</span></button>
         <button class="btn" onclick="showScreen('join-online-screen')">Unirse a Partida</button>
         <button class="btn" onclick="showScreen('invite-online-screen')">Invitar por Nombre</button>
         <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
@@ -237,6 +248,36 @@
     <audio id="audio-player"></audio>
     <audio id="sfx-acierto" src="audio/sfx/acierto.mp3"></audio>
     <audio id="sfx-error" src="audio/sfx/error.mp3"></audio>
+
+    <div id="premium-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="premium-modal-title">
+        <div class="modal-content">
+            <h3 id="premium-modal-title">Contenido premium</h3>
+            <p id="premium-modal-message">Contenido premium. Próximamente disponible mediante desbloqueo.</p>
+            <button class="btn secondary" type="button" onclick="closePremiumModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="instructions-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="instructions-modal-title">
+        <div class="modal-content">
+            <h3 id="instructions-modal-title">Instrucciones</h3>
+            <div class="modal-body">
+                <p><strong>Cómo jugar:</strong> escucha el fragmento y elige la respuesta correcta.</p>
+                <p><strong>Intentos:</strong> tienes hasta 3 intentos por pregunta.</p>
+                <p><strong>Puntuación:</strong> 3 puntos (1º intento), 2 puntos (2º), 1 punto (3º).</p>
+                <p><strong>Contenido gratuito:</strong> Español, Inglés, décadas individuales.</p>
+                <p><strong>Contenido premium:</strong> BSO Películas/Series, TV, Infantiles, Anuncios, Todas las Décadas y Canciones del Verano.</p>
+            </div>
+            <button class="btn secondary" type="button" onclick="closeInstructions()">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="notifications-panel" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="notifications-title">
+        <div class="modal-content">
+            <h3 id="notifications-title">Notificaciones</h3>
+            <div id="notifications-list" class="modal-body"></div>
+            <button class="btn secondary" type="button" onclick="toggleNotificationsPanel()">Cerrar</button>
+        </div>
+    </div>
 
     <script src="js/songs-loader.js"></script>
     <script src="js/main.js"></script>
