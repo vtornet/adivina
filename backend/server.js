@@ -210,6 +210,16 @@ app.get('/api/scores/:email', async (req, res) => {
     }
 });
 
+app.delete('/api/scores/:email', async (req, res) => {
+    try {
+        await Score.deleteMany({ email: req.params.email });
+        res.status(200).json({ message: 'Estadísticas borradas correctamente.' });
+    } catch (err) {
+        console.error('Error al borrar puntuaciones:', err.message);
+        res.status(500).json({ message: 'Error del servidor.' });
+    }
+});
+
 // MODIFICACIÓN: Ruta para guardar/actualizar una puntuación acumulada con década
 app.post('/api/scores', async (req, res) => {
     const { email, decade, category, score } = req.body;
