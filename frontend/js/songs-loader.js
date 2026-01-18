@@ -8,6 +8,9 @@ const allPossibleCategories = ['espanol', 'ingles', 'peliculas', 'series', 'tv',
 // Las décadas que esperamos (ajustado a tus décadas existentes)
 const allDecadesDefined = ['80s', '90s', '00s', '10s', 'actual', 'verano']; // <-- AÑADE 'verano'
 
+window.allPossibleCategories = allPossibleCategories;
+window.allDecadesDefined = allDecadesDefined;
+
 /**
  * Carga las canciones para una década y categoría específica desde un archivo JS.
  * Si la década es 'Todas', llama a loadAllSongs().
