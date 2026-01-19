@@ -514,6 +514,440 @@ async function changePassword() {
     }
 }
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    openPasswordResetModal();
+}
+
+function toggleHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (!menu) return;
+    menu.classList.toggle('hidden');
+}
+
+function closeHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (menu) menu.classList.add('hidden');
+}
+
+function openPasswordResetModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closePasswordResetModal() {
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.add('hidden');
+    const tokenInfo = document.getElementById('password-reset-token-info');
+    if (tokenInfo) tokenInfo.textContent = '';
+    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+function showChangePasswordModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.add('hidden');
+    ['password-change-current', 'password-change-new', 'password-change-confirm']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+async function requestPasswordReset() {
+    const emailInput = document.getElementById('password-reset-email');
+    const email = emailInput?.value.trim();
+    const tokenInfo = document.getElementById('password-reset-token-info');
+
+    if (!email) {
+        showAppAlert('Introduce tu correo electrónico para recibir el token.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            if (tokenInfo) {
+                tokenInfo.textContent = result.token
+                    ? `Token generado: ${result.token}`
+                    : (result.message || 'Si el email existe, te enviaremos un token.');
+            }
+            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
+        } else {
+            showAppAlert(result.message || 'No se pudo solicitar el token.');
+        }
+    } catch (error) {
+        console.error('Error al solicitar token:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function confirmPasswordReset() {
+    const email = document.getElementById('password-reset-email')?.value.trim();
+    const token = document.getElementById('password-reset-token')?.value.trim();
+    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
+    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
+
+    if (!email || !token || !newPassword) {
+        showAppAlert('Completa el email, el token y la nueva contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/confirm`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closePasswordResetModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al confirmar reset:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function changePassword() {
+    if (!currentUser || !currentUser.email) {
+        showAppAlert('Debes iniciar sesión para cambiar la contraseña.');
+        showScreen('login-screen');
+        return;
+    }
+
+    const currentPassword = document.getElementById('password-change-current')?.value.trim();
+    const newPassword = document.getElementById('password-change-new')?.value.trim();
+    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
+
+    if (!currentPassword || !newPassword) {
+        showAppAlert('Completa todos los campos para cambiar la contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-change`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentUser.email, currentPassword, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closeChangePasswordModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    openPasswordResetModal();
+}
+
+function toggleHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (!menu) return;
+    menu.classList.toggle('hidden');
+}
+
+function closeHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (menu) menu.classList.add('hidden');
+}
+
+function openPasswordResetModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closePasswordResetModal() {
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.add('hidden');
+    const tokenInfo = document.getElementById('password-reset-token-info');
+    if (tokenInfo) tokenInfo.textContent = '';
+    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+function showChangePasswordModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.add('hidden');
+    ['password-change-current', 'password-change-new', 'password-change-confirm']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+async function requestPasswordReset() {
+    const emailInput = document.getElementById('password-reset-email');
+    const email = emailInput?.value.trim();
+    const tokenInfo = document.getElementById('password-reset-token-info');
+
+    if (!email) {
+        showAppAlert('Introduce tu correo electrónico para recibir el token.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            if (tokenInfo) {
+                tokenInfo.textContent = result.token
+                    ? `Token generado: ${result.token}`
+                    : (result.message || 'Si el email existe, te enviaremos un token.');
+            }
+            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
+        } else {
+            showAppAlert(result.message || 'No se pudo solicitar el token.');
+        }
+    } catch (error) {
+        console.error('Error al solicitar token:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function confirmPasswordReset() {
+    const email = document.getElementById('password-reset-email')?.value.trim();
+    const token = document.getElementById('password-reset-token')?.value.trim();
+    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
+    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
+
+    if (!email || !token || !newPassword) {
+        showAppAlert('Completa el email, el token y la nueva contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/confirm`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closePasswordResetModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al confirmar reset:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function changePassword() {
+    if (!currentUser || !currentUser.email) {
+        showAppAlert('Debes iniciar sesión para cambiar la contraseña.');
+        showScreen('login-screen');
+        return;
+    }
+
+    const currentPassword = document.getElementById('password-change-current')?.value.trim();
+    const newPassword = document.getElementById('password-change-new')?.value.trim();
+    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
+
+    if (!currentPassword || !newPassword) {
+        showAppAlert('Completa todos los campos para cambiar la contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-change`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentUser.email, currentPassword, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closeChangePasswordModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    showAppAlert('La recuperación de contraseña estará disponible próximamente. Si necesitas ayuda, contacta con el administrador.');
+}
+
 // =====================================================================
 // FUNCIONES DE AUTENTICACIÓN (Registro y Login)
 // =====================================================================
