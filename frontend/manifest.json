@@ -1,0 +1,17 @@
+{
+  "name": "Adivina la Canción",
+  "short_name": "Adivina",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1b0b2c",
+  "theme_color": "#3b1b52",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "img/adivina.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
