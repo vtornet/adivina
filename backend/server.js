@@ -497,7 +497,8 @@ app.post('/api/online-games/submit', async (req, res) => {
   player.score = score;
   player.finished = true;
 
-  game.finished = game.players.every(p => p.finished);
+  const hasBothPlayers = game.players.length === 2;
+  game.finished = hasBothPlayers && game.players.every(p => p.finished);
   if (game.finished && !game.finishedAt) {
     game.finishedAt = new Date();
   }
@@ -514,7 +515,7 @@ app.get('/api/online-games/:code', async (req, res) => {
         }
         // Devuelve el estado actual de la partida, incluyendo si está terminada y los jugadores.
         res.status(200).json({
-            finished: game.finished,
+            finished: game.players.length === 2 && game.finished,
             players: game.players,
             decade: game.decade,
             category: game.category,
