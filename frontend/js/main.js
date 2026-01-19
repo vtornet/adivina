@@ -71,6 +71,7 @@ const ADMIN_EMAIL = 'vtornet@gmail.com';
 const NOTIFICATIONS_STORAGE_KEY = 'localNotifications';
 const NOTIFICATIONS_PROMPTED_KEY = 'inviteNotificationsPrompted';
 const PERMISSIONS_STORAGE_KEY = 'userPermissions';
+const FINISHED_NOTIFICATIONS_KEY = 'finishedOnlineNotifications';
 
 function getCurrentUserData() {
     const userDataString = localStorage.getItem("userData");
@@ -236,18 +237,36 @@ function renderNotifications() {
         const item = document.createElement('div');
         item.className = 'notification-item';
         item.innerHTML = `<p>${note.message}</p><small>${note.date}</small>`;
+        if (note.type === 'invite' || note.type === 'result') {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', () => {
+                toggleNotificationsPanel();
+                showScreen('pending-games-screen');
+            });
+        }
         list.appendChild(item);
     });
 }
 
-function addNotification(message) {
+function addNotification(message, type = 'info') {
     const notifications = getNotifications();
     notifications.unshift({
         id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
         message,
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(),
+        type
     });
     localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
+}
+
+function getFinishedNotificationsState() {
+    const stored = localStorage.getItem(FINISHED_NOTIFICATIONS_KEY);
+    if (!stored) return {};
+    return JSON.parse(stored);
+}
+
+function setFinishedNotificationsState(state) {
+    localStorage.setItem(FINISHED_NOTIFICATIONS_KEY, JSON.stringify(state));
 }
 
 function toggleNotificationsPanel() {
@@ -294,6 +313,202 @@ function showScreen(screenId) {
     if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
         loadPlayerOnlineGames(); //
         requestInviteNotificationPermission();
+    }
+}
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    openPasswordResetModal();
+}
+
+function toggleHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (!menu) return;
+    menu.classList.toggle('hidden');
+}
+
+function closeHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (menu) menu.classList.add('hidden');
+}
+
+function openPasswordResetModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closePasswordResetModal() {
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.add('hidden');
+    const tokenInfo = document.getElementById('password-reset-token-info');
+    if (tokenInfo) tokenInfo.textContent = '';
+    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+function showChangePasswordModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.add('hidden');
+    ['password-change-current', 'password-change-new', 'password-change-confirm']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+async function requestPasswordReset() {
+    const emailInput = document.getElementById('password-reset-email');
+    const email = emailInput?.value.trim();
+    const tokenInfo = document.getElementById('password-reset-token-info');
+
+    if (!email) {
+        showAppAlert('Introduce tu correo electrónico para recibir el token.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            if (tokenInfo) {
+                tokenInfo.textContent = result.token
+                    ? `Token generado: ${result.token}`
+                    : (result.message || 'Si el email existe, te enviaremos un token.');
+            }
+            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
+        } else {
+            showAppAlert(result.message || 'No se pudo solicitar el token.');
+        }
+    } catch (error) {
+        console.error('Error al solicitar token:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function confirmPasswordReset() {
+    const email = document.getElementById('password-reset-email')?.value.trim();
+    const token = document.getElementById('password-reset-token')?.value.trim();
+    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
+    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
+
+    if (!email || !token || !newPassword) {
+        showAppAlert('Completa el email, el token y la nueva contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/confirm`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closePasswordResetModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al confirmar reset:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function changePassword() {
+    if (!currentUser || !currentUser.email) {
+        showAppAlert('Debes iniciar sesión para cambiar la contraseña.');
+        showScreen('login-screen');
+        return;
+    }
+
+    const currentPassword = document.getElementById('password-change-current')?.value.trim();
+    const newPassword = document.getElementById('password-change-new')?.value.trim();
+    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
+
+    if (!currentPassword || !newPassword) {
+        showAppAlert('Completa todos los campos para cambiar la contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-change`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentUser.email, currentPassword, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closeChangePasswordModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
@@ -2668,7 +2883,21 @@ async function loadPlayerOnlineGames() {
                 const otherPlayer = game.players.find(p => p.email !== playerData.email);
                 const otherPlayerName = otherPlayer ? otherPlayer.name : 'Rival Desconocido'; // Por si el rival no está
                 const isCreator = game.creatorEmail === playerData.email;
+                const currentPlayerFinished = game.players.find(p => p.email === playerData.email)?.finished;
+                const otherPlayerFinished = otherPlayer?.finished;
 
+                if (currentPlayerFinished && otherPlayerFinished) {
+                    const notifiedState = getFinishedNotificationsState();
+                    if (!notifiedState[game.code]) {
+                        const opponentName = isCreator ? otherPlayerName : invitingPlayerName;
+                        addNotification(`Partida finalizada: ${opponentName} ha terminado.`, 'result');
+                        sendGameFinishedNotification(opponentName);
+                        notifiedState[game.code] = true;
+                        setFinishedNotificationsState(notifiedState);
+                    }
+                }
+
+                const finishedDateLabel = formatOnlineGameDate(game.finishedAt || game.createdAt);
 
                 const finishedDateLabel = formatOnlineGameDate(game.finishedAt || game.createdAt);
 
@@ -2714,7 +2943,7 @@ function showInviteToast(invites) {
 
     const invite = newInvites[0];
     const invitingPlayerName = invite.players[0] ? invite.players[0].name : 'Alguien';
-    addNotification(`Nueva invitación de ${invitingPlayerName}.`);
+    addNotification(`Nueva invitación de ${invitingPlayerName}.`, 'invite');
     sendInviteNotification(invitingPlayerName);
     const toast = document.createElement('div');
     toast.className = 'invite-toast';
@@ -2768,6 +2997,22 @@ function sendInviteNotification(invitingPlayerName) {
 
     const notification = new Notification('Nueva invitación online', {
         body: `Te ha invitado ${invitingPlayerName}.`,
+        icon: 'img/adivina.png'
+    });
+
+    notification.onclick = () => {
+        window.focus();
+        showScreen('pending-games-screen');
+        notification.close();
+    };
+}
+
+function sendGameFinishedNotification(opponentName) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+
+    const notification = new Notification('Partida online finalizada', {
+        body: `${opponentName} ha terminado su partida.`,
         icon: 'img/adivina.png'
     });
 
