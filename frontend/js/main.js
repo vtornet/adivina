@@ -837,6 +837,391 @@ async function confirmPasswordReset() {
     const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
     const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
 
+const PREMIUM_CATEGORIES = new Set(['peliculas', 'series', 'tv', 'infantiles', 'anuncios']);
+const PREMIUM_DECADES = new Set(['Todas', 'verano']);
+const ADMIN_EMAIL = 'vtornet@gmail.com';
+const NOTIFICATIONS_STORAGE_KEY = 'localNotifications';
+const NOTIFICATIONS_PROMPTED_KEY = 'inviteNotificationsPrompted';
+const PERMISSIONS_STORAGE_KEY = 'userPermissions';
+const FINISHED_NOTIFICATIONS_KEY = 'finishedOnlineNotifications';
+
+function getCurrentUserData() {
+    const userDataString = localStorage.getItem("userData");
+    if (!userDataString) return null;
+    return JSON.parse(userDataString);
+}
+
+function getUserPermissions(email) {
+    const storedPermissions = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+    if (!storedPermissions[email]) {
+        storedPermissions[email] = {
+            email,
+            unlocked_sections: [],
+            no_ads: false,
+            is_admin: false
+        };
+    }
+
+    if (email === ADMIN_EMAIL) {
+        storedPermissions[email] = {
+            email,
+            unlocked_sections: ['premium_all'],
+            no_ads: true,
+            is_admin: true
+        };
+    }
+
+    localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(storedPermissions));
+    return storedPermissions[email];
+}
+
+function hasPremiumAccess() {
+    if (!currentUser || !currentUser.email) return false;
+    const permissions = getUserPermissions(currentUser.email);
+    return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
+}
+
+function isPremiumCategory(categoryId) {
+    return PREMIUM_CATEGORIES.has(categoryId);
+}
+
+function isPremiumDecade(decadeId) {
+    return PREMIUM_DECADES.has(decadeId);
+}
+
+function isPremiumSelection(decadeId, categoryId) {
+    if (isPremiumDecade(decadeId)) return true;
+    if (isPremiumCategory(categoryId)) return true;
+    return false;
+}
+
+function showPremiumModal(message) {
+    const modal = document.getElementById('premium-modal');
+    const text = document.getElementById('premium-modal-message');
+    if (!modal || !text) return;
+    text.textContent = message || 'Contenido premium. Próximamente disponible mediante desbloqueo.';
+    modal.classList.remove('hidden');
+}
+
+function closePremiumModal() {
+    const modal = document.getElementById('premium-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function showInstructions() {
+    const modal = document.getElementById('instructions-modal');
+    closeHamburgerMenu();
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeInstructions() {
+    const modal = document.getElementById('instructions-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+let appModalResolver = null;
+
+function showAppModal({ title, message, confirmText = 'Aceptar', cancelText = 'Cancelar', showCancel = false } = {}) {
+    const modal = document.getElementById('app-modal');
+    const titleEl = document.getElementById('app-modal-title');
+    const messageEl = document.getElementById('app-modal-message');
+    const confirmBtn = document.getElementById('app-modal-confirm');
+    const cancelBtn = document.getElementById('app-modal-cancel');
+
+    if (!modal || !titleEl || !messageEl || !confirmBtn || !cancelBtn) {
+        if (showCancel) {
+            return Promise.resolve(window.confirm(message || ''));
+        }
+        window.alert(message || '');
+        return Promise.resolve(true);
+    }
+
+    titleEl.textContent = title || 'Aviso';
+    messageEl.textContent = message || '';
+    confirmBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+    cancelBtn.style.display = showCancel ? 'inline-flex' : 'none';
+
+    modal.classList.remove('hidden');
+
+    return new Promise(resolve => {
+        appModalResolver = resolve;
+        confirmBtn.onclick = () => {
+            modal.classList.add('hidden');
+            appModalResolver?.(true);
+            appModalResolver = null;
+        };
+        cancelBtn.onclick = () => {
+            modal.classList.add('hidden');
+            appModalResolver?.(false);
+            appModalResolver = null;
+        };
+    });
+}
+
+function showAppAlert(message, options = {}) {
+    return showAppModal({
+        title: options.title || 'Aviso',
+        message,
+        confirmText: options.confirmText || 'Aceptar',
+        showCancel: false
+    });
+}
+
+function showAppConfirm(message, options = {}) {
+    return showAppModal({
+        title: options.title || 'Confirmación',
+        message,
+        confirmText: options.confirmText || 'Aceptar',
+        cancelText: options.cancelText || 'Cancelar',
+        showCancel: true
+    });
+}
+
+function getNotifications() {
+    const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
+    if (stored) {
+        return JSON.parse(stored);
+    }
+
+    const initial = [
+        {
+            id: 'welcome-premium',
+            message: 'Próximamente podrás desbloquear nuevas categorías.',
+            date: new Date().toLocaleDateString()
+        }
+    ];
+    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(initial));
+    return initial;
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notifications-list');
+    if (!list) return;
+    const notifications = getNotifications();
+    list.innerHTML = '';
+    if (notifications.length === 0) {
+        list.innerHTML = '<p>No hay notificaciones todavía.</p>';
+        return;
+    }
+
+    notifications.forEach(note => {
+        const item = document.createElement('div');
+        item.className = 'notification-item';
+        item.innerHTML = `<p>${note.message}</p><small>${note.date}</small>`;
+        if (note.type === 'invite' || note.type === 'result') {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', () => {
+                toggleNotificationsPanel();
+                showScreen('pending-games-screen');
+            });
+        }
+        list.appendChild(item);
+    });
+}
+
+function addNotification(message, type = 'info') {
+    const notifications = getNotifications();
+    notifications.unshift({
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        message,
+        date: new Date().toLocaleDateString(),
+        type
+    });
+    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
+}
+
+function getFinishedNotificationsState() {
+    const stored = localStorage.getItem(FINISHED_NOTIFICATIONS_KEY);
+    if (!stored) return {};
+    return JSON.parse(stored);
+}
+
+function setFinishedNotificationsState(state) {
+    localStorage.setItem(FINISHED_NOTIFICATIONS_KEY, JSON.stringify(state));
+}
+
+function toggleNotificationsPanel() {
+    const panel = document.getElementById('notifications-panel');
+    if (!panel) return;
+    const isHidden = panel.classList.contains('hidden');
+    if (isHidden) {
+        renderNotifications();
+        panel.classList.remove('hidden');
+    } else {
+        panel.classList.add('hidden');
+    }
+}
+
+function updatePremiumButtonsState() {
+    const summerButton = document.getElementById('summer-songs-btn');
+    if (!summerButton) return;
+
+    if (hasPremiumAccess()) {
+        summerButton.classList.remove('locked');
+    } else {
+        summerButton.classList.add('locked');
+    }
+}
+
+// main.js - Función showScreen
+function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+
+    const currentPassword = document.getElementById('password-change-current')?.value.trim();
+    const newPassword = document.getElementById('password-change-new')?.value.trim();
+    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
+
+    if (!currentPassword || !newPassword) {
+        showAppAlert('Completa todos los campos para cambiar la contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+    if (screenId === 'decade-selection-screen') {
+        updatePremiumButtonsState();
+    }
+    // MODIFICACIÓN CLAVE AQUÍ:
+    if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
+        loadPlayerOnlineGames(); //
+        requestInviteNotificationPermission();
+    }
+}
+
+window.showScreen = showScreen;
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    openPasswordResetModal();
+}
+
+function toggleHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (!menu) return;
+    menu.classList.toggle('hidden');
+}
+
+function closeHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (menu) menu.classList.add('hidden');
+}
+
+function openPasswordResetModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closePasswordResetModal() {
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.add('hidden');
+    const tokenInfo = document.getElementById('password-reset-token-info');
+    if (tokenInfo) tokenInfo.textContent = '';
+    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+function showChangePasswordModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.add('hidden');
+    ['password-change-current', 'password-change-new', 'password-change-confirm']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+async function requestPasswordReset() {
+    const emailInput = document.getElementById('password-reset-email');
+    const email = emailInput?.value.trim();
+    const tokenInfo = document.getElementById('password-reset-token-info');
+
+    if (!email) {
+        showAppAlert('Introduce tu correo electrónico para recibir el token.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            if (tokenInfo) {
+                tokenInfo.textContent = result.token
+                    ? `Token generado: ${result.token}`
+                    : (result.message || 'Si el email existe, te enviaremos un token.');
+            }
+            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
+        } else {
+            showAppAlert(result.message || 'No se pudo solicitar el token.');
+        }
+    } catch (error) {
+        console.error('Error al solicitar token:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function confirmPasswordReset() {
+    const email = document.getElementById('password-reset-email')?.value.trim();
+    const token = document.getElementById('password-reset-token')?.value.trim();
+    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
+    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
+
     if (!email || !token || !newPassword) {
         showAppAlert('Completa el email, el token y la nueva contraseña.');
         return;
@@ -3045,6 +3430,7 @@ async function loadPlayerOnlineGames() {
                     statusText = 'Esperando a que un rival se una...';
                     actionButtons.push(`<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`);
                     actionButtons.push(`<button class="btn tertiary" onclick="declineOnlineGame('${game.code}')">Declinar partida</button>`);
+                    actionButtons.push(`<button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar partida</button>`);
                 } else if (game.players.length === 2) { // Partida con dos jugadores
                     if (currentPlayerFinished && !otherPlayerFinished) {
                         statusText = `Esperando a que ${otherPlayerName} termine...`;
@@ -3261,6 +3647,37 @@ async function declineOnlineGame(code) {
         }
     } catch (err) {
         console.error('Error al declinar partida online:', err);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function deletePendingOnlineGame(code) {
+    const playerData = getCurrentUserData();
+    if (!playerData?.email) {
+        showAppAlert('Debes iniciar sesión para eliminar una partida.');
+        showScreen('login-screen');
+        return;
+    }
+
+    const confirmed = await showAppConfirm('¿Seguro que quieres eliminar esta partida pendiente? Esta acción es irreversible.');
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/decline`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, email: playerData?.email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            await showAppAlert(result.message || 'Partida eliminada.');
+            await loadPlayerOnlineGames();
+        } else {
+            showAppAlert(result.message || 'No se pudo eliminar la partida.');
+        }
+    } catch (err) {
+        console.error('Error al eliminar partida online:', err);
         showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
