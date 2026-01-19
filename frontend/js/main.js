@@ -38,6 +38,20 @@ const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
     : ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
 
+function getDecadesForSelect() {
+    if (Array.isArray(window.allDecadesDefined) && window.allDecadesDefined.length > 1) {
+        return window.allDecadesDefined.filter(decade => decade !== 'verano');
+    }
+    return DECADES_ORDER;
+}
+
+function getCategoriesForSelect() {
+    if (Array.isArray(window.allPossibleCategories) && window.allPossibleCategories.length > 1) {
+        return window.allPossibleCategories;
+    }
+    return CATEGORY_ORDER;
+}
+
 let gameState = {};
 let audioPlaybackTimeout;
 const screens = document.querySelectorAll('.screen');
@@ -1672,6 +1686,7 @@ function endGame() {
     // El botón "Salir del Juego" llama a 'logout()'.
 
     setOnlineMenuButtonVisibility(false);
+    setEndGameNavigationButtons();
     showScreen('end-game-screen');
 }
 
@@ -1679,6 +1694,34 @@ function setOnlineMenuButtonVisibility(isVisible) {
     const onlineMenuButton = document.getElementById('online-menu-btn');
     if (!onlineMenuButton) return;
     onlineMenuButton.style.display = isVisible ? 'inline-flex' : 'none';
+}
+
+function setEndGameNavigationButtons() {
+    const backToCategories = document.getElementById('back-to-categories-btn');
+    const backToDecades = document.getElementById('back-to-decades-btn');
+    if (!backToCategories || !backToDecades) return;
+
+    if (isOnlineMode) {
+        backToCategories.style.display = 'none';
+        backToDecades.style.display = 'none';
+        return;
+    }
+
+    const selectedDecade = gameState?.selectedDecade;
+    const showCategories = selectedDecade && selectedDecade !== 'Todas';
+    backToCategories.style.display = showCategories ? 'inline-flex' : 'none';
+    backToDecades.style.display = 'inline-flex';
+
+    backToCategories.onclick = () => {
+        closeHamburgerMenu();
+        showScreen('category-screen');
+    };
+
+    backToDecades.onclick = () => {
+        closeHamburgerMenu();
+        showScreen('decade-selection-screen');
+        generateDecadeButtons();
+    };
 }
 
 /**
@@ -2410,8 +2453,8 @@ function populateOnlineSelectors() {
     const decadeSelect = document.getElementById('online-decade-select');
     const categorySelect = document.getElementById('online-category-select');
 
-    populateDecadeOptions(decadeSelect, DECADES_ORDER);
-    populateCategoryOptions(categorySelect, CATEGORY_ORDER);
+    populateDecadeOptions(decadeSelect, getDecadesForSelect());
+    populateCategoryOptions(categorySelect, getCategoriesForSelect());
 }
 
 async function saveOnlineGameToHistory(gameData) {
@@ -2447,8 +2490,8 @@ function populateInviteSelectors() {
     const decadeSelect = document.getElementById('invite-decade-select');
     const categorySelect = document.getElementById('invite-category-select');
 
-    populateDecadeOptions(decadeSelect, DECADES_ORDER);
-    populateCategoryOptions(categorySelect, CATEGORY_ORDER);
+    populateDecadeOptions(decadeSelect, getDecadesForSelect());
+    populateCategoryOptions(categorySelect, getCategoriesForSelect());
 }
 
 function formatOnlineGameDate(dateValue) {
@@ -2456,6 +2499,10 @@ function formatOnlineGameDate(dateValue) {
     const date = new Date(dateValue);
     if (Number.isNaN(date.getTime())) return '';
     return date.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+}
+
+function isOnlineGameFinished(game) {
+    return game.players.length === 2 && (game.finished || game.players.every(player => player.finished));
 }
 
 async function invitePlayerByName() {
@@ -2547,8 +2594,8 @@ async function loadPlayerOnlineGames() {
             return;
         }
 
-        const activeGames = games.filter(game => !game.finished && !game.players.every(p => p.finished));
-        const finishedGames = games.filter(game => game.finished || game.players.every(p => p.finished));
+        const activeGames = games.filter(game => !isOnlineGameFinished(game));
+        const finishedGames = games.filter(game => isOnlineGameFinished(game));
         const pendingInvites = activeGames.filter(game =>
             game.waitingFor === playerData.email &&
             game.players.every(p => p.email !== playerData.email)
@@ -2766,8 +2813,8 @@ async function declineOnlineGame(code) {
         const result = await response.json();
 
         if (response.ok) {
-            showAppAlert(result.message || 'Partida declinada.');
-            loadPlayerOnlineGames();
+            await showAppAlert(result.message || 'Partida declinada.');
+            await loadPlayerOnlineGames();
         } else {
             showAppAlert(result.message || 'No se pudo declinar la partida.');
         }
@@ -2791,7 +2838,7 @@ async function viewOnlineGameResults(code) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/${code}`);
         const result = await response.json();
-        if (response.ok && result.finished) {
+        if (response.ok && result.finished && result.players?.length === 2) {
             // Limpiar el estado de la partida actual para evitar conflictos
             currentOnlineGameCode = null;
             currentOnlineSongs = [];
@@ -2965,6 +3012,7 @@ function showOnlineResults(gameData) {
     // No necesitamos modificarlo aquí, solo asegurarnos de que la función existe y funciona.
 
     setOnlineMenuButtonVisibility(true);
+    setEndGameNavigationButtons();
     showScreen('end-game-screen'); // Reutilizar la pantalla de fin de juego
 }
 
