@@ -21,6 +21,37 @@ const categoryNames = {
     consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
 };
 
+function getDecadeLabel(decadeId) {
+    return decadeNames[decadeId] || decadeId;
+}
+
+function getCategoryLabel(categoryId) {
+    return categoryNames[categoryId] || categoryId;
+}
+
+const BASE_DECADES = Array.isArray(window.allDecadesDefined)
+    ? window.allDecadesDefined
+    : ['80s', '90s', '00s', '10s', 'actual', 'verano'];
+const DECADES_ORDER = BASE_DECADES.filter(decade => decade !== 'verano');
+const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas', 'verano'];
+const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
+    ? window.allPossibleCategories
+    : ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
+
+function getDecadesForSelect() {
+    if (Array.isArray(window.allDecadesDefined) && window.allDecadesDefined.length > 1) {
+        return window.allDecadesDefined.filter(decade => decade !== 'verano');
+    }
+    return DECADES_ORDER;
+}
+
+function getCategoriesForSelect() {
+    if (Array.isArray(window.allPossibleCategories) && window.allPossibleCategories.length > 1) {
+        return window.allPossibleCategories;
+    }
+    return CATEGORY_ORDER;
+}
+
 let gameState = {};
 let audioPlaybackTimeout;
 const screens = document.querySelectorAll('.screen');
@@ -34,10 +65,212 @@ let currentUser = null;
 let userAccumulatedScores = {}; 
 let gameHistory = []; 
 
+const PREMIUM_CATEGORIES = new Set(['peliculas', 'series', 'tv', 'infantiles', 'anuncios']);
+const PREMIUM_DECADES = new Set(['Todas', 'verano']);
+const ADMIN_EMAIL = 'vtornet@gmail.com';
+const NOTIFICATIONS_STORAGE_KEY = 'localNotifications';
+const NOTIFICATIONS_PROMPTED_KEY = 'inviteNotificationsPrompted';
+const PERMISSIONS_STORAGE_KEY = 'userPermissions';
+
 function getCurrentUserData() {
     const userDataString = localStorage.getItem("userData");
     if (!userDataString) return null;
     return JSON.parse(userDataString);
+}
+
+function getUserPermissions(email) {
+    const storedPermissions = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+    if (!storedPermissions[email]) {
+        storedPermissions[email] = {
+            email,
+            unlocked_sections: [],
+            no_ads: false,
+            is_admin: false
+        };
+    }
+
+    if (email === ADMIN_EMAIL) {
+        storedPermissions[email] = {
+            email,
+            unlocked_sections: ['premium_all'],
+            no_ads: true,
+            is_admin: true
+        };
+    }
+
+    localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(storedPermissions));
+    return storedPermissions[email];
+}
+
+function hasPremiumAccess() {
+    if (!currentUser || !currentUser.email) return false;
+    const permissions = getUserPermissions(currentUser.email);
+    return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
+}
+
+function isPremiumCategory(categoryId) {
+    return PREMIUM_CATEGORIES.has(categoryId);
+}
+
+function isPremiumDecade(decadeId) {
+    return PREMIUM_DECADES.has(decadeId);
+}
+
+function isPremiumSelection(decadeId, categoryId) {
+    if (isPremiumDecade(decadeId)) return true;
+    if (isPremiumCategory(categoryId)) return true;
+    return false;
+}
+
+function showPremiumModal(message) {
+    const modal = document.getElementById('premium-modal');
+    const text = document.getElementById('premium-modal-message');
+    if (!modal || !text) return;
+    text.textContent = message || 'Contenido premium. Próximamente disponible mediante desbloqueo.';
+    modal.classList.remove('hidden');
+}
+
+function closePremiumModal() {
+    const modal = document.getElementById('premium-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function showInstructions() {
+    const modal = document.getElementById('instructions-modal');
+    closeHamburgerMenu();
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeInstructions() {
+    const modal = document.getElementById('instructions-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+let appModalResolver = null;
+
+function showAppModal({ title, message, confirmText = 'Aceptar', cancelText = 'Cancelar', showCancel = false } = {}) {
+    const modal = document.getElementById('app-modal');
+    const titleEl = document.getElementById('app-modal-title');
+    const messageEl = document.getElementById('app-modal-message');
+    const confirmBtn = document.getElementById('app-modal-confirm');
+    const cancelBtn = document.getElementById('app-modal-cancel');
+
+    if (!modal || !titleEl || !messageEl || !confirmBtn || !cancelBtn) {
+        if (showCancel) {
+            return Promise.resolve(window.confirm(message || ''));
+        }
+        window.alert(message || '');
+        return Promise.resolve(true);
+    }
+
+    titleEl.textContent = title || 'Aviso';
+    messageEl.textContent = message || '';
+    confirmBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+    cancelBtn.style.display = showCancel ? 'inline-flex' : 'none';
+
+    modal.classList.remove('hidden');
+
+    return new Promise(resolve => {
+        appModalResolver = resolve;
+        confirmBtn.onclick = () => {
+            modal.classList.add('hidden');
+            appModalResolver?.(true);
+            appModalResolver = null;
+        };
+        cancelBtn.onclick = () => {
+            modal.classList.add('hidden');
+            appModalResolver?.(false);
+            appModalResolver = null;
+        };
+    });
+}
+
+function showAppAlert(message, options = {}) {
+    return showAppModal({
+        title: options.title || 'Aviso',
+        message,
+        confirmText: options.confirmText || 'Aceptar',
+        showCancel: false
+    });
+}
+
+function showAppConfirm(message, options = {}) {
+    return showAppModal({
+        title: options.title || 'Confirmación',
+        message,
+        confirmText: options.confirmText || 'Aceptar',
+        cancelText: options.cancelText || 'Cancelar',
+        showCancel: true
+    });
+}
+
+function getNotifications() {
+    const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
+    if (stored) {
+        return JSON.parse(stored);
+    }
+
+    const initial = [
+        {
+            id: 'welcome-premium',
+            message: 'Próximamente podrás desbloquear nuevas categorías.',
+            date: new Date().toLocaleDateString()
+        }
+    ];
+    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(initial));
+    return initial;
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notifications-list');
+    if (!list) return;
+    const notifications = getNotifications();
+    list.innerHTML = '';
+    if (notifications.length === 0) {
+        list.innerHTML = '<p>No hay notificaciones todavía.</p>';
+        return;
+    }
+
+    notifications.forEach(note => {
+        const item = document.createElement('div');
+        item.className = 'notification-item';
+        item.innerHTML = `<p>${note.message}</p><small>${note.date}</small>`;
+        list.appendChild(item);
+    });
+}
+
+function addNotification(message) {
+    const notifications = getNotifications();
+    notifications.unshift({
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        message,
+        date: new Date().toLocaleDateString()
+    });
+    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
+}
+
+function toggleNotificationsPanel() {
+    const panel = document.getElementById('notifications-panel');
+    if (!panel) return;
+    const isHidden = panel.classList.contains('hidden');
+    if (isHidden) {
+        renderNotifications();
+        panel.classList.remove('hidden');
+    } else {
+        panel.classList.add('hidden');
+    }
+}
+
+function updatePremiumButtonsState() {
+    const summerButton = document.getElementById('summer-songs-btn');
+    if (!summerButton) return;
+
+    if (hasPremiumAccess()) {
+        summerButton.classList.remove('locked');
+    } else {
+        summerButton.classList.add('locked');
+    }
 }
 
 // main.js - Función showScreen
@@ -54,9 +287,209 @@ function showScreen(screenId) {
     if (screenId === 'invite-online-screen') {
         populateInviteSelectors();
     }
+    if (screenId === 'decade-selection-screen') {
+        updatePremiumButtonsState();
+    }
     // MODIFICACIÓN CLAVE AQUÍ:
     if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
         loadPlayerOnlineGames(); //
+        requestInviteNotificationPermission();
+    }
+}
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
+            console.warn('No se pudo registrar el Service Worker:', error);
+        });
+    });
+}
+
+function populateDecadeOptions(selectElement, decades) {
+    selectElement.innerHTML = '';
+    decades.forEach(dec => {
+        const option = document.createElement('option');
+        option.value = dec;
+        option.textContent = getDecadeLabel(dec);
+        selectElement.appendChild(option);
+    });
+}
+
+function populateCategoryOptions(selectElement, categories) {
+    selectElement.innerHTML = '';
+    categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = getCategoryLabel(cat);
+        selectElement.appendChild(option);
+    });
+}
+
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    button.textContent = isPassword ? '🙈' : '👁️';
+    button.setAttribute('aria-pressed', String(isPassword));
+}
+
+function showPasswordRecoveryInfo() {
+    openPasswordResetModal();
+}
+
+function toggleHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (!menu) return;
+    menu.classList.toggle('hidden');
+}
+
+function closeHamburgerMenu() {
+    const menu = document.getElementById('hamburger-menu');
+    if (menu) menu.classList.add('hidden');
+}
+
+function openPasswordResetModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closePasswordResetModal() {
+    const modal = document.getElementById('password-reset-modal');
+    if (modal) modal.classList.add('hidden');
+    const tokenInfo = document.getElementById('password-reset-token-info');
+    if (tokenInfo) tokenInfo.textContent = '';
+    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+function showChangePasswordModal() {
+    closeHamburgerMenu();
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('password-change-modal');
+    if (modal) modal.classList.add('hidden');
+    ['password-change-current', 'password-change-new', 'password-change-confirm']
+        .forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.value = '';
+        });
+}
+
+async function requestPasswordReset() {
+    const emailInput = document.getElementById('password-reset-email');
+    const email = emailInput?.value.trim();
+    const tokenInfo = document.getElementById('password-reset-token-info');
+
+    if (!email) {
+        showAppAlert('Introduce tu correo electrónico para recibir el token.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            if (tokenInfo) {
+                tokenInfo.textContent = result.token
+                    ? `Token generado: ${result.token}`
+                    : (result.message || 'Si el email existe, te enviaremos un token.');
+            }
+            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
+        } else {
+            showAppAlert(result.message || 'No se pudo solicitar el token.');
+        }
+    } catch (error) {
+        console.error('Error al solicitar token:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function confirmPasswordReset() {
+    const email = document.getElementById('password-reset-email')?.value.trim();
+    const token = document.getElementById('password-reset-token')?.value.trim();
+    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
+    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
+
+    if (!email || !token || !newPassword) {
+        showAppAlert('Completa el email, el token y la nueva contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-reset/confirm`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closePasswordResetModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al confirmar reset:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
+async function changePassword() {
+    if (!currentUser || !currentUser.email) {
+        showAppAlert('Debes iniciar sesión para cambiar la contraseña.');
+        showScreen('login-screen');
+        return;
+    }
+
+    const currentPassword = document.getElementById('password-change-current')?.value.trim();
+    const newPassword = document.getElementById('password-change-new')?.value.trim();
+    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
+
+    if (!currentPassword || !newPassword) {
+        showAppAlert('Completa todos los campos para cambiar la contraseña.');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        showAppAlert('Las contraseñas no coinciden.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/password-change`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: currentUser.email, currentPassword, newPassword })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
+            closeChangePasswordModal();
+        } else {
+            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
+        }
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
@@ -76,11 +509,11 @@ async function registerUser() {
     const password = passwordInput.value.trim();
 
     if (!email || !password) {
-        alert('Por favor, introduce un email y una contraseña.');
+        showAppAlert('Por favor, introduce un email y una contraseña.');
         return;
     }
     if (!isValidEmail(email)) {
-        alert('Por favor, introduce un email válido.');
+        showAppAlert('Por favor, introduce un email válido.');
         return;
     }
 
@@ -94,16 +527,16 @@ async function registerUser() {
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message);
+            showAppAlert(data.message);
             emailInput.value = '';
             passwordInput.value = '';
             showScreen('login-screen');
         } else {
-            alert(`Error al registrar: ${data.message}`);
+            showAppAlert(`Error al registrar: ${data.message}`);
         }
     } catch (error) {
         console.error('Error de red durante el registro:', error);
-        alert('Error de conexión. Intenta de nuevo más tarde.');
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
@@ -114,7 +547,7 @@ async function loginUser() {
     const password = passwordInput.value.trim();
 
     if (!email || !password) {
-        alert('Por favor, introduce tu email y contraseña.');
+        showAppAlert('Por favor, introduce tu email y contraseña.');
         return;
     }
 
@@ -129,10 +562,11 @@ async function loginUser() {
 
         if (response.ok) {
             currentUser = { email: data.user.email, playerName: data.user.playerName };
+            getUserPermissions(currentUser.email);
             localStorage.setItem('loggedInUserEmail', data.user.email);
             localStorage.setItem('userData', JSON.stringify(currentUser));
 
-            alert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
+            showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
             emailInput.value = '';
             passwordInput.value = '';
 
@@ -143,15 +577,16 @@ async function loginUser() {
                 showScreen('decade-selection-screen'); 
                 // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
                 generateDecadeButtons(); 
+                updatePremiumButtonsState();
             } else {
                 showScreen('set-player-name-screen');
             }
         } else {
-            alert(`Error al iniciar sesión: ${data.message}`);
+            showAppAlert(`Error al iniciar sesión: ${data.message}`);
         }
     } catch (error) {
         console.error('Error de red durante el login:', error);
-        alert('Error de conexión. Intenta de nuevo más tarde.');
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
@@ -160,13 +595,13 @@ function logout() {
     localStorage.removeItem('loggedInUserEmail');
     localStorage.removeItem('userData'); // <-- AÑADE ESTA LÍNEA
     localStorage.removeItem('currentOnlineGameData'); // <-- AÑADE ESTA LÍNEA
-    alert('Sesión cerrada correctamente.');
+    showAppAlert('Sesión cerrada correctamente.');
     showScreen('home-screen');
 }
 
 // main.js - Nuevas funciones para borrar historial de partidas online
-function confirmClearOnlineGameHistory() {
-    const confirmed = confirm("¿Estás seguro de que quieres borrar TODO tu historial de partidas online? Esta acción es irreversible.");
+async function confirmClearOnlineGameHistory() {
+    const confirmed = await showAppConfirm("¿Estás seguro de que quieres borrar TODO tu historial de partidas online? Esta acción es irreversible.");
     if (confirmed) {
         clearOnlineGameHistory();
     }
@@ -175,7 +610,7 @@ function confirmClearOnlineGameHistory() {
 async function clearOnlineGameHistory() {
     const playerData = getCurrentUserData();
     if (!playerData || !playerData.email) {
-        alert("Debes iniciar sesión para borrar tu historial.");
+        showAppAlert("Debes iniciar sesión para borrar tu historial.");
         showScreen('login-screen');
         return;
     }
@@ -189,18 +624,19 @@ async function clearOnlineGameHistory() {
         const result = await response.json();
 
         if (response.ok) {
-            alert(result.message);
+            showAppAlert(result.message);
             loadPlayerOnlineGames(); // Recargar la lista de partidas para mostrar el cambio
         } else {
-            alert(`Error al borrar historial: ${result.message}`);
+            showAppAlert(`Error al borrar historial: ${result.message}`);
         }
     } catch (error) {
         console.error('Error de red al borrar historial de partidas online:', error);
-        alert('Error de conexión. Intenta de nuevo más tarde.');
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
 function endOnlineModeAndGoHome() {
+    closeHamburgerMenu();
     // Siempre resetear el estado de la partida online al ir al menú principal
     isOnlineMode = false;
     currentOnlineGameCode = null;
@@ -215,6 +651,16 @@ function endOnlineModeAndGoHome() {
     // Y siempre redirigir a la pantalla de selección de década
     showScreen('decade-selection-screen'); 
     generateDecadeButtons(); // Asegurarse de que los botones de década se generen correctamente
+}
+
+function goToOnlineMenu() {
+    isOnlineMode = false;
+    currentOnlineGameCode = null;
+    currentOnlineSongs = [];
+    currentOnlineEmail = null;
+    currentOnlinePlayerName = null;
+    localStorage.removeItem('currentOnlineGameData');
+    showScreen('online-mode-screen');
 }
 
 const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
@@ -266,7 +712,7 @@ async function setPlayerName() {
     const newPlayerName = playerNameInput.value.trim();
 
     if (!newPlayerName) {
-        alert('Por favor, introduce un nombre de jugador.');
+        showAppAlert('Por favor, introduce un nombre de jugador.');
         return;
     }
 
@@ -283,19 +729,19 @@ async function setPlayerName() {
             if (response.ok) {
                 currentUser.playerName = newPlayerName;
                 localStorage.setItem("userData", JSON.stringify(currentUser));
-                alert(data.message);
+                showAppAlert(data.message);
                 playerNameInput.value = '';
                 showScreen('decade-selection-screen');
                 generateDecadeButtons();
             } else {
-                alert(`Error al actualizar nombre: ${data.message}`);
+                showAppAlert(`Error al actualizar nombre: ${data.message}`);
             }
         } catch (error) {
             console.error('Error de red al establecer nombre de jugador:', error);
-            alert('Error de conexión. Intenta de nuevo más tarde.');
+            showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
         }
     } else {
-        alert('No hay un usuario logueado. Por favor, inicia sesión primero.');
+        showAppAlert('No hay un usuario logueado. Por favor, inicia sesión primero.');
         showScreen('login-screen');
     }
 }
@@ -450,20 +896,21 @@ function parseDisplay(displayText) {
 async function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'actual']; // Aquí está 'Actual'
-
-    decadesOrder.forEach(decadeId => {
+    DECADES_ORDER.forEach(decadeId => {
         const button = document.createElement('button');
         button.className = 'category-btn';
-        button.innerText = decadeNames[decadeId];
+        button.innerText = getDecadeLabel(decadeId);
         button.onclick = () => selectDecade(decadeId);
         container.appendChild(button);
     });
 
     const allButton = document.createElement('button');
     allButton.className = 'category-btn tertiary';
-    allButton.innerText = decadeNames['Todas'];
+    allButton.innerText = getDecadeLabel('Todas');
     allButton.onclick = () => selectDecade('Todas');
+    if (!hasPremiumAccess()) {
+        allButton.classList.add('locked');
+    }
     container.appendChild(allButton);
 }
 
@@ -473,8 +920,12 @@ async function generateDecadeButtons() {
  */
 async function selectDecade(decade) {
     if (!currentUser || !currentUser.playerName) {
-        alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+        showAppAlert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
+        return;
+    }
+    if (isPremiumDecade(decade) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
     gameState.selectedDecade = decade;
@@ -486,13 +937,13 @@ async function selectDecade(decade) {
             // Verificar que hay suficientes canciones para empezar una partida en modo "Todas"
             // (10 preguntas por jugador, por lo tanto, mínimo 10 canciones si hay 1 jugador)
             if (configuracionCanciones['Todas']['consolidated'].length < gameState.totalQuestionsPerPlayer) {
-                alert(`No hay suficientes canciones para jugar en la opción '${decadeNames['Todas']}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
+                showAppAlert(`No hay suficientes canciones para jugar en la opción '${getDecadeLabel('Todas')}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
                 showScreen('decade-selection-screen'); // Vuelve si no hay suficientes
                 return;
             }
             showScreen('player-selection-screen');
         } catch (error) {
-            alert('Error al cargar todas las canciones. Intenta de nuevo.');
+            showAppAlert('Error al cargar todas las canciones. Intenta de nuevo.');
             console.error(error);
             showScreen('decade-selection-screen'); // Volver a la selección de década
         }
@@ -527,15 +978,16 @@ function generateCategoryButtons() {
         return;
     }
 
-    const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-
-    categoryOrder.forEach(categoryId => {
+    CATEGORY_ORDER.forEach(categoryId => {
         const songsArray = currentDecadeSongs[categoryId]; // Asegurarse de obtener el array de canciones
         if (Array.isArray(songsArray) && songsArray.length >= 4) { // Validar que sea un array y tenga suficientes canciones
             const button = document.createElement('button');
             button.className = 'category-btn';
-            button.innerText = categoryNames[categoryId];
+            button.innerText = getCategoryLabel(categoryId);
             button.onclick = () => selectCategory(categoryId);
+            if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
+                button.classList.add('locked');
+            }
             container.appendChild(button);
         }
     });
@@ -551,8 +1003,12 @@ function generateCategoryButtons() {
  */
 async function selectCategory(category) {
     if (!currentUser || !currentUser.playerName) {
-        alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+        showAppAlert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
+        return;
+    }
+    if (isPremiumCategory(category) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
     gameState.category = category;
@@ -561,13 +1017,13 @@ async function selectCategory(category) {
         await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
         // Verificar si la categoría tiene suficientes canciones después de la carga
         if (configuracionCanciones[gameState.selectedDecade][gameState.category].length < 4) {
-            alert(`No hay suficientes canciones en la categoría '${categoryNames[category]}' para la década ${decadeNames[gameState.selectedDecade]}. Necesitas al menos 4 canciones.`);
+            showAppAlert(`No hay suficientes canciones en la categoría '${getCategoryLabel(category)}' para la década ${getDecadeLabel(gameState.selectedDecade)}. Necesitas al menos 4 canciones.`);
             showScreen('category-screen'); // Volver a la selección de categoría
             return;
         }
         showScreen('player-selection-screen');
     }  catch (error) {
-        alert(`No se pudieron cargar las canciones para la categoría ${categoryNames[category]} en la década ${decadeNames[gameState.selectedDecade]}. Intenta con otra.`);
+        showAppAlert(`No se pudieron cargar las canciones para la categoría ${getCategoryLabel(category)} en la década ${getDecadeLabel(gameState.selectedDecade)}. Intenta con otra.`);
         console.error(error);
         showScreen('category-screen');
     }
@@ -579,7 +1035,7 @@ async function selectCategory(category) {
  */
 function selectPlayers(numPlayers) {
     if (!currentUser || !currentUser.playerName) {
-        alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+        showAppAlert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
         return;
     }
@@ -597,6 +1053,11 @@ function selectPlayers(numPlayers) {
         input.placeholder = `Nombre del Jugador ${i + 1}`;
         input.id = `player-${i + 1}-name-input`;
         otherPlayerNamesInputsDiv.appendChild(input);
+    }
+
+    if (numPlayers === 1) {
+        startGame();
+        return;
     }
 
     showScreen('player-names-input-screen');
@@ -627,7 +1088,7 @@ function addElderlyPlayerInput(numPlayers) {
 async function startElderlyModeGame() {
     const player1Name = document.getElementById('elderly-player-1-name').value.trim();
     if (!player1Name) {
-        alert('Por favor, introduce al menos el nombre del Jugador 1.');
+        showAppAlert('Por favor, introduce al menos el nombre del Jugador 1.');
         return;
     }
     gameState.isOnline = false; // Este modo no es online
@@ -669,7 +1130,7 @@ async function startElderlyModeGame() {
         const allSongsToChooseFrom = configuracionCanciones[gameState.selectedDecade][gameState.category];
 
         if (!allSongsToChooseFrom || allSongsToChooseFrom.length < gameState.totalQuestionsPerPlayer * gameState.players.length) {
-            alert(`No hay suficientes canciones en el modo fácil para ${elderlyPlayerCount} jugador(es). Se necesitan ${gameState.totalQuestionsPerPlayer * gameState.players.length} y solo hay ${allSongsToChooseFrom ? allSongsToChooseFrom.length : 0}. Por favor, añade más canciones a la carpeta 'elderly/consolidated'.`); // Mensaje actualizado
+            showAppAlert(`No hay suficientes canciones en el modo fácil para ${elderlyPlayerCount} jugador(es). Se necesitan ${gameState.totalQuestionsPerPlayer * gameState.players.length} y solo hay ${allSongsToChooseFrom ? allSongsToChooseFrom.length : 0}. Por favor, añade más canciones a la carpeta 'elderly/consolidated'.`); // Mensaje actualizado
             showScreen('elderly-mode-intro-screen');
             return;
         }
@@ -687,7 +1148,7 @@ async function startElderlyModeGame() {
 
     } catch (error) {
         console.error('Error al iniciar el modo fácil:', error);
-        alert('Error al cargar las canciones para el modo fácil. Intenta de nuevo más tarde.');
+        showAppAlert('Error al cargar las canciones para el modo fácil. Intenta de nuevo más tarde.');
         showScreen('elderly-mode-intro-screen'); // Volver a la pantalla de inicio del modo fácil
     }
 }
@@ -695,8 +1156,12 @@ async function startElderlyModeGame() {
 // main.js - Nueva función para el modo "Canciones del Verano"
 // main.js - Función MODIFICADA para el modo "Canciones del Verano"
 async function startSummerSongsGame() {
+    if (!hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
+        return;
+    }
     if (!currentUser || !currentUser.playerName) {
-        alert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+        showAppAlert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
         return;
     }
@@ -723,7 +1188,7 @@ async function startSummerSongsGame() {
         const minimumSongsRequired = 10; // Mínimo de canciones para empezar una partida de 1 jugador
 
         if (!allSongsToChooseFrom || allSongsToChooseFrom.length < minimumSongsRequired) {
-            alert(`No hay suficientes canciones en el modo "Canciones del Verano". Necesitas al menos ${minimumSongsRequired} canciones para jugar.`);
+            showAppAlert(`No hay suficientes canciones en el modo "Canciones del Verano". Necesitas al menos ${minimumSongsRequired} canciones para jugar.`);
             showScreen('decade-selection-screen'); // Volver si no hay suficientes
             return;
         }
@@ -736,7 +1201,7 @@ async function startSummerSongsGame() {
 
     } catch (error) {
         console.error('Error al precargar canciones para el modo "Canciones del Verano":', error);
-        alert('Error al cargar las canciones para el modo "Canciones del Verano". Intenta de nuevo más tarde.');
+        showAppAlert('Error al cargar las canciones para el modo "Canciones del Verano". Intenta de nuevo más tarde.');
         showScreen('decade-selection-screen'); // Volver a la selección de década
     }
 }
@@ -745,12 +1210,12 @@ async function startSummerSongsGame() {
  */
 function startGame() {
     if (!currentUser || !currentUser.playerName) {
-        alert('Error: No se ha encontrado el nombre del jugador principal. Por favor, inicia sesión de nuevo.');
+        showAppAlert('Error: No se ha encontrado el nombre del jugador principal. Por favor, inicia sesión de nuevo.');
         logout();
         return;
     }
     if (!gameState.selectedDecade || !gameState.category) {
-        alert('Error: No se ha seleccionado una década o categoría. Vuelve a empezar.');
+        showAppAlert('Error: No se ha seleccionado una década o categoría. Vuelve a empezar.');
         showScreen('decade-selection-screen');
         return;
     }
@@ -784,7 +1249,7 @@ function startGame() {
         allSongsToChooseFrom = [...configuracionCanciones['Todas']['consolidated']];
     } else {
         if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
-            alert(`Error: No se encontraron canciones para la década ${decadeNames[gameState.selectedDecade]} y categoría ${categoryNames[gameState.category]}.`);
+            showAppAlert(`Error: No se encontraron canciones para la década ${getDecadeLabel(gameState.selectedDecade)} y categoría ${getCategoryLabel(gameState.category)}.`);
             showScreen('decade-selection-screen');
             return;
         }
@@ -794,10 +1259,10 @@ function startGame() {
     const requiredSongs = gameState.totalQuestionsPerPlayer * gameState.playerCount;
 
     if (allSongsToChooseFrom.length < requiredSongs) {
-        console.warn(`Advertencia: No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`);
+        console.warn(`Advertencia: No hay suficientes canciones en ${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`);
         gameState.totalQuestionsPerPlayer = Math.floor(allSongsToChooseFrom.length / gameState.playerCount);
         if (gameState.totalQuestionsPerPlayer < 1) { 
-             alert(`No hay suficientes canciones en ${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]} para que cada jugador tenga al menos una pregunta. Elige otra década o categoría.`);
+             showAppAlert(`No hay suficientes canciones en ${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)} para que cada jugador tenga al menos una pregunta. Elige otra década o categoría.`);
              showScreen('decade-selection-screen');
              return;
         }
@@ -875,7 +1340,7 @@ function setupQuestion() {
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
     
     document.getElementById("player-name-display").textContent = currentPlayer.name;
-    document.getElementById('category-display').innerText = `${decadeNames[gameState.selectedDecade]} - ${categoryNames[gameState.category]}`;
+    document.getElementById('category-display').innerText = `${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}`;
     document.getElementById('question-counter').innerText = `Pregunta ${currentPlayer.questionsAnswered + 1}/${gameState.totalQuestionsPerPlayer}`;
     document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
     document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
@@ -891,7 +1356,7 @@ function setupQuestion() {
     } else {
          if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
             console.error(`Error: Opciones de canciones no encontradas para ${gameState.selectedDecade} - ${gameState.category}.`);
-            alert('Error interno al cargar las opciones de respuesta. Intenta de nuevo.');
+            showAppAlert('Error interno al cargar las opciones de respuesta. Intenta de nuevo.');
             showScreen('decade-selection-screen'); 
             return;
         }
@@ -947,7 +1412,7 @@ function playAudioSnippet() {
     // USAMOS originalDecade y originalCategory para la ruta del audio
     if (!currentQuestion.originalDecade || !currentQuestion.originalCategory) {
         console.error("Error: Canción sin decade/category original para la reproducción:", currentQuestion);
-        alert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
+        showAppAlert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
         return; 
     }
     audioPlayer.src = `audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
@@ -972,7 +1437,7 @@ function playAudioSnippet() {
  */
 function checkAnswer(isCorrect, button) {
     if (!gameState.hasPlayed) {
-        alert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
+        showAppAlert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
         return;
     }
     clearTimeout(audioPlaybackTimeout);
@@ -1178,14 +1643,22 @@ function endGame() {
     // Esa función ya maneja la lógica de redirección y limpieza para online/normal.
     // El botón "Salir del Juego" llama a 'logout()'.
 
+    setOnlineMenuButtonVisibility(false);
     showScreen('end-game-screen');
+}
+
+function setOnlineMenuButtonVisibility(isVisible) {
+    const onlineMenuButton = document.getElementById('online-menu-btn');
+    if (!onlineMenuButton) return;
+    onlineMenuButton.style.display = isVisible ? 'inline-flex' : 'none';
 }
 
 /**
  * Permite al usuario salir del juego después de una confirmación.
  */
-function exitGame() {
-    const confirmed = confirm('¿Seguro que quieres salir del juego? Se cerrará la sesión actual.');
+async function exitGame() {
+    closeHamburgerMenu();
+    const confirmed = await showAppConfirm('¿Seguro que quieres salir del juego? Se cerrará la sesión actual.');
     if (confirmed) {
         logout();
     }
@@ -1196,8 +1669,9 @@ function exitGame() {
  */
 // main.js - confirmReturnToMenu
 // main.js - confirmReturnToMenu
-function confirmReturnToMenu() {
-    const confirmed = confirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
+async function confirmReturnToMenu() {
+    closeHamburgerMenu();
+    const confirmed = await showAppConfirm("¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.");
     if (confirmed) {
         if (isOnlineMode) {
             isOnlineMode = false;
@@ -1237,7 +1711,7 @@ function confirmReturnToMenu() {
  */
 function showStatisticsScreen() {
     if (!currentUser || !currentUser.email) {
-        alert("Debes iniciar sesión para ver tus estadísticas.");
+        showAppAlert("Debes iniciar sesión para ver tus estadísticas.");
         showScreen('login-screen');
         return;
     }
@@ -1245,6 +1719,43 @@ function showStatisticsScreen() {
     showScreen('statistics-screen');
     renderUserTotalScores();
     renderDuelHistory();
+}
+
+async function confirmResetStatistics() {
+    if (!currentUser || !currentUser.email) {
+        showAppAlert("Debes iniciar sesión para borrar tus estadísticas.");
+        showScreen('login-screen');
+        return;
+    }
+
+    const confirmed = await showAppConfirm(
+        '¿Seguro que quieres borrar tus estadísticas? Empezarán de cero desde este momento y no podrás recuperar las actuales.'
+    );
+    if (!confirmed) return;
+
+    await resetUserStatistics();
+}
+
+async function resetUserStatistics() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/scores/${currentUser.email}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            userAccumulatedScores[currentUser.email] = {};
+            renderUserTotalScores();
+            showAppAlert(result.message || 'Estadísticas borradas correctamente.');
+        } else {
+            showAppAlert(result.message || 'No se pudieron borrar las estadísticas.');
+        }
+    } catch (error) {
+        console.error('Error de red al borrar estadísticas:', error);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
 }
 
 /**
@@ -1261,7 +1772,7 @@ function renderUserTotalScores() {
         return;
     }
 
-    const decadesInOrder = ['80s', '90s', '00s', '10s', 'actual', 'Todas', 'verano'];
+    const decadesInOrder = DECADES_WITH_SPECIALS;
     let hasScoresToDisplay = false;
 
     decadesInOrder.forEach(decadeId => {
@@ -1272,13 +1783,13 @@ function renderUserTotalScores() {
             decadeHeader.style.color = 'var(--secondary-color)';
             decadeHeader.style.marginTop = '15px';
             decadeHeader.style.marginBottom = '10px';
-            decadeHeader.textContent = decadeNames[decadeId];
+            decadeHeader.textContent = getDecadeLabel(decadeId);
             categoryScoresList.appendChild(decadeHeader);
 
             const sortedCategoriesInDecade = Object.entries(categoriesInDecade).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
 
             sortedCategoriesInDecade.forEach(([categoryId, score]) => {
-                const categoryNameDisplay = categoryNames[categoryId] || categoryId;
+                const categoryNameDisplay = getCategoryLabel(categoryId);
                 const p = document.createElement('p');
                 p.className = 'score-item';
                 p.innerHTML = `• ${categoryNameDisplay}: <strong>${score} puntos</strong>`;
@@ -1358,7 +1869,7 @@ function renderDuelHistory() {
             listItem.style.fontSize = '0.85rem';
             listItem.style.marginBottom = '3px';
             listItem.style.color = 'var(--text-color)';
-            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Década: ${decadeNames[game.decade] || game.decade}, Categoría: ${categoryNames[game.category] || game.category}`;
+            listItem.textContent = `Fecha: ${game.date}, Ganador: ${game.winner}, Década: ${getDecadeLabel(game.decade)}, Categoría: ${getCategoryLabel(game.category)}`;
             detailsList.appendChild(listItem);
         });
 
@@ -1373,22 +1884,35 @@ function renderDuelHistory() {
 /**
  * Muestra la pantalla para seleccionar una categoría y década para ver el listado de canciones.
  */
-function showSongsListCategorySelection() {
+async function showSongsListCategorySelection() {
     showScreen('songs-list-category-screen');
     const container = document.getElementById('songs-list-category-buttons');
     container.innerHTML = '';
 
-    const decadesOrder = ['80s', '90s', '00s', '10s', 'Actual', 'Todas', 'verano'];// Solo las décadas que quieres mostrar aquí
+    const decadesToLoad = DECADES_WITH_SPECIALS.filter(decadeId => decadeId !== 'Todas' && decadeId !== 'verano');
+    const loadPromises = decadesToLoad.flatMap(decadeId => (
+        CATEGORY_ORDER.map(categoryId => (
+            loadSongsForDecadeAndCategory(decadeId, categoryId).catch(error => {
+                console.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
+                return null;
+            })
+        ))
+    ));
 
-    decadesOrder.forEach(decadeId => {
-         if (decadeId === 'Todas' || decadeId === 'verano') {
+    await Promise.allSettled(loadPromises);
+
+    DECADES_WITH_SPECIALS.forEach(decadeId => {
+        if (decadeId === 'Todas' || decadeId === 'verano') {
             const allButtonDiv = document.createElement('div');
             allButtonDiv.style.gridColumn = '1 / -1'; 
             allButtonDiv.style.marginTop = '20px';
             const allButton = document.createElement('button');
             allButton.className = 'category-btn tertiary';
-            allButton.innerText = decadeNames[decadeId];
+            allButton.innerText = getDecadeLabel(decadeId);
             allButton.onclick = () => displaySongsForCategory(decadeId, 'consolidated');
+            if (!hasPremiumAccess()) {
+                allButton.classList.add('locked');
+            }
             allButtonDiv.appendChild(allButton);
             container.appendChild(allButtonDiv);
             return; 
@@ -1397,7 +1921,7 @@ function showSongsListCategorySelection() {
         const decadeCategorySongs = configuracionCanciones[decadeId];
         if (decadeCategorySongs) {
             const decadeHeader = document.createElement('h3');
-            decadeHeader.textContent = decadeNames[decadeId];
+            decadeHeader.textContent = getDecadeLabel(decadeId);
             decadeHeader.style.color = 'var(--secondary-color)';
             decadeHeader.style.marginTop = '20px';
             decadeHeader.style.marginBottom = '10px';
@@ -1409,15 +1933,16 @@ function showSongsListCategorySelection() {
             categoryButtonsForDecadeDiv.style.gap = '10px';
             container.appendChild(categoryButtonsForDecadeDiv);
 
-            const categoryOrder = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-
-            categoryOrder.forEach(categoryId => {
+            CATEGORY_ORDER.forEach(categoryId => {
                 const songsArray = decadeCategorySongs[categoryId];
                 if (Array.isArray(songsArray) && songsArray.length > 0) { 
                     const button = document.createElement('button');
                     button.className = 'category-btn';
-                    button.innerText = categoryNames[categoryId];
+                    button.innerText = getCategoryLabel(categoryId);
                     button.onclick = () => displaySongsForCategory(decadeId, categoryId);
+                    if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
+                        button.classList.add('locked');
+                    }
                     categoryButtonsForDecadeDiv.appendChild(button);
                 }
             });
@@ -1434,6 +1959,10 @@ async function displaySongsForCategory(decadeId, categoryId) {
     let songsToDisplay;
 
     try {
+        if (isPremiumSelection(decadeId, categoryId) && !hasPremiumAccess()) {
+            showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
+            return;
+        }
         if (decadeId === 'Todas') {
             await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
             songsToDisplay = configuracionCanciones['Todas']['consolidated'];
@@ -1442,7 +1971,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
             songsToDisplay = configuracionCanciones[decadeId][categoryId];
         }
     } catch (error) {
-        alert(`No se pudo cargar la lista de canciones para ${decadeNames[decadeId]} - ${categoryNames[categoryId]}.`);
+        showAppAlert(`No se pudo cargar la lista de canciones para ${getDecadeLabel(decadeId)} - ${getCategoryLabel(categoryId)}.`);
         console.error(error);
         showScreen('songs-list-category-screen');
         return;
@@ -1452,7 +1981,7 @@ async function displaySongsForCategory(decadeId, categoryId) {
     const songsListCategoryTitle = document.getElementById('songs-list-category-title');
 
     songsListContainer.innerHTML = '';
-    songsListCategoryTitle.textContent = `Canciones de ${decadeNames[decadeId]} - ${categoryNames[categoryId]}`;
+    songsListCategoryTitle.textContent = `Canciones de ${getDecadeLabel(decadeId)} - ${getCategoryLabel(categoryId)}`;
 
     if (!songsToDisplay || songsToDisplay.length === 0) {
         songsListContainer.innerHTML = '<p>No hay canciones en esta categoría para la década seleccionada.</p>';
@@ -1552,6 +2081,8 @@ let currentOnlinePlayerName = null;
 let isOnlineMode = false;
 let isElderlyMode = false;
 let isSummerSongsMode = false;
+let onlineInvitePollInterval = null;
+let lastInviteCodes = new Set();
 
 // ========== CREAR PARTIDA ONLINE ==========
 async function createOnlineGame() {
@@ -1560,14 +2091,18 @@ async function createOnlineGame() {
 
     const playerData = getCurrentUserData(); // <-- OBTENER DATOS AQUÍ
     if (!playerData || !playerData.email || !playerData.playerName) {
-        alert("Debes iniciar sesión con tu nombre de jugador para crear partidas online.");
+        showAppAlert("Debes iniciar sesión con tu nombre de jugador para crear partidas online.");
         showScreen('login-screen'); // <-- Redirigir a login si no está logueado
+        return;
+    }
+    if (isPremiumSelection(decade, category) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
 
     const songsArray = await getSongsForOnlineMatch(decade, category);
     if (!songsArray || songsArray.length < 10) {
-        alert("No hay suficientes canciones en esta categoría para crear una partida (mínimo 10).");
+        showAppAlert("No hay suficientes canciones en esta categoría para crear una partida (mínimo 10).");
         return;
     }
 
@@ -1599,25 +2134,25 @@ async function createOnlineGame() {
                 category: category // <-- AÑADE ESTO
     }));
 
-            alert(`Partida creada con éxito. Comparte este código con tu amigo: ${currentOnlineGameCode}`);
-            startOnlineGame();
+            showAppAlert(`Partida creada con éxito. Comparte este código con tu amigo: ${currentOnlineGameCode}`);
+            await startOnlineGame();
         } else {
-            alert(result.message || 'Error al crear la partida.');
+            showAppAlert(result.message || 'Error al crear la partida.');
         }
     } catch (err) {
         console.error(err);
-        alert('Error al crear la partida online. Por favor, revisa tu conexión o intenta de nuevo.'); 
+        showAppAlert('Error al crear la partida online. Por favor, revisa tu conexión o intenta de nuevo.'); 
     }
 }
 
 // ========== UNIRSE A UNA PARTIDA ONLINE ==========
 async function joinOnlineGame() {
     const code = document.getElementById('join-code-input').value.trim().toUpperCase();
-    if (!code) return alert("Introduce un código válido.");
+    if (!code) return showAppAlert("Introduce un código válido.");
 
     const playerData = getCurrentUserData(); // <-- OBTENER DATOS AQUÍ
     if (!playerData || !playerData.email || !playerData.playerName) { // <<-- ¡CUIDADO! AQUÍ DICE 'player.playerName', debe ser playerData.playerName
-        alert("Debes iniciar sesión con tu nombre de jugador para jugar online.");
+        showAppAlert("Debes iniciar sesión con tu nombre de jugador para jugar online.");
         showScreen('login-screen'); // <-- Redirigir a login si no está logueado
         return;
     }
@@ -1646,19 +2181,18 @@ async function joinOnlineGame() {
                 decade: result.game.decade, // <-- AÑADE ESTO
                 category: result.game.category // <-- AÑADE ESTO
             }));
-            startOnlineGame();
+            await startOnlineGame();
         } else {
-            alert(result.message || 'Error al unirse a la partida.');
+            showAppAlert(result.message || 'Error al unirse a la partida.');
         }
     } catch (err) {
         console.error(err);
-        alert('Error al unirse a la partida.');
+        showAppAlert('Error al unirse a la partida.');
     }
 }
 
 // main.js - AÑADE ESTA NUEVA FUNCIÓN COMPLETA
 // Nueva función para unirse a una partida pendiente (reutiliza lógica de joinOnlineGame)
-// main.js - Función joinOnlineGameFromPending (VERIFICAR ESTA LÍNEA)
 async function joinOnlineGameFromPending(code, playerName, email) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/join`, {
@@ -1675,7 +2209,7 @@ async function joinOnlineGameFromPending(code, playerName, email) {
         if (response.ok) {
             // Si la unión es exitosa, establece las variables de juego online
             currentOnlineGameCode = code;
-            currentOnlineSongs = result.game.songsUsed; // <-- VERIFICA ESTA LÍNEA. Si el server devuelve { game: {...} }, entonces es result.game.songsUsed
+            currentOnlineSongs = result.game.songsUsed;
             currentOnlineEmail = email;
             currentOnlinePlayerName = playerName;
             isOnlineMode = true;
@@ -1683,19 +2217,19 @@ async function joinOnlineGameFromPending(code, playerName, email) {
             // Guardar info del juego online para usarla en startOnlineGame
             localStorage.setItem('currentOnlineGameData', JSON.stringify({
                 code: code,
-                songsUsed: result.game.songsUsed, // <-- VERIFICA ESTA LÍNEA
+                songsUsed: result.game.songsUsed,
                 decade: result.game.decade,
                 category: result.game.category
             }));
 
-            startOnlineGame(); // Inicia el juego
+            await startOnlineGame(); // Inicia el juego
         } else {
-            alert(result.message || 'Error al unirse a la partida pendiente.');
+            showAppAlert(result.message || 'Error al unirse a la partida pendiente.');
             loadPlayerOnlineGames(); // Recarga la lista por si el estado cambió
         }
     } catch (err) {
         console.error('Error de red al unirse a la partida pendiente:', err);
-        alert('Error de conexión. Intenta de nuevo más tarde.');
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
@@ -1709,7 +2243,7 @@ async function getSongsForOnlineMatch(decade, category) {
 
 // ========== EMPEZAR PARTIDA ONLINE ==========
 // main.js - startOnlineGame
-function startOnlineGame() {
+async function startOnlineGame() {
     // Reiniciar el gameState para una partida online
     gameState = {
         players: [],
@@ -1748,11 +2282,18 @@ function startOnlineGame() {
         gameState.category = gameData.category;
     } else {
         console.error("No se encontraron datos de la partida online en localStorage.");
-        alert("Error: No se pudo cargar la información de la década/categoría para la partida online.");
+        showAppAlert("Error: No se pudo cargar la información de la década/categoría para la partida online.");
         showScreen('online-mode-screen');
         return;
     }
-
+    try {
+        await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
+    } catch (error) {
+        console.error('Error al cargar las canciones para la partida online:', error);
+        showAppAlert('Error al cargar las canciones para la partida online. Intenta de nuevo más tarde.');
+        showScreen('online-mode-screen');
+        return;
+    }
 
     setupQuestion();
     showScreen('game-screen');
@@ -1764,7 +2305,7 @@ async function submitOnlineScore() {
     const localPlayer = gameState.players.find(p => p.email === currentOnlineEmail);
     if (!localPlayer) {
         console.error("Error: Jugador local no encontrado en gameState para submitOnlineScore.");
-        alert("Error interno al enviar la puntuación.");
+        showAppAlert("Error interno al enviar la puntuación.");
         return;
     }
 
@@ -1791,11 +2332,11 @@ async function submitOnlineScore() {
                 pollOnlineGameStatus();
             }
         } else {
-            alert(result.message || 'Error al enviar resultado.');
+            showAppAlert(result.message || 'Error al enviar resultado.');
         }
     } catch (err) {
         console.error(err);
-        alert('Error al guardar la puntuación online.');
+        showAppAlert('Error al guardar la puntuación online.');
     }
 }
 
@@ -1841,34 +2382,8 @@ function populateOnlineSelectors() {
     const decadeSelect = document.getElementById('online-decade-select');
     const categorySelect = document.getElementById('online-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
-    const categories = [
-        { value: 'espanol', text: 'Canciones en Español' },
-        { value: 'ingles', text: 'Canciones en Inglés' },
-        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
-        { value: 'series', text: 'Intros de Series' },
-        { value: 'infantiles', text: 'Series y Programas Infantiles' },
-        { value: 'anuncios', text: 'Anuncios de TV' },
-        { value: 'tv', text: 'Programas de Televisión' }
-    ];
-
-    // Limpiar y añadir décadas
-    decadeSelect.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = dec;
-        decadeSelect.appendChild(option);
-    });
-
-    // Limpiar y añadir categorías
-    categorySelect.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.value;
-        option.textContent = cat.text;
-        categorySelect.appendChild(option);
-    });
+    populateDecadeOptions(decadeSelect, getDecadesForSelect());
+    populateCategoryOptions(categorySelect, getCategoriesForSelect());
 }
 
 async function saveOnlineGameToHistory(gameData) {
@@ -1904,32 +2419,19 @@ function populateInviteSelectors() {
     const decadeSelect = document.getElementById('invite-decade-select');
     const categorySelect = document.getElementById('invite-category-select');
 
-    const decades = ['80s', '90s', '00s', '10s', 'Actual'];
-    const categories = [
-        { value: 'espanol', text: 'Canciones en Español' },
-        { value: 'ingles', text: 'Canciones en Inglés' },
-        { value: 'peliculas', text: 'Bandas Sonoras de Películas' },
-        { value: 'series', text: 'Intros de Series' },
-        { value: 'infantiles', text: 'Series y Programas Infantiles' },
-        { value: 'anuncios', text: 'Anuncios de TV' },
-        { value: 'tv', text: 'Programas de Televisión' }
-    ];
+    populateDecadeOptions(decadeSelect, getDecadesForSelect());
+    populateCategoryOptions(categorySelect, getCategoriesForSelect());
+}
 
-    decadeSelect.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = dec;
-        decadeSelect.appendChild(option);
-    });
+function formatOnlineGameDate(dateValue) {
+    if (!dateValue) return '';
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+}
 
-    categorySelect.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.value;
-        option.textContent = cat.text;
-        categorySelect.appendChild(option);
-    });
+function isOnlineGameFinished(game) {
+    return game.players.length === 2 && (game.finished || game.players.every(player => player.finished));
 }
 
 async function invitePlayerByName() {
@@ -1939,14 +2441,18 @@ async function invitePlayerByName() {
 
      const playerData = getCurrentUserData(); // <-- OBTENER DATOS AQUÍ
     if (!rivalName || !playerData || !playerData.email || !playerData.playerName) {
-        alert("Faltan datos o no estás logueado con un nombre de jugador.");
+        showAppAlert("Faltan datos o no estás logueado con un nombre de jugador.");
         showScreen('login-screen'); // <-- Redirigir a login si no está logueado
+        return;
+    }
+    if (isPremiumSelection(decade, category) && !hasPremiumAccess()) {
+        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
 
     const songsArray = await getSongsForOnlineMatch(decade, category);
     if (!songsArray || songsArray.length < 10) {
-        alert("No hay suficientes canciones.");
+        showAppAlert("No hay suficientes canciones.");
         return;
     }
 
@@ -1966,7 +2472,7 @@ async function invitePlayerByName() {
 
         const result = await response.json();
         if (response.ok) {
-            alert("Invitación enviada a " + rivalName);
+            showAppAlert("Invitación enviada a " + rivalName);
             currentOnlineGameCode = result.code; // El código debe ser devuelto por el servidor en by-username
             currentOnlineSongs = songsArray; // Las canciones ya las tenemos
             currentOnlineEmail = playerData.email;
@@ -1980,13 +2486,14 @@ async function invitePlayerByName() {
                 decade: decade,
                 category: category
             }));
+            await startOnlineGame();
 
         } else {
-            alert(result.message || "Error al invitar.");
+            showAppAlert(result.message || "Error al invitar.");
         }
     } catch (err) {
         console.error(err);
-        alert("Error al enviar la invitación.");
+        showAppAlert("Error al enviar la invitación.");
     }
 }
 
@@ -2016,8 +2523,18 @@ async function loadPlayerOnlineGames() {
             return;
         }
 
-        const activeGames = games.filter(game => !game.finished);
-        const finishedGames = games.filter(game => game.finished);
+        const activeGames = games.filter(game => !isOnlineGameFinished(game));
+        const finishedGames = games.filter(game => isOnlineGameFinished(game));
+        const pendingInvites = activeGames.filter(game =>
+            game.waitingFor === playerData.email &&
+            game.players.every(p => p.email !== playerData.email)
+        );
+
+        updateOnlineInviteBadge(pendingInvites.length);
+
+        if (!document.getElementById('pending-games-screen')?.classList.contains('active')) {
+            showInviteToast(pendingInvites, playerData.playerName);
+        }
 
         // Renderizar partidas activas
         if (activeGames.length > 0) {
@@ -2033,34 +2550,36 @@ async function loadPlayerOnlineGames() {
                 const otherPlayerFinished = otherPlayer?.finished;
 
                 let statusText = '';
-                let buttonHtml = '';
-                 const isWaitingForCurrentPlayer = game.waitingFor === playerData.email && game.players.every(p => p.email !== playerData.email);
+                const actionButtons = [];
+                const isWaitingForCurrentPlayer = game.waitingFor === playerData.email && game.players.every(p => p.email !== playerData.email);
 
                 if (isWaitingForCurrentPlayer) {
                     statusText = `¡Te han invitado a jugar contra ${invitingPlayerName}!`;
-                    buttonHtml = `<button class="btn" onclick="joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${playerData.email}')">Aceptar y Unirse</button>`;
+                    actionButtons.push(`<button class="btn" onclick="joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${playerData.email}')">Aceptar y Unirse</button>`);
+                    actionButtons.push(`<button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar invitación</button>`);
                 } else if (game.players.length === 1) { // Partida creada por el jugador actual, esperando rival
                     statusText = 'Esperando a que un rival se una...';
-                    buttonHtml = `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`;
+                    actionButtons.push(`<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>`);
+                    actionButtons.push(`<button class="btn tertiary" onclick="declineOnlineGame('${game.code}')">Declinar partida</button>`);
                 } else if (game.players.length === 2) { // Partida con dos jugadores
                     if (currentPlayerFinished && !otherPlayerFinished) {
                         statusText = `Esperando a que ${otherPlayerName} termine...`;
-                        buttonHtml = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
+                        actionButtons.push(`<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`);
                     } else if (!currentPlayerFinished && otherPlayerFinished) {
                         statusText = `¡Tu turno! ${otherPlayerName} ha terminado.`;
                         // Se necesitan los datos del jugador actual para continuar la partida
-                        buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                        actionButtons.push(`<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`);
                     } else if (!currentPlayerFinished && !otherPlayerFinished) {
                         statusText = `Partida en curso con ${otherPlayerName}.`;
-                        buttonHtml = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`;
+                        actionButtons.push(`<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${playerData.email}')">Continuar Partida</button>`);
                     }
                 }
 
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
-                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> ${statusText}</p>
-                    ${buttonHtml}
+                    ${actionButtons.length > 0 ? `<div class="online-game-actions">${actionButtons.join('')}</div>` : ''}
                 `;
                 activeGamesContainer.appendChild(gameDiv);
             });
@@ -2080,9 +2599,12 @@ async function loadPlayerOnlineGames() {
                 const isCreator = game.creatorEmail === playerData.email;
 
 
+                const finishedDateLabel = formatOnlineGameDate(game.finishedAt || game.createdAt);
+
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
-                    <p><strong>Categoría:</strong> ${decadeNames[game.decade]} - ${categoryNames[game.category]}</p>
+                    <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
+                    ${finishedDateLabel ? `<p><strong>Fecha:</strong> ${finishedDateLabel}</p>` : ''}
                     <p><strong>Estado:</strong> FINALIZADA</p>
                     <button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>
                 `;
@@ -2099,13 +2621,145 @@ async function loadPlayerOnlineGames() {
     }
 }
 
+function updateOnlineInviteBadge(count) {
+    const badge = document.getElementById('online-invite-count');
+    if (!badge) return;
+
+    if (count > 0) {
+        badge.textContent = count;
+        badge.hidden = false;
+    } else {
+        badge.hidden = true;
+    }
+}
+
+function showInviteToast(invites) {
+    if (!invites || invites.length === 0) return;
+
+    const newInvites = invites.filter(invite => !lastInviteCodes.has(invite.code));
+    if (newInvites.length === 0) return;
+
+    newInvites.forEach(invite => lastInviteCodes.add(invite.code));
+
+    const invite = newInvites[0];
+    const invitingPlayerName = invite.players[0] ? invite.players[0].name : 'Alguien';
+    addNotification(`Nueva invitación de ${invitingPlayerName}.`);
+    sendInviteNotification(invitingPlayerName);
+    const toast = document.createElement('div');
+    toast.className = 'invite-toast';
+    toast.innerHTML = `
+        <p>¡Nueva invitación de <strong>${invitingPlayerName}</strong>!</p>
+        <button class="btn" type="button">Ver partidas recibidas</button>
+    `;
+
+    const button = toast.querySelector('button');
+    button.addEventListener('click', () => {
+        toast.remove();
+        showScreen('pending-games-screen');
+    });
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 200);
+    }, 6000);
+}
+
+async function requestInviteNotificationPermission() {
+    if (!('Notification' in window)) return;
+
+    const dismissed = localStorage.getItem('inviteNotificationsDismissed');
+    const prompted = localStorage.getItem(NOTIFICATIONS_PROMPTED_KEY);
+    if (dismissed === 'true' || Notification.permission !== 'default' || prompted === 'true') {
+        return;
+    }
+
+    const allowed = await showAppConfirm('¿Quieres recibir notificaciones cuando tengas invitaciones online?');
+    localStorage.setItem(NOTIFICATIONS_PROMPTED_KEY, 'true');
+    if (!allowed) {
+        localStorage.setItem('inviteNotificationsDismissed', 'true');
+        return;
+    }
+
+    Notification.requestPermission().then(result => {
+        if (result !== 'granted') {
+            localStorage.setItem('inviteNotificationsDismissed', 'true');
+        }
+    }).catch(error => {
+        console.warn('No se pudo solicitar permiso de notificaciones:', error);
+    });
+}
+
+function sendInviteNotification(invitingPlayerName) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+
+    const notification = new Notification('Nueva invitación online', {
+        body: `Te ha invitado ${invitingPlayerName}.`,
+        icon: 'img/adivina.png'
+    });
+
+    notification.onclick = () => {
+        window.focus();
+        showScreen('pending-games-screen');
+        notification.close();
+    };
+}
+
+function startOnlineInvitePolling() {
+    if (onlineInvitePollInterval) return;
+    onlineInvitePollInterval = setInterval(() => {
+        if (currentUser && currentUser.email) {
+            loadPlayerOnlineGames();
+        }
+    }, 15000);
+}
+
+function stopOnlineInvitePolling() {
+    if (!onlineInvitePollInterval) return;
+    clearInterval(onlineInvitePollInterval);
+    onlineInvitePollInterval = null;
+}
+
+async function declineOnlineGame(code) {
+    const playerData = getCurrentUserData();
+    if (!playerData?.email) {
+        showAppAlert('Debes iniciar sesión para declinar una partida.');
+        showScreen('login-screen');
+        return;
+    }
+
+    const confirmed = await showAppConfirm('¿Quieres declinar esta partida online? Se eliminará la invitación pendiente.');
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/online-games/decline`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code, email: playerData?.email })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            await showAppAlert(result.message || 'Partida declinada.');
+            await loadPlayerOnlineGames();
+        } else {
+            showAppAlert(result.message || 'No se pudo declinar la partida.');
+        }
+    } catch (err) {
+        console.error('Error al declinar partida online:', err);
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+    }
+}
+
 // main.js - AÑADE ESTAS NUEVAS FUNCIONES
 function copyOnlineGameCode(code) {
     navigator.clipboard.writeText(code).then(() => {
-        alert(`Código de partida copiado: ${code}`);
+        showAppAlert(`Código de partida copiado: ${code}`);
     }).catch(err => {
         console.error('Error al copiar el código:', err);
-        alert(`No se pudo copiar el código. Por favor, cópialo manualmente: ${code}`);
+        showAppAlert(`No se pudo copiar el código. Por favor, cópialo manualmente: ${code}`);
     });
 }
 
@@ -2113,7 +2767,7 @@ async function viewOnlineGameResults(code) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/${code}`);
         const result = await response.json();
-        if (response.ok && result.finished) {
+        if (response.ok && result.finished && result.players?.length === 2) {
             // Limpiar el estado de la partida actual para evitar conflictos
             currentOnlineGameCode = null;
             currentOnlineSongs = [];
@@ -2122,13 +2776,13 @@ async function viewOnlineGameResults(code) {
 
             showOnlineResults(result); // Reutiliza la función existente para mostrar resultados
         } else {
-            alert(result.message || 'La partida aún no ha terminado o no se encontraron resultados.');
+            showAppAlert(result.message || 'La partida aún no ha terminado o no se encontraron resultados.');
             // Recargar la lista por si el estado cambió
             loadPlayerOnlineGames();
         }
     } catch (err) {
         console.error('Error al ver resultados de partida online:', err);
-        alert('Error de conexión al cargar los resultados.');
+        showAppAlert('Error de conexión al cargar los resultados.');
     }
 }
 
@@ -2210,14 +2864,14 @@ async function continueOnlineGame(code, playerName, email) {
                 });
             }
 
-            startOnlineGame(); // Inicia el juego con los datos cargados
+            await startOnlineGame(); // Inicia el juego con los datos cargados
         } else {
-            alert(result.message || 'Error al cargar la partida para continuar.');
+            showAppAlert(result.message || 'Error al cargar la partida para continuar.');
             loadPlayerOnlineGames(); // Recargar la lista por si el estado cambió
         }
     } catch (err) {
         console.error('Error de red al continuar partida online:', err);
-        alert('Error de conexión. Intenta de nuevo más tarde.');
+        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
     }
 }
 
@@ -2254,8 +2908,16 @@ function showOnlineResults(gameData) {
     winnerDisplay.style.fontSize = '2.5rem';
 
 
+    const topScore = sortedPlayers[0]?.score ?? null;
+    const hasTieForFirst = sortedPlayers.filter(player => player.score === topScore).length > 1;
+
     sortedPlayers.forEach((player, index) => {
-        const medal = ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '');
+        let medal = '';
+        if (hasTieForFirst && player.score === topScore) {
+            medal = '🥇';
+        } else {
+            medal = ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '');
+        }
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
 
@@ -2278,22 +2940,27 @@ function showOnlineResults(gameData) {
     // que a su vez te llevará a decade-selection-screen.
     // No necesitamos modificarlo aquí, solo asegurarnos de que la función existe y funciona.
 
+    setOnlineMenuButtonVisibility(true);
     showScreen('end-game-screen'); // Reutilizar la pantalla de fin de juego
 }
 
 function showStats() {
+  closeHamburgerMenu();
   showStatisticsScreen();
 }
 function showAllSongs() {
+  closeHamburgerMenu();
   showSongsListCategorySelection();
 }
 function showOnlineMenu() {
+  closeHamburgerMenu();
   showScreen("online-mode-screen");
 }
 
 window.showStats = showStats;
 window.showAllSongs = showAllSongs;
 window.showOnlineMenu = showOnlineMenu;
+window.confirmResetStatistics = confirmResetStatistics;
 
 // =====================================================================
 // INICIALIZACIÓN
@@ -2313,6 +2980,7 @@ window.onload = async () => {
         if (userDataString) {
             const storedUser = JSON.parse(userDataString);
             currentUser = storedUser;
+            getUserPermissions(currentUser.email);
 
             await loadUserScores(currentUser.email);
             await loadGameHistory(currentUser.email);
@@ -2320,6 +2988,7 @@ window.onload = async () => {
             if (currentUser.playerName) {
                 showScreen('decade-selection-screen');
                 generateDecadeButtons();
+                updatePremiumButtonsState();
             } else {
                 showScreen('set-player-name-screen');
             }
@@ -2330,4 +2999,5 @@ window.onload = async () => {
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
+    startOnlineInvitePolling();
 };
