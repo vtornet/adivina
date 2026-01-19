@@ -1644,6 +1644,7 @@ function endGame() {
     // El botón "Salir del Juego" llama a 'logout()'.
 
     setOnlineMenuButtonVisibility(false);
+    setEndGameNavigationButtons();
     showScreen('end-game-screen');
 }
 
@@ -1651,6 +1652,34 @@ function setOnlineMenuButtonVisibility(isVisible) {
     const onlineMenuButton = document.getElementById('online-menu-btn');
     if (!onlineMenuButton) return;
     onlineMenuButton.style.display = isVisible ? 'inline-flex' : 'none';
+}
+
+function setEndGameNavigationButtons() {
+    const backToCategories = document.getElementById('back-to-categories-btn');
+    const backToDecades = document.getElementById('back-to-decades-btn');
+    if (!backToCategories || !backToDecades) return;
+
+    if (isOnlineMode) {
+        backToCategories.style.display = 'none';
+        backToDecades.style.display = 'none';
+        return;
+    }
+
+    const selectedDecade = gameState?.selectedDecade;
+    const showCategories = selectedDecade && selectedDecade !== 'Todas';
+    backToCategories.style.display = showCategories ? 'inline-flex' : 'none';
+    backToDecades.style.display = 'inline-flex';
+
+    backToCategories.onclick = () => {
+        closeHamburgerMenu();
+        showScreen('category-screen');
+    };
+
+    backToDecades.onclick = () => {
+        closeHamburgerMenu();
+        showScreen('decade-selection-screen');
+        generateDecadeButtons();
+    };
 }
 
 /**
@@ -2941,6 +2970,7 @@ function showOnlineResults(gameData) {
     // No necesitamos modificarlo aquí, solo asegurarnos de que la función existe y funciona.
 
     setOnlineMenuButtonVisibility(true);
+    setEndGameNavigationButtons();
     showScreen('end-game-screen'); // Reutilizar la pantalla de fin de juego
 }
 
