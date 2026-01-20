@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 // Servir frontend
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/data", express.static(path.join(__dirname, "data")));
 
 // API (solo endpoints específicos)
 app.get("/api/health", (req, res) => {
@@ -24,5 +25,4 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
-
 
