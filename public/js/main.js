@@ -685,6 +685,9 @@ async function loginUser() {
     }
 }
 
+window.loginUser = loginUser;
+
+
 function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
@@ -3265,4 +3268,4 @@ window.onload = async () => {
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
-};
+}};
