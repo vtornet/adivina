@@ -59,7 +59,7 @@ const audioPlayer = document.getElementById('audio-player');
 const sfxAcierto = document.getElementById('sfx-acierto');
 const sfxError = document.getElementById('sfx-error');
 
-const API_BASE_URL = 'https://accomplished-balance-production.up.railway.app';
+const API_BASE_URL = '';
 
 let currentUser = null;
 let userAccumulatedScores = {}; 
@@ -3930,4 +3930,4 @@ window.onload = async () => {
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
-};
+}};
