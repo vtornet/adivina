@@ -1430,6 +1430,9 @@ async function loginUser() {
     }
 }
 
+window.loginUser = loginUser;
+
+
 function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
