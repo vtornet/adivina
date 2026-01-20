@@ -1,4 +1,3 @@
-throw new Error("🚨 SERVER.JS NUEVO NO ESTÁ SIENDO USADO");
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
