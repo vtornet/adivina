@@ -1,15 +1,14 @@
-import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+require("dotenv").config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require("express");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Servir frontend
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/data", express.static(path.join(__dirname, "data")));
 
 // API (solo endpoints específicos)
 app.get("/api/health", (req, res) => {
@@ -24,5 +23,3 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
-
-

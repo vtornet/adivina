@@ -46,11 +46,15 @@ async function loadSongsForDecadeAndCategory(decade, category) {
     // Construye la ruta al archivo JavaScript de canciones.
     // Para 'verano' y 'consolidated' será: data/songs/verano/consolidated.js
     // Para '80s' y 'espanol' será: data/songs/80s/espanol.js
-    const scriptPath = `data/songs/${decade}/${category}.js`;
+    const scriptPaths = [
+        `data/songs/${decade}/${category}.js`,
+        `../data/songs/${decade}/${category}.js`
+    ];
 
-    return new Promise((resolve, reject) => {
+    const loadScript = (paths, resolve, reject) => {
+        const [currentPath, ...restPaths] = paths;
         const script = document.createElement('script');
-        script.src = scriptPath;
+        script.src = currentPath;
         script.onload = () => {
             // Cuando el script se carga con éxito, se asume que ha populado
             // window.allSongsByDecadeAndCategory[decade][category].
@@ -58,14 +62,23 @@ async function loadSongsForDecadeAndCategory(decade, category) {
             resolve(); // Resuelve la promesa indicando éxito
         };
         script.onerror = (e) => {
+            script.remove();
+            if (restPaths.length > 0) {
+                loadScript(restPaths, resolve, reject);
+                return;
+            }
             // Si hay un error al cargar el script (ej. archivo no encontrado, error de sintaxis),
             // registramos el error y rechazamos la promesa.
             // El array para esta categoría ya está inicializado como vacío arriba, lo cual es seguro.
-            console.error(`Error al cargar las canciones de ${decade}/${category} desde ${scriptPath}:`, e);
+            console.error(`Error al cargar las canciones de ${decade}/${category} desde ${currentPath}:`, e);
             reject(new Error(`No se pudo cargar el archivo de canciones para ${decade}/${category}.`));
         };
         // Añade el script al <head> del documento para que se cargue y ejecute.
         document.head.appendChild(script);
+    };
+
+    return new Promise((resolve, reject) => {
+        loadScript(scriptPaths, resolve, reject);
     });
 }
 
