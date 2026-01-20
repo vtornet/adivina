@@ -59,7 +59,11 @@ const audioPlayer = document.getElementById('audio-player');
 const sfxAcierto = document.getElementById('sfx-acierto');
 const sfxError = document.getElementById('sfx-error');
 
-const API_BASE_URL = 'https://accomplished-balance-production.up.railway.app';
+const API_BASE_URL = window.location.origin;
+const LOCAL_USERS_KEY = 'localUsers';
+const LOCAL_SCORES_KEY = 'localScores';
+const LOCAL_GAME_HISTORY_KEY = 'localGameHistory';
+let useLocalApiFallback = false;
 
 let currentUser = null;
 let userAccumulatedScores = {}; 
@@ -101,6 +105,38 @@ function getUserPermissions(email) {
 
     localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(storedPermissions));
     return storedPermissions[email];
+}
+
+function getLocalUsers() {
+    return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || '{}');
+}
+
+function saveLocalUsers(users) {
+    localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+}
+
+function getLocalScores() {
+    return JSON.parse(localStorage.getItem(LOCAL_SCORES_KEY) || '{}');
+}
+
+function saveLocalScores(scores) {
+    localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(scores));
+}
+
+function getLocalGameHistory() {
+    return JSON.parse(localStorage.getItem(LOCAL_GAME_HISTORY_KEY) || '{}');
+}
+
+function saveLocalGameHistory(history) {
+    localStorage.setItem(LOCAL_GAME_HISTORY_KEY, JSON.stringify(history));
+}
+
+async function parseJsonResponse(response) {
+    try {
+        return await response.json();
+    } catch (error) {
+        return null;
+    }
 }
 
 function hasPremiumAccess() {
@@ -508,7 +544,7 @@ async function changePassword() {
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(error => {
+        navigator.serviceWorker.register('sw.js').catch(error => {
             console.warn('No se pudo registrar el Service Worker:', error);
         });
     });
@@ -545,19 +581,41 @@ async function registerUser() {
             body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
-            showAppAlert(data.message);
+            showAppAlert(data?.message || 'Usuario registrado correctamente.');
             emailInput.value = '';
             passwordInput.value = '';
             showScreen('login-screen');
-        } else {
-            showAppAlert(`Error al registrar: ${data.message}`);
+            return;
+        }
+
+        if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+        }
+
+        if (!useLocalApiFallback) {
+            showAppAlert(`Error al registrar: ${data?.message || 'No se pudo completar el registro.'}`);
+            return;
         }
     } catch (error) {
-        console.error('Error de red durante el registro:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+        console.warn('API no disponible, usando registro local:', error);
+        useLocalApiFallback = true;
+    }
+
+    if (useLocalApiFallback) {
+        const users = getLocalUsers();
+        if (users[email]) {
+            showAppAlert('Ese correo ya está registrado.');
+            return;
+        }
+        users[email] = { email, password, playerName: null };
+        saveLocalUsers(users);
+        showAppAlert('Usuario registrado correctamente.');
+        emailInput.value = '';
+        passwordInput.value = '';
+        showScreen('login-screen');
     }
 }
 
@@ -579,35 +637,51 @@ async function loginUser() {
             body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             currentUser = { email: data.user.email, playerName: data.user.playerName };
-            getUserPermissions(currentUser.email);
-            localStorage.setItem('loggedInUserEmail', data.user.email);
-            localStorage.setItem('userData', JSON.stringify(currentUser));
-
-            showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
-            emailInput.value = '';
-            passwordInput.value = '';
-
-            await loadUserScores(currentUser.email);
-            await loadGameHistory(currentUser.email);
-
-            if (currentUser.playerName) {
-                showScreen('decade-selection-screen'); 
-                // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
-                generateDecadeButtons(); 
-                updatePremiumButtonsState();
-            } else {
-                showScreen('set-player-name-screen');
-            }
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
         } else {
-            showAppAlert(`Error al iniciar sesión: ${data.message}`);
+            showAppAlert(`Error al iniciar sesión: ${data?.message || 'No se pudo iniciar sesión.'}`);
+            return;
         }
     } catch (error) {
-        console.error('Error de red durante el login:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+        console.warn('API no disponible, usando login local:', error);
+        useLocalApiFallback = true;
+    }
+
+    if (useLocalApiFallback) {
+        const users = getLocalUsers();
+        const user = users[email];
+        if (!user || user.password !== password) {
+            showAppAlert('Email o contraseña incorrectos.');
+            return;
+        }
+        currentUser = { email: user.email, playerName: user.playerName };
+    }
+
+    if (currentUser) {
+        getUserPermissions(currentUser.email);
+        localStorage.setItem('loggedInUserEmail', currentUser.email);
+        localStorage.setItem('userData', JSON.stringify(currentUser));
+
+        showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
+        emailInput.value = '';
+        passwordInput.value = '';
+
+        await loadUserScores(currentUser.email);
+        await loadGameHistory(currentUser.email);
+
+        if (currentUser.playerName) {
+            showScreen('decade-selection-screen'); 
+            // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
+            generateDecadeButtons(); 
+            updatePremiumButtonsState();
+        } else {
+            showScreen('set-player-name-screen');
+        }
     }
 }
 
@@ -745,21 +819,41 @@ async function setPlayerName() {
                 body: JSON.stringify({ playerName: newPlayerName })
             });
 
-            const data = await response.json();
+            const data = await parseJsonResponse(response);
 
             if (response.ok) {
                 currentUser.playerName = newPlayerName;
                 localStorage.setItem("userData", JSON.stringify(currentUser));
-                showAppAlert(data.message);
+                showAppAlert(data?.message || 'Nombre de jugador actualizado.');
                 playerNameInput.value = '';
                 showScreen('decade-selection-screen');
                 generateDecadeButtons();
+                return;
+            }
+
+            if (response.status === 404 || response.status >= 500) {
+                useLocalApiFallback = true;
             } else {
-                showAppAlert(`Error al actualizar nombre: ${data.message}`);
+                showAppAlert(`Error al actualizar nombre: ${data?.message || 'No se pudo actualizar el nombre.'}`);
+                return;
             }
         } catch (error) {
-            console.error('Error de red al establecer nombre de jugador:', error);
-            showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+            console.warn('API no disponible, usando actualización local:', error);
+            useLocalApiFallback = true;
+        }
+
+        if (useLocalApiFallback) {
+            const users = getLocalUsers();
+            if (users[currentUser.email]) {
+                users[currentUser.email].playerName = newPlayerName;
+                saveLocalUsers(users);
+            }
+            currentUser.playerName = newPlayerName;
+            localStorage.setItem("userData", JSON.stringify(currentUser));
+            showAppAlert('Nombre de jugador actualizado.');
+            playerNameInput.value = '';
+            showScreen('decade-selection-screen');
+            generateDecadeButtons();
         }
     } else {
         showAppAlert('No hay un usuario logueado. Por favor, inicia sesión primero.');
@@ -773,9 +867,16 @@ async function setPlayerName() {
 // =====================================================================
 
 async function loadUserScores(userEmail) {
+    if (useLocalApiFallback) {
+        const localScores = getLocalScores();
+        userAccumulatedScores[userEmail] = localScores[userEmail] || {};
+        console.log(`Puntuaciones locales de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             const scoresByDecade = {};
@@ -787,19 +888,35 @@ async function loadUserScores(userEmail) {
             });
             userAccumulatedScores[userEmail] = scoresByDecade;
             console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            const localScores = getLocalScores();
+            userAccumulatedScores[userEmail] = localScores[userEmail] || {};
         } else {
-            console.error('Error al cargar puntuaciones:', data.message);
+            console.error('Error al cargar puntuaciones:', data?.message);
             userAccumulatedScores[userEmail] = {};
         }
     } catch (error) {
-        console.error('Error de red al cargar puntuaciones:', error);
-        userAccumulatedScores[userEmail] = {};
+        console.warn('API no disponible, usando puntuaciones locales:', error);
+        useLocalApiFallback = true;
+        const localScores = getLocalScores();
+        userAccumulatedScores[userEmail] = localScores[userEmail] || {};
     }
 }
 
 async function saveUserScores(userEmail, decade, category, score) {
     if (!userEmail || !decade || !category || typeof score === 'undefined') {
         console.error("Error: Datos incompletos para guardar puntuación acumulada (email, decade, category, score).");
+        return;
+    }
+
+    if (useLocalApiFallback) {
+        const localScores = getLocalScores();
+        localScores[userEmail] = localScores[userEmail] || {};
+        localScores[userEmail][decade] = localScores[userEmail][decade] || {};
+        localScores[userEmail][decade][category] = score;
+        saveLocalScores(localScores);
+        await loadUserScores(userEmail);
         return;
     }
 
@@ -810,34 +927,52 @@ async function saveUserScores(userEmail, decade, category, score) {
             body: JSON.stringify({ email: userEmail, decade, category, score })
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             console.log(data.message);
             await loadUserScores(userEmail); 
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            await saveUserScores(userEmail, decade, category, score);
         } else {
-            console.error('Error al guardar puntuación:', data.message);
+            console.error('Error al guardar puntuación:', data?.message);
         }
     } catch (error) {
-        console.error('Error de red al guardar puntuación:', error);
+        console.warn('API no disponible, usando puntuaciones locales:', error);
+        useLocalApiFallback = true;
+        await saveUserScores(userEmail, decade, category, score);
     }
 }
 
 async function loadGameHistory(userEmail) {
+    if (useLocalApiFallback) {
+        const localHistory = getLocalGameHistory();
+        gameHistory = localHistory[userEmail] || [];
+        console.log("Historial local cargado:", gameHistory);
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             gameHistory = data;
             console.log("Historial de partidas cargado:", gameHistory);
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            const localHistory = getLocalGameHistory();
+            gameHistory = localHistory[userEmail] || [];
         } else {
-            console.error('Error al cargar historial:', data.message);
+            console.error('Error al cargar historial:', data?.message);
             gameHistory = [];
         }
     } catch (error) {
-        console.error('Error de red al cargar historial:', error);
-        gameHistory = [];
+        console.warn('API no disponible, usando historial local:', error);
+        useLocalApiFallback = true;
+        const localHistory = getLocalGameHistory();
+        gameHistory = localHistory[userEmail] || [];
     }
 }
 
@@ -856,6 +991,20 @@ async function saveGameResult(players, winnerName, decade, category) {
         category: category
     };
 
+    if (useLocalApiFallback) {
+        const localHistory = getLocalGameHistory();
+        players.forEach(player => {
+            if (!player.email) return;
+            localHistory[player.email] = localHistory[player.email] || [];
+            localHistory[player.email].push(gameResult);
+        });
+        saveLocalGameHistory(localHistory);
+        if (currentUser && currentUser.email) {
+            await loadGameHistory(currentUser.email);
+        }
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/gamehistory`, {
             method: 'POST',
@@ -863,18 +1012,23 @@ async function saveGameResult(players, winnerName, decade, category) {
             body: JSON.stringify(gameResult)
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             console.log(data.message);
             if (currentUser && currentUser.email) {
                 await loadGameHistory(currentUser.email);
             }
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            await saveGameResult(players, winnerName, decade, category);
         } else {
-            console.error('Error al guardar historial de partida:', data.message);
+            console.error('Error al guardar historial de partida:', data?.message);
         }
     } catch (error) {
-        console.error('Error de red al guardar historial de partida:', error);
+        console.warn('API no disponible, usando historial local:', error);
+        useLocalApiFallback = true;
+        await saveGameResult(players, winnerName, decade, category);
     }
 }
 
