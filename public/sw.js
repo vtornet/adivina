@@ -1,12 +1,12 @@
-const CACHE_NAME = 'adivina-cancion-v2';
+const CACHE_NAME = 'adivina-cancion-v3';
 const PRECACHE_URLS = [
   './',
-  './index.html',
-  './manifest.json',
-  './css/style.css',
-  './js/main.js',
-  './js/songs-loader.js',
-  './img/adivina.png'
+  'index.html',
+  'manifest.json',
+  'css/style.css',
+  'js/main.js',
+  'js/songs-loader.js',
+  'img/adivina.png'
 ];
 
 self.addEventListener('install', event => {

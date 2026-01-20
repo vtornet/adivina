@@ -59,7 +59,11 @@ const audioPlayer = document.getElementById('audio-player');
 const sfxAcierto = document.getElementById('sfx-acierto');
 const sfxError = document.getElementById('sfx-error');
 
-const API_BASE_URL = '';
+const API_BASE_URL = window.location.origin;
+const LOCAL_USERS_KEY = 'localUsers';
+const LOCAL_SCORES_KEY = 'localScores';
+const LOCAL_GAME_HISTORY_KEY = 'localGameHistory';
+let useLocalApiFallback = false;
 
 let currentUser = null;
 let userAccumulatedScores = {}; 
@@ -101,6 +105,38 @@ function getUserPermissions(email) {
 
     localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(storedPermissions));
     return storedPermissions[email];
+}
+
+function getLocalUsers() {
+    return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || '{}');
+}
+
+function saveLocalUsers(users) {
+    localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+}
+
+function getLocalScores() {
+    return JSON.parse(localStorage.getItem(LOCAL_SCORES_KEY) || '{}');
+}
+
+function saveLocalScores(scores) {
+    localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(scores));
+}
+
+function getLocalGameHistory() {
+    return JSON.parse(localStorage.getItem(LOCAL_GAME_HISTORY_KEY) || '{}');
+}
+
+function saveLocalGameHistory(history) {
+    localStorage.setItem(LOCAL_GAME_HISTORY_KEY, JSON.stringify(history));
+}
+
+async function parseJsonResponse(response) {
+    try {
+        return await response.json();
+    } catch (error) {
+        return null;
+    }
 }
 
 function hasPremiumAccess() {
@@ -318,14 +354,6 @@ function showScreen(screenId) {
 
 window.showScreen = showScreen;
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(error => {
-            console.warn('No se pudo registrar el Service Worker:', error);
-        });
-    });
-}
-
 function populateDecadeOptions(selectElement, decades) {
     selectElement.innerHTML = '';
     decades.forEach(dec => {
@@ -520,817 +548,6 @@ if ('serviceWorker' in navigator) {
             console.warn('No se pudo registrar el Service Worker:', error);
         });
     });
-}
-
-function populateDecadeOptions(selectElement, decades) {
-    selectElement.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = getDecadeLabel(dec);
-        selectElement.appendChild(option);
-    });
-}
-
-function populateCategoryOptions(selectElement, categories) {
-    selectElement.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = getCategoryLabel(cat);
-        selectElement.appendChild(option);
-    });
-}
-
-function togglePasswordVisibility(inputId, button) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    const isPassword = input.type === 'password';
-    input.type = isPassword ? 'text' : 'password';
-    button.textContent = isPassword ? '🙈' : '👁️';
-    button.setAttribute('aria-pressed', String(isPassword));
-}
-
-function showPasswordRecoveryInfo() {
-    openPasswordResetModal();
-}
-
-function toggleHamburgerMenu() {
-    const menu = document.getElementById('hamburger-menu');
-    if (!menu) return;
-    menu.classList.toggle('hidden');
-}
-
-function closeHamburgerMenu() {
-    const menu = document.getElementById('hamburger-menu');
-    if (menu) menu.classList.add('hidden');
-}
-
-function openPasswordResetModal() {
-    closeHamburgerMenu();
-    const modal = document.getElementById('password-reset-modal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closePasswordResetModal() {
-    const modal = document.getElementById('password-reset-modal');
-    if (modal) modal.classList.add('hidden');
-    const tokenInfo = document.getElementById('password-reset-token-info');
-    if (tokenInfo) tokenInfo.textContent = '';
-    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
-        .forEach(id => {
-            const input = document.getElementById(id);
-            if (input) input.value = '';
-        });
-}
-
-function showChangePasswordModal() {
-    closeHamburgerMenu();
-    const modal = document.getElementById('password-change-modal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closeChangePasswordModal() {
-    const modal = document.getElementById('password-change-modal');
-    if (modal) modal.classList.add('hidden');
-    ['password-change-current', 'password-change-new', 'password-change-confirm']
-        .forEach(id => {
-            const input = document.getElementById(id);
-            if (input) input.value = '';
-        });
-}
-
-async function requestPasswordReset() {
-    const emailInput = document.getElementById('password-reset-email');
-    const email = emailInput?.value.trim();
-    const tokenInfo = document.getElementById('password-reset-token-info');
-
-    if (!email) {
-        showAppAlert('Introduce tu correo electrónico para recibir el token.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        const result = await response.json();
-
-        if (response.ok) {
-            if (tokenInfo) {
-                tokenInfo.textContent = result.token
-                    ? `Token generado: ${result.token}`
-                    : (result.message || 'Si el email existe, te enviaremos un token.');
-            }
-            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
-        } else {
-            showAppAlert(result.message || 'No se pudo solicitar el token.');
-        }
-    } catch (error) {
-        console.error('Error al solicitar token:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
-    }
-}
-
-async function confirmPasswordReset() {
-    const email = document.getElementById('password-reset-email')?.value.trim();
-    const token = document.getElementById('password-reset-token')?.value.trim();
-    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
-    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
-
-    if (!email || !token || !newPassword) {
-        showAppAlert('Completa el email, el token y la nueva contraseña.');
-        return;
-    }
-    if (newPassword !== confirmPassword) {
-        showAppAlert('Las contraseñas no coinciden.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/password-reset/confirm`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, token, newPassword })
-        });
-        const result = await response.json();
-
-        if (response.ok) {
-            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
-            closePasswordResetModal();
-        } else {
-            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
-        }
-    } catch (error) {
-        console.error('Error al confirmar reset:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
-    }
-}
-
-async function changePassword() {
-    if (!currentUser || !currentUser.email) {
-        showAppAlert('Debes iniciar sesión para cambiar la contraseña.');
-        showScreen('login-screen');
-        return;
-    }
-
-    const currentPassword = document.getElementById('password-change-current')?.value.trim();
-    const newPassword = document.getElementById('password-change-new')?.value.trim();
-    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
-
-    if (!currentPassword || !newPassword) {
-        showAppAlert('Completa todos los campos para cambiar la contraseña.');
-        return;
-    }
-    if (newPassword !== confirmPassword) {
-        showAppAlert('Las contraseñas no coinciden.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/password-change`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: currentUser.email, currentPassword, newPassword })
-        });
-        const result = await response.json();
-
-        if (response.ok) {
-            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
-            closeChangePasswordModal();
-        } else {
-            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
-        }
-    } catch (error) {
-        console.error('Error al cambiar contraseña:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
-    }
-}
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(error => {
-            console.warn('No se pudo registrar el Service Worker:', error);
-        });
-    });
-}
-
-function populateDecadeOptions(selectElement, decades) {
-    selectElement.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = getDecadeLabel(dec);
-        selectElement.appendChild(option);
-    });
-}
-
-function populateCategoryOptions(selectElement, categories) {
-    selectElement.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = getCategoryLabel(cat);
-        selectElement.appendChild(option);
-    });
-}
-
-function togglePasswordVisibility(inputId, button) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    const isPassword = input.type === 'password';
-    input.type = isPassword ? 'text' : 'password';
-    button.textContent = isPassword ? '🙈' : '👁️';
-    button.setAttribute('aria-pressed', String(isPassword));
-}
-
-function showPasswordRecoveryInfo() {
-    openPasswordResetModal();
-}
-
-function toggleHamburgerMenu() {
-    const menu = document.getElementById('hamburger-menu');
-    if (!menu) return;
-    menu.classList.toggle('hidden');
-}
-
-function closeHamburgerMenu() {
-    const menu = document.getElementById('hamburger-menu');
-    if (menu) menu.classList.add('hidden');
-}
-
-function openPasswordResetModal() {
-    closeHamburgerMenu();
-    const modal = document.getElementById('password-reset-modal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closePasswordResetModal() {
-    const modal = document.getElementById('password-reset-modal');
-    if (modal) modal.classList.add('hidden');
-    const tokenInfo = document.getElementById('password-reset-token-info');
-    if (tokenInfo) tokenInfo.textContent = '';
-    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
-        .forEach(id => {
-            const input = document.getElementById(id);
-            if (input) input.value = '';
-        });
-}
-
-function showChangePasswordModal() {
-    closeHamburgerMenu();
-    const modal = document.getElementById('password-change-modal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closeChangePasswordModal() {
-    const modal = document.getElementById('password-change-modal');
-    if (modal) modal.classList.add('hidden');
-    ['password-change-current', 'password-change-new', 'password-change-confirm']
-        .forEach(id => {
-            const input = document.getElementById(id);
-            if (input) input.value = '';
-        });
-}
-
-async function requestPasswordReset() {
-    const emailInput = document.getElementById('password-reset-email');
-    const email = emailInput?.value.trim();
-    const tokenInfo = document.getElementById('password-reset-token-info');
-
-    if (!email) {
-        showAppAlert('Introduce tu correo electrónico para recibir el token.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        const result = await response.json();
-
-        if (response.ok) {
-            if (tokenInfo) {
-                tokenInfo.textContent = result.token
-                    ? `Token generado: ${result.token}`
-                    : (result.message || 'Si el email existe, te enviaremos un token.');
-            }
-            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
-        } else {
-            showAppAlert(result.message || 'No se pudo solicitar el token.');
-        }
-    } catch (error) {
-        console.error('Error al solicitar token:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
-    }
-}
-
-async function confirmPasswordReset() {
-    const email = document.getElementById('password-reset-email')?.value.trim();
-    const token = document.getElementById('password-reset-token')?.value.trim();
-    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
-    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
-
-const PREMIUM_CATEGORIES = new Set(['peliculas', 'series', 'tv', 'infantiles', 'anuncios']);
-const PREMIUM_DECADES = new Set(['Todas', 'verano']);
-const ADMIN_EMAIL = 'vtornet@gmail.com';
-const NOTIFICATIONS_STORAGE_KEY = 'localNotifications';
-const NOTIFICATIONS_PROMPTED_KEY = 'inviteNotificationsPrompted';
-const PERMISSIONS_STORAGE_KEY = 'userPermissions';
-const FINISHED_NOTIFICATIONS_KEY = 'finishedOnlineNotifications';
-
-function getCurrentUserData() {
-    const userDataString = localStorage.getItem("userData");
-    if (!userDataString) return null;
-    return JSON.parse(userDataString);
-}
-
-function getUserPermissions(email) {
-    const storedPermissions = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
-    if (!storedPermissions[email]) {
-        storedPermissions[email] = {
-            email,
-            unlocked_sections: [],
-            no_ads: false,
-            is_admin: false
-        };
-    }
-
-    if (email === ADMIN_EMAIL) {
-        storedPermissions[email] = {
-            email,
-            unlocked_sections: ['premium_all'],
-            no_ads: true,
-            is_admin: true
-        };
-    }
-
-    localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(storedPermissions));
-    return storedPermissions[email];
-}
-
-function hasPremiumAccess() {
-    if (!currentUser || !currentUser.email) return false;
-    const permissions = getUserPermissions(currentUser.email);
-    return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
-}
-
-function isPremiumCategory(categoryId) {
-    return PREMIUM_CATEGORIES.has(categoryId);
-}
-
-function isPremiumDecade(decadeId) {
-    return PREMIUM_DECADES.has(decadeId);
-}
-
-function isPremiumSelection(decadeId, categoryId) {
-    if (isPremiumDecade(decadeId)) return true;
-    if (isPremiumCategory(categoryId)) return true;
-    return false;
-}
-
-function showPremiumModal(message) {
-    const modal = document.getElementById('premium-modal');
-    const text = document.getElementById('premium-modal-message');
-    if (!modal || !text) return;
-    text.textContent = message || 'Contenido premium. Próximamente disponible mediante desbloqueo.';
-    modal.classList.remove('hidden');
-}
-
-function closePremiumModal() {
-    const modal = document.getElementById('premium-modal');
-    if (modal) modal.classList.add('hidden');
-}
-
-function showInstructions() {
-    const modal = document.getElementById('instructions-modal');
-    closeHamburgerMenu();
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closeInstructions() {
-    const modal = document.getElementById('instructions-modal');
-    if (modal) modal.classList.add('hidden');
-}
-
-let appModalResolver = null;
-
-function showAppModal({ title, message, confirmText = 'Aceptar', cancelText = 'Cancelar', showCancel = false } = {}) {
-    const modal = document.getElementById('app-modal');
-    const titleEl = document.getElementById('app-modal-title');
-    const messageEl = document.getElementById('app-modal-message');
-    const confirmBtn = document.getElementById('app-modal-confirm');
-    const cancelBtn = document.getElementById('app-modal-cancel');
-
-    if (!modal || !titleEl || !messageEl || !confirmBtn || !cancelBtn) {
-        if (showCancel) {
-            return Promise.resolve(window.confirm(message || ''));
-        }
-        window.alert(message || '');
-        return Promise.resolve(true);
-    }
-
-    titleEl.textContent = title || 'Aviso';
-    messageEl.textContent = message || '';
-    confirmBtn.textContent = confirmText;
-    cancelBtn.textContent = cancelText;
-    cancelBtn.style.display = showCancel ? 'inline-flex' : 'none';
-
-    modal.classList.remove('hidden');
-
-    return new Promise(resolve => {
-        appModalResolver = resolve;
-        confirmBtn.onclick = () => {
-            modal.classList.add('hidden');
-            appModalResolver?.(true);
-            appModalResolver = null;
-        };
-        cancelBtn.onclick = () => {
-            modal.classList.add('hidden');
-            appModalResolver?.(false);
-            appModalResolver = null;
-        };
-    });
-}
-
-function showAppAlert(message, options = {}) {
-    return showAppModal({
-        title: options.title || 'Aviso',
-        message,
-        confirmText: options.confirmText || 'Aceptar',
-        showCancel: false
-    });
-}
-
-function showAppConfirm(message, options = {}) {
-    return showAppModal({
-        title: options.title || 'Confirmación',
-        message,
-        confirmText: options.confirmText || 'Aceptar',
-        cancelText: options.cancelText || 'Cancelar',
-        showCancel: true
-    });
-}
-
-function getNotifications() {
-    const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
-    if (stored) {
-        return JSON.parse(stored);
-    }
-
-    const initial = [
-        {
-            id: 'welcome-premium',
-            message: 'Próximamente podrás desbloquear nuevas categorías.',
-            date: new Date().toLocaleDateString()
-        }
-    ];
-    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(initial));
-    return initial;
-}
-
-function renderNotifications() {
-    const list = document.getElementById('notifications-list');
-    if (!list) return;
-    const notifications = getNotifications();
-    list.innerHTML = '';
-    if (notifications.length === 0) {
-        list.innerHTML = '<p>No hay notificaciones todavía.</p>';
-        return;
-    }
-
-    notifications.forEach(note => {
-        const item = document.createElement('div');
-        item.className = 'notification-item';
-        item.innerHTML = `<p>${note.message}</p><small>${note.date}</small>`;
-        if (note.type === 'invite' || note.type === 'result') {
-            item.style.cursor = 'pointer';
-            item.addEventListener('click', () => {
-                toggleNotificationsPanel();
-                showScreen('pending-games-screen');
-            });
-        }
-        list.appendChild(item);
-    });
-}
-
-function addNotification(message, type = 'info') {
-    const notifications = getNotifications();
-    notifications.unshift({
-        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-        message,
-        date: new Date().toLocaleDateString(),
-        type
-    });
-    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
-}
-
-function getFinishedNotificationsState() {
-    const stored = localStorage.getItem(FINISHED_NOTIFICATIONS_KEY);
-    if (!stored) return {};
-    return JSON.parse(stored);
-}
-
-function setFinishedNotificationsState(state) {
-    localStorage.setItem(FINISHED_NOTIFICATIONS_KEY, JSON.stringify(state));
-}
-
-function toggleNotificationsPanel() {
-    const panel = document.getElementById('notifications-panel');
-    if (!panel) return;
-    const isHidden = panel.classList.contains('hidden');
-    if (isHidden) {
-        renderNotifications();
-        panel.classList.remove('hidden');
-    } else {
-        panel.classList.add('hidden');
-    }
-}
-
-function updatePremiumButtonsState() {
-    const summerButton = document.getElementById('summer-songs-btn');
-    if (!summerButton) return;
-
-    if (hasPremiumAccess()) {
-        summerButton.classList.remove('locked');
-    } else {
-        summerButton.classList.add('locked');
-    }
-}
-
-// main.js - Función showScreen
-function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-    });
-    document.getElementById(screenId).classList.add('active');
-
-    const currentPassword = document.getElementById('password-change-current')?.value.trim();
-    const newPassword = document.getElementById('password-change-new')?.value.trim();
-    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
-
-    if (!currentPassword || !newPassword) {
-        showAppAlert('Completa todos los campos para cambiar la contraseña.');
-        return;
-    }
-    if (newPassword !== confirmPassword) {
-        showAppAlert('Las contraseñas no coinciden.');
-        return;
-    }
-    if (screenId === 'decade-selection-screen') {
-        updatePremiumButtonsState();
-    }
-    // MODIFICACIÓN CLAVE AQUÍ:
-    if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') { //
-        loadPlayerOnlineGames(); //
-        requestInviteNotificationPermission();
-    }
-}
-
-window.showScreen = showScreen;
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(error => {
-            console.warn('No se pudo registrar el Service Worker:', error);
-        });
-    });
-}
-
-function populateDecadeOptions(selectElement, decades) {
-    selectElement.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = getDecadeLabel(dec);
-        selectElement.appendChild(option);
-    });
-}
-
-function populateCategoryOptions(selectElement, categories) {
-    selectElement.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = getCategoryLabel(cat);
-        selectElement.appendChild(option);
-    });
-}
-
-function togglePasswordVisibility(inputId, button) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    const isPassword = input.type === 'password';
-    input.type = isPassword ? 'text' : 'password';
-    button.textContent = isPassword ? '🙈' : '👁️';
-    button.setAttribute('aria-pressed', String(isPassword));
-}
-
-function showPasswordRecoveryInfo() {
-    openPasswordResetModal();
-}
-
-function toggleHamburgerMenu() {
-    const menu = document.getElementById('hamburger-menu');
-    if (!menu) return;
-    menu.classList.toggle('hidden');
-}
-
-function closeHamburgerMenu() {
-    const menu = document.getElementById('hamburger-menu');
-    if (menu) menu.classList.add('hidden');
-}
-
-function openPasswordResetModal() {
-    closeHamburgerMenu();
-    const modal = document.getElementById('password-reset-modal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closePasswordResetModal() {
-    const modal = document.getElementById('password-reset-modal');
-    if (modal) modal.classList.add('hidden');
-    const tokenInfo = document.getElementById('password-reset-token-info');
-    if (tokenInfo) tokenInfo.textContent = '';
-    ['password-reset-email', 'password-reset-token', 'password-reset-new-password', 'password-reset-confirm-password']
-        .forEach(id => {
-            const input = document.getElementById(id);
-            if (input) input.value = '';
-        });
-}
-
-function showChangePasswordModal() {
-    closeHamburgerMenu();
-    const modal = document.getElementById('password-change-modal');
-    if (modal) modal.classList.remove('hidden');
-}
-
-function closeChangePasswordModal() {
-    const modal = document.getElementById('password-change-modal');
-    if (modal) modal.classList.add('hidden');
-    ['password-change-current', 'password-change-new', 'password-change-confirm']
-        .forEach(id => {
-            const input = document.getElementById(id);
-            if (input) input.value = '';
-        });
-}
-
-async function requestPasswordReset() {
-    const emailInput = document.getElementById('password-reset-email');
-    const email = emailInput?.value.trim();
-    const tokenInfo = document.getElementById('password-reset-token-info');
-
-    if (!email) {
-        showAppAlert('Introduce tu correo electrónico para recibir el token.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/password-reset/request`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-        const result = await response.json();
-
-        if (response.ok) {
-            if (tokenInfo) {
-                tokenInfo.textContent = result.token
-                    ? `Token generado: ${result.token}`
-                    : (result.message || 'Si el email existe, te enviaremos un token.');
-            }
-            showAppAlert(result.message || 'Si el email existe, te enviaremos un token.');
-        } else {
-            showAppAlert(result.message || 'No se pudo solicitar el token.');
-        }
-    } catch (error) {
-        console.error('Error al solicitar token:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
-    }
-}
-
-async function confirmPasswordReset() {
-    const email = document.getElementById('password-reset-email')?.value.trim();
-    const token = document.getElementById('password-reset-token')?.value.trim();
-    const newPassword = document.getElementById('password-reset-new-password')?.value.trim();
-    const confirmPassword = document.getElementById('password-reset-confirm-password')?.value.trim();
-
-    if (!email || !token || !newPassword) {
-        showAppAlert('Completa el email, el token y la nueva contraseña.');
-        return;
-    }
-    if (newPassword !== confirmPassword) {
-        showAppAlert('Las contraseñas no coinciden.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/password-reset/confirm`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, token, newPassword })
-        });
-        const result = await response.json();
-
-        if (response.ok) {
-            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
-            closePasswordResetModal();
-        } else {
-            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
-        }
-    } catch (error) {
-        console.error('Error al confirmar reset:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
-    }
-}
-
-async function changePassword() {
-    if (!currentUser || !currentUser.email) {
-        showAppAlert('Debes iniciar sesión para cambiar la contraseña.');
-        showScreen('login-screen');
-        return;
-    }
-
-    const currentPassword = document.getElementById('password-change-current')?.value.trim();
-    const newPassword = document.getElementById('password-change-new')?.value.trim();
-    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
-
-    if (!currentPassword || !newPassword) {
-        showAppAlert('Completa todos los campos para cambiar la contraseña.');
-        return;
-    }
-    if (newPassword !== confirmPassword) {
-        showAppAlert('Las contraseñas no coinciden.');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/password-change`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: currentUser.email, currentPassword, newPassword })
-        });
-        const result = await response.json();
-
-        if (response.ok) {
-            showAppAlert(result.message || 'Contraseña actualizada correctamente.');
-            closeChangePasswordModal();
-        } else {
-            showAppAlert(result.message || 'No se pudo cambiar la contraseña.');
-        }
-    } catch (error) {
-        console.error('Error al cambiar contraseña:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
-    }
-}
-
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(error => {
-            console.warn('No se pudo registrar el Service Worker:', error);
-        });
-    });
-}
-
-function populateDecadeOptions(selectElement, decades) {
-    selectElement.innerHTML = '';
-    decades.forEach(dec => {
-        const option = document.createElement('option');
-        option.value = dec;
-        option.textContent = getDecadeLabel(dec);
-        selectElement.appendChild(option);
-    });
-}
-
-function populateCategoryOptions(selectElement, categories) {
-    selectElement.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = getCategoryLabel(cat);
-        selectElement.appendChild(option);
-    });
-}
-
-function togglePasswordVisibility(inputId, button) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-
-    const isPassword = input.type === 'password';
-    input.type = isPassword ? 'text' : 'password';
-    button.textContent = isPassword ? '🙈' : '👁️';
-    button.setAttribute('aria-pressed', String(isPassword));
-}
-
-function showPasswordRecoveryInfo() {
-    showAppAlert('La recuperación de contraseña estará disponible próximamente. Si necesitas ayuda, contacta con el administrador.');
 }
 
 // =====================================================================
@@ -1364,19 +581,41 @@ async function registerUser() {
             body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
-            showAppAlert(data.message);
+            showAppAlert(data?.message || 'Usuario registrado correctamente.');
             emailInput.value = '';
             passwordInput.value = '';
             showScreen('login-screen');
-        } else {
-            showAppAlert(`Error al registrar: ${data.message}`);
+            return;
+        }
+
+        if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+        }
+
+        if (!useLocalApiFallback) {
+            showAppAlert(`Error al registrar: ${data?.message || 'No se pudo completar el registro.'}`);
+            return;
         }
     } catch (error) {
-        console.error('Error de red durante el registro:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+        console.warn('API no disponible, usando registro local:', error);
+        useLocalApiFallback = true;
+    }
+
+    if (useLocalApiFallback) {
+        const users = getLocalUsers();
+        if (users[email]) {
+            showAppAlert('Ese correo ya está registrado.');
+            return;
+        }
+        users[email] = { email, password, playerName: null };
+        saveLocalUsers(users);
+        showAppAlert('Usuario registrado correctamente.');
+        emailInput.value = '';
+        passwordInput.value = '';
+        showScreen('login-screen');
     }
 }
 
@@ -1398,35 +637,51 @@ async function loginUser() {
             body: JSON.stringify({ email, password })
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             currentUser = { email: data.user.email, playerName: data.user.playerName };
-            getUserPermissions(currentUser.email);
-            localStorage.setItem('loggedInUserEmail', data.user.email);
-            localStorage.setItem('userData', JSON.stringify(currentUser));
-
-            showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
-            emailInput.value = '';
-            passwordInput.value = '';
-
-            await loadUserScores(currentUser.email);
-            await loadGameHistory(currentUser.email);
-
-            if (currentUser.playerName) {
-                showScreen('decade-selection-screen'); 
-                // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
-                generateDecadeButtons(); 
-                updatePremiumButtonsState();
-            } else {
-                showScreen('set-player-name-screen');
-            }
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
         } else {
-            showAppAlert(`Error al iniciar sesión: ${data.message}`);
+            showAppAlert(`Error al iniciar sesión: ${data?.message || 'No se pudo iniciar sesión.'}`);
+            return;
         }
     } catch (error) {
-        console.error('Error de red durante el login:', error);
-        showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+        console.warn('API no disponible, usando login local:', error);
+        useLocalApiFallback = true;
+    }
+
+    if (useLocalApiFallback) {
+        const users = getLocalUsers();
+        const user = users[email];
+        if (!user || user.password !== password) {
+            showAppAlert('Email o contraseña incorrectos.');
+            return;
+        }
+        currentUser = { email: user.email, playerName: user.playerName };
+    }
+
+    if (currentUser) {
+        getUserPermissions(currentUser.email);
+        localStorage.setItem('loggedInUserEmail', currentUser.email);
+        localStorage.setItem('userData', JSON.stringify(currentUser));
+
+        showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
+        emailInput.value = '';
+        passwordInput.value = '';
+
+        await loadUserScores(currentUser.email);
+        await loadGameHistory(currentUser.email);
+
+        if (currentUser.playerName) {
+            showScreen('decade-selection-screen'); 
+            // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
+            generateDecadeButtons(); 
+            updatePremiumButtonsState();
+        } else {
+            showScreen('set-player-name-screen');
+        }
     }
 }
 
@@ -1567,21 +822,41 @@ async function setPlayerName() {
                 body: JSON.stringify({ playerName: newPlayerName })
             });
 
-            const data = await response.json();
+            const data = await parseJsonResponse(response);
 
             if (response.ok) {
                 currentUser.playerName = newPlayerName;
                 localStorage.setItem("userData", JSON.stringify(currentUser));
-                showAppAlert(data.message);
+                showAppAlert(data?.message || 'Nombre de jugador actualizado.');
                 playerNameInput.value = '';
                 showScreen('decade-selection-screen');
                 generateDecadeButtons();
+                return;
+            }
+
+            if (response.status === 404 || response.status >= 500) {
+                useLocalApiFallback = true;
             } else {
-                showAppAlert(`Error al actualizar nombre: ${data.message}`);
+                showAppAlert(`Error al actualizar nombre: ${data?.message || 'No se pudo actualizar el nombre.'}`);
+                return;
             }
         } catch (error) {
-            console.error('Error de red al establecer nombre de jugador:', error);
-            showAppAlert('Error de conexión. Intenta de nuevo más tarde.');
+            console.warn('API no disponible, usando actualización local:', error);
+            useLocalApiFallback = true;
+        }
+
+        if (useLocalApiFallback) {
+            const users = getLocalUsers();
+            if (users[currentUser.email]) {
+                users[currentUser.email].playerName = newPlayerName;
+                saveLocalUsers(users);
+            }
+            currentUser.playerName = newPlayerName;
+            localStorage.setItem("userData", JSON.stringify(currentUser));
+            showAppAlert('Nombre de jugador actualizado.');
+            playerNameInput.value = '';
+            showScreen('decade-selection-screen');
+            generateDecadeButtons();
         }
     } else {
         showAppAlert('No hay un usuario logueado. Por favor, inicia sesión primero.');
@@ -1595,9 +870,16 @@ async function setPlayerName() {
 // =====================================================================
 
 async function loadUserScores(userEmail) {
+    if (useLocalApiFallback) {
+        const localScores = getLocalScores();
+        userAccumulatedScores[userEmail] = localScores[userEmail] || {};
+        console.log(`Puntuaciones locales de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             const scoresByDecade = {};
@@ -1609,19 +891,35 @@ async function loadUserScores(userEmail) {
             });
             userAccumulatedScores[userEmail] = scoresByDecade;
             console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            const localScores = getLocalScores();
+            userAccumulatedScores[userEmail] = localScores[userEmail] || {};
         } else {
-            console.error('Error al cargar puntuaciones:', data.message);
+            console.error('Error al cargar puntuaciones:', data?.message);
             userAccumulatedScores[userEmail] = {};
         }
     } catch (error) {
-        console.error('Error de red al cargar puntuaciones:', error);
-        userAccumulatedScores[userEmail] = {};
+        console.warn('API no disponible, usando puntuaciones locales:', error);
+        useLocalApiFallback = true;
+        const localScores = getLocalScores();
+        userAccumulatedScores[userEmail] = localScores[userEmail] || {};
     }
 }
 
 async function saveUserScores(userEmail, decade, category, score) {
     if (!userEmail || !decade || !category || typeof score === 'undefined') {
         console.error("Error: Datos incompletos para guardar puntuación acumulada (email, decade, category, score).");
+        return;
+    }
+
+    if (useLocalApiFallback) {
+        const localScores = getLocalScores();
+        localScores[userEmail] = localScores[userEmail] || {};
+        localScores[userEmail][decade] = localScores[userEmail][decade] || {};
+        localScores[userEmail][decade][category] = score;
+        saveLocalScores(localScores);
+        await loadUserScores(userEmail);
         return;
     }
 
@@ -1632,34 +930,52 @@ async function saveUserScores(userEmail, decade, category, score) {
             body: JSON.stringify({ email: userEmail, decade, category, score })
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             console.log(data.message);
             await loadUserScores(userEmail); 
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            await saveUserScores(userEmail, decade, category, score);
         } else {
-            console.error('Error al guardar puntuación:', data.message);
+            console.error('Error al guardar puntuación:', data?.message);
         }
     } catch (error) {
-        console.error('Error de red al guardar puntuación:', error);
+        console.warn('API no disponible, usando puntuaciones locales:', error);
+        useLocalApiFallback = true;
+        await saveUserScores(userEmail, decade, category, score);
     }
 }
 
 async function loadGameHistory(userEmail) {
+    if (useLocalApiFallback) {
+        const localHistory = getLocalGameHistory();
+        gameHistory = localHistory[userEmail] || [];
+        console.log("Historial local cargado:", gameHistory);
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             gameHistory = data;
             console.log("Historial de partidas cargado:", gameHistory);
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            const localHistory = getLocalGameHistory();
+            gameHistory = localHistory[userEmail] || [];
         } else {
-            console.error('Error al cargar historial:', data.message);
+            console.error('Error al cargar historial:', data?.message);
             gameHistory = [];
         }
     } catch (error) {
-        console.error('Error de red al cargar historial:', error);
-        gameHistory = [];
+        console.warn('API no disponible, usando historial local:', error);
+        useLocalApiFallback = true;
+        const localHistory = getLocalGameHistory();
+        gameHistory = localHistory[userEmail] || [];
     }
 }
 
@@ -1678,6 +994,20 @@ async function saveGameResult(players, winnerName, decade, category) {
         category: category
     };
 
+    if (useLocalApiFallback) {
+        const localHistory = getLocalGameHistory();
+        players.forEach(player => {
+            if (!player.email) return;
+            localHistory[player.email] = localHistory[player.email] || [];
+            localHistory[player.email].push(gameResult);
+        });
+        saveLocalGameHistory(localHistory);
+        if (currentUser && currentUser.email) {
+            await loadGameHistory(currentUser.email);
+        }
+        return;
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/gamehistory`, {
             method: 'POST',
@@ -1685,18 +1015,23 @@ async function saveGameResult(players, winnerName, decade, category) {
             body: JSON.stringify(gameResult)
         });
 
-        const data = await response.json();
+        const data = await parseJsonResponse(response);
 
         if (response.ok) {
             console.log(data.message);
             if (currentUser && currentUser.email) {
                 await loadGameHistory(currentUser.email);
             }
+        } else if (response.status === 404 || response.status >= 500) {
+            useLocalApiFallback = true;
+            await saveGameResult(players, winnerName, decade, category);
         } else {
-            console.error('Error al guardar historial de partida:', data.message);
+            console.error('Error al guardar historial de partida:', data?.message);
         }
     } catch (error) {
-        console.error('Error de red al guardar historial de partida:', error);
+        console.warn('API no disponible, usando historial local:', error);
+        useLocalApiFallback = true;
+        await saveGameResult(players, winnerName, decade, category);
     }
 }
 
