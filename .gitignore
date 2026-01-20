@@ -28,3 +28,4 @@ dist/
 *.log
 .vscode/
 >>>>>>> 098a320f2014647dfc8199539bcf5976fd612160
+*.zip
