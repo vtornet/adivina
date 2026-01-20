@@ -1071,17 +1071,11 @@ function showScreen(screenId) {
     });
     document.getElementById(screenId).classList.add('active');
 
-    const currentPassword = document.getElementById('password-change-current')?.value.trim();
-    const newPassword = document.getElementById('password-change-new')?.value.trim();
-    const confirmPassword = document.getElementById('password-change-confirm')?.value.trim();
-
-    if (!currentPassword || !newPassword) {
-        showAppAlert('Completa todos los campos para cambiar la contraseña.');
-        return;
+    if (screenId === 'create-online-screen') {
+        populateOnlineSelectors();
     }
-    if (newPassword !== confirmPassword) {
-        showAppAlert('Las contraseñas no coinciden.');
-        return;
+    if (screenId === 'invite-online-screen') {
+        populateInviteSelectors();
     }
     if (screenId === 'decade-selection-screen') {
         updatePremiumButtonsState();
