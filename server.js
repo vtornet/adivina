@@ -553,6 +553,18 @@ app.delete("/api/online-games/clear-history/:playerEmail", async (req, res) => {
 // 5) Frontend (public + data)
 // ==============================
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  "/audio",
+  express.static(path.join(__dirname, "public", "audio"), {
+    fallthrough: false,
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith(".mp3")) {
+        res.setHeader("Content-Type", "audio/mpeg");
+      }
+      res.setHeader("Accept-Ranges", "bytes");
+    },
+  })
+);
 app.use("/data", express.static(path.join(__dirname, "data")));
 
 // Fallback: cualquier ruta que NO empiece por /api/ -> index.html

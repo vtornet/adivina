@@ -37,7 +37,10 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (event.request.headers.get('range') || event.request.destination === 'audio') {
+  if (requestUrl.pathname.startsWith('/audio/')
+    || event.request.headers.get('range')
+    || event.request.destination === 'audio'
+  ) {
     event.respondWith(fetch(event.request));
     return;
   }
