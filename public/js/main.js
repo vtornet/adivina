@@ -3237,6 +3237,42 @@ window.showAllSongs = showAllSongs;
 window.showOnlineMenu = showOnlineMenu;
 window.confirmResetStatistics = confirmResetStatistics;
 
+Object.assign(window, {
+    togglePasswordVisibility,
+    toggleNotificationsPanel,
+    toggleHamburgerMenu,
+    closeHamburgerMenu,
+    showPasswordRecoveryInfo,
+    showChangePasswordModal,
+    showInstructions,
+    closeInstructions,
+    closePremiumModal,
+    closePasswordResetModal,
+    confirmPasswordReset,
+    requestPasswordReset,
+    closeChangePasswordModal,
+    changePassword,
+    loginUser,
+    registerUser,
+    setPlayerName,
+    startSummerSongsGame,
+    showOnlineMenu,
+    createOnlineGame,
+    joinOnlineGame,
+    invitePlayerByName,
+    confirmClearOnlineGameHistory,
+    goToOnlineMenu,
+    endOnlineModeAndGoHome,
+    showSongsListCategorySelection,
+    selectPlayers,
+    startGame,
+    continueToNextPlayerTurn,
+    confirmReturnToMenu,
+    addElderlyPlayerInput,
+    startElderlyModeGame,
+    exitGame
+});
+
 // =====================================================================
 // INICIALIZACIÓN
 // =====================================================================
