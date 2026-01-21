@@ -672,6 +672,7 @@ async function loginUser() {
         getUserPermissions(currentUser.email);
         localStorage.setItem('loggedInUserEmail', currentUser.email);
         localStorage.setItem('userData', JSON.stringify(currentUser));
+        localStorage.setItem('sessionActive', 'true');
 
         showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
         emailInput.value = '';
@@ -698,9 +699,10 @@ function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
     localStorage.removeItem('userData'); // <-- AÑADE ESTA LÍNEA
+    localStorage.removeItem('sessionActive');
     localStorage.removeItem('currentOnlineGameData'); // <-- AÑADE ESTA LÍNEA
     showAppAlert('Sesión cerrada correctamente.');
-    showScreen('home-screen');
+    showScreen('login-screen');
 }
 
 // main.js - Nuevas funciones para borrar historial de partidas online
@@ -833,6 +835,7 @@ async function setPlayerName() {
             if (response.ok) {
                 currentUser.playerName = newPlayerName;
                 localStorage.setItem("userData", JSON.stringify(currentUser));
+                localStorage.setItem('sessionActive', 'true');
                 showAppAlert(data?.message || 'Nombre de jugador actualizado.');
                 playerNameInput.value = '';
                 showScreen('decade-selection-screen');
@@ -859,6 +862,7 @@ async function setPlayerName() {
             }
             currentUser.playerName = newPlayerName;
             localStorage.setItem("userData", JSON.stringify(currentUser));
+            localStorage.setItem('sessionActive', 'true');
             showAppAlert('Nombre de jugador actualizado.');
             playerNameInput.value = '';
             showScreen('decade-selection-screen');
@@ -3288,7 +3292,8 @@ window.onload = async () => {
         document.getElementById('elderly-other-player-names-inputs').innerHTML = ''; // Limpiar inputs extra
     } else {
         const userDataString = localStorage.getItem('userData');
-        if (userDataString) {
+        const sessionActive = localStorage.getItem('sessionActive') === 'true';
+        if (sessionActive && userDataString) {
             const storedUser = JSON.parse(userDataString);
             currentUser = storedUser;
             getUserPermissions(currentUser.email);
@@ -3304,7 +3309,7 @@ window.onload = async () => {
                 showScreen('set-player-name-screen');
             }
         } else {
-            showScreen('home-screen');
+            showScreen('login-screen');
         }
     }
     window.showStatisticsScreen = showStatisticsScreen;
