@@ -433,6 +433,8 @@ function closeChangePasswordModal() {
         });
 }
 
+window.toggleHamburgerMenu = toggleHamburgerMenu;
+
 async function requestPasswordReset() {
     const emailInput = document.getElementById('password-reset-email');
     const email = emailInput?.value.trim();
@@ -640,6 +642,10 @@ async function loginUser() {
         const data = await parseJsonResponse(response);
 
         if (response.ok) {
+            if (!data || !data.user || !data.user.email) {
+                showAppAlert('Respuesta inválida del servidor. Intenta de nuevo más tarde.');
+                return;
+            }
             currentUser = { email: data.user.email, playerName: data.user.playerName };
         } else if (response.status === 404 || response.status >= 500) {
             useLocalApiFallback = true;
@@ -666,6 +672,7 @@ async function loginUser() {
         getUserPermissions(currentUser.email);
         localStorage.setItem('loggedInUserEmail', currentUser.email);
         localStorage.setItem('userData', JSON.stringify(currentUser));
+        localStorage.setItem('sessionActive', 'true');
 
         showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
         emailInput.value = '';
@@ -692,9 +699,10 @@ function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
     localStorage.removeItem('userData'); // <-- AÑADE ESTA LÍNEA
+    localStorage.removeItem('sessionActive');
     localStorage.removeItem('currentOnlineGameData'); // <-- AÑADE ESTA LÍNEA
     showAppAlert('Sesión cerrada correctamente.');
-    showScreen('home-screen');
+    showScreen('login-screen');
 }
 
 // main.js - Nuevas funciones para borrar historial de partidas online
@@ -827,6 +835,7 @@ async function setPlayerName() {
             if (response.ok) {
                 currentUser.playerName = newPlayerName;
                 localStorage.setItem("userData", JSON.stringify(currentUser));
+                localStorage.setItem('sessionActive', 'true');
                 showAppAlert(data?.message || 'Nombre de jugador actualizado.');
                 playerNameInput.value = '';
                 showScreen('decade-selection-screen');
@@ -853,6 +862,7 @@ async function setPlayerName() {
             }
             currentUser.playerName = newPlayerName;
             localStorage.setItem("userData", JSON.stringify(currentUser));
+            localStorage.setItem('sessionActive', 'true');
             showAppAlert('Nombre de jugador actualizado.');
             playerNameInput.value = '';
             showScreen('decade-selection-screen');
@@ -1593,7 +1603,7 @@ function playAudioSnippet() {
         showAppAlert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
         return; 
     }
-    audioPlayer.src = `audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
+    audioPlayer.src = `/audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
 
     audioPlayer.currentTime = 0;
     audioPlayer.play();
@@ -2716,7 +2726,8 @@ async function loadPlayerOnlineGames() {
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/player/${playerData.email}`);
-        const games = await response.json();
+        const data = await parseJsonResponse(response);
+        const games = Array.isArray(data) ? data : (Array.isArray(data?.games) ? data.games : []);
 
         const activeGamesContainer = document.getElementById('active-games-list');
         const finishedGamesContainer = document.getElementById('finished-games-list');
@@ -3230,6 +3241,42 @@ window.showAllSongs = showAllSongs;
 window.showOnlineMenu = showOnlineMenu;
 window.confirmResetStatistics = confirmResetStatistics;
 
+Object.assign(window, {
+    togglePasswordVisibility,
+    toggleNotificationsPanel,
+    toggleHamburgerMenu,
+    closeHamburgerMenu,
+    showPasswordRecoveryInfo,
+    showChangePasswordModal,
+    showInstructions,
+    closeInstructions,
+    closePremiumModal,
+    closePasswordResetModal,
+    confirmPasswordReset,
+    requestPasswordReset,
+    closeChangePasswordModal,
+    changePassword,
+    loginUser,
+    registerUser,
+    setPlayerName,
+    startSummerSongsGame,
+    showOnlineMenu,
+    createOnlineGame,
+    joinOnlineGame,
+    invitePlayerByName,
+    confirmClearOnlineGameHistory,
+    goToOnlineMenu,
+    endOnlineModeAndGoHome,
+    showSongsListCategorySelection,
+    selectPlayers,
+    startGame,
+    continueToNextPlayerTurn,
+    confirmReturnToMenu,
+    addElderlyPlayerInput,
+    startElderlyModeGame,
+    exitGame
+});
+
 // =====================================================================
 // INICIALIZACIÓN
 // =====================================================================
@@ -3245,7 +3292,8 @@ window.onload = async () => {
         document.getElementById('elderly-other-player-names-inputs').innerHTML = ''; // Limpiar inputs extra
     } else {
         const userDataString = localStorage.getItem('userData');
-        if (userDataString) {
+        const sessionActive = localStorage.getItem('sessionActive') === 'true';
+        if (sessionActive && userDataString) {
             const storedUser = JSON.parse(userDataString);
             currentUser = storedUser;
             getUserPermissions(currentUser.email);
@@ -3261,11 +3309,11 @@ window.onload = async () => {
                 showScreen('set-player-name-screen');
             }
         } else {
-            showScreen('home-screen');
+            showScreen('login-screen');
         }
     }
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
-}};
+};
