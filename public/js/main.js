@@ -642,6 +642,10 @@ async function loginUser() {
         const data = await parseJsonResponse(response);
 
         if (response.ok) {
+            if (!data || !data.user || !data.user.email) {
+                showAppAlert('Respuesta inválida del servidor. Intenta de nuevo más tarde.');
+                return;
+            }
             currentUser = { email: data.user.email, playerName: data.user.playerName };
         } else if (response.status === 404 || response.status >= 500) {
             useLocalApiFallback = true;
