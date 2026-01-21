@@ -433,6 +433,8 @@ function closeChangePasswordModal() {
         });
 }
 
+window.toggleHamburgerMenu = toggleHamburgerMenu;
+
 async function requestPasswordReset() {
     const emailInput = document.getElementById('password-reset-email');
     const email = emailInput?.value.trim();
@@ -3268,4 +3270,4 @@ window.onload = async () => {
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
-}};
+};
