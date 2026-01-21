@@ -1610,14 +1610,27 @@ function playAudioSnippet() {
         return;
     }
     const audioSrc = `/audio/${fileName}`;
-    audioPlayer.src = audioSrc;
-    if (!audioPlayer.src) {
-        showAppAlert("No se pudo reproducir el audio de esta canción.");
-        return;
-    }
+audioPlayer.src = audioSrc;
 
-    audioPlayer.currentTime = 0;
-    audioPlayer.play();
+/* ====== DEBUG (INSERTADO AQUÍ, JUSTO DESPUÉS DE audioPlayer.src) ====== */
+console.error("DEBUG AUDIO -> fileName:", fileName);
+console.error("DEBUG AUDIO -> audioSrc:", audioSrc);
+console.error("DEBUG AUDIO -> audioPlayer.src:", audioPlayer.src);
+/* ===================================================================== */
+
+if (!audioPlayer.src) {
+    showAppAlert("No se pudo reproducir el audio de esta canción.");
+    return;
+}
+
+audioPlayer.currentTime = 0;
+
+/* ====== DEBUG (INSERTADO AQUÍ, JUSTO ANTES DE play) ====== */
+console.error("DEBUG AUDIO -> intentando reproducir:", audioPlayer.src);
+/* ========================================================== */
+
+audioPlayer.play();
+
 
     const playBtn = document.getElementById('play-song-btn');
     playBtn.innerText = "🎵";
