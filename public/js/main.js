@@ -1603,7 +1603,18 @@ function playAudioSnippet() {
         showAppAlert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
         return; 
     }
-    audioPlayer.src = `/audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
+    const fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
+    if (!fileName || !fileName.includes('.')) {
+        console.error("Error: Archivo de audio inválido:", currentQuestion.file);
+        showAppAlert("No se pudo reproducir el audio de esta canción.");
+        return;
+    }
+    const audioSrc = `/audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${fileName}`;
+    audioPlayer.src = audioSrc;
+    if (!audioPlayer.src) {
+        showAppAlert("No se pudo reproducir el audio de esta canción.");
+        return;
+    }
 
     audioPlayer.currentTime = 0;
     audioPlayer.play();
