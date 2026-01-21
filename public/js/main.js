@@ -433,6 +433,8 @@ function closeChangePasswordModal() {
         });
 }
 
+window.toggleHamburgerMenu = toggleHamburgerMenu;
+
 async function requestPasswordReset() {
     const emailInput = document.getElementById('password-reset-email');
     const email = emailInput?.value.trim();
@@ -640,6 +642,10 @@ async function loginUser() {
         const data = await parseJsonResponse(response);
 
         if (response.ok) {
+            if (!data || !data.user || !data.user.email) {
+                showAppAlert('Respuesta inválida del servidor. Intenta de nuevo más tarde.');
+                return;
+            }
             currentUser = { email: data.user.email, playerName: data.user.playerName };
         } else if (response.status === 404 || response.status >= 500) {
             useLocalApiFallback = true;
@@ -1593,7 +1599,7 @@ function playAudioSnippet() {
         showAppAlert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
         return; 
     }
-    audioPlayer.src = `audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
+    audioPlayer.src = `/audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
 
     audioPlayer.currentTime = 0;
     audioPlayer.play();
@@ -2716,7 +2722,8 @@ async function loadPlayerOnlineGames() {
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/player/${playerData.email}`);
-        const games = await response.json();
+        const data = await parseJsonResponse(response);
+        const games = Array.isArray(data) ? data : (Array.isArray(data?.games) ? data.games : []);
 
         const activeGamesContainer = document.getElementById('active-games-list');
         const finishedGamesContainer = document.getElementById('finished-games-list');
@@ -3268,4 +3275,4 @@ window.onload = async () => {
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
-}};
+};
