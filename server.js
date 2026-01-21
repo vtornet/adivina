@@ -53,13 +53,7 @@ if (!MONGO_URI) {
   process.exit(1);
 }
 
-mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log("Conectado a MongoDB"))
-  .catch((err) => {
-    console.error("Error conectando a MongoDB:", err.message);
-    process.exit(1);
-  });
+mongoose.set("strictQuery", true);
 
 // ==============================
 // 3) Modelos (Mongoose)
@@ -118,6 +112,25 @@ const Score = mongoose.model("Score", scoreSchema);
 const GameHistory = mongoose.model("GameHistory", gameHistorySchema);
 const OnlineGame = mongoose.model("OnlineGame", onlineGameSchema);
 
+async function connectToMongo() {
+  try {
+    await mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 5000 });
+    console.log("Conectado a MongoDB");
+
+    await Promise.all([
+      User.createCollection(),
+      Score.createCollection(),
+      GameHistory.createCollection(),
+      OnlineGame.createCollection(),
+    ]);
+    await Promise.all([User.init(), Score.init(), GameHistory.init(), OnlineGame.init()]);
+    console.log("Colecciones e índices verificados.");
+  } catch (err) {
+    console.error("Error conectando a MongoDB:", err.message);
+    throw err;
+  }
+}
+
 // ==============================
 // 4) API
 // ==============================
@@ -138,6 +151,7 @@ app.post("/api/register", async (req, res) => {
     const hashed = await bcrypt.hash(password, salt);
 
     await new User({ email, password: hashed }).save();
+    console.log("Usuario registrado:", email);
     res.status(201).json({ message: "Usuario registrado exitosamente." });
   } catch (err) {
     console.error("Error en registro:", err.message);
@@ -159,6 +173,7 @@ app.post("/api/login", async (req, res) => {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(400).json({ message: "Credenciales inválidas." });
 
+    console.log("Login exitoso:", email);
     res.status(200).json({
       message: "Inicio de sesión exitoso.",
       user: { email: user.email, playerName: user.playerName || null },
@@ -278,7 +293,7 @@ app.get("/api/scores/:email", async (req, res) => {
     res.status(200).json(scores);
   } catch (err) {
     console.error("Error get scores:", err.message);
-    res.status(500).json({ message: "Error del servidor." });
+    res.status(200).json([]);
   }
 });
 
@@ -481,10 +496,11 @@ app.get("/api/online-games/player/:playerEmail", async (req, res) => {
       ],
     }).sort({ createdAt: -1 });
 
-    res.status(200).json(games);
+    console.log("Online games cargadas para:", playerEmail, "total:", games.length);
+    res.status(200).json(Array.isArray(games) ? games : []);
   } catch (err) {
     console.error("Error get player games:", err.message);
-    res.status(500).json({ message: "Error del servidor." });
+    res.status(200).json([]);
   }
 });
 
@@ -544,6 +560,16 @@ app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+async function startServer() {
+  try {
+    await connectToMongo();
+    app.listen(PORT, () => {
+      console.log(`Servidor escuchando en el puerto ${PORT}`);
+    });
+  } catch (err) {
+    console.error("No se pudo iniciar el servidor:", err.message);
+    process.exit(1);
+  }
+}
+
+startServer();
