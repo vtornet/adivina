@@ -57,11 +57,18 @@ async function loadSongsForDecadeAndCategory(decade, category) {
         const script = document.createElement('script');
         script.src = currentPath;
         script.onload = () => {
-            // Cuando el script se carga con éxito, se asume que ha populado
-            // window.allSongsByDecadeAndCategory[decade][category].
-            console.log(`Canciones de ${decade}/${category} cargadas exitosamente.`);
-            resolve(); // Resuelve la promesa indicando éxito
-        };
+    const songsArray = window.allSongsByDecadeAndCategory[decade][category];
+
+    if (Array.isArray(songsArray)) {
+        songsArray.forEach(song => {
+            if (!song.originalDecade) song.originalDecade = decade;
+            if (!song.originalCategory) song.originalCategory = category;
+        });
+    }
+
+    console.log(`Canciones de ${decade}/${category} cargadas exitosamente.`);
+    resolve();
+};
         script.onerror = (e) => {
             script.remove();
             if (restPaths.length > 0) {
