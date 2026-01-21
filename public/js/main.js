@@ -1599,7 +1599,7 @@ function playAudioSnippet() {
         showAppAlert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
         return; 
     }
-    audioPlayer.src = `audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
+    audioPlayer.src = `/audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${currentQuestion.file}`;
 
     audioPlayer.currentTime = 0;
     audioPlayer.play();
@@ -2722,7 +2722,8 @@ async function loadPlayerOnlineGames() {
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games/player/${playerData.email}`);
-        const games = await response.json();
+        const data = await parseJsonResponse(response);
+        const games = Array.isArray(data) ? data : (Array.isArray(data?.games) ? data.games : []);
 
         const activeGamesContainer = document.getElementById('active-games-list');
         const finishedGamesContainer = document.getElementById('finished-games-list');
