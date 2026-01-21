@@ -32,6 +32,19 @@ self.addEventListener('fetch', event => {
     return;
   }
 
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.pathname.startsWith('/api/')) {
+    return;
+  }
+
+  if (requestUrl.pathname.startsWith('/audio/')
+    || event.request.headers.get('range')
+    || event.request.destination === 'audio'
+  ) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       if (cachedResponse) {
@@ -39,6 +52,9 @@ self.addEventListener('fetch', event => {
       }
 
       return fetch(event.request).then(response => {
+        if (!response || !response.ok || response.status !== 200) {
+          return response;
+        }
         const responseClone = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
         return response;
