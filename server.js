@@ -568,7 +568,7 @@ app.use(
 app.use("/data", express.static(path.join(__dirname, "data")));
 
 // Fallback: cualquier ruta que NO empiece por /api/ -> index.html
-app.get(/^\/(?!api).*/, (req, res) => {
+app.get(/^\/(?!api|audio).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
