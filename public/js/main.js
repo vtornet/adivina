@@ -1730,34 +1730,47 @@ function continueToNextPlayerTurn() {
 
 let currentSharePayload = null;
 
-function buildSharePayload({ players, modeLabel, gameCode }) {
+function generateShareText(players, gameUrl) {
+    // Ordenar por puntuación descendente
     const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
-    const topScore = sortedPlayers[0]?.score ?? null;
-    const winners = topScore === null ? [] : sortedPlayers.filter(player => player.score === topScore);
-    const winnerText = winners.length === 0
-        ? 'Sin resultados disponibles.'
-        : winners.length > 1
-            ? `Empate entre ${winners.map(winner => winner.name).join(' y ')} con ${topScore} puntos.`
-            : `Ganador: ${winners[0].name} con ${topScore} puntos.`;
+    const topPlayer = sortedPlayers[0];
+    const secondPlayer = sortedPlayers[1];
 
-    const scoresText = sortedPlayers.length
-        ? `Marcador: ${sortedPlayers.map(player => `${player.name}: ${player.score}`).join(', ')}.`
-        : '';
+    if (!topPlayer || !secondPlayer) {
+        return `🎵 Adivina la Canción 🎵\n\n¿Te animas a jugar una partida?\n👉 ${gameUrl}`;
+    }
 
-    const baseUrl = window.location.origin;
-    const codeText = gameCode ? `Código: ${gameCode}.` : '';
+    const winner = topPlayer.name;
+    const winnerScore = topPlayer.score;
+    const loser = secondPlayer.name;
+    const loserScore = secondPlayer.score;
+    const diff = Math.abs(winnerScore - loserScore);
 
-    const text = [
-        `🎵 Adivina la Canción - ${modeLabel}`,
-        winnerText,
-        scoresText,
-        codeText,
-        baseUrl
-    ].filter(Boolean).join('\n');
+    if (diff === 0) {
+        return `🎵 Empate total en Adivina la Canción 🎵\n\n🤝 ${winner} y ${loser} terminan igualados con ${winnerScore} puntos.\nSin ganador… por ahora.\n\n¿Te unes para romper el empate?\n👉 ${gameUrl}`;
+    }
 
+    if (diff === 1) {
+        return `🎶 Final de auténtico infarto en Adivina la Canción 🎶\n\n🏆 Ganador: ${winner} con ${winnerScore} puntos\n😮 ${loser} se queda a solo 1 punto (${loserScore})\n\nUna canción más lo habría cambiado todo…\n¿Habrías acertado tú la definitiva?\n👉 ${gameUrl}`;
+    }
+
+    if (diff >= 2 && diff <= 4) {
+        return `🎧 Duelo muy ajustado en Adivina la Canción 🎧\n\n🥇 ${winner} se impone con ${winnerScore} puntos\n🥈 ${loser}, muy cerca, con ${loserScore}\n\nNada estaba decidido hasta el final.\n¿Te atreves a mejorar este resultado?\n👉 ${gameUrl}`;
+    }
+
+    return `🔥 Exhibición musical en Adivina la Canción 🔥\n\n🏆 ${winner} arrasa con ${winnerScore} puntos\n${loser} se queda en ${loserScore}\n\n¿Habrías podido frenar esta victoria?\nDemuéstralo en tu propio duelo 👇\n👉 ${gameUrl}`;
+}
+
+// Ejemplo de uso con datos simulados
+// const exampleShareText = generateShareText(
+//     [{ name: 'Ana', score: 8 }, { name: 'Luis', score: 7 }],
+//     'https://adivinalacancion.app'
+// );
+
+function buildSharePayload({ players, gameUrl }) {
     return {
-        text,
-        url: baseUrl
+        text: generateShareText(players, gameUrl),
+        url: gameUrl
     };
 }
 
@@ -1881,7 +1894,7 @@ function endGame() {
 
     updateShareLinks(buildSharePayload({
         players: gameState.players,
-        modeLabel: 'Partida local'
+        gameUrl: 'https://adivinalacancion.app'
     }));
 
     // Recopilar todas las canciones jugadas en esta partida por todos los jugadores
@@ -3306,8 +3319,7 @@ function showOnlineResults(gameData) {
 
     updateShareLinks(buildSharePayload({
         players: gameData.players || [],
-        modeLabel: 'Partida online',
-        gameCode: gameData.code || currentOnlineGameCode
+        gameUrl: 'https://adivinalacancion.app'
     }));
 
     // Opciones de botón después de partida online: Volver al menú principal
