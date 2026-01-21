@@ -1728,6 +1728,82 @@ function continueToNextPlayerTurn() {
     showScreen('game-screen');
 }
 
+let currentSharePayload = null;
+
+function buildSharePayload({ players, modeLabel, gameCode }) {
+    const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+    const topScore = sortedPlayers[0]?.score ?? null;
+    const winners = topScore === null ? [] : sortedPlayers.filter(player => player.score === topScore);
+    const winnerText = winners.length === 0
+        ? 'Sin resultados disponibles.'
+        : winners.length > 1
+            ? `Empate entre ${winners.map(winner => winner.name).join(' y ')} con ${topScore} puntos.`
+            : `Ganador: ${winners[0].name} con ${topScore} puntos.`;
+
+    const scoresText = sortedPlayers.length
+        ? `Marcador: ${sortedPlayers.map(player => `${player.name}: ${player.score}`).join(', ')}.`
+        : '';
+
+    const baseUrl = window.location.origin;
+    const codeText = gameCode ? `Código: ${gameCode}.` : '';
+
+    const text = [
+        `🎵 Adivina la Canción - ${modeLabel}`,
+        winnerText,
+        scoresText,
+        codeText,
+        baseUrl
+    ].filter(Boolean).join('\n');
+
+    return {
+        text,
+        url: baseUrl
+    };
+}
+
+function updateShareLinks(payload) {
+    currentSharePayload = payload;
+    const whatsappLink = document.getElementById('share-whatsapp');
+    const facebookLink = document.getElementById('share-facebook');
+    const instagramLink = document.getElementById('share-instagram');
+    const xLink = document.getElementById('share-x');
+
+    const encodedText = encodeURIComponent(payload.text);
+    const encodedUrl = encodeURIComponent(payload.url);
+
+    if (whatsappLink) {
+        whatsappLink.href = `https://api.whatsapp.com/send?text=${encodedText}`;
+    }
+    if (facebookLink) {
+        facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+    }
+    if (instagramLink) {
+        instagramLink.dataset.shareText = payload.text;
+        instagramLink.dataset.shareUrl = payload.url;
+    }
+    if (xLink) {
+        xLink.href = `https://twitter.com/intent/tweet?text=${encodedText}`;
+    }
+}
+
+function initializeShareButtons() {
+    const instagramLink = document.getElementById('share-instagram');
+    if (!instagramLink) return;
+
+    instagramLink.addEventListener('click', async (event) => {
+        if (!currentSharePayload || !navigator.share) return;
+        event.preventDefault();
+        try {
+            await navigator.share({
+                text: currentSharePayload.text,
+                url: currentSharePayload.url
+            });
+        } catch (error) {
+            console.warn('Compartir nativo cancelado o no disponible:', error);
+        }
+    });
+}
+
 /**
  * Finaliza la partida, calcula el ganador y guarda los resultados.
  */
@@ -1802,6 +1878,11 @@ function endGame() {
         const medal = (gameState.players.length > 1) ? ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '') : '';
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
+
+    updateShareLinks(buildSharePayload({
+        players: gameState.players,
+        modeLabel: 'Partida local'
+    }));
 
     // Recopilar todas las canciones jugadas en esta partida por todos los jugadores
     let allPlayedSongsInThisGame = [];
@@ -3223,6 +3304,12 @@ function showOnlineResults(gameData) {
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
 
+    updateShareLinks(buildSharePayload({
+        players: gameData.players || [],
+        modeLabel: 'Partida online',
+        gameCode: gameData.code || currentOnlineGameCode
+    }));
+
     // Opciones de botón después de partida online: Volver al menú principal
     document.getElementById('play-again-btn').onclick = () => {
         // Limpiar estado online y volver al menú online para jugar otra partida online
@@ -3340,4 +3427,5 @@ window.onload = async () => {
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
+    initializeShareButtons();
 };
