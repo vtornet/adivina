@@ -1609,7 +1609,7 @@ function playAudioSnippet() {
         showAppAlert("No se pudo reproducir el audio de esta canción.");
         return;
     }
-    const audioSrc = `/audio/${currentQuestion.originalDecade}/${currentQuestion.originalCategory}/${fileName}`;
+    const audioSrc = `/audio/${fileName}`;
     audioPlayer.src = audioSrc;
     if (!audioPlayer.src) {
         showAppAlert("No se pudo reproducir el audio de esta canción.");
