@@ -47,6 +47,7 @@ async function loadSongsForDecadeAndCategory(decade, category) {
     // Para 'verano' y 'consolidated' será: data/songs/verano/consolidated.js
     // Para '80s' y 'espanol' será: data/songs/80s/espanol.js
     const scriptPaths = [
+        `/data/songs/${decade}/${category}.js`,
         `data/songs/${decade}/${category}.js`,
         `../data/songs/${decade}/${category}.js`
     ];
