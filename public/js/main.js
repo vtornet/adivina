@@ -1769,18 +1769,14 @@ let currentSharePayload = null;
 let deferredInstallPrompt = null;
 
 function isAppInstalled() {
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-}
-
-function isMobileDevice() {
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    return window.matchMedia('(display-mode: standalone)').matches;
 }
 
 function updateInstallButtonVisibility() {
     const installBtn = document.getElementById('install-btn');
     if (!installBtn) return;
 
-    const shouldShow = Boolean(deferredInstallPrompt) && !isAppInstalled() && isMobileDevice();
+    const shouldShow = Boolean(deferredInstallPrompt) && !isAppInstalled();
     installBtn.style.display = shouldShow ? 'inline-flex' : 'none';
 }
 
@@ -1800,7 +1796,10 @@ function initializeInstallPrompt() {
     });
 
     installBtn.addEventListener('click', async () => {
-        if (!deferredInstallPrompt) return;
+        if (!deferredInstallPrompt || isAppInstalled()) {
+            updateInstallButtonVisibility();
+            return;
+        }
         deferredInstallPrompt.prompt();
         await deferredInstallPrompt.userChoice;
         deferredInstallPrompt = null;
