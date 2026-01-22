@@ -51,6 +51,19 @@ html, body {
     border: 1px solid var(--secondary-color);
     backdrop-filter: blur(3px);
     position: relative;
+
+    /* --- CAMBIOS AQUÍ --- */
+    /* En lugar de 100vh, usamos 90vh para dejar espacio arriba y abajo */
+    max-height: 90vh; 
+    
+    /* Activamos el scroll vertical si el contenido es muy largo */
+    overflow-y: auto; 
+    
+    /* Esto ayuda a que el scroll sea suave en iPhone */
+    -webkit-overflow-scrolling: touch; 
+    
+    /* Aseguramos que el contenido no quede pegado al borde inferior al hacer scroll */
+    padding-bottom: 40px; 
 }
 
 .screen.active {
@@ -786,4 +799,18 @@ select.text-input option {
 select.text-input optgroup {
     background-color: #000000;
     color: white;
+}
+
+/* Ocultar barra de scroll para Chrome, Safari y Opera */
+.screen::-webkit-scrollbar {
+  width: 6px;
+}
+
+.screen::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.screen::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color);
+  border-radius: 20px;
 }
