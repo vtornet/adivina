@@ -1730,14 +1730,33 @@ function continueToNextPlayerTurn() {
 
 let currentSharePayload = null;
 
+function generateSinglePlayerShareText(player, gameUrl) {
+    const templates = [
+        `🎶 Reto superado en Adivina la Canción 🎶\n\n🎧 {{player}} ha conseguido {{score}} puntos.\n¿Habrías llegado tan lejos?\n\nPon a prueba tu oído musical 👇\n👉 {{gameUrl}}`,
+        `🔥 ¿Cuánto sabes realmente de música? 🔥\n\n{{player}} ha logrado {{score}} puntos en Adivina la Canción.\nNo es tan fácil como parece…\n\n¿Aceptas el reto?\n👉 {{gameUrl}}`,
+        `🎵 Partida completada en Adivina la Canción\n\n🎧 {{player}}: {{score}} puntos.\n¿Te animas a intentarlo tú?\n\n👉 {{gameUrl}}`,
+        `🎶 {{player}} se ha puesto a prueba en Adivina la Canción\n\nResultado final: {{score}} puntos.\n¿Puedes superarlo?\n\n👉 {{gameUrl}}`
+    ];
+
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    return template
+        .replace('{{player}}', player.name)
+        .replace('{{score}}', player.score)
+        .replace('{{gameUrl}}', gameUrl);
+}
+
 function generateShareText(players, gameUrl) {
     // Ordenar por puntuación descendente
     const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
     const topPlayer = sortedPlayers[0];
     const secondPlayer = sortedPlayers[1];
 
-    if (!topPlayer || !secondPlayer) {
+    if (!topPlayer) {
         return `🎵 Adivina la Canción 🎵\n\n¿Te animas a jugar una partida?\n👉 ${gameUrl}`;
+    }
+
+    if (!secondPlayer) {
+        return generateSinglePlayerShareText(topPlayer, gameUrl);
     }
 
     const winner = topPlayer.name;
@@ -1764,6 +1783,10 @@ function generateShareText(players, gameUrl) {
 // Ejemplo de uso con datos simulados
 // const exampleShareText = generateShareText(
 //     [{ name: 'Ana', score: 8 }, { name: 'Luis', score: 7 }],
+//     'https://adivinalacancion.app'
+// );
+// const exampleSinglePlayerText = generateSinglePlayerShareText(
+//     { name: 'Ana', score: 10 },
 //     'https://adivinalacancion.app'
 // );
 
