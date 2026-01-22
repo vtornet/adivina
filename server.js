@@ -189,24 +189,37 @@ app.post("/api/password-reset/request", async (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ message: "Debes indicar un email válido." });
 
+  // ... dentro de app.post("/api/password-reset/request") ...
+
   try {
     const user = await User.findOne({ email });
-    // No revelar si existe o no
+    
+    // IMPORTANTE: Nunca reveles si el usuario existe o no por seguridad (User Enumeration)
     if (!user) {
-      return res.status(200).json({ message: "Si el email existe, recibirás un token de recuperación." });
+      // Retardo artificial para evitar ataques de tiempo (opcional, pero buena práctica)
+      return res.status(200).json({ message: "Si el email existe, se ha enviado un código de recuperación." });
     }
 
     const token = crypto.randomBytes(20).toString("hex");
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
     user.resetTokenHash = tokenHash;
-    user.resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000);
+    user.resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutos
     await user.save();
 
+    // --- BLOQUE DE SEGURIDAD ---
+    // EN PRODUCCIÓN: Aquí enviarías el email usando nodemailer.
+    // EN DESARROLLO (TU CASO): Lo mostramos en la consola del servidor (la terminal negra donde corre node).
+    console.log("========================================");
+    console.log(`🔐 TOKEN DE RECUPERACIÓN PARA ${email}:`);
+    console.log(token); 
+    console.log("========================================");
+
     res.status(200).json({
-      message: "Token de recuperación generado.",
-      token,
+      message: "Si el email existe, se ha enviado un código de recuperación.",
+      // token: token <--- ELIMINAMOS ESTA LÍNEA. ¡JAMÁS DEVUELVAS EL TOKEN AQUÍ!
     });
+
   } catch (err) {
     console.error("Error password-reset request:", err.message);
     res.status(500).json({ message: "Error del servidor." });

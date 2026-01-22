@@ -1589,57 +1589,66 @@ function updateAttemptsCounter() {
 /**
  * Reproduce un fragmento de audio de la canción actual.
  */
+/**
+ * Reproduce un fragmento de audio con precisión usando timeupdate
+ * Reemplaza al antiguo sistema basado en setTimeout
+ */
 function playAudioSnippet() {
     if (gameState.hasPlayed) return;
-    gameState.hasPlayed = true;
-    const durations = { 3: 4000, 2: 6000, 1: 10000 };
-    const duration = durations[gameState.attempts];
+    
+    // 1. Definir duración según intentos
+    const durations = { 3: 4.0, 2: 6.0, 1: 10.0 }; // En SEGUNDOS (timeupdate usa segundos)
+    const durationSecs = durations[gameState.attempts];
+    
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
-    // USAMOS originalDecade y originalCategory para la ruta del audio
-    if (!currentQuestion.originalDecade || !currentQuestion.originalCategory) {
-        console.error("Error: Canción sin decade/category original para la reproducción:", currentQuestion);
-        showAppAlert("Error al reproducir el audio de la canción. Por favor, revisa la consola para más detalles.");
-        return; 
-    }
+    // 2. Validaciones
     const fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName || !fileName.includes('.')) {
-        console.error("Error: Archivo de audio inválido:", currentQuestion.file);
         showAppAlert("No se pudo reproducir el audio de esta canción.");
         return;
     }
-    const audioSrc = `/audio/${fileName}`;
-audioPlayer.src = audioSrc;
 
-/* ====== DEBUG (INSERTADO AQUÍ, JUSTO DESPUÉS DE audioPlayer.src) ====== */
-console.error("DEBUG AUDIO -> fileName:", fileName);
-console.error("DEBUG AUDIO -> audioSrc:", audioSrc);
-console.error("DEBUG AUDIO -> audioPlayer.src:", audioPlayer.src);
-/* ===================================================================== */
-
-if (!audioPlayer.src) {
-    showAppAlert("No se pudo reproducir el audio de esta canción.");
-    return;
-}
-
-audioPlayer.currentTime = 0;
-
-/* ====== DEBUG (INSERTADO AQUÍ, JUSTO ANTES DE play) ====== */
-console.error("DEBUG AUDIO -> intentando reproducir:", audioPlayer.src);
-/* ========================================================== */
-
-audioPlayer.play();
-
-
+    // 3. Configurar UI
     const playBtn = document.getElementById('play-song-btn');
     playBtn.innerText = "🎵";
     playBtn.disabled = true;
+    gameState.hasPlayed = true;
 
-    audioPlaybackTimeout = setTimeout(() => {
-        audioPlayer.pause();
+    // 4. Configurar Audio
+    const audioSrc = `/audio/${fileName}`;
+    // Solo cambiamos el src si es diferente para evitar recargas innecesarias
+    if (!audioPlayer.src.includes(audioSrc)) {
+        audioPlayer.src = audioSrc;
+    }
+    
+    audioPlayer.currentTime = 0;
+
+    // 5. DEFINIR EL LISTENER (La magia ocurre aquí)
+    const stopAudioListener = () => {
+        if (audioPlayer.currentTime >= durationSecs) {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0; // Rebobinar
+            playBtn.innerText = "▶";
+            
+            // IMPORTANTE: Limpiar el evento para que no interfiera en el futuro
+            audioPlayer.removeEventListener('timeupdate', stopAudioListener);
+        }
+    };
+
+    // Añadimos el "vigilante" del tiempo
+    audioPlayer.addEventListener('timeupdate', stopAudioListener);
+
+    // 6. Reproducir (con manejo de promesas para evitar errores de navegador)
+    audioPlayer.play().catch(e => {
+        console.error("Error al reproducir:", e);
+        showAppAlert("El navegador bloqueó el audio. Intenta pulsar de nuevo.");
+        playBtn.disabled = false;
         playBtn.innerText = "▶";
-    }, duration);
+        gameState.hasPlayed = false; // Permitir reintentar
+        audioPlayer.removeEventListener('timeupdate', stopAudioListener);
+    });
 }
 
 /**

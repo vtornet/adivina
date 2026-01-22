@@ -9,6 +9,18 @@
   "icons": [
     {
       "src": "img/adivina.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img/adivina.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img/adivina.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
