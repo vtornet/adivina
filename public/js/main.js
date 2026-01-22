@@ -544,26 +544,46 @@ async function changePassword() {
     }
 }
 
-let isUpdateReloading = false;
+let swRegistration = null;
+let updateBannerVisible = false;
+let updateNoticeInitialized = false;
 
-function showUpdateNotice() {
-    const updateNotice = document.getElementById('update-notice');
-    if (!updateNotice) return;
-    updateNotice.style.display = 'block';
+function showUpdateBanner() {
+    if (updateBannerVisible) return;
+    updateBannerVisible = true;
+
+    const banner = document.getElementById('update-notice');
+    if (!banner) return;
+    if (!updateNoticeInitialized) {
+        const button = document.getElementById('update-now-btn');
+        if (button) {
+            button.addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
+        updateNoticeInitialized = true;
+    }
+    banner.hidden = false;
 }
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (isUpdateReloading) return;
-        isUpdateReloading = true;
-        showUpdateNotice();
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
+        showUpdateBanner();
     });
 
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(error => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+            swRegistration = registration;
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (!newWorker) return;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        showUpdateBanner();
+                    }
+                });
+            });
+        }).catch(error => {
             console.warn('No se pudo registrar el Service Worker:', error);
         });
     });
