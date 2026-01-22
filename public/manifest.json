@@ -1,34 +1,26 @@
 {
   "name": "Adivina la Canción",
   "short_name": "Adivina la Canción",
-  "start_url": "/",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
   "background_color": "#1b0b2c",
   "theme_color": "#3b1b52",
   "lang": "es",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "img/adivina.png",
-      "sizes": "1024x1024",
+      "src": "/img/adivina.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "img/adivina.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "img/adivina.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "img/adivina.png",
+      "src": "/img/adivina.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }
