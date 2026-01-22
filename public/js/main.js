@@ -546,54 +546,24 @@ async function changePassword() {
 
 let swRegistration = null;
 let updateBannerVisible = false;
+let updateNoticeInitialized = false;
 
 function showUpdateBanner() {
     if (updateBannerVisible) return;
     updateBannerVisible = true;
 
-    let banner = document.getElementById('update-notice');
-    if (!banner) {
-        banner = document.createElement('div');
-        banner.id = 'update-notice';
-        banner.style.position = 'fixed';
-        banner.style.left = '50%';
-        banner.style.bottom = '88px';
-        banner.style.transform = 'translateX(-50%)';
-        banner.style.width = 'min(360px, 92%)';
-        banner.style.padding = '12px 16px';
-        banner.style.borderRadius = '12px';
-        banner.style.background = 'rgba(0, 0, 0, 0.8)';
-        banner.style.color = '#ffffff';
-        banner.style.border = '1px solid #00eaff';
-        banner.style.boxShadow = '0 0 6px rgba(0, 255, 255, 0.2)';
-        banner.style.fontWeight = '700';
-        banner.style.textAlign = 'center';
-        banner.style.zIndex = '1400';
-        banner.style.display = 'grid';
-        banner.style.gap = '10px';
-        document.body.appendChild(banner);
+    const banner = document.getElementById('update-notice');
+    if (!banner) return;
+    if (!updateNoticeInitialized) {
+        const button = document.getElementById('update-now-btn');
+        if (button) {
+            button.addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
+        updateNoticeInitialized = true;
     }
-
-    if (!banner.dataset.initialized) {
-        banner.textContent = 'Hay una nueva versión disponible. ¿Actualizar ahora?';
-        banner.style.display = 'grid';
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = 'Actualizar ahora';
-        button.style.border = 'none';
-        button.style.borderRadius = '10px';
-        button.style.padding = '10px 12px';
-        button.style.fontWeight = '700';
-        button.style.cursor = 'pointer';
-        button.style.background = 'linear-gradient(45deg, #7b00ff, #00eaff)';
-        button.style.color = '#ffffff';
-        button.addEventListener('click', () => {
-            window.location.reload();
-        });
-        banner.appendChild(button);
-        banner.dataset.initialized = 'true';
-    }
-    banner.style.display = 'grid';
+    banner.hidden = false;
 }
 
 if ('serviceWorker' in navigator) {
