@@ -721,3 +721,63 @@ h1 {
     overflow-y: auto;
     max-height: 100vh;
 }
+
+/* =========================================
+   MEJORA VISUAL DE INPUTS Y SELECTORES
+   ========================================= */
+
+/* Estilo base para todos los inputs y selects (Clase .text-input) */
+.text-input {
+    width: 100%;
+    padding: 15px 20px; /* Más espacio interno */
+    margin-bottom: 20px;
+    
+    /* Fondo oscuro translúcido para que se funda con el tema */
+    background-color: rgba(20, 10, 40, 0.6); 
+    
+    /* Borde neón suave */
+    border: 2px solid #00d2ff; /* Cyan similar a tus botones */
+    border-radius: 12px;       /* Bordes redondeados */
+    
+    /* Tipografía */
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    
+    /* Eliminar el estilo por defecto del navegador */
+    outline: none;
+    transition: all 0.3s ease;
+
+    /* PROPIEDAD MÁGICA: Fuerza al móvil a mostrar la lista en modo oscuro */
+    color-scheme: dark; 
+}
+
+/* Efecto al tocar/enfocar el input */
+.text-input:focus {
+    background-color: rgba(20, 10, 40, 0.9);
+    border-color: #ff00de; /* Cambia a rosa neón al tocarlo */
+    box-shadow: 0 0 15px rgba(255, 0, 222, 0.4); /* Resplandor */
+}
+
+/* --- ESTILOS ESPECÍFICOS PARA LOS DESPLEGABLES (SELECT) --- */
+select.text-input {
+    /* Ocultar la flecha fea por defecto del navegador */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    /* Poner nuestra propia flecha blanca moderna */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 24px;
+    cursor: pointer;
+}
+
+/* Estilo para las opciones cuando se despliegan en PC (Chrome/Edge/Firefox) */
+select.text-input option {
+    background-color: #1b0b2c; /* Color de fondo morado oscuro */
+    color: white;
+    padding: 10px;
+}
