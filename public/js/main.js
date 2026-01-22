@@ -1729,6 +1729,49 @@ function continueToNextPlayerTurn() {
 }
 
 let currentSharePayload = null;
+let deferredInstallPrompt = null;
+
+function isAppInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function updateInstallButtonVisibility() {
+    const installBtn = document.getElementById('install-btn');
+    if (!installBtn) return;
+
+    const shouldShow = Boolean(deferredInstallPrompt) && !isAppInstalled() && isMobileDevice();
+    installBtn.style.display = shouldShow ? 'inline-flex' : 'none';
+}
+
+function initializeInstallPrompt() {
+    const installBtn = document.getElementById('install-btn');
+    if (!installBtn) return;
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        updateInstallButtonVisibility();
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        updateInstallButtonVisibility();
+    });
+
+    installBtn.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        updateInstallButtonVisibility();
+    });
+
+    updateInstallButtonVisibility();
+}
 
 function generateSinglePlayerShareText(player, gameUrl) {
     const templates = [
@@ -3463,4 +3506,5 @@ window.onload = async () => {
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
     initializeShareButtons();
+    initializeInstallPrompt();
 };
