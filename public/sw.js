@@ -45,16 +45,22 @@ self.addEventListener('fetch', event => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request)
-        .then(response => {
+      (async () => {
+        try {
+          const response = await fetch(request);
           const responseClone = response.clone();
-          caches.open(RUNTIME_CACHE).then(cache => cache.put('/index.html', responseClone));
+          const responseCloneForRoot = response.clone();
+          const cache = await caches.open(RUNTIME_CACHE);
+          await Promise.all([
+            cache.put('/index.html', responseClone),
+            cache.put('/', responseCloneForRoot)
+          ]);
           return response;
-        })
-        .catch(async () => {
+        } catch (error) {
           const cached = await caches.match('/index.html');
-          return cached || caches.match('/index.html');
-        })
+          return cached || caches.match('/');
+        }
+      })()
     );
     return;
   }
