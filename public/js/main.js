@@ -1777,7 +1777,7 @@ function updateInstallButtonVisibility() {
     const installBtn = document.getElementById('install-btn');
     if (!installBtn) return;
 
-    const shouldShow = !isAppInstalled();
+    const shouldShow = Boolean(deferredInstallPrompt) && !isAppInstalled();
     installBtn.style.display = shouldShow ? 'inline-flex' : 'none';
 }
 
@@ -1800,7 +1800,6 @@ function initializeInstallPrompt() {
                 deferredInstallPrompt = null;
                 return;
             }
-            showAppAlert('La instalación no está disponible en este momento. Navega un poco más por la app y vuelve a intentarlo.');
         });
         installNoticeInitialized = true;
     }
