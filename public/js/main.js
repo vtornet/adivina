@@ -1795,7 +1795,7 @@ function initializeInstallPrompt() {
                 deferredInstallPrompt.prompt();
                 const choice = await deferredInstallPrompt.userChoice;
                 if (choice && choice.outcome === 'accepted') {
-                    installBtn.style.display = 'none';
+                    updateInstallButtonVisibility();
                 }
                 deferredInstallPrompt = null;
                 return;
