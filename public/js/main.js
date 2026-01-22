@@ -1793,9 +1793,11 @@ function initializeInstallPrompt() {
             }
             if (deferredInstallPrompt) {
                 deferredInstallPrompt.prompt();
-                await deferredInstallPrompt.userChoice;
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    updateInstallButtonVisibility();
+                }
                 deferredInstallPrompt = null;
-                updateInstallButtonVisibility();
                 return;
             }
             showManualInstallNotice();
