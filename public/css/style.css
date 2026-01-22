@@ -775,9 +775,15 @@ select.text-input {
     cursor: pointer;
 }
 
-/* Estilo para las opciones cuando se despliegan en PC (Chrome/Edge/Firefox) */
+/* Estilo para las opciones (FORZAR COLOR SÓLIDO PARA MÓVIL) */
 select.text-input option {
-    background-color: #1b0b2c; /* Color de fondo morado oscuro */
+    background-color: #000000; /* Negro puro sólido */
     color: white;
-    padding: 10px;
+    padding: 15px;
+}
+
+/* Forzar también el grupo de opciones (optgroup) si lo hubiera */
+select.text-input optgroup {
+    background-color: #000000;
+    color: white;
 }
