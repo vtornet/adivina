@@ -3,11 +3,11 @@ const decadeNames = {
     '90s': 'Década de los 90',
     '00s': 'Década de los 2000',
     '10s': 'Década de los 2010',
-    'Actual': 'Década Actual', // 2020s en adelante
-    'actual': 'Década Actual', // AÑADE ESTO PARA HACERLO RESISTENTE
-    'Todas': 'Todas las Décadas', // Nueva opción
+    'Actual': 'Década Actual',
+    'actual': 'Década Actual',
+    'Todas': 'Todas las Décadas',
     'elderly': 'Modo Fácil',
-    'especiales': 'Especiales'
+    'especiales': 'Especiales' // Esto asegura que tenga etiqueta visual
 };
 
 const categoryNames = {
@@ -18,7 +18,8 @@ const categoryNames = {
     tv: "Programas de TV",
     infantiles: "Series Infantiles",
     anuncios: "Anuncios",
-    consolidated: "Todas las Categorías" // Usado para la opción 'Todas'
+    consolidated: "Todas las Categorías",
+    verano: "Canciones del Verano"
 };
 
 function getDecadeLabel(decadeId) {
@@ -29,11 +30,20 @@ function getCategoryLabel(categoryId) {
     return categoryNames[categoryId] || categoryId;
 }
 
+// DEFINICIÓN DE ORDEN DE BOTONES
 const BASE_DECADES = Array.isArray(window.allDecadesDefined)
     ? window.allDecadesDefined
     : ['80s', '90s', '00s', '10s', 'actual', 'verano'];
-const DECADES_ORDER = BASE_DECADES.filter(decade => decade !== 'verano');
-const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas', 'verano'];
+
+// CORRECCIÓN CRÍTICA AQUÍ:
+// 1. Filtramos 'verano' (para moverlo dentro) y 'especiales' (por si acaso viniera de auto-scan).
+// 2. Concatenamos explícitamente ['especiales'] al final para forzar que aparezca el botón.
+const DECADES_ORDER = BASE_DECADES
+    .filter(decade => decade !== 'verano' && decade !== 'especiales')
+    .concat(['especiales']);
+
+const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
+
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
     : ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
@@ -1084,14 +1094,22 @@ function parseDisplay(displayText) {
 async function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
+    
+    // Aquí usa la lista corregida que acabamos de definir arriba
     DECADES_ORDER.forEach(decadeId => {
         const button = document.createElement('button');
         button.className = 'category-btn';
+        // Si es especiales, le damos un estilo distinto (opcional, pero recomendado)
+        if (decadeId === 'especiales') {
+            button.className = 'category-btn tertiary'; // Usa tertiary o el que prefieras
+            button.style.border = '2px solid gold'; // Un toque visual para destacarlo
+        }
         button.innerText = getDecadeLabel(decadeId);
         button.onclick = () => selectDecade(decadeId);
         container.appendChild(button);
     });
 
+    // Botón de Todas las décadas
     const allButton = document.createElement('button');
     allButton.className = 'category-btn tertiary';
     allButton.innerText = getDecadeLabel('Todas');
