@@ -54,7 +54,7 @@ html, body {
 
     /* --- CAMBIOS AQUÍ --- */
     /* En lugar de 100vh, usamos 90vh para dejar espacio arriba y abajo */
-    max-height: 90vh; 
+    max-height: 82vh; 
     
     /* Activamos el scroll vertical si el contenido es muy largo */
     overflow-y: auto; 
@@ -796,16 +796,16 @@ select.text-input optgroup {
     color: white;
 }
 
-/* Ocultar barra de scroll para Chrome, Safari y Opera */
+/* Ocultar barra de scroll VISUALMENTE pero mantener funcionalidad */
 .screen::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;  /* Ancho cero para que no se vea */
+  background: transparent; /* Fondo transparente */
 }
 
 .screen::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  display: none;
 }
 
 .screen::-webkit-scrollbar-thumb {
-  background-color: var(--secondary-color);
-  border-radius: 20px;
+  display: none;
 }
