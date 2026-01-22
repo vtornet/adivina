@@ -1777,7 +1777,7 @@ function updateInstallButtonVisibility() {
     const installBtn = document.getElementById('install-btn');
     if (!installBtn) return;
 
-    const shouldShow = !isAppInstalled();
+    const shouldShow = Boolean(deferredInstallPrompt) && !isAppInstalled();
     installBtn.style.display = shouldShow ? 'inline-flex' : 'none';
 }
 
@@ -1793,12 +1793,13 @@ function initializeInstallPrompt() {
             }
             if (deferredInstallPrompt) {
                 deferredInstallPrompt.prompt();
-                await deferredInstallPrompt.userChoice;
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    updateInstallButtonVisibility();
+                }
                 deferredInstallPrompt = null;
-                updateInstallButtonVisibility();
                 return;
             }
-            showManualInstallNotice();
         });
         installNoticeInitialized = true;
     }
@@ -1815,29 +1816,6 @@ function initializeInstallPrompt() {
     });
 
     updateInstallButtonVisibility();
-}
-
-function showManualInstallNotice() {
-    let notice = document.getElementById('manual-install-notice');
-    if (!notice) {
-        notice = document.createElement('div');
-        notice.id = 'manual-install-notice';
-        notice.className = 'modal-overlay hidden';
-        notice.innerHTML = `
-            <div class="modal-content">
-                <p>Pulsa ⋮ y selecciona ‘Añadir a pantalla de inicio’</p>
-                <button class="btn secondary" type="button" id="manual-install-close">Cerrar</button>
-            </div>
-        `;
-        document.body.appendChild(notice);
-        const closeBtn = notice.querySelector('#manual-install-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                notice.classList.add('hidden');
-            });
-        }
-    }
-    notice.classList.remove('hidden');
 }
 
 function generateSinglePlayerShareText(player, gameUrl, decade, category) {
