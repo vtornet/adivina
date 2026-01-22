@@ -544,9 +544,46 @@ async function changePassword() {
     }
 }
 
+let swRegistration = null;
+let updateBannerVisible = false;
+let updateNoticeInitialized = false;
+
+function showUpdateBanner() {
+    if (updateBannerVisible) return;
+    updateBannerVisible = true;
+
+    const banner = document.getElementById('update-notice');
+    if (!banner) return;
+    if (!updateNoticeInitialized) {
+        const button = document.getElementById('update-now-btn');
+        if (button) {
+            button.addEventListener('click', () => {
+                window.location.reload();
+            });
+        }
+        updateNoticeInitialized = true;
+    }
+    banner.hidden = false;
+}
+
 if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        showUpdateBanner();
+    });
+
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(error => {
+        navigator.serviceWorker.register('/sw.js').then(registration => {
+            swRegistration = registration;
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (!newWorker) return;
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        showUpdateBanner();
+                    }
+                });
+            });
+        }).catch(error => {
             console.warn('No se pudo registrar el Service Worker:', error);
         });
     });
@@ -1728,6 +1765,180 @@ function continueToNextPlayerTurn() {
     showScreen('game-screen');
 }
 
+let currentSharePayload = null;
+let deferredInstallPrompt = null;
+
+function isAppInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches;
+}
+
+function updateInstallButtonVisibility() {
+    const installBtn = document.getElementById('install-btn');
+    if (!installBtn) return;
+
+    const shouldShow = Boolean(deferredInstallPrompt) && !isAppInstalled();
+    installBtn.style.display = shouldShow ? 'inline-flex' : 'none';
+}
+
+function initializeInstallPrompt() {
+    const installBtn = document.getElementById('install-btn');
+    if (!installBtn) return;
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        updateInstallButtonVisibility();
+    });
+
+    window.addEventListener('appinstalled', () => {
+        deferredInstallPrompt = null;
+        updateInstallButtonVisibility();
+    });
+
+    installBtn.addEventListener('click', async () => {
+        if (!deferredInstallPrompt || isAppInstalled()) {
+            updateInstallButtonVisibility();
+            return;
+        }
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        updateInstallButtonVisibility();
+    });
+
+    updateInstallButtonVisibility();
+}
+
+function generateSinglePlayerShareText(player, gameUrl, decade, category) {
+    const templates = [
+        `🎶 Reto superado en Adivina la Canción 🎶\n\n🎧 {{player}} ha conseguido {{score}} puntos.\n¿Habrías llegado tan lejos?\n\nPon a prueba tu oído musical 👇\n👉 {{gameUrl}}`,
+        `🔥 ¿Cuánto sabes realmente de música? 🔥\n\n{{player}} ha logrado {{score}} puntos en Adivina la Canción.\nNo es tan fácil como parece…\n\n¿Aceptas el reto?\n👉 {{gameUrl}}`,
+        `🎵 Partida completada en Adivina la Canción\n\n🎧 {{player}}: {{score}} puntos.\n¿Te animas a intentarlo tú?\n\n👉 {{gameUrl}}`,
+        `🎶 {{player}} se ha puesto a prueba en Adivina la Canción\n\nResultado final: {{score}} puntos.\n¿Puedes superarlo?\n\n👉 {{gameUrl}}`
+    ];
+
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    const baseText = template
+        .replace('{{player}}', player.name)
+        .replace('{{score}}', player.score)
+        .replace('{{gameUrl}}', gameUrl);
+    const extraInfo = (decade || category)
+        ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+        : '';
+    return `${baseText}${extraInfo}`;
+}
+
+function generateShareText(players, gameUrl, decade, category) {
+    // Ordenar por puntuación descendente
+    const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+    const topPlayer = sortedPlayers[0];
+    const secondPlayer = sortedPlayers[1];
+
+    if (!topPlayer) {
+        return `🎵 Adivina la Canción 🎵\n\n¿Te animas a jugar una partida?\n👉 ${gameUrl}`;
+    }
+
+    if (!secondPlayer) {
+        return generateSinglePlayerShareText(topPlayer, gameUrl, decade, category);
+    }
+
+    const winner = topPlayer.name;
+    const winnerScore = topPlayer.score;
+    const loser = secondPlayer.name;
+    const loserScore = secondPlayer.score;
+    const diff = Math.abs(winnerScore - loserScore);
+
+    if (diff === 0) {
+        const baseText = `🎵 Empate total en Adivina la Canción 🎵\n\n🤝 ${winner} y ${loser} terminan igualados con ${winnerScore} puntos.\nSin ganador… por ahora.\n\n¿Te unes para romper el empate?\n👉 ${gameUrl}`;
+        const extraInfo = (decade || category)
+            ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+            : '';
+        return `${baseText}${extraInfo}`;
+    }
+
+    if (diff === 1) {
+        const baseText = `🎶 Final de auténtico infarto en Adivina la Canción 🎶\n\n🏆 Ganador: ${winner} con ${winnerScore} puntos\n😮 ${loser} se queda a solo 1 punto (${loserScore})\n\nUna canción más lo habría cambiado todo…\n¿Habrías acertado tú la definitiva?\n👉 ${gameUrl}`;
+        const extraInfo = (decade || category)
+            ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+            : '';
+        return `${baseText}${extraInfo}`;
+    }
+
+    if (diff >= 2 && diff <= 4) {
+        const baseText = `🎧 Duelo muy ajustado en Adivina la Canción 🎧\n\n🥇 ${winner} se impone con ${winnerScore} puntos\n🥈 ${loser}, muy cerca, con ${loserScore}\n\nNada estaba decidido hasta el final.\n¿Te atreves a mejorar este resultado?\n👉 ${gameUrl}`;
+        const extraInfo = (decade || category)
+            ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+            : '';
+        return `${baseText}${extraInfo}`;
+    }
+
+    const baseText = `🔥 Exhibición musical en Adivina la Canción 🔥\n\n🏆 ${winner} arrasa con ${winnerScore} puntos\n${loser} se queda en ${loserScore}\n\n¿Habrías podido frenar esta victoria?\nDemuéstralo en tu propio duelo 👇\n👉 ${gameUrl}`;
+    const extraInfo = (decade || category)
+        ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+        : '';
+    return `${baseText}${extraInfo}`;
+}
+
+// Ejemplo de uso con datos simulados
+// const exampleShareText = generateShareText(
+//     [{ name: 'Ana', score: 8 }, { name: 'Luis', score: 7 }],
+//     'https://adivinalacancion.app'
+// );
+// const exampleSinglePlayerText = generateSinglePlayerShareText(
+//     { name: 'Ana', score: 10 },
+//     'https://adivinalacancion.app'
+// );
+
+function buildSharePayload({ players, gameUrl, decade, category }) {
+    return {
+        text: generateShareText(players, gameUrl, decade, category),
+        url: gameUrl
+    };
+}
+
+function updateShareLinks(payload) {
+    currentSharePayload = payload;
+    const whatsappLink = document.getElementById('share-whatsapp');
+    const facebookLink = document.getElementById('share-facebook');
+    const instagramLink = document.getElementById('share-instagram');
+    const xLink = document.getElementById('share-x');
+
+    const encodedText = encodeURIComponent(payload.text);
+    const encodedUrl = encodeURIComponent(payload.url);
+
+    if (whatsappLink) {
+        whatsappLink.href = `https://api.whatsapp.com/send?text=${encodedText}`;
+    }
+    if (facebookLink) {
+        facebookLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+    }
+    if (instagramLink) {
+        instagramLink.dataset.shareText = payload.text;
+        instagramLink.dataset.shareUrl = payload.url;
+    }
+    if (xLink) {
+        xLink.href = `https://twitter.com/intent/tweet?text=${encodedText}`;
+    }
+}
+
+function initializeShareButtons() {
+    const instagramLink = document.getElementById('share-instagram');
+    if (!instagramLink) return;
+
+    instagramLink.addEventListener('click', async (event) => {
+        if (!currentSharePayload || !navigator.share) return;
+        event.preventDefault();
+        try {
+            await navigator.share({
+                text: currentSharePayload.text,
+                url: currentSharePayload.url
+            });
+        } catch (error) {
+            console.warn('Compartir nativo cancelado o no disponible:', error);
+        }
+    });
+}
+
 /**
  * Finaliza la partida, calcula el ganador y guarda los resultados.
  */
@@ -1802,6 +2013,13 @@ function endGame() {
         const medal = (gameState.players.length > 1) ? ({ 0: '🥇', 1: '🥈', 2: '🥉' }[index] || '') : '';
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
+
+    updateShareLinks(buildSharePayload({
+        players: gameState.players,
+        gameUrl: 'https://adivinalacancion.app',
+        decade: gameState.selectedDecade,
+        category: gameState.category
+    }));
 
     // Recopilar todas las canciones jugadas en esta partida por todos los jugadores
     let allPlayedSongsInThisGame = [];
@@ -3223,6 +3441,13 @@ function showOnlineResults(gameData) {
         finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
     });
 
+    updateShareLinks(buildSharePayload({
+        players: gameData.players || [],
+        gameUrl: 'https://adivinalacancion.app',
+        decade: gameData.decade,
+        category: gameData.category
+    }));
+
     // Opciones de botón después de partida online: Volver al menú principal
     document.getElementById('play-again-btn').onclick = () => {
         // Limpiar estado online y volver al menú online para jugar otra partida online
@@ -3340,4 +3565,6 @@ window.onload = async () => {
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
+    initializeShareButtons();
+    initializeInstallPrompt();
 };
