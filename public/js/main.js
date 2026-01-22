@@ -1767,22 +1767,41 @@ function continueToNextPlayerTurn() {
 
 let currentSharePayload = null;
 let deferredInstallPrompt = null;
+let installNoticeInitialized = false;
 
 function isAppInstalled() {
-    return window.matchMedia('(display-mode: standalone)').matches;
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
 function updateInstallButtonVisibility() {
     const installBtn = document.getElementById('install-btn');
     if (!installBtn) return;
 
-    const shouldShow = Boolean(deferredInstallPrompt) && !isAppInstalled();
+    const shouldShow = !isAppInstalled();
     installBtn.style.display = shouldShow ? 'inline-flex' : 'none';
 }
 
 function initializeInstallPrompt() {
     const installBtn = document.getElementById('install-btn');
     if (!installBtn) return;
+
+    if (!installNoticeInitialized) {
+        installBtn.addEventListener('click', async () => {
+            if (isAppInstalled()) {
+                updateInstallButtonVisibility();
+                return;
+            }
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+                updateInstallButtonVisibility();
+                return;
+            }
+            showManualInstallNotice();
+        });
+        installNoticeInitialized = true;
+    }
 
     window.addEventListener('beforeinstallprompt', (event) => {
         event.preventDefault();
@@ -1795,18 +1814,30 @@ function initializeInstallPrompt() {
         updateInstallButtonVisibility();
     });
 
-    installBtn.addEventListener('click', async () => {
-        if (!deferredInstallPrompt || isAppInstalled()) {
-            updateInstallButtonVisibility();
-            return;
-        }
-        deferredInstallPrompt.prompt();
-        await deferredInstallPrompt.userChoice;
-        deferredInstallPrompt = null;
-        updateInstallButtonVisibility();
-    });
-
     updateInstallButtonVisibility();
+}
+
+function showManualInstallNotice() {
+    let notice = document.getElementById('manual-install-notice');
+    if (!notice) {
+        notice = document.createElement('div');
+        notice.id = 'manual-install-notice';
+        notice.className = 'modal-overlay hidden';
+        notice.innerHTML = `
+            <div class="modal-content">
+                <p>Pulsa ⋮ y selecciona ‘Añadir a pantalla de inicio’</p>
+                <button class="btn secondary" type="button" id="manual-install-close">Cerrar</button>
+            </div>
+        `;
+        document.body.appendChild(notice);
+        const closeBtn = notice.querySelector('#manual-install-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                notice.classList.add('hidden');
+            });
+        }
+    }
+    notice.classList.remove('hidden');
 }
 
 function generateSinglePlayerShareText(player, gameUrl, decade, category) {
