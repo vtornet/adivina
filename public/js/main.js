@@ -544,7 +544,24 @@ async function changePassword() {
     }
 }
 
+let isUpdateReloading = false;
+
+function showUpdateNotice() {
+    const updateNotice = document.getElementById('update-notice');
+    if (!updateNotice) return;
+    updateNotice.style.display = 'block';
+}
+
 if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (isUpdateReloading) return;
+        isUpdateReloading = true;
+        showUpdateNotice();
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+    });
+
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js').catch(error => {
             console.warn('No se pudo registrar el Service Worker:', error);
@@ -1773,7 +1790,7 @@ function initializeInstallPrompt() {
     updateInstallButtonVisibility();
 }
 
-function generateSinglePlayerShareText(player, gameUrl) {
+function generateSinglePlayerShareText(player, gameUrl, decade, category) {
     const templates = [
         `🎶 Reto superado en Adivina la Canción 🎶\n\n🎧 {{player}} ha conseguido {{score}} puntos.\n¿Habrías llegado tan lejos?\n\nPon a prueba tu oído musical 👇\n👉 {{gameUrl}}`,
         `🔥 ¿Cuánto sabes realmente de música? 🔥\n\n{{player}} ha logrado {{score}} puntos en Adivina la Canción.\nNo es tan fácil como parece…\n\n¿Aceptas el reto?\n👉 {{gameUrl}}`,
@@ -1782,13 +1799,17 @@ function generateSinglePlayerShareText(player, gameUrl) {
     ];
 
     const template = templates[Math.floor(Math.random() * templates.length)];
-    return template
+    const baseText = template
         .replace('{{player}}', player.name)
         .replace('{{score}}', player.score)
         .replace('{{gameUrl}}', gameUrl);
+    const extraInfo = (decade || category)
+        ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+        : '';
+    return `${baseText}${extraInfo}`;
 }
 
-function generateShareText(players, gameUrl) {
+function generateShareText(players, gameUrl, decade, category) {
     // Ordenar por puntuación descendente
     const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
     const topPlayer = sortedPlayers[0];
@@ -1799,7 +1820,7 @@ function generateShareText(players, gameUrl) {
     }
 
     if (!secondPlayer) {
-        return generateSinglePlayerShareText(topPlayer, gameUrl);
+        return generateSinglePlayerShareText(topPlayer, gameUrl, decade, category);
     }
 
     const winner = topPlayer.name;
@@ -1809,18 +1830,34 @@ function generateShareText(players, gameUrl) {
     const diff = Math.abs(winnerScore - loserScore);
 
     if (diff === 0) {
-        return `🎵 Empate total en Adivina la Canción 🎵\n\n🤝 ${winner} y ${loser} terminan igualados con ${winnerScore} puntos.\nSin ganador… por ahora.\n\n¿Te unes para romper el empate?\n👉 ${gameUrl}`;
+        const baseText = `🎵 Empate total en Adivina la Canción 🎵\n\n🤝 ${winner} y ${loser} terminan igualados con ${winnerScore} puntos.\nSin ganador… por ahora.\n\n¿Te unes para romper el empate?\n👉 ${gameUrl}`;
+        const extraInfo = (decade || category)
+            ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+            : '';
+        return `${baseText}${extraInfo}`;
     }
 
     if (diff === 1) {
-        return `🎶 Final de auténtico infarto en Adivina la Canción 🎶\n\n🏆 Ganador: ${winner} con ${winnerScore} puntos\n😮 ${loser} se queda a solo 1 punto (${loserScore})\n\nUna canción más lo habría cambiado todo…\n¿Habrías acertado tú la definitiva?\n👉 ${gameUrl}`;
+        const baseText = `🎶 Final de auténtico infarto en Adivina la Canción 🎶\n\n🏆 Ganador: ${winner} con ${winnerScore} puntos\n😮 ${loser} se queda a solo 1 punto (${loserScore})\n\nUna canción más lo habría cambiado todo…\n¿Habrías acertado tú la definitiva?\n👉 ${gameUrl}`;
+        const extraInfo = (decade || category)
+            ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+            : '';
+        return `${baseText}${extraInfo}`;
     }
 
     if (diff >= 2 && diff <= 4) {
-        return `🎧 Duelo muy ajustado en Adivina la Canción 🎧\n\n🥇 ${winner} se impone con ${winnerScore} puntos\n🥈 ${loser}, muy cerca, con ${loserScore}\n\nNada estaba decidido hasta el final.\n¿Te atreves a mejorar este resultado?\n👉 ${gameUrl}`;
+        const baseText = `🎧 Duelo muy ajustado en Adivina la Canción 🎧\n\n🥇 ${winner} se impone con ${winnerScore} puntos\n🥈 ${loser}, muy cerca, con ${loserScore}\n\nNada estaba decidido hasta el final.\n¿Te atreves a mejorar este resultado?\n👉 ${gameUrl}`;
+        const extraInfo = (decade || category)
+            ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+            : '';
+        return `${baseText}${extraInfo}`;
     }
 
-    return `🔥 Exhibición musical en Adivina la Canción 🔥\n\n🏆 ${winner} arrasa con ${winnerScore} puntos\n${loser} se queda en ${loserScore}\n\n¿Habrías podido frenar esta victoria?\nDemuéstralo en tu propio duelo 👇\n👉 ${gameUrl}`;
+    const baseText = `🔥 Exhibición musical en Adivina la Canción 🔥\n\n🏆 ${winner} arrasa con ${winnerScore} puntos\n${loser} se queda en ${loserScore}\n\n¿Habrías podido frenar esta victoria?\nDemuéstralo en tu propio duelo 👇\n👉 ${gameUrl}`;
+    const extraInfo = (decade || category)
+        ? `\n\nDécada: ${decade || 'N/A'} · Categoría: ${category || 'N/A'}`
+        : '';
+    return `${baseText}${extraInfo}`;
 }
 
 // Ejemplo de uso con datos simulados
@@ -1833,9 +1870,9 @@ function generateShareText(players, gameUrl) {
 //     'https://adivinalacancion.app'
 // );
 
-function buildSharePayload({ players, gameUrl }) {
+function buildSharePayload({ players, gameUrl, decade, category }) {
     return {
-        text: generateShareText(players, gameUrl),
+        text: generateShareText(players, gameUrl, decade, category),
         url: gameUrl
     };
 }
@@ -1960,7 +1997,9 @@ function endGame() {
 
     updateShareLinks(buildSharePayload({
         players: gameState.players,
-        gameUrl: 'https://adivinalacancion.app'
+        gameUrl: 'https://adivinalacancion.app',
+        decade: gameState.selectedDecade,
+        category: gameState.category
     }));
 
     // Recopilar todas las canciones jugadas en esta partida por todos los jugadores
@@ -3385,7 +3424,9 @@ function showOnlineResults(gameData) {
 
     updateShareLinks(buildSharePayload({
         players: gameData.players || [],
-        gameUrl: 'https://adivinalacancion.app'
+        gameUrl: 'https://adivinalacancion.app',
+        decade: gameData.decade,
+        category: gameData.category
     }));
 
     // Opciones de botón después de partida online: Volver al menú principal
