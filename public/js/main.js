@@ -7,7 +7,7 @@ const decadeNames = {
     'actual': 'Década Actual', // AÑADE ESTO PARA HACERLO RESISTENTE
     'Todas': 'Todas las Décadas', // Nueva opción
     'elderly': 'Modo Fácil',
-    'verano': 'Canciones del Verano'
+    'especiales': 'Especiales'
 };
 
 const categoryNames = {
@@ -1107,23 +1107,38 @@ async function generateDecadeButtons() {
  * @param {string} decade - La década seleccionada.
  */
 async function selectDecade(decade) {
+    // 1. Verificación de Usuario
     if (!currentUser || !currentUser.playerName) {
         showAppAlert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
         showScreen('login-screen');
         return;
     }
+
+    // 2. NUEVA LÓGICA: Sección Especiales
+    // Se coloca antes del chequeo premium general porque 'especiales' es un contenedor
+    // y la validación premium se hará en cada botón interno (ej. Verano).
+    if (decade === 'especiales') {
+        gameState.selectedDecade = 'especiales';
+        generateCategoryButtons(); // Genera el menú especial con texto de feedback
+        showScreen('category-screen');
+        return;
+    }
+
+    // 3. Verificación Premium (para décadas normales bloqueadas)
     if (isPremiumDecade(decade) && !hasPremiumAccess()) {
         showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
         return;
     }
+
     gameState.selectedDecade = decade;
-    
+
+    // 4. Lógica para "Todas las Décadas" (MANTENIDA INTACTA)
     if (decade === 'Todas') {
         gameState.category = 'consolidated'; // Categoría especial para "Todas"
         try {
             await loadSongsForDecadeAndCategory('Todas', 'consolidated'); // Carga/consolida todas las canciones
+            
             // Verificar que hay suficientes canciones para empezar una partida en modo "Todas"
-            // (10 preguntas por jugador, por lo tanto, mínimo 10 canciones si hay 1 jugador)
             if (configuracionCanciones['Todas']['consolidated'].length < gameState.totalQuestionsPerPlayer) {
                 showAppAlert(`No hay suficientes canciones para jugar en la opción '${getDecadeLabel('Todas')}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
                 showScreen('decade-selection-screen'); // Vuelve si no hay suficientes
@@ -1135,9 +1150,11 @@ async function selectDecade(decade) {
             console.error(error);
             showScreen('decade-selection-screen'); // Volver a la selección de década
         }
-    } else {
-        // *** INICIO DE LA MODIFICACIÓN ***
+    } 
+    // 5. Lógica para Décadas Normales (MANTENIDA INTACTA)
+    else {
         // Antes de mostrar la pantalla de categorías, cargamos todas las categorías de la década.
+        // Esto evita el lag al pulsar una categoría después.
         const categoriesToLoadPromises = allPossibleCategories.map(cat => 
             loadSongsForDecadeAndCategory(decade, cat).catch(error => {
                 console.warn(`No se pudo cargar la categoría ${cat} para la década ${decade}. Puede que no haya canciones o un error de archivo.`, error);
@@ -1146,7 +1163,6 @@ async function selectDecade(decade) {
         );
         
         await Promise.allSettled(categoriesToLoadPromises);
-        // *** FIN DE LA MODIFICACIÓN ***
 
         generateCategoryButtons(); // Genera los botones de categoría para la década seleccionada
         showScreen('category-screen');
@@ -1159,6 +1175,54 @@ async function selectDecade(decade) {
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
     container.innerHTML = '';
+    
+    // Título dinámico
+    const titleEl = document.getElementById('category-screen-title');
+    if (titleEl) {
+        titleEl.innerHTML = gameState.selectedDecade === 'especiales' 
+            ? 'Selecciona una Edición Especial' 
+            : `Elige una Categoría (<span id="selected-decade-display">${getDecadeLabel(gameState.selectedDecade)}</span>)`;
+    }
+
+    // --- RENDERIZADO PARA SECCIÓN 'ESPECIALES' ---
+    if (gameState.selectedDecade === 'especiales') {
+        // 1. Botón Canciones del Verano
+        const btnVerano = document.createElement('button');
+        btnVerano.className = 'category-btn';
+        btnVerano.innerText = '☀️ Canciones del Verano';
+        // Reutilizamos la lógica existente, pero verificamos premium si fuese necesario
+        if (!hasPremiumAccess()) {
+             btnVerano.classList.add('locked');
+             btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.');
+        } else {
+             btnVerano.onclick = () => startSummerSongsGame();
+        }
+        container.appendChild(btnVerano);
+
+        // 2. Texto Profesional "Próximamente"
+        const infoDiv = document.createElement('div');
+        infoDiv.style.marginTop = '30px';
+        infoDiv.style.padding = '20px';
+        infoDiv.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+        infoDiv.style.borderRadius = '12px';
+        infoDiv.style.border = '1px dashed var(--secondary-color)';
+        infoDiv.style.textAlign = 'center';
+        infoDiv.innerHTML = `
+            <p style="color: var(--light-text-color); margin-bottom: 10px; font-size: 0.95rem;">
+                🚀 <strong>Próximamente más categorías</strong>
+            </p>
+            <p style="font-size: 0.85rem; color: #ccc; line-height: 1.5;">
+                Estamos trabajando en nuevas ediciones especiales (Sevillanas, Metal, etc.). 
+                <br>¿Tienes alguna sugerencia? Escríbenos a:
+                <br><a href="mailto:contact@appstracta.app" style="color: var(--secondary-color); text-decoration: underline; font-weight: bold;">contact@appstracta.app</a>
+            </p>
+        `;
+        container.appendChild(infoDiv);
+        return; // Salimos para no ejecutar la lógica estándar
+    }
+    // ----------------------------------------------
+
+    // LÓGICA ESTÁNDAR (Décadas normales)
     const currentDecadeSongs = configuracionCanciones[gameState.selectedDecade];
 
     if (!currentDecadeSongs) {
@@ -1166,9 +1230,14 @@ function generateCategoryButtons() {
         return;
     }
 
-    CATEGORY_ORDER.forEach(categoryId => {
-        const songsArray = currentDecadeSongs[categoryId]; // Asegurarse de obtener el array de canciones
-        if (Array.isArray(songsArray) && songsArray.length >= 4) { // Validar que sea un array y tenga suficientes canciones
+    // Usar window.allPossibleCategories si existe, sino CATEGORY_ORDER por defecto
+    const catsToRender = (typeof window.allPossibleCategories !== 'undefined') 
+        ? window.allPossibleCategories 
+        : CATEGORY_ORDER;
+
+    catsToRender.forEach(categoryId => {
+        const songsArray = currentDecadeSongs[categoryId];
+        if (Array.isArray(songsArray) && songsArray.length >= 4) {
             const button = document.createElement('button');
             button.className = 'category-btn';
             button.innerText = getCategoryLabel(categoryId);
@@ -1181,7 +1250,7 @@ function generateCategoryButtons() {
     });
 
     if (container.innerHTML === '') {
-        container.innerHTML = '<p class="warning-text">No hay categorías con suficientes canciones para jugar en esta década. Por favor, vuelve y elige otra década o categoría.</p>';
+        container.innerHTML = '<p class="warning-text">No hay categorías con suficientes canciones para jugar en esta década.</p>';
     }
 }
 
