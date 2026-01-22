@@ -729,11 +729,6 @@ h1 {
     padding: 10px 0;
 }
 
-/* ✅ Permite hacer scroll vertical en pantallas si el contenido excede la altura de la ventana */
-.screen {
-    overflow-y: auto;
-    max-height: 100vh;
-}
 
 /* =========================================
    MEJORA VISUAL DE INPUTS Y SELECTORES
