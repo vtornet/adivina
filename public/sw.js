@@ -1,12 +1,15 @@
-const CACHE_NAME = 'adivina-cancion-v3';
+const CACHE_VERSION = 'v1.0.0';
+const CACHE_NAME = `adivina-cache-${CACHE_VERSION}`;
+const RUNTIME_CACHE = `adivina-runtime-${CACHE_VERSION}`;
+
 const PRECACHE_URLS = [
-  './',
-  'index.html',
-  'manifest.json',
-  'css/style.css',
-  'js/main.js',
-  'js/songs-loader.js',
-  'img/adivina.png'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/css/style.css',
+  '/js/main.js',
+  '/js/songs-loader.js',
+  '/img/adivina.png'
 ];
 
 self.addEventListener('install', event => {
@@ -20,45 +23,57 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.map(key => (key === CACHE_NAME ? null : caches.delete(key)))
+        keys.map(key => (key === CACHE_NAME || key === RUNTIME_CACHE ? null : caches.delete(key)))
       )
     )
   );
   self.clients.claim();
 });
 
+function isCacheableAsset(request) {
+  if (request.method !== 'GET') return false;
+  const destination = request.destination;
+  return ['style', 'script', 'image', 'font'].includes(destination);
+}
+
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') {
+  const { request } = event;
+
+  if (request.method !== 'GET') {
     return;
   }
 
-  const requestUrl = new URL(event.request.url);
-  if (requestUrl.pathname.startsWith('/api/')) {
-    return;
-  }
-
-  if (requestUrl.pathname.startsWith('/audio/')
-    || event.request.headers.get('range')
-    || event.request.destination === 'audio'
-  ) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      return fetch(event.request).then(response => {
-        if (!response || !response.ok || response.status !== 200) {
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          const responseClone = response.clone();
+          caches.open(RUNTIME_CACHE).then(cache => cache.put('/index.html', responseClone));
           return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match('/index.html');
+          return cached || caches.match('/index.html');
+        })
+    );
+    return;
+  }
+
+  if (isCacheableAsset(request)) {
+    event.respondWith(
+      caches.match(request).then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse;
         }
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
-        return response;
-      });
-    })
-  );
+        return fetch(request).then(response => {
+          if (!response || !response.ok) {
+            return response;
+          }
+          const responseClone = response.clone();
+          caches.open(RUNTIME_CACHE).then(cache => cache.put(request, responseClone));
+          return response;
+        });
+      })
+    );
+  }
 });
