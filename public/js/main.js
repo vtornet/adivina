@@ -1615,7 +1615,15 @@ function setupQuestion() {
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
     
     document.getElementById("player-name-display").textContent = currentPlayer.name;
-    document.getElementById('category-display').innerText = `${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}`;
+    // MODIFICACIÓN VISUAL: Texto personalizado para modos especiales
+    const categoryDisplayEl = document.getElementById('category-display');
+    if (gameState.selectedDecade === 'verano') {
+        categoryDisplayEl.innerText = "Especiales - Canciones del Verano";
+    } else if (gameState.selectedDecade === 'elderly') {
+        categoryDisplayEl.innerText = "Modo Fácil - Todas las Canciones";
+    } else {
+        categoryDisplayEl.innerText = `${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}`;
+    }
     document.getElementById('question-counter').innerText = `Pregunta ${currentPlayer.questionsAnswered + 1}/${gameState.totalQuestionsPerPlayer}`;
     document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
     document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
