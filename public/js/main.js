@@ -1369,35 +1369,55 @@ function generateCategoryButtons() {
         return;
     }
 
+    // public/js/main.js
+
+// ... (inicio de la función generateCategoryButtons sigue igual)
+
     const catsToRender = (typeof window.allPossibleCategories !== 'undefined') 
         ? window.allPossibleCategories 
         : CATEGORY_ORDER;
 
     catsToRender.forEach(categoryId => {
         const songsArray = currentDecadeSongs[categoryId];
-        // Comprobamos si hay canciones (mínimo 4)
-        const hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
+        
+        // 1. Determinar si hay contenido real
+        let hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
+
+        // 2. REGLA ESPECIAL: Década Actual
+        // Forzamos "sin contenido" para todo lo que no sea español o inglés
+        const isActualDecade = (gameState.selectedDecade === 'actual' || gameState.selectedDecade === 'Actual');
+        const allowedCategories = ['espanol', 'ingles'];
+
+        if (isActualDecade && !allowedCategories.includes(categoryId)) {
+            hasEnoughSongs = false;
+        }
         
         const button = document.createElement('button');
         button.className = 'category-btn';
         
-        // ESTADO 1: PRÓXIMAMENTE (No hay canciones)
-        if (!hasEnoughSongs) {
+        // --- LÓGICA DE VISUALIZACIÓN POR JERARQUÍA ---
+
+        // PRIORIDAD 1: ¿Es Premium y el usuario NO ha pagado? -> CANDADO
+        // (Mostramos el candado incluso si está "vacía" por detrás, para mantener la consistencia visual de venta)
+        if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
+            button.innerText = getCategoryLabel(categoryId);
+            button.classList.add('locked'); // Esto añade el candado 🔒 por CSS
+            button.onclick = () => showPremiumModal(`Desbloquea ${getCategoryLabel(categoryId)} y muchas más con el pase Premium.`);
+        } 
+        
+        // PRIORIDAD 2: ¿No hay canciones (o está forzado)? -> PRÓXIMAMENTE
+        // (Solo llegamos aquí si el usuario YA es Premium o la categoría es Gratuita)
+        else if (!hasEnoughSongs) {
             button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Próximamente)</span>`;
             button.classList.add('secondary'); 
             button.style.opacity = '0.7'; 
             button.onclick = () => showAppAlert(`🚧 Estamos recopilando temas de ${getCategoryLabel(categoryId)}. ¡Pronto disponible!`);
         } 
-        // ESTADO 2 y 3: DISPONIBLE o PREMIUM (Hay canciones)
+        
+        // PRIORIDAD 3: Todo correcto -> JUGAR
         else {
             button.innerText = getCategoryLabel(categoryId);
-            
-            if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
-                button.classList.add('locked');
-                button.onclick = () => showPremiumModal(`Desbloquea ${getCategoryLabel(categoryId)} con el pase Premium.`);
-            } else {
-                button.onclick = () => selectCategory(categoryId);
-            }
+            button.onclick = () => selectCategory(categoryId);
         }
         
         container.appendChild(button);
