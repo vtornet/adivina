@@ -56,7 +56,7 @@ window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: '90s/ingles/oasis - wonderwall.mp3', display: 'Oasis - Wonderwall', listenUrl: 'URL_PENDIENTE_OASIS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/phil-collins - another-day-in-paradise.mp3', display: 'Phil Collins - Another Day In Paradise', listenUrl: 'URL_PENDIENTE_PHIL_COLLINS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/R-E-M - everybody-hurts.mp3', display: 'R E M - Everybody Hurts', listenUrl: 'URL_PENDIENTE_R_E_M', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  { file: '90s/ingles/r-e-m - losing my religion.mp3', display: 'R.E.M. - Losing My Religion', listenUrl: 'URL_PENDIENTE_R.E.M.', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: '90s/ingles/r-e-m - losing-my-religion.mp3', display: 'R.E.M. - Losing My Religion', listenUrl: 'URL_PENDIENTE_R.E.M.', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/radiohead - creep.mp3', display: 'Radiohead - Creep', listenUrl: 'URL_PENDIENTE_RADIOHEAD', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/rage-against-the-machine - killing-in-the-name.mp3', display: 'Rage Against The Machine - Killing In The Name', listenUrl: 'URL_PENDIENTE_RAGE AGAINST THE MACHINE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/red-hot-chili-peppers - under-the-bridge.mp3', display: 'Red Hot Chili Peppers - Under The Bridge', listenUrl: 'URL_PENDIENTE_RED HOT CHILI PEPPERS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
