@@ -1261,10 +1261,35 @@ async function selectDecade(decade) {
  * Genera y muestra los botones de categoría.
  * AHORA: Muestra botones "Próximamente" si no hay canciones, para llenar la UI.
  */
+/**
+ * Genera y muestra los botones de categoría.
+ * VERSIÓN FINAL: Integra corrección de datos (mapeo) + Lógica de Próximamente/Premium
+ */
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
     container.innerHTML = '';
     
+    // 1. CORRECCIÓN DE DATOS (EL PUENTE)
+    // Aseguramos que el juego encuentre las canciones aunque la carpeta se llame distinto al botón.
+    if (typeof window.allSongsByDecadeAndCategory !== 'undefined') {
+        const key = gameState.selectedDecade;
+        
+        // Lógica de búsqueda:
+        // Si el botón es '2010s', busca en '10s'. Si es '2000s', busca en '00s'.
+        let dataFound = window.allSongsByDecadeAndCategory[key]; // Intento directo
+        
+        if (!dataFound) {
+            if (key === '2010s') dataFound = window.allSongsByDecadeAndCategory['10s'];
+            else if (key === '2000s') dataFound = window.allSongsByDecadeAndCategory['00s'];
+            else if (key === 'actual') dataFound = window.allSongsByDecadeAndCategory['actual'];
+        }
+
+        // Si encontramos datos, actualizamos la configuración global para que el juego los vea
+        if (dataFound) {
+            configuracionCanciones[key] = dataFound;
+        }
+    }
+
     // Título dinámico
     const titleEl = document.getElementById('category-screen-title');
     if (titleEl) {
@@ -1275,7 +1300,7 @@ function generateCategoryButtons() {
 
     // --- RENDERIZADO PARA SECCIÓN 'ESPECIALES' ---
     if (gameState.selectedDecade === 'especiales') {
-        // ... (Lógica de especiales se mantiene igual) ...
+        // (Tu lógica actual de especiales)
         const btnVerano = document.createElement('button');
         btnVerano.className = 'category-btn';
         btnVerano.innerText = '☀️ Canciones del Verano';
@@ -1288,7 +1313,6 @@ function generateCategoryButtons() {
         }
         container.appendChild(btnVerano);
 
-        // Mensaje de feedback
         const infoDiv = document.createElement('div');
         infoDiv.style.marginTop = '30px';
         infoDiv.style.padding = '20px';
@@ -1313,9 +1337,9 @@ function generateCategoryButtons() {
     // LÓGICA ESTÁNDAR (Décadas normales)
     const currentDecadeSongs = configuracionCanciones[gameState.selectedDecade];
 
-    // Si la década ni siquiera existe en el archivo de configuración, mostramos aviso
+    // Si tras el "puente" sigue sin haber datos, mostramos aviso
     if (!currentDecadeSongs) {
-        container.innerHTML = '<p class="warning-text">Estamos recopilando canciones para esta década. ¡Vuelve pronto!</p>';
+        container.innerHTML = '<p class="warning-text">Cargando datos... Si persiste, recarga la página.</p>';
         return;
     }
 
@@ -1330,26 +1354,20 @@ function generateCategoryButtons() {
         const button = document.createElement('button');
         button.className = 'category-btn';
         
-        // ESTADO 1: PRÓXIMAMENTE (No hay canciones)
+        // ESTADO 1: PRÓXIMAMENTE (No hay canciones suficientes)
         if (!hasEnoughSongs) {
-            // Usamos innerHTML para poner un subtítulo pequeño
             button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Próximamente)</span>`;
-            
-            // Estilo visual "apagado" pero visible (reutilizamos clase secondary o añadimos opacidad inline)
             button.classList.add('secondary'); 
             button.style.opacity = '0.7'; 
-            
-            // Al hacer click, aviso amigable
-            button.onclick = () => showAppAlert(`🚧 Estamos recopilando los mejores temas de ${getCategoryLabel(categoryId)} para esta década. ¡Muy pronto estarán disponibles!`);
+            button.onclick = () => showAppAlert(`🚧 Estamos recopilando los mejores temas de ${getCategoryLabel(categoryId)}. ¡Muy pronto disponible!`);
         } 
         // ESTADO 2 y 3: DISPONIBLE o PREMIUM (Hay canciones)
         else {
             button.innerText = getCategoryLabel(categoryId);
             
-            // Check de Premium (tu lógica existente del candado)
+            // Check de Premium
             if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
-                button.classList.add('locked'); // Tu CSS ya añade el candado automáticamente con ::after
-                // Si haces click, modal de pago
+                button.classList.add('locked');
                 button.onclick = () => showPremiumModal(`Desbloquea ${getCategoryLabel(categoryId)} y muchas más categorías con el pase Premium.`);
             } else {
                 // Click normal para jugar
@@ -1359,6 +1377,14 @@ function generateCategoryButtons() {
         
         container.appendChild(button);
     });
+    
+    // Botón Volver extra por si acaso
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn secondary';
+    backBtn.style.marginTop = '20px';
+    backBtn.innerText = 'Volver';
+    backBtn.onclick = () => showScreen('decade-selection-screen');
+    container.appendChild(backBtn);
 }
 
 /**
