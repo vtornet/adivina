@@ -3,7 +3,7 @@ window.allSongsByDecadeAndCategory = window.allSongsByDecadeAndCategory || {};
 window.allSongsByDecadeAndCategory['90s'] = window.allSongsByDecadeAndCategory['90s'] || {};
 window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: '90s/ingles/4-non-blondes - whats-up.mp3', display: '4 Non Blondes - Whats Up', listenUrl: 'URL_PENDIENTE_4_NON_BLONDES', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  { file: '90s/ingles/ac-dc -thunderstruck.mp3', display: 'Ac Dc - Thunderstruck', listenUrl: 'URL_PENDIENTE_AC_DC', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: '90s/ingles/ac-dc - thunderstruck.mp3', display: 'Ac Dc - Thunderstruck', listenUrl: 'URL_PENDIENTE_AC_DC', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/ace-of-base - all-that-she-wants.mp3', display: 'Ace Of Base - All That She Wants', listenUrl: 'URL_PENDIENTE_ACE_OF_BASE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/ace-of-base - happy-nation.mp3', display: 'Ace Of Base - Happy Nation', listenUrl: 'URL_PENDIENTE_ACE_OF_BASE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/aerosmith - i-dont-want-to-miss-a-thing.mp3', display: 'Aerosmith - I Dont Want To Miss A Thing', listenUrl: 'URL_PENDIENTE_AEROSMITH', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
@@ -75,7 +75,7 @@ window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: '90s/ingles/soundgarden - black-hole-sun.mp3', display: 'Soundgarden - Black Hole Sun', listenUrl: 'URL_PENDIENTE_SOUNDGARDEN', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/spice-girls - wannabe.mp3', display: 'Spice Girls - Wannabe', listenUrl: 'URL_PENDIENTE_SPICE_GIRLS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/spin-doctors - two-princes.mp3', display: 'Spin Doctors - Two Princes', listenUrl: 'URL_PENDIENTE_SPIN_DOCTORS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  { file: '90s/ingles/take-that - back-for-good.mp3', display: 'Take That - Back For Good', listenUrl: 'URL_PENDIENTE_TAKE_THAT  _BACK_FOR_GOOD.MP3', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+{ { file: '90s/ingles/take-that - back-for-good.mp3', display: 'Take That - Back For Good', listenUrl: 'URL_PENDIENTE_TAKE_THAT_BACK_FOR_GOOD', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },  
   { file: '90s/ingles/the-cardigans - lovefool.mp3', display: 'The Cardigans - Lovefool', listenUrl: 'URL_PENDIENTE_THE CARDIGANS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/the-cranberries - linger.mp3', display: 'The Cranberries - Linger', listenUrl: 'URL_PENDIENTE_THE CRANBERRIES', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/the-fugees - killing-me-softly.mp3', display: 'The Fugees - Killing Me Softly', listenUrl: 'URL_PENDIENTE_THE FUGEES', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
@@ -93,7 +93,7 @@ window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: '90s/ingles/fatboy-slim - rockafeller-skank.mp3', display: 'Fatboy Slim - Rockafeller Skank', listenUrl: 'URL_PENDIENTE_FATBOY_SLIM', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/the-prodigy - breathe.mp3', display: 'The Prodigy - Breathe', listenUrl: 'URL_PENDIENTE_THE PRODIGY', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/the-wiseguys - ooh-la-la.mp3', display: 'The Wiseguys - Ooh La La', listenUrl: 'URL_PENDIENTE_THE_WISEGUYS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  { file: '90s/ingles/willy-deville -  hey-joe.mp3', display: 'Willy Devilla - Hey Joe', listenUrl: 'URL_PENDIENTE_WILLY_DEVILLE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: '90s/ingles/willy-deville - hey-joe.mp3', display: 'Willy Deville - Hey Joe', listenUrl: 'URL_PENDIENTE_WILLY_DEVILLE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   
 ]
  
