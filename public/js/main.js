@@ -3522,7 +3522,8 @@ Object.assign(window, {
     confirmReturnToMenu,
     addElderlyPlayerInput,
     startElderlyModeGame,
-    exitGame
+    exitGame,
+    acceptCookieConsent
 });
 
 // =====================================================================
@@ -3531,7 +3532,38 @@ Object.assign(window, {
 
 // ... (resto del código)
 
+// ==========================================
+// GESTIÓN DE COOKIES (HUEVOS DE PASCUA)
+// ==========================================
+
+function checkCookieConsent() {
+    // Comprobamos si ya aceptó el trato
+    const consent = localStorage.getItem('cookieConsent');
+    if (!consent) {
+        const banner = document.getElementById('cookie-consent-banner');
+        if (banner) {
+            // Pequeño retraso para que la animación luzca al cargar la web
+            setTimeout(() => {
+                banner.classList.remove('hidden');
+            }, 1500);
+        }
+    }
+}
+
+function acceptCookieConsent() {
+    // Guardamos que ha aceptado
+    localStorage.setItem('cookieConsent', 'true');
+    const banner = document.getElementById('cookie-consent-banner');
+    if (banner) {
+        // Efecto de salida (opcional, simplemente ocultamos)
+        banner.style.opacity = '0';
+        banner.style.transform = 'translate(-50%, 50px)';
+        setTimeout(() => banner.classList.add('hidden'), 300);
+    }
+}
+
 window.onload = async () => {
+    checkCookieConsent();
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
