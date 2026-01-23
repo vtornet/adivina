@@ -920,3 +920,33 @@ select.text-input optgroup {
     position: absolute; /* Ya estaba así, pero confirmamos */
     overflow: visible;  /* IMPORTANTE: para que el badge pueda salir del círculo */
 }
+
+/* css/style.css */
+
+.answer-btn {
+    /* ... otras propiedades que ya tengas ... */
+    
+    /* CAMBIOS PARA TEXTOS LARGOS: */
+    height: auto !important;       /* Permite que el botón crezca según el texto */
+    min-height: 80px;              /* Mantiene un tamaño mínimo bonito para textos cortos */
+    padding: 12px 5px;             /* Espacio interno para que el texto no toque los bordes */
+    
+    /* Gestión del texto */
+    white-space: normal !important; /* Obliga al texto a saltar de línea si no cabe */
+    word-wrap: break-word;          /* Rompe palabras larguísimas si es necesario */
+    line-height: 1.2;               /* Interlineado más ajustado */
+    
+    /* Centrado perfecto */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ajuste específico para el Artista (la parte en negrita) */
+.answer-btn strong {
+    display: block;                /* Fuerza que el título vaya debajo del artista */
+    margin-bottom: 6px;            /* Separación entre Artista y Canción */
+    font-size: 0.95em;             /* Un pelín más pequeño para que quepan nombres largos */
+    max-width: 100%;               /* Asegura que no desborde horizontalmente */
+}
