@@ -3,11 +3,11 @@ const decadeNames = {
     '90s': 'Década de los 90',
     '00s': 'Década de los 2000',
     '10s': 'Década de los 2010',
-    'Actual': 'Década Actual',
-    'actual': 'Década Actual',
+    'actual': 'Década Actual', // Estandarizado a minúscula como clave principal
+    'Actual': 'Década Actual', // Mantenemos por seguridad/retrocompatibilidad
     'Todas': 'Todas las Décadas',
     'elderly': 'Modo Fácil',
-    'especiales': 'Especiales' // Esto asegura que tenga etiqueta visual
+    'especiales': 'Especiales'
 };
 
 const categoryNames = {
