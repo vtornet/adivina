@@ -169,11 +169,47 @@ function isPremiumSelection(decadeId, categoryId) {
     return false;
 }
 
+// Variable para el enlace de compra (La rellenaremos cuando te aprueben)
+const LEMON_SQUEEZY_BUY_URL = ''; // Ej: 'https://adivinalacancion.lemonsqueezy.com/checkout/buy/...'
+
 function showPremiumModal(message) {
     const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
+    
+    // Buscamos si ya existe el botón de compra, si no, lo creamos
+    let buyBtn = document.getElementById('premium-buy-btn');
+    
     if (!modal || !text) return;
-    text.textContent = message || 'Contenido premium. Próximamente disponible mediante desbloqueo.';
+    
+    text.innerHTML = message || 'Desbloquea todas las categorías (Cine, TV, Anuncios...) y modos especiales con el Pase Premium.';
+
+    // Lógica del botón de compra
+    if (LEMON_SQUEEZY_BUY_URL) {
+        if (!buyBtn) {
+            // Crear el botón si no existe en el HTML
+            buyBtn = document.createElement('a'); // Usamos <a> para que Lemon Squeezy lo detecte
+            buyBtn.id = 'premium-buy-btn';
+            buyBtn.className = 'btn';
+            buyBtn.style.marginTop = '15px';
+            buyBtn.style.background = 'linear-gradient(45deg, #FFC107, #FF9800)'; // Dorado Premium
+            buyBtn.style.color = '#000';
+            buyBtn.textContent = '🔓 Desbloquear Ahora';
+            
+            // Insertar antes del botón cerrar
+            const modalContent = modal.querySelector('.modal-content');
+            const closeBtn = modalContent.querySelector('.btn.secondary');
+            modalContent.insertBefore(buyBtn, closeBtn);
+        }
+        
+        // Configurar el enlace para que abra el Overlay
+        buyBtn.href = LEMON_SQUEEZY_BUY_URL + '?embed=1'; // ?embed=1 activa el modo popup
+        buyBtn.className = 'btn lemon-squeezy-button'; // Clase especial para que el script lo detecte
+        buyBtn.style.display = 'flex'; // Mostrarlo
+    } else {
+        // Si no hay URL configurada aún, ocultamos el botón si existe
+        if (buyBtn) buyBtn.style.display = 'none';
+    }
+
     modal.classList.remove('hidden');
 }
 
