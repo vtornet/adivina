@@ -888,3 +888,35 @@ select.text-input optgroup {
         min-width: 140px;
     }
 }
+
+/* BADGE DE NOTIFICACIONES */
+.notification-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: #ff0055; /* Rojo intenso */
+    color: white;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border: 1px solid #fff;
+    box-shadow: 0 0 8px #ff0055;
+    z-index: 10;
+    pointer-events: none; /* Para que el click pase al botón */
+}
+
+.notification-badge.hidden {
+    display: none; /* Se oculta si es 0 */
+}
+
+/* Ajuste para que la campana soporte posición relativa */
+.bell-btn {
+    position: absolute; /* Ya estaba así, pero confirmamos */
+    overflow: visible;  /* IMPORTANTE: para que el badge pueda salir del círculo */
+}

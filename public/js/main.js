@@ -269,6 +269,26 @@ function getNotifications() {
     return initial;
 }
 
+function updateNotificationBadge() {
+    const notifications = getNotifications();
+    // Contamos las que no tienen 'read' o 'read' es false
+    const unreadCount = notifications.filter(n => !n.read).length;
+    
+    const badge = document.getElementById('notification-badge');
+    if (badge) {
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+            badge.classList.remove('hidden');
+            // Efecto visual divertido para llamar la atención
+            badge.style.animation = 'none';
+            badge.offsetHeight; /* trigger reflow */
+            badge.style.animation = 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+}
+
 function renderNotifications() {
     const list = document.getElementById('notifications-list');
     if (!list) return;
@@ -300,9 +320,12 @@ function addNotification(message, type = 'info') {
         id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
         message,
         date: new Date().toLocaleDateString(),
-        type
+        type,
+        read: false // <--- NUEVO: Marcamos como NO leída
     });
     localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
+    
+    updateNotificationBadge(); // <--- NUEVO: Actualizamos el contador visualmente
 }
 
 function getFinishedNotificationsState() {
@@ -319,14 +342,22 @@ function toggleNotificationsPanel() {
     const panel = document.getElementById('notifications-panel');
     if (!panel) return;
     const isHidden = panel.classList.contains('hidden');
+    
     if (isHidden) {
-        renderNotifications();
+        // AL ABRIR: Marcamos todo como leído
+        const notifications = getNotifications();
+        const updatedNotifications = notifications.map(n => ({ ...n, read: true }));
+        localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(updatedNotifications));
+        
+        // Actualizamos UI
+        updateNotificationBadge(); // El contador se pondrá a 0 y desaparecerá
+        renderNotifications();     // Mostramos la lista
+        
         panel.classList.remove('hidden');
     } else {
         panel.classList.add('hidden');
     }
 }
-
 function updatePremiumButtonsState() {
     const summerButton = document.getElementById('summer-songs-btn');
     if (!summerButton) return;
@@ -3618,4 +3649,5 @@ window.onload = async () => {
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
     startOnlineInvitePolling();
+    updateNotificationBadge();
 };

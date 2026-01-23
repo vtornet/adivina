@@ -52,7 +52,10 @@
     </div>
 
     <div id="decade-selection-screen" class="screen">
-        <button class="bell-btn" type="button" onclick="toggleNotificationsPanel()" aria-label="Ver notificaciones">🔔</button>
+        <button class="bell-btn" type="button" onclick="toggleNotificationsPanel()" aria-label="Ver notificaciones">
+            🔔
+            <span id="notification-badge" class="notification-badge hidden">0</span>
+        </button>
         <h2>Selecciona una década</h2>
         <div id="decade-buttons" class="button-container"></div>
         
