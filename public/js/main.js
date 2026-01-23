@@ -170,44 +170,142 @@ function isPremiumSelection(decadeId, categoryId) {
 }
 
 // Variable para el enlace de compra (La rellenaremos cuando te aprueben)
-const LEMON_SQUEEZY_BUY_URL = ''; // Ej: 'https://adivinalacancion.lemonsqueezy.com/checkout/buy/...'
+// public/js/main.js
 
-function showPremiumModal(message) {
+// 1. DICCIONARIO DE URLs DE COMPRA
+// Sustituye las cadenas vacías por los "Checkout Links" que copiaste de Lemon Squeezy
+const LEMON_SQUEEZY_URLS = {
+    full_pack:  'https://adivinalacancion.lemonsqueezy.com/checkout/buy/9fe8d9a6-717e-4ed4-917e-cb5a60ea8056', 
+    peliculas:  'https://adivinalacancion.lemonsqueezy.com/checkout/buy/298630b1-01ec-4fd6-9444-e09293253326',
+    series:     'https://adivinalacancion.lemonsqueezy.com/checkout/buy/f470f782-a181-490f-b35a-414d800be0c5',
+    tv:         'https://adivinalacancion.lemonsqueezy.com/checkout/buy/6d7d59bb-31c5-4324-9c1d-75ac167d2a4e',
+    infantiles: 'https://adivinalacancion.lemonsqueezy.com/checkout/buy/d74b92f2-8c26-4d77-9bb3-75fd5c59f5cc',
+    anuncios:   'https://adivinalacancion.lemonsqueezy.com/checkout/buy/13e93718-3038-45c5-be47-6bac4a5201b3',
+    verano:     'https://adivinalacancion.lemonsqueezy.com/checkout/buy/6770dd9e-d9a4-4c8c-9c33-220785267a34'
+};
+
+// 2. NUEVA FUNCIÓN DE VERIFICACIÓN DE ACCESO
+// Verifica si tienes acceso a una categoría específica (ya sea por Pack Total o compra individual)
+function hasCategoryAccess(categoryId) {
+    if (!currentUser || !currentUser.email) return false;
+    
+    // Si la categoría no es premium (ej: espanol), acceso libre
+    if (!isPremiumCategory(categoryId)) return true;
+
+    const permissions = getUserPermissions(currentUser.email);
+    
+    // 1. Acceso total (Admin o Pack Completo)
+    if (permissions.is_admin || permissions.unlocked_sections.includes('premium_all')) return true;
+    
+    // 2. Acceso individual a esa categoría específica (Estrategia Global)
+    if (permissions.unlocked_sections.includes(categoryId)) return true;
+
+    return false;
+}
+
+// Mantenemos esta por compatibilidad, pero internamente usaremos la de arriba
+function hasPremiumAccess() {
+    if (!currentUser || !currentUser.email) return false;
+    const permissions = getUserPermissions(currentUser.email);
+    return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
+}
+
+function showPremiumModal(message, categoryKey = null) {
     const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
-    
-    // Buscamos si ya existe el botón de compra, si no, lo creamos
     let buyBtn = document.getElementById('premium-buy-btn');
+    let fullPackBtn = document.getElementById('premium-full-pack-btn'); // Botón secundario
     
     if (!modal || !text) return;
     
-    text.innerHTML = message || 'Desbloquea todas las categorías (Cine, TV, Anuncios...) y modos especiales con el Pase Premium.';
+    text.innerHTML = message || 'Desbloquea contenido Premium.';
 
-    // Lógica del botón de compra
-    if (LEMON_SQUEEZY_BUY_URL) {
-        if (!buyBtn) {
-            // Crear el botón si no existe en el HTML
-            buyBtn = document.createElement('a'); // Usamos <a> para que Lemon Squeezy lo detecte
-            buyBtn.id = 'premium-buy-btn';
-            buyBtn.className = 'btn';
-            buyBtn.style.marginTop = '15px';
-            buyBtn.style.background = 'linear-gradient(45deg, #FFC107, #FF9800)'; // Dorado Premium
-            buyBtn.style.color = '#000';
-            buyBtn.textContent = '🔓 Desbloquear Ahora';
-            
-            // Insertar antes del botón cerrar
-            const modalContent = modal.querySelector('.modal-content');
-            const closeBtn = modalContent.querySelector('.btn.secondary');
-            modalContent.insertBefore(buyBtn, closeBtn);
+    // Configuración por defecto: Pack Completo
+    let checkoutUrl = LEMON_SQUEEZY_URLS.full_pack; 
+    let btnText = '🔓 Desbloquear TODO (2.99€)';
+    let webhookKey = 'full_pack'; // Clave que enviaremos al webhook
+    let showIndividual = false;
+
+    // Si nos pasan una categoría específica y existe su URL (ej: 'peliculas')
+    if (categoryKey && LEMON_SQUEEZY_URLS[categoryKey]) {
+        checkoutUrl = LEMON_SQUEEZY_URLS[categoryKey];
+        btnText = `🔓 Desbloquear Categoría (0.99€)`;
+        webhookKey = categoryKey;
+        showIndividual = true;
+    }
+
+    // --- BOTÓN PRINCIPAL (Dorado/Color primario) ---
+    if (!buyBtn) {
+        buyBtn = document.createElement('a');
+        buyBtn.id = 'premium-buy-btn';
+        buyBtn.className = 'btn lemon-squeezy-button'; 
+        buyBtn.style.marginTop = '15px';
+        buyBtn.style.background = 'linear-gradient(45deg, #FFC107, #FF9800)';
+        buyBtn.style.color = '#000';
+        
+        const modalContent = modal.querySelector('.modal-content');
+        const closeBtn = modalContent.querySelector('.btn.secondary');
+        modalContent.insertBefore(buyBtn, closeBtn);
+    }
+    
+    // --- CONSTRUCCIÓN INTELIGENTE DE LA URL ---
+    if (checkoutUrl && checkoutUrl.includes('http')) {
+        // 1. Añadimos ?embed=1 para que salga en popup
+        let finalUrl = checkoutUrl + '?embed=1';
+        
+        // 2. Inyectar datos del usuario (si está logueado)
+        if (currentUser && currentUser.email) {
+            // Rellena el campo email del formulario automáticamente
+            finalUrl += `&checkout[email]=${encodeURIComponent(currentUser.email)}`;
+            // Pasa el email como dato oculto (custom data) para seguridad del webhook
+            finalUrl += `&checkout[custom][user_email]=${encodeURIComponent(currentUser.email)}`;
         }
         
-        // Configurar el enlace para que abra el Overlay
-        buyBtn.href = LEMON_SQUEEZY_BUY_URL + '?embed=1'; // ?embed=1 activa el modo popup
-        buyBtn.className = 'btn lemon-squeezy-button'; // Clase especial para que el script lo detecte
-        buyBtn.style.display = 'flex'; // Mostrarlo
+        // 3. Inyectar qué está comprando (category_key) para el Webhook
+        finalUrl += `&checkout[custom][category_key]=${webhookKey}`;
+
+        buyBtn.href = finalUrl; 
+        buyBtn.textContent = btnText;
+        buyBtn.style.display = 'flex';
     } else {
-        // Si no hay URL configurada aún, ocultamos el botón si existe
-        if (buyBtn) buyBtn.style.display = 'none';
+        buyBtn.style.display = 'none'; 
+    }
+
+    // --- BOTÓN SECUNDARIO (Upselling del Pack Completo) ---
+    // Solo lo mostramos si estamos viendo una categoría individual, para tentar al usuario
+    if (showIndividual) {
+        if (!fullPackBtn) {
+            fullPackBtn = document.createElement('a');
+            fullPackBtn.id = 'premium-full-pack-btn';
+            fullPackBtn.className = 'btn lemon-squeezy-button';
+            fullPackBtn.style.marginTop = '10px';
+            fullPackBtn.style.background = 'var(--secondary-color)';
+            fullPackBtn.style.fontSize = '0.9rem';
+            fullPackBtn.textContent = 'O llévatelo TODO por 2.99€'; 
+            
+            const modalContent = modal.querySelector('.modal-content');
+            const closeBtn = modalContent.querySelector('.btn.secondary');
+            modalContent.insertBefore(fullPackBtn, closeBtn);
+        }
+        
+        // Construimos también la URL inteligente para el pack completo
+        let fullUrl = LEMON_SQUEEZY_URLS.full_pack;
+        if (fullUrl && fullUrl.includes('http')) {
+             fullUrl += '?embed=1';
+             if (currentUser && currentUser.email) {
+                 fullUrl += `&checkout[email]=${encodeURIComponent(currentUser.email)}`;
+                 fullUrl += `&checkout[custom][user_email]=${encodeURIComponent(currentUser.email)}`;
+             }
+             fullUrl += `&checkout[custom][category_key]=full_pack`;
+
+             fullPackBtn.href = fullUrl;
+             fullPackBtn.style.display = 'flex';
+        } else {
+             fullPackBtn.style.display = 'none';
+        }
+    } else {
+        // Si ya estamos mostrando el pack completo en el principal, ocultamos este
+        if (fullPackBtn) fullPackBtn.style.display = 'none';
     }
 
     modal.classList.remove('hidden');
@@ -723,7 +821,28 @@ async function loginUser() {
                 showAppAlert('Respuesta inválida del servidor. Intenta de nuevo más tarde.');
                 return;
             }
-            currentUser = { email: data.user.email, playerName: data.user.playerName };
+            // Actualizamos la variable global
+            currentUser = { 
+                email: data.user.email, 
+                playerName: data.user.playerName 
+            };
+            
+            // --- NUEVO: Procesar Permisos del Servidor ---
+            // Si el servidor nos devuelve unlocked_sections (porque pagó), actualizamos localStorage
+            if (data.user.unlocked_sections) {
+                const perms = {
+                    email: data.user.email,
+                    unlocked_sections: data.user.unlocked_sections,
+                    is_admin: (data.user.email === ADMIN_EMAIL)
+                };
+                
+                // Recuperamos todos los permisos y actualizamos solo los de este usuario
+                const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+                allPerms[data.user.email] = perms;
+                localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
+            }
+            // ---------------------------------------------
+
         } else if (response.status === 404 || response.status >= 500) {
             useLocalApiFallback = true;
         } else {
@@ -735,6 +854,7 @@ async function loginUser() {
         useLocalApiFallback = true;
     }
 
+    // Fallback offline (mantiene la lógica antigua por si acaso)
     if (useLocalApiFallback) {
         const users = getLocalUsers();
         const user = users[email];
@@ -746,7 +866,9 @@ async function loginUser() {
     }
 
     if (currentUser) {
+        // Refresca los permisos en memoria llamando a getUserPermissions
         getUserPermissions(currentUser.email);
+
         localStorage.setItem('loggedInUserEmail', currentUser.email);
         localStorage.setItem('userData', JSON.stringify(currentUser));
         localStorage.setItem('sessionActive', 'true');
@@ -760,7 +882,6 @@ async function loginUser() {
 
         if (currentUser.playerName) {
             showScreen('decade-selection-screen'); 
-            // AHORA: Llamamos a generateDecadeButtons solo cuando sabemos que vamos a esa pantalla
             generateDecadeButtons(); 
             updatePremiumButtonsState();
         } else {
@@ -1397,13 +1518,21 @@ function generateCategoryButtons() {
         
         // --- LÓGICA DE VISUALIZACIÓN POR JERARQUÍA ---
 
-        // PRIORIDAD 1: ¿Es Premium y el usuario NO ha pagado? -> CANDADO
-        // (Mostramos el candado incluso si está "vacía" por detrás, para mantener la consistencia visual de venta)
-        if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
+        // ... dentro del forEach en generateCategoryButtons ...
+
+        // PRIORIDAD 1: ¿Es Premium y NO tienes acceso? -> CANDADO 🔒
+        // Usamos la nueva función hasCategoryAccess(categoryId)
+        if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
             button.innerText = getCategoryLabel(categoryId);
-            button.classList.add('locked'); // Esto añade el candado 🔒 por CSS
-            button.onclick = () => showPremiumModal(`Desbloquea ${getCategoryLabel(categoryId)} y muchas más con el pase Premium.`);
+            button.classList.add('locked');
+            // Al hacer clic, pasamos el ID de la categoría (ej: 'peliculas') al modal
+            button.onclick = () => showPremiumModal(
+                `¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong> en todas las décadas?`, 
+                categoryId 
+            );
         } 
+        
+        // ... continúan las Prioridades 2 y 3 igual que antes ...
         
         // PRIORIDAD 2: ¿No hay canciones (o está forzado)? -> PRÓXIMAMENTE
         // (Solo llegamos aquí si el usuario YA es Premium o la categoría es Gratuita)
@@ -1441,10 +1570,14 @@ async function selectCategory(category) {
         showScreen('login-screen');
         return;
     }
-    if (isPremiumCategory(category) && !hasPremiumAccess()) {
-        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
+    
+    // CAMBIO AQUÍ: Usamos hasCategoryAccess en lugar de hasPremiumAccess
+    if (isPremiumCategory(category) && !hasCategoryAccess(category)) {
+        showPremiumModal('Contenido premium. Desbloquéalo para jugar.', category);
         return;
     }
+    
+    // ... resto de la función igual ...
     gameState.category = category;
 
     try {

@@ -64,6 +64,8 @@ const userSchema = new mongoose.Schema({
   playerName: { type: String, unique: true, sparse: true },
   resetTokenHash: { type: String, default: null },
   resetTokenExpires: { type: Date, default: null },
+  // NUEVO CAMPO:
+  unlocked_sections: { type: [String], default: [] } 
 });
 
 const scoreSchema = new mongoose.Schema({
@@ -160,6 +162,8 @@ app.post("/api/register", async (req, res) => {
 });
 
 // Login
+// server.js - CORRECCIÓN BLOQUE LOGIN
+
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) {
@@ -174,9 +178,15 @@ app.post("/api/login", async (req, res) => {
     if (!ok) return res.status(400).json({ message: "Credenciales inválidas." });
 
     console.log("Login exitoso:", email);
+    
+    // AQUÍ ENVIAMOS LOS PERMISOS AL FRONTEND
     res.status(200).json({
       message: "Inicio de sesión exitoso.",
-      user: { email: user.email, playerName: user.playerName || null },
+      user: { 
+          email: user.email, 
+          playerName: user.playerName || null,
+          unlocked_sections: user.unlocked_sections || [] 
+      },
     });
   } catch (err) {
     console.error("Error en login:", err.message);
@@ -583,6 +593,60 @@ app.use("/data", express.static(path.join(__dirname, "data")));
 // Fallback: cualquier ruta que NO empiece por /api/ -> index.html
 app.get(/^\/(?!api|audio).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// ==============================
+// 6) WEBHOOK LEMON SQUEEZY
+// ==============================
+app.post("/api/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  try {
+    const rawBody = req.body;
+    const hmac = crypto.createHmac("sha256", process.env.LEMONSQUEEZY_SIGNING_SECRET);
+    const digest = hmac.update(rawBody).digest("hex");
+    const signature = req.headers["x-signature"];
+
+    if (digest !== signature) {
+      console.error("Firma de webhook inválida.");
+      return res.status(401).send("Invalid signature.");
+    }
+
+    const payload = JSON.parse(rawBody);
+    const eventName = payload.meta.event_name;
+    
+    // Solo nos interesa cuando se crea una orden exitosa
+    if (eventName === "order_created") {
+      const attributes = payload.data.attributes;
+      const customData = payload.meta.custom_data || {};
+      
+      // 1. Identificar al usuario (preferiblemente por el email pasado en custom_data)
+      const userEmail = customData.user_email || attributes.user_email;
+      
+      // 2. Identificar qué compró (category_key pasado desde el frontend)
+      // Si es el pack completo, main.js enviará 'premium_all' o 'full_pack'
+      const categoryUnlocked = customData.category_key; 
+
+      if (userEmail && categoryUnlocked) {
+        console.log(`Procesando compra de ${categoryUnlocked} para ${userEmail}`);
+        
+        // Actualizar MongoDB
+        // Usamos $addToSet para no duplicar si ya lo tiene
+        let updateData = { $addToSet: { unlocked_sections: categoryUnlocked } };
+        
+        // Si compró el pack total, nos aseguramos de dar permisos 'premium_all'
+        if (categoryUnlocked === 'full_pack') {
+             updateData = { $addToSet: { unlocked_sections: 'premium_all' } };
+        }
+
+        await User.findOneAndUpdate({ email: userEmail }, updateData);
+        console.log("Base de datos actualizada correctamente.");
+      }
+    }
+
+    res.status(200).send("Webhook received");
+  } catch (err) {
+    console.error("Error en webhook:", err.message);
+    res.status(500).send("Server Error");
+  }
 });
 
 async function startServer() {
