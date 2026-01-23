@@ -1190,6 +1190,10 @@ async function selectDecade(decade) {
 /**
  * Genera y muestra los botones de categoría para la década seleccionada.
  */
+/**
+ * Genera y muestra los botones de categoría.
+ * AHORA: Muestra botones "Próximamente" si no hay canciones, para llenar la UI.
+ */
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
     container.innerHTML = '';
@@ -1204,11 +1208,11 @@ function generateCategoryButtons() {
 
     // --- RENDERIZADO PARA SECCIÓN 'ESPECIALES' ---
     if (gameState.selectedDecade === 'especiales') {
-        // 1. Botón Canciones del Verano
+        // ... (Lógica de especiales se mantiene igual) ...
         const btnVerano = document.createElement('button');
         btnVerano.className = 'category-btn';
         btnVerano.innerText = '☀️ Canciones del Verano';
-        // Reutilizamos la lógica existente, pero verificamos premium si fuese necesario
+        
         if (!hasPremiumAccess()) {
              btnVerano.classList.add('locked');
              btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.');
@@ -1217,7 +1221,7 @@ function generateCategoryButtons() {
         }
         container.appendChild(btnVerano);
 
-        // 2. Texto Profesional "Próximamente"
+        // Mensaje de feedback
         const infoDiv = document.createElement('div');
         infoDiv.style.marginTop = '30px';
         infoDiv.style.padding = '20px';
@@ -1230,46 +1234,64 @@ function generateCategoryButtons() {
                 🚀 <strong>Próximamente más categorías</strong>
             </p>
             <p style="font-size: 0.85rem; color: #ccc; line-height: 1.5;">
-                Estamos trabajando en nuevas ediciones especiales (Sevillanas, Metal, etc.). 
-                <br>¿Tienes alguna sugerencia? Escríbenos a:
-                <br><a href="mailto:contact@appstracta.app" style="color: var(--secondary-color); text-decoration: underline; font-weight: bold;">contact@appstracta.app</a>
+                Estamos trabajando en nuevas ediciones especiales. 
+                <br>¿Sugerencias? <a href="mailto:contact@appstracta.app" style="color: var(--secondary-color);">contact@appstracta.app</a>
             </p>
         `;
         container.appendChild(infoDiv);
-        return; // Salimos para no ejecutar la lógica estándar
+        return; 
     }
     // ----------------------------------------------
 
     // LÓGICA ESTÁNDAR (Décadas normales)
     const currentDecadeSongs = configuracionCanciones[gameState.selectedDecade];
 
+    // Si la década ni siquiera existe en el archivo de configuración, mostramos aviso
     if (!currentDecadeSongs) {
-        container.innerHTML = '<p class="warning-text">No hay categorías disponibles para esta década.</p>';
+        container.innerHTML = '<p class="warning-text">Estamos recopilando canciones para esta década. ¡Vuelve pronto!</p>';
         return;
     }
 
-    // Usar window.allPossibleCategories si existe, sino CATEGORY_ORDER por defecto
     const catsToRender = (typeof window.allPossibleCategories !== 'undefined') 
         ? window.allPossibleCategories 
         : CATEGORY_ORDER;
 
     catsToRender.forEach(categoryId => {
         const songsArray = currentDecadeSongs[categoryId];
-        if (Array.isArray(songsArray) && songsArray.length >= 4) {
-            const button = document.createElement('button');
-            button.className = 'category-btn';
+        const hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
+        
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+        
+        // ESTADO 1: PRÓXIMAMENTE (No hay canciones)
+        if (!hasEnoughSongs) {
+            // Usamos innerHTML para poner un subtítulo pequeño
+            button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Próximamente)</span>`;
+            
+            // Estilo visual "apagado" pero visible (reutilizamos clase secondary o añadimos opacidad inline)
+            button.classList.add('secondary'); 
+            button.style.opacity = '0.7'; 
+            
+            // Al hacer click, aviso amigable
+            button.onclick = () => showAppAlert(`🚧 Estamos recopilando los mejores temas de ${getCategoryLabel(categoryId)} para esta década. ¡Muy pronto estarán disponibles!`);
+        } 
+        // ESTADO 2 y 3: DISPONIBLE o PREMIUM (Hay canciones)
+        else {
             button.innerText = getCategoryLabel(categoryId);
-            button.onclick = () => selectCategory(categoryId);
+            
+            // Check de Premium (tu lógica existente del candado)
             if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
-                button.classList.add('locked');
+                button.classList.add('locked'); // Tu CSS ya añade el candado automáticamente con ::after
+                // Si haces click, modal de pago
+                button.onclick = () => showPremiumModal(`Desbloquea ${getCategoryLabel(categoryId)} y muchas más categorías con el pase Premium.`);
+            } else {
+                // Click normal para jugar
+                button.onclick = () => selectCategory(categoryId);
             }
-            container.appendChild(button);
         }
+        
+        container.appendChild(button);
     });
-
-    if (container.innerHTML === '') {
-        container.innerHTML = '<p class="warning-text">No hay categorías con suficientes canciones para jugar en esta década.</p>';
-    }
 }
 
 /**
