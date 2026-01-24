@@ -118,42 +118,37 @@ function getUserPermissions(email) {
     return storedPermissions[email];
 }
 
-
-
-/**
- * Single Source of Truth: Recupera los permisos combinando memoria y disco.
- * Prioriza la unión de ambos para evitar perder desbloqueos optimistas.
- */
 function getActivePermissions() {
+    // Si no hay usuario, no hay permisos
+    if (!currentUser || !currentUser.email) return [];
+
     let localSections = [];
     let memorySections = [];
 
-    // 1. Obtener datos del Storage (Persistencia)
-    if (currentUser && currentUser.email) {
-        try {
-            const storedPermsJSON = localStorage.getItem(PERMISSIONS_STORAGE_KEY);
-            if (storedPermsJSON) {
-                const parsed = JSON.parse(storedPermsJSON);
-                if (parsed[currentUser.email]) {
-                    localSections = parsed[currentUser.email].unlocked_sections || [];
-                }
-            }
-        } catch (e) {
-            console.error("Error leyendo permisos locales:", e);
-        }
-
-        // 2. Obtener datos de Memoria (Estado actual de la sesión)
-        if (currentUser.unlocked_sections && Array.isArray(currentUser.unlocked_sections)) {
-            memorySections = currentUser.unlocked_sections;
-        }
+    // 1. Memoria (RAM) - Lo más inmediato
+    if (currentUser.unlocked_sections && Array.isArray(currentUser.unlocked_sections)) {
+        memorySections = currentUser.unlocked_sections;
     }
 
-    // 3. Fusión sin duplicados (La Unión hace la fuerza)
+    // 2. Disco (LocalStorage) - La persistencia
+    try {
+        const storedPermsJSON = localStorage.getItem(PERMISSIONS_STORAGE_KEY);
+        if (storedPermsJSON) {
+            const parsed = JSON.parse(storedPermsJSON);
+            if (parsed[currentUser.email] && Array.isArray(parsed[currentUser.email].unlocked_sections)) {
+                localSections = parsed[currentUser.email].unlocked_sections;
+            }
+        }
+    } catch (e) {
+        console.error("Error leyendo permisos locales:", e);
+    }
+
+    // 3. Fusión
     const combined = [...new Set([...localSections, ...memorySections])];
-    
-    // 4. Lógica especial: Si tiene 'premium_all', tiene acceso a todo
-    if (combined.includes('premium_all') || (currentUser && currentUser.email === ADMIN_EMAIL)) {
-        return ['premium_all', ...combined]; 
+
+    // 4. Lógica Admin / Premium All
+    if (combined.includes('premium_all') || currentUser.email === ADMIN_EMAIL) {
+        return ['premium_all', ...combined];
     }
 
     return combined;
@@ -871,13 +866,15 @@ async function loginUser() {
                 showAppAlert('Respuesta inválida del servidor. Intenta de nuevo más tarde.');
                 return;
             }
-            // Actualizamos la variable global
+            
+            // --- CORRECCIÓN AQUÍ: Coma añadida y array inicializado ---
             currentUser = { 
                 email: data.user.email, 
-                playerName: data.user.playerName 
+                playerName: data.user.playerName,
+                unlocked_sections: data.user.unlocked_sections || [] 
             };
             
-            // --- NUEVO: Procesar Permisos del Servidor ---
+            // --- Procesar Permisos del Servidor ---
             // Si el servidor nos devuelve unlocked_sections (porque pagó), actualizamos localStorage
             if (data.user.unlocked_sections) {
                 const perms = {
@@ -912,7 +909,12 @@ async function loginUser() {
             showAppAlert('Email o contraseña incorrectos.');
             return;
         }
-        currentUser = { email: user.email, playerName: user.playerName };
+        // También inicializamos unlocked_sections aquí para consistencia
+        currentUser = { 
+            email: user.email, 
+            playerName: user.playerName,
+            unlocked_sections: [] 
+        };
     }
 
     if (currentUser) {
@@ -939,7 +941,6 @@ async function loginUser() {
         }
     }
 }
-
 window.loginUser = loginUser;
 
 
