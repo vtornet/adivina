@@ -1426,29 +1426,20 @@ async function selectDecade(decade) {
     }
 }
 
-/**
- * Genera y muestra los botones de categoría para la década seleccionada.
- */
-/**
- * Genera y muestra los botones de categoría.
- * AHORA: Muestra botones "Próximamente" si no hay canciones, para llenar la UI.
- */
-/**
- * Genera y muestra los botones de categoría.
- * VERSIÓN FINAL: Integra corrección de datos (mapeo) + Lógica de Próximamente/Premium
- */
-/**
- * Genera y muestra los botones de categoría.
- * VERSIÓN BLINDADA: Fuerza la conexión de 'Actual' (mayúscula) con 'actual' (minúscula).
- */
+// ==========================================
+// FUNCIÓN: generateCategoryButtons (COMPLETA)
+// ==========================================
+
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
+    if (!container) return; // Seguridad
     container.innerHTML = '';
     
     // Clave que viene del botón (Ej: 'Actual', '2010s', '80s')
     const key = gameState.selectedDecade; 
 
     // --- 1. PUENTE DE DATOS (MAPPING) ---
+    // Aseguramos que encontramos los datos aunque la clave tenga mayúsculas/minúsculas distintas
     if (typeof window.allSongsByDecadeAndCategory !== 'undefined') {
         let dataFound = window.allSongsByDecadeAndCategory[key]; 
         
@@ -1488,9 +1479,12 @@ function generateCategoryButtons() {
         btnVerano.className = 'category-btn';
         btnVerano.innerText = '☀️ Canciones del Verano';
         
-        if (!hasPremiumAccess()) {
+        // Verificación Premium para Verano
+        // Usamos hasCategoryAccess para ser consistentes con la compra individual si existiera
+        if (!hasCategoryAccess('verano') && !hasPremiumAccess()) {
              btnVerano.classList.add('locked');
-             btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.');
+             // Al hacer clic, abrimos modal para 'verano'
+             btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.', 'verano');
         } else {
              btnVerano.onclick = () => startSummerSongsGame();
         }
@@ -1525,7 +1519,7 @@ function generateCategoryButtons() {
     // --- LÓGICA ESTÁNDAR (Décadas normales) ---
     const currentDecadeSongs = configuracionCanciones[key];
 
-    // Si tras el puente sigue sin haber datos, mostramos el aviso (pero no bloqueamos si es un error de carga parcial)
+    // Si tras el puente sigue sin haber datos, mostramos el aviso
     if (!currentDecadeSongs) {
         container.innerHTML = `
             <div class="warning-text">
@@ -1548,11 +1542,11 @@ function generateCategoryButtons() {
     catsToRender.forEach(categoryId => {
         const songsArray = currentDecadeSongs[categoryId];
         
-        // 1. Determinar si hay contenido real
+        // 1. Determinar si hay contenido real (Mínimo 4 canciones para jugar)
         let hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
 
         // 2. REGLA ESPECIAL: Década Actual
-        // Forzamos "sin contenido" para todo lo que no sea español o inglés
+        // Forzamos "sin contenido" para todo lo que no sea español o inglés en la década actual
         const isActualDecade = (gameState.selectedDecade === 'actual' || gameState.selectedDecade === 'Actual');
         const allowedCategories = ['espanol', 'ingles'];
 
@@ -1565,10 +1559,8 @@ function generateCategoryButtons() {
         
         // --- LÓGICA DE VISUALIZACIÓN POR JERARQUÍA ---
 
-        // ... dentro del forEach en generateCategoryButtons ...
-
         // PRIORIDAD 1: ¿Es Premium y NO tienes acceso? -> CANDADO 🔒
-        // Usamos la nueva función hasCategoryAccess(categoryId)
+        // Aquí usamos la función hasCategoryAccess actualizada que lee la "Fuente de Verdad"
         if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
             button.innerText = getCategoryLabel(categoryId);
             button.classList.add('locked');
@@ -1578,8 +1570,6 @@ function generateCategoryButtons() {
                 categoryId 
             );
         } 
-        
-        // ... continúan las Prioridades 2 y 3 igual que antes ...
         
         // PRIORIDAD 2: ¿No hay canciones (o está forzado)? -> PRÓXIMAMENTE
         // (Solo llegamos aquí si el usuario YA es Premium o la categoría es Gratuita)
@@ -3902,72 +3892,50 @@ function acceptCookieConsent() {
 }
 
 
-// Sustituye la función existente syncUserPermissions por esta:
 async function syncUserPermissions() {
-    // 1. Asegurar que tenemos usuario
-    if (!currentUser || !currentUser.email) {
-        const stored = getCurrentUserData();
-        if (stored && stored.email) {
-            currentUser = stored;
-        } else {
-            return; 
-        }
-    }
+    if (!currentUser || !currentUser.email) return;
 
     const safeEmail = currentUser.email.trim();
 
     try {
-        console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
-        
-        // Fetch con Cache Busting agresivo
+        // El parámetro t=${Date.now()} es vital para evitar caché
         const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
-            cache: "no-store",
-            headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+            headers: { 'Cache-Control': 'no-cache, no-store' } // Forzar red
         });
-        
+
         if (response.ok) {
             const data = await response.json();
+            const serverSections = (data.user && data.user.unlocked_sections) ? data.user.unlocked_sections : [];
+            const localSections = getActivePermissions();
+
+            // Fusión
+            const mergedSections = [...new Set([...localSections, ...serverSections])];
+
+            // Actualizar todo
+            currentUser.unlocked_sections = mergedSections;
             
-            if (data.user && Array.isArray(data.user.unlocked_sections)) {
-                
-                // 1. Leemos lo que tenemos localmente (incluyendo el desbloqueo optimista reciente)
-                const activeNow = getActivePermissions(); // Usamos el helper
-                const serverSections = data.user.unlocked_sections;
-                
-                // 2. FUSIÓN (MERGE): Local (Optimista) + Servidor (Persistente)
-                const mergedSections = [...new Set([...activeNow, ...serverSections])];
+            // Actualizar UserData para persistencia
+            const userData = JSON.parse(localStorage.getItem("userData") || '{}');
+            userData.unlocked_sections = mergedSections;
+            localStorage.setItem("userData", JSON.stringify(userData));
 
-                // 3. ACTUALIZAR MEMORIA (CRÍTICO PARA LA UI INMEDIATA)
-                if (currentUser) {
-                    currentUser.unlocked_sections = mergedSections;
-                    // Opcional: Actualizar también userData en localStorage si lo usas para persistir sesión
-                    const userData = JSON.parse(localStorage.getItem("userData") || '{}');
-                    userData.unlocked_sections = mergedSections;
-                    localStorage.setItem("userData", JSON.stringify(userData));
-                }
+            // Actualizar UserPermissions
+            const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+            allPerms[safeEmail] = {
+                email: safeEmail,
+                unlocked_sections: mergedSections,
+                is_admin: (safeEmail === ADMIN_EMAIL)
+            };
+            localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-                // 4. ACTUALIZAR ALMACÉN DE PERMISOS
-                const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
-                allPerms[safeEmail] = {
-                    email: safeEmail,
-                    unlocked_sections: mergedSections,
-                    is_admin: (safeEmail === ADMIN_EMAIL)
-                };
-                localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
-                
-                console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
-                
-                // 5. REDIBUJAR UI (Solo si es necesario)
-                const currentScreen = document.querySelector('.screen.active');
-                if (currentScreen) {
-                    if (currentScreen.id === 'category-screen') generateCategoryButtons();
-                    if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
-                    if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
-                }
+            // IMPORTANTE: Refrescar la UI si cambió algo
+            if (JSON.stringify(localSections) !== JSON.stringify(mergedSections)) {
+                console.log("✨ Nuevos permisos detectados, actualizando UI...");
+                refreshUI();
             }
         }
     } catch (error) {
-        console.warn("❌ Error al sincronizar perfil:", error);
+        console.warn("Sync error:", error);
     }
 }
 
@@ -3976,88 +3944,114 @@ let isSyncing = false;
 
 
 function setupPaymentListeners() {
-    console.log("🎧 Iniciando escuchas de pago (Modo Robusto)...");
+    console.log("🎧 Iniciando sistema de pagos (v3 - Polling)...");
 
-    // Función auxiliar para desbloqueo inmediato (Optimista)
+    // Función de desbloqueo optimista (intento inmediato)
     const instantUnlock = () => {
-        // Verificamos si hay una intención de compra pendiente
         if (pendingPurchaseCategory && currentUser && currentUser.email) {
-            console.log(`⚡ Desbloqueo OPTIMISTA de: ${pendingPurchaseCategory}`);
+            console.log(`⚡ Intento de desbloqueo rápido para: ${pendingPurchaseCategory}`);
             
-            // 1. Calcular nuevos permisos
-            const currentSections = getActivePermissions();
-            const newSections = [...currentSections];
+            // 1. Añadir a memoria y persistencia
+            let currentList = getActivePermissions();
+            const newList = [...currentList];
             
-            if (!newSections.includes(pendingPurchaseCategory)) {
-                newSections.push(pendingPurchaseCategory);
+            if (!newList.includes(pendingPurchaseCategory)) {
+                newList.push(pendingPurchaseCategory);
             }
-            if (pendingPurchaseCategory === 'full_pack' && !newSections.includes('premium_all')) {
-                newSections.push('premium_all');
+            if (pendingPurchaseCategory === 'full_pack' && !newList.includes('premium_all')) {
+                newList.push('premium_all');
             }
 
-            // 2. ACTUALIZAR MEMORIA (CRÍTICO: Esto faltaba o fallaba antes)
-            currentUser.unlocked_sections = newSections;
+            // 2. Guardar en todas partes
+            currentUser.unlocked_sections = newList;
+            
+            const userData = JSON.parse(localStorage.getItem("userData") || '{}');
+            userData.unlocked_sections = newList;
+            localStorage.setItem("userData", JSON.stringify(userData));
 
-            // 3. ACTUALIZAR LOCALSTORAGE (Persistencia de Permisos)
             const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
             allPerms[currentUser.email] = {
                 email: currentUser.email,
-                unlocked_sections: newSections,
+                unlocked_sections: newList,
                 is_admin: (currentUser.email === ADMIN_EMAIL)
             };
             localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-            // 4. Forzar actualización de userData (Persistencia de Sesión)
-            // Esto ayuda si el usuario recarga la página inmediatamente con F5
-            const userData = JSON.parse(localStorage.getItem("userData") || '{}');
-            userData.unlocked_sections = newSections;
-            localStorage.setItem("userData", JSON.stringify(userData));
-
-            // 5. ACTUALIZAR UI AL INSTANTE
-            const currentScreen = document.querySelector('.screen.active');
-            if (currentScreen) {
-                if (currentScreen.id === 'category-screen') generateCategoryButtons();
-                if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
-                if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
-            }
-            
-            showAppAlert("¡Compra verificada! Contenido desbloqueado.", { title: "¡Gracias!" });
-            
-            // Limpiamos la variable, pero NO inmediatamente para dar margen a otras funciones
-            // pendingPurchaseCategory = null; 
-            setTimeout(() => { pendingPurchaseCategory = null; }, 5000);
+            // 3. Actualizar UI
+            refreshUI();
+            showAppAlert("Procesando compra... el contenido se desbloqueará en breve.");
         }
     };
 
-    // 1. Listeners de Lemon Squeezy
-    if (window.LemonSqueezy) {
-        window.LemonSqueezy.Setup({
-            eventHandler: (event) => {
-                // Evento de éxito
-                if (event.event === 'Payment.Success') {
-                    console.log("🍋 Payment.Success recibido.");
-                    closePremiumModal();
-                    instantUnlock(); 
-                    // Sync de respaldo un poco después
-                    setTimeout(() => syncUserPermissions(), 2500);
-                }
-                // Evento de cierre de modal (backup por si el success no llegó o fue muy rápido)
-                else if (event.event === 'Checkout.Closed') {
-                    console.log("🍋 Checkout cerrado.");
-                    closePremiumModal();
-                    // Si el usuario cerró, intentamos ver si pagó
-                    // Ejecutamos instantUnlock si todavía tenemos la intención de compra
-                    if (pendingPurchaseCategory) {
-                        // Pequeño delay para dar tiempo al webhook si fue muy rápido
-                        setTimeout(() => {
-                             // Intentamos sync primero, si falla, confiamos en la intención si hubo success previo no capturado
-                             syncUserPermissions(); 
-                        }, 1000);
-                    }
+    // Función de Polling: Pregunta al servidor repetidamente
+    const startPolling = () => {
+        console.log("⏳ Iniciando búsqueda de confirmación en servidor...");
+        let attempts = 0;
+        const maxAttempts = 6; // Intentar durante 12-15 segundos aprox
+        
+        // Ejecutar sync inmediatamente
+        syncUserPermissions();
+
+        const interval = setInterval(async () => {
+            attempts++;
+            console.log(`🔄 Comprobando pago en servidor... (Intento ${attempts}/${maxAttempts})`);
+            
+            await syncUserPermissions(); // Esto actualiza la UI si encuentra algo nuevo
+
+            // Comprobar si ya tenemos lo que queríamos
+            const perms = getActivePermissions();
+            const target = pendingPurchaseCategory; // La categoría que intentábamos comprar
+            
+            if (target && (perms.includes(target) || perms.includes('premium_all'))) {
+                console.log("✅ ¡Compra confirmada por el servidor!");
+                showAppAlert("¡Contenido desbloqueado correctamente!");
+                clearInterval(interval);
+                pendingPurchaseCategory = null; // Limpiar pendiente
+            } else if (attempts >= maxAttempts) {
+                console.log("⚠️ Fin de intentos de polling.");
+                clearInterval(interval);
+                // Si llegamos aquí y no se desbloqueó, mantenemos la variable por si el usuario refresca
+            }
+        }, 2500); // Preguntar cada 2.5 segundos
+    };
+
+    // Verificar si LemonSqueezy está cargado, si no, reintentar
+    if (!window.LemonSqueezy) {
+        console.warn("LemonSqueezy no está listo, reintentando en 1s...");
+        setTimeout(setupPaymentListeners, 1000);
+        return;
+    }
+
+    window.LemonSqueezy.Setup({
+        eventHandler: (event) => {
+            console.log("🍋 Evento Lemon:", event);
+            
+            if (event.event === 'Payment.Success') {
+                closePremiumModal();
+                instantUnlock(); // Intento local
+                startPolling();  // Confirmación servidor
+            }
+            else if (event.event === 'Checkout.Closed') {
+                console.log("🍋 Checkout cerrado.");
+                closePremiumModal();
+                // Si el usuario cierra la ventana, asumimos que quizás pagó y el evento Success no llegó a tiempo
+                if (pendingPurchaseCategory) {
+                    startPolling(); 
                 }
             }
-        });
+        }
+    });
+}
+
+// Helper para refrescar pantallas activas
+function refreshUI() {
+    const currentScreen = document.querySelector('.screen.active');
+    if (currentScreen) {
+        if (currentScreen.id === 'category-screen') generateCategoryButtons();
+        if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
+        if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
     }
+}
 
     // 2. Listener de visibilidad (Backup para pagos en móvil/otra pestaña)
     document.addEventListener("visibilitychange", () => {
