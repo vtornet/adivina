@@ -118,6 +118,47 @@ function getUserPermissions(email) {
     return storedPermissions[email];
 }
 
+
+
+/**
+ * Single Source of Truth: Recupera los permisos combinando memoria y disco.
+ * Prioriza la unión de ambos para evitar perder desbloqueos optimistas.
+ */
+function getActivePermissions() {
+    let localSections = [];
+    let memorySections = [];
+
+    // 1. Obtener datos del Storage (Persistencia)
+    if (currentUser && currentUser.email) {
+        try {
+            const storedPermsJSON = localStorage.getItem(PERMISSIONS_STORAGE_KEY);
+            if (storedPermsJSON) {
+                const parsed = JSON.parse(storedPermsJSON);
+                if (parsed[currentUser.email]) {
+                    localSections = parsed[currentUser.email].unlocked_sections || [];
+                }
+            }
+        } catch (e) {
+            console.error("Error leyendo permisos locales:", e);
+        }
+
+        // 2. Obtener datos de Memoria (Estado actual de la sesión)
+        if (currentUser.unlocked_sections && Array.isArray(currentUser.unlocked_sections)) {
+            memorySections = currentUser.unlocked_sections;
+        }
+    }
+
+    // 3. Fusión sin duplicados (La Unión hace la fuerza)
+    const combined = [...new Set([...localSections, ...memorySections])];
+    
+    // 4. Lógica especial: Si tiene 'premium_all', tiene acceso a todo
+    if (combined.includes('premium_all') || (currentUser && currentUser.email === ADMIN_EMAIL)) {
+        return ['premium_all', ...combined]; 
+    }
+
+    return combined;
+}
+
 function getLocalUsers() {
     return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || '{}');
 }
@@ -171,7 +212,6 @@ function isPremiumSelection(decadeId, categoryId) {
 }
 
 // Variable para el enlace de compra (La rellenaremos cuando te aprueben)
-// public/js/main.js
 
 // 1. DICCIONARIO DE URLs DE COMPRA
 // Sustituye las cadenas vacías por los "Checkout Links" que copiaste de Lemon Squeezy
@@ -190,16 +230,19 @@ const LEMON_SQUEEZY_URLS = {
 function hasCategoryAccess(categoryId) {
     if (!currentUser || !currentUser.email) return false;
     
-    // Si la categoría no es premium (ej: espanol), acceso libre
+    // Si la categoría no es premium, acceso libre
     if (!isPremiumCategory(categoryId)) return true;
 
-    const permissions = getUserPermissions(currentUser.email);
+    // USAMOS LA NUEVA FUENTE DE VERDAD
+    const activeSections = getActivePermissions();
     
     // 1. Acceso total (Admin o Pack Completo)
-    if (permissions.is_admin || permissions.unlocked_sections.includes('premium_all')) return true;
+    // Nota: getActivePermissions ya maneja la lógica de ADMIN_EMAIL internamente si quieres, 
+    // pero mantenemos la verificación de 'premium_all' explícita aquí.
+    if (activeSections.includes('premium_all')) return true;
     
-    // 2. Acceso individual a esa categoría específica (Estrategia Global)
-    if (permissions.unlocked_sections.includes(categoryId)) return true;
+    // 2. Acceso individual
+    if (activeSections.includes(categoryId)) return true;
 
     return false;
 }
@@ -1496,10 +1539,6 @@ function generateCategoryButtons() {
         container.appendChild(backBtnErr);
         return;
     }
-
-    // public/js/main.js
-
-// ... (inicio de la función generateCategoryButtons sigue igual)
 
     const catsToRender = (typeof window.allPossibleCategories !== 'undefined') 
         ? window.allPossibleCategories 
@@ -3861,15 +3900,8 @@ function acceptCookieConsent() {
     }
 }
 
-// public/js/main.js
 
-// Función para sincronizar permisos con el servidor sin hacer login de nuevo
-// public/js/main.js
-
-// public/js/main.js
-
-// public/js/main.js
-
+// Sustituye la función existente syncUserPermissions por esta:
 async function syncUserPermissions() {
     // 1. Asegurar que tenemos usuario
     if (!currentUser || !currentUser.email) {
@@ -3886,13 +3918,10 @@ async function syncUserPermissions() {
     try {
         console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
         
-        // Cache busting con timestamp
+        // Fetch con Cache Busting agresivo
         const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
-            cache: "no-store", 
-            headers: {
-                'Pragma': 'no-cache',
-                'Cache-Control': 'no-cache'
-            }
+            cache: "no-store",
+            headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
         });
         
         if (response.ok) {
@@ -3901,33 +3930,33 @@ async function syncUserPermissions() {
             if (data.user && Array.isArray(data.user.unlocked_sections)) {
                 
                 // 1. Leemos lo que tenemos localmente (incluyendo el desbloqueo optimista reciente)
-                const currentPerms = getUserPermissions(safeEmail);
+                const activeNow = getActivePermissions(); // Usamos el helper
                 const serverSections = data.user.unlocked_sections;
                 
-                // --- CORRECCIÓN CRÍTICA: FUSIÓN (MERGE) ---
-                // En lugar de borrar lo local con lo del servidor, los unimos.
-                // Si el servidor va lento, mantenemos lo que desbloqueamos localmente.
-                const mergedSections = [...new Set([...currentPerms.unlocked_sections, ...serverSections])];
+                // 2. FUSIÓN (MERGE): Local (Optimista) + Servidor (Persistente)
+                const mergedSections = [...new Set([...activeNow, ...serverSections])];
 
-                // Si teníamos 'premium_all' localmente, asegurarnos de mantenerlo
-                if (currentPerms.unlocked_sections.includes('premium_all') && !mergedSections.includes('premium_all')) {
-                     mergedSections.push('premium_all');
+                // 3. ACTUALIZAR MEMORIA (CRÍTICO PARA LA UI INMEDIATA)
+                if (currentUser) {
+                    currentUser.unlocked_sections = mergedSections;
+                    // Opcional: Actualizar también userData en localStorage si lo usas para persistir sesión
+                    const userData = JSON.parse(localStorage.getItem("userData") || '{}');
+                    userData.unlocked_sections = mergedSections;
+                    localStorage.setItem("userData", JSON.stringify(userData));
                 }
 
-                const perms = {
+                // 4. ACTUALIZAR ALMACÉN DE PERMISOS
+                const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+                allPerms[safeEmail] = {
                     email: safeEmail,
-                    unlocked_sections: mergedSections, // <--- USAMOS LA FUSIÓN
+                    unlocked_sections: mergedSections,
                     is_admin: (safeEmail === ADMIN_EMAIL)
                 };
-                
-                // Guardar en LocalStorage
-                const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
-                allPerms[safeEmail] = perms;
                 localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
                 
                 console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
                 
-                // Forzar redibujado visual INMEDIATO
+                // 5. REDIBUJAR UI (Solo si es necesario)
                 const currentScreen = document.querySelector('.screen.active');
                 if (currentScreen) {
                     if (currentScreen.id === 'category-screen') generateCategoryButtons();
@@ -3940,43 +3969,50 @@ async function syncUserPermissions() {
         console.warn("❌ Error al sincronizar perfil:", error);
     }
 }
-// public/js/main.js
 
-// public/js/main.js
 
 let isSyncing = false;
 
-// public/js/main.js
 
 function setupPaymentListeners() {
-    console.log("🎧 Iniciando escuchas de pago...");
+    console.log("🎧 Iniciando escuchas de pago (Modo Robusto)...");
 
     // Función auxiliar para desbloqueo inmediato (Optimista)
     const instantUnlock = () => {
+        // Verificamos si hay una intención de compra pendiente
         if (pendingPurchaseCategory && currentUser && currentUser.email) {
             console.log(`⚡ Desbloqueo OPTIMISTA de: ${pendingPurchaseCategory}`);
             
-            // 1. Leer permisos actuales
-            const perms = getUserPermissions(currentUser.email);
+            // 1. Calcular nuevos permisos
+            const currentSections = getActivePermissions();
+            const newSections = [...currentSections];
             
-            // 2. Añadir la nueva categoría manualmente
-            if (!perms.unlocked_sections.includes(pendingPurchaseCategory)) {
-                perms.unlocked_sections.push(pendingPurchaseCategory);
+            if (!newSections.includes(pendingPurchaseCategory)) {
+                newSections.push(pendingPurchaseCategory);
             }
-            
-            // Si es pack completo, añadir la flag maestra
-            if (pendingPurchaseCategory === 'full_pack') {
-                if (!perms.unlocked_sections.includes('premium_all')) {
-                    perms.unlocked_sections.push('premium_all');
-                }
+            if (pendingPurchaseCategory === 'full_pack' && !newSections.includes('premium_all')) {
+                newSections.push('premium_all');
             }
 
-            // 3. Guardar en LocalStorage INMEDIATAMENTE
+            // 2. ACTUALIZAR MEMORIA (CRÍTICO: Esto faltaba o fallaba antes)
+            currentUser.unlocked_sections = newSections;
+
+            // 3. ACTUALIZAR LOCALSTORAGE (Persistencia de Permisos)
             const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
-            allPerms[currentUser.email] = perms;
+            allPerms[currentUser.email] = {
+                email: currentUser.email,
+                unlocked_sections: newSections,
+                is_admin: (currentUser.email === ADMIN_EMAIL)
+            };
             localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-            // 4. Actualizar UI al instante
+            // 4. Forzar actualización de userData (Persistencia de Sesión)
+            // Esto ayuda si el usuario recarga la página inmediatamente con F5
+            const userData = JSON.parse(localStorage.getItem("userData") || '{}');
+            userData.unlocked_sections = newSections;
+            localStorage.setItem("userData", JSON.stringify(userData));
+
+            // 5. ACTUALIZAR UI AL INSTANTE
             const currentScreen = document.querySelector('.screen.active');
             if (currentScreen) {
                 if (currentScreen.id === 'category-screen') generateCategoryButtons();
@@ -3986,38 +4022,46 @@ function setupPaymentListeners() {
             
             showAppAlert("¡Compra verificada! Contenido desbloqueado.", { title: "¡Gracias!" });
             
-            // Limpiamos la variable
-            pendingPurchaseCategory = null;
+            // Limpiamos la variable, pero NO inmediatamente para dar margen a otras funciones
+            // pendingPurchaseCategory = null; 
+            setTimeout(() => { pendingPurchaseCategory = null; }, 5000);
         }
     };
 
-    // 1. Listeners de Lemon Squeezy (La clave del éxito)
+    // 1. Listeners de Lemon Squeezy
     if (window.LemonSqueezy) {
         window.LemonSqueezy.Setup({
             eventHandler: (event) => {
-                // Si el pago es exitoso, DESBLOQUEAMOS YA (no esperamos al servidor)
+                // Evento de éxito
                 if (event.event === 'Payment.Success') {
-                    console.log("🍋 Pago exitoso detectado.");
+                    console.log("🍋 Payment.Success recibido.");
                     closePremiumModal();
-                    instantUnlock(); // <--- LA MAGIA ESTÁ AQUÍ
-                    
-                    // Sincronizamos con el servidor en segundo plano por seguridad
-                    setTimeout(() => syncUserPermissions(), 2000);
+                    instantUnlock(); 
+                    // Sync de respaldo un poco después
+                    setTimeout(() => syncUserPermissions(), 2500);
                 }
+                // Evento de cierre de modal (backup por si el success no llegó o fue muy rápido)
                 else if (event.event === 'Checkout.Closed') {
                     console.log("🍋 Checkout cerrado.");
                     closePremiumModal();
-                    // Por si el evento Success falló pero el usuario cerró tras pagar
-                    setTimeout(() => syncUserPermissions(), 1000); 
+                    // Si el usuario cerró, intentamos ver si pagó
+                    // Ejecutamos instantUnlock si todavía tenemos la intención de compra
+                    if (pendingPurchaseCategory) {
+                        // Pequeño delay para dar tiempo al webhook si fue muy rápido
+                        setTimeout(() => {
+                             // Intentamos sync primero, si falla, confiamos en la intención si hubo success previo no capturado
+                             syncUserPermissions(); 
+                        }, 1000);
+                    }
                 }
             }
         });
     }
 
-    // 2. Listener de visibilidad (Backup por si paga en otra pestaña/móvil)
+    // 2. Listener de visibilidad (Backup para pagos en móvil/otra pestaña)
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
-            // Aquí sí necesitamos preguntar al servidor obligatoriamente
+            console.log("👀 Tab visible, comprobando permisos...");
             syncUserPermissions(); 
         }
     });
