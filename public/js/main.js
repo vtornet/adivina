@@ -3859,41 +3859,48 @@ function acceptCookieConsent() {
 // Función para sincronizar permisos con el servidor sin hacer login de nuevo
 // public/js/main.js
 
+// public/js/main.js
+
 async function syncUserPermissions() {
-    // 1. Asegurar que tenemos usuario. Si falta en memoria, intentamos recuperarlo de localStorage
+    // 1. Asegurar que tenemos usuario
     if (!currentUser || !currentUser.email) {
         const stored = getCurrentUserData();
         if (stored && stored.email) {
             currentUser = stored;
         } else {
-            return; // No hay usuario, no podemos sincronizar
+            return; 
         }
     }
 
-    const safeEmail = currentUser.email.trim(); // Quitamos espacios por seguridad
+    const safeEmail = currentUser.email.trim();
 
     try {
         console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
-        const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}`);
+        
+        // --- CAMBIO CLAVE AQUÍ ---
+        // Añadimos ?t=${Date.now()} para obligar al navegador a no usar caché
+        const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
+            cache: "no-store", // Instrucción explícita para no guardar caché
+            headers: {
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache'
+            }
+        });
+        // -------------------------
         
         if (response.ok) {
             const data = await response.json();
             
-            // Solo actualizamos si el servidor nos devuelve una lista de secciones válida
             if (data.user && Array.isArray(data.user.unlocked_sections)) {
                 
-                // --- PROTECCIÓN DE DATOS ---
-                // Leemos los permisos actuales para comparar
+                // Protección de datos previos
                 const currentPerms = getUserPermissions(safeEmail);
                 const serverSections = data.user.unlocked_sections;
                 
-                // Si teníamos 'premium_all' y el servidor no lo trae (error raro), NO lo borramos
-                // Esto evita el bloqueo accidental de cosas antiguas
                 const hadFullPack = currentPerms.unlocked_sections.includes('premium_all');
                 const serverHasFullPack = serverSections.includes('premium_all');
                 
                 if (hadFullPack && !serverHasFullPack) {
-                    console.warn("⚠️ Advertencia: El servidor no devolvió premium_all pero el usuario lo tenía. Manteniendo acceso local por seguridad.");
                     serverSections.push('premium_all');
                 }
 
@@ -3903,24 +3910,27 @@ async function syncUserPermissions() {
                     is_admin: (safeEmail === ADMIN_EMAIL)
                 };
                 
-                // Guardamos en LocalStorage
+                // Guardar en LocalStorage
                 const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
                 allPerms[safeEmail] = perms;
                 localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
                 
-                console.log("✅ Permisos actualizados:", serverSections);
+                console.log("✅ Permisos actualizados (Frescos):", serverSections);
                 
-                // Forzamos el redibujado de la pantalla actual
+                // Forzar redibujado visual INMEDIATO
                 const currentScreen = document.querySelector('.screen.active');
                 if (currentScreen) {
-                    if (currentScreen.id === 'category-screen') generateCategoryButtons();
+                    if (currentScreen.id === 'category-screen') {
+                        console.log("Redibujando botones de categoría...");
+                        generateCategoryButtons();
+                    }
                     if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
                     if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
                 }
             }
         }
     } catch (error) {
-        console.warn("❌ Error de red al sincronizar perfil (manteniendo datos offline):", error);
+        console.warn("❌ Error al sincronizar perfil:", error);
     }
 }
 // public/js/main.js
@@ -3965,8 +3975,8 @@ function setupPaymentListeners() {
     // 1. Detectar vuelta a la pestaña (Móvil/PC)
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
-            // Solo sincronizamos si ha pasado un tiempo prudencial o venimos de pagar
-            // Para no saturar, aquí hacemos una sync simple, no la agresiva
+            console.log("👁️ App visible de nuevo. Forzando actualización...");
+            // Llamada inmediata para que se note rápido
             syncUserPermissions(); 
         }
     });
