@@ -82,5 +82,12 @@ window.allSongsByDecadeAndCategory['80s'].series = [
         { file: '80s/series/yo-claudio - 1976.mp3', display: 'Yo Claudio - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YO_CLAUDIO___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: '80s/series/el-halcon-callejero - 1985.mp3', display: 'El Halcón Callejero - (1985)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_HALCON_CALLEJERO___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
         { file: '80s/series/el-show-de-benny-hill - 1955.mp3', display: 'El Show de Benny Hill - (1955)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL-SHOW_DE_BENNY_HILL___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: '80s/series/curro-jimenez - 1976.mp3', display: 'Curro Jiménez - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CURRO_JIMENEZ___1976', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: '80s/series/dona-beija - 1986.mp3', display: 'Doña Beija - (1986)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_DONA_BEIJA___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: '80s/series/enredos-de-familia - 1982.mp3', display: 'Enredos De Familia - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ENREDOS_DE_FAMILIA___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: '80s/series/flamingo-road - 1980.mp3', display: 'Flamingo Road - (1980)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FLAMINGO_ROAD___1980', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: '80s/series/los-camioneros - 1982.mp3', display: 'Los Camioneros - (1982)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LOS_CAMIONEROS___1982', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+        { file: '80s/series/orzowei - 1977.mp3', display: 'Orzowei - (1977)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ORZOWEI___1977', platform: 'youtube', originalDecade: '80s', originalCategory: 'series' },
+
     ];
     

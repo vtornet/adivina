@@ -57,6 +57,7 @@ window.allSongsByDecadeAndCategory['80s'].tv = [
         { file: '80s/tv/que-noche-la-de-aquel-ano - 1987.mp3', display: '¡Qué Noche La Del Año! - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUE_NOCHE_LA_DEL_AÑO___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: '80s/tv/rockopop - 1988.mp3', display: 'Rockopop - (1988)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ROCKOPOP___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: '80s/tv/sabado-cine - 1976.mp3', display: 'Sábado Cine - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_CINE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: '80s/tv/sabado-cine - 1989.mp3', display: 'Sábado Cine - (1976)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_CINE___1986', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: '80s/tv/sabado-noche - 1987.mp3', display: 'Sábado Noche - (1987)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_NOCHE___1987', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: '80s/tv/sabado-revista - 1989.mp3', display: 'Sábado Revista - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_REVISTA___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: '80s/tv/sesion-de-noche - 1989.mp3', display: 'Sesión De Noche - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SESION_DE_NOCHE___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
@@ -77,5 +78,9 @@ window.allSongsByDecadeAndCategory['80s'].tv = [
         { file: '80s/tv/vamos-a-ver - 1981.mp3', display: 'Vamos A Ver - (1981)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VAMOS_A_VER___1981', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: '80s/tv/vivir-cada-dia - 1984.mp3', display: 'Vivir Cada Día - (1984)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIVIR_CADA_DIA___1984', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
         { file: '80s/tv/waku-waku - 1989.mp3', display: 'Waku Waku - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WAKU_WAKU___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
-        { file: '80s/tv/y-sin-embargo-te-quiero - 1983.mp3', display: 'Y Sin Embargo Te Quiero - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_Y_SIN_EMBARGO_TE_QUIERO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' }
+        { file: '80s/tv/y-sin-embargo-te-quiero - 1983.mp3', display: 'Y Sin Embargo Te Quiero - (1983)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_Y_SIN_EMBARGO_TE_QUIERO___1983', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: '80s/tv/follow-me - 1978.mp3', display: 'Follow Me - (1978)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FOLLOW_ME___1978', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: '80s/tv/grand-prix - 1995.mp3', display: 'Grand Prix - (1995)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GRAND_PRIX___1995', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+        { file: '80s/tv/sabado-cine - 1989.mp3', display: 'Sábado Cine - (1989)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SABADO_CINE___1989', platform: 'youtube', originalDecade: '80s', originalCategory: 'tv' },
+
     ];

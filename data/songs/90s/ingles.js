@@ -84,7 +84,7 @@ window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: '90s/ingles/the-cranberries - zombie.mp3', display: 'The Cranberries - Zombie', listenUrl: 'URL_PENDIENTE_THE_CRANBERRIES', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/tlc - no-scrubs.mp3', display: 'Tlc - No Scrubs', listenUrl: 'URL_PENDIENTE_TLC', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/tlc - waterfalls.mp3', display: 'Tlc - Waterfalls', listenUrl: 'URL_PENDIENTE_TLC', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  { file: '90s/ingles/toni-braxton - un-break my heart.mp3', display: 'Toni Braxton - Un Break My Heart', listenUrl: 'URL_PENDIENTE_TONI BRAXTON', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+  { file: '90s/ingles/toni-braxton - un-break-my-heart.mp3', display: 'Toni Braxton - Un Break My Heart', listenUrl: 'URL_PENDIENTE_TONI BRAXTON', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/u2 - one.mp3', display: 'U2 - One', listenUrl: 'URL_PENDIENTE_U2', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/vanilla-ice - ice-ice-baby.mp3', display: 'Vanilla Ice - Ice Ice Baby', listenUrl: 'URL_PENDIENTE_VANILLA ICE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/whitney-houston - i-will-always-love-you.mp3', display: 'Whitney Houston - I Will Always Love you', listenUrl: 'URL_PENDIENTE_WHITNEY HOUSTON', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
@@ -94,6 +94,7 @@ window.allSongsByDecadeAndCategory['90s'].ingles = [
   { file: '90s/ingles/the-prodigy - breathe.mp3', display: 'The Prodigy - Breathe', listenUrl: 'URL_PENDIENTE_THE PRODIGY', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/the-wiseguys - ooh-la-la.mp3', display: 'The Wiseguys - Ooh La La', listenUrl: 'URL_PENDIENTE_THE_WISEGUYS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
   { file: '90s/ingles/willy-deville - hey-joe.mp3', display: 'Willy Deville - Hey Joe', listenUrl: 'URL_PENDIENTE_WILLY_DEVILLE', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
-  
+  { file: '90s/ingles/youssou-n-dour-y-neneh-cherry - 7-seconds.mp3', display: 'Youssou N Dour Y Neneh Cherry - 7 Seconds', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YOUSSOU_N_DOUR_Y_NENEH_CHERRY___7_SECONDS', platform: 'spotify', originalDecade: '90s', originalCategory: 'ingles' },
+
 ]
  

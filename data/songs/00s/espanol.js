@@ -24,7 +24,6 @@ window.allSongsByDecadeAndCategory['00s'].espanol = [
     { file: '00s/espanol/coti - antes-que-ver-el-sol.mp3', display: 'Coti - Antes Que Ver El Sol', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ANTES_QUE_VER_EL_SOL', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/coti - nada-fue-un-error.mp3', display: 'Coti - Nada Fue Un Error', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_NADA_FUE_UN_ERROR', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/cristian-castro - azul.mp3', display: 'Cristian Castro - Azul', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AZUL', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
-    { file: '00s/espanol/cuando-me-vaya - melocos.mp3', display: 'Cuando Me Vaya - Melocos', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MELOCOS', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/daddy-yankee - gasolina.mp3', display: 'Daddy Yankee - Gasolina', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_GASOLINA', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/david-bisbal - ave-maria.mp3', display: 'David Bisbal - Ave Maria', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AVE_MARIA', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/david-bisbal - buleria.mp3', display: 'David Bisbal - Buleria', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BULERIA', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
@@ -52,7 +51,6 @@ window.allSongsByDecadeAndCategory['00s'].espanol = [
     { file: '00s/espanol/juanes - lo-que-me-gusta-a-mi.mp3', display: 'Juanes - Lo Que Me Gusta A Mi', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LO_QUE_ME_GUSTA_A_MI', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/juanes - me-enamora.mp3', display: 'Juanes - Me Enamora', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ME_ENAMORA', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/juanes - volverte-a-ver.mp3', display: 'Juanes - Volverte A Ver', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VOLVERTE_A_VER', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
-    { file: '00s/espanol/juanes-y-nelly-furtado - fotografia.mp3', display: 'Juanes Y Nelly Furtado - Fotografia', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FOTOGRAFIA', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/juanes-y-nelly-furtado - fotografias.mp3', display: 'Juanes Y Nelly Furtado - Fotografias', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_FOTOGRAFIAS', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/julieta-venegas - limon-y-sal.mp3', display: 'Julieta Venegas - Limon Y Sal', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LIMON_Y_SAL', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/julieta-venegas - me-voy.mp3', display: 'Julieta Venegas - Me Voy', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ME_VOY', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
@@ -104,5 +102,6 @@ window.allSongsByDecadeAndCategory['00s'].espanol = [
     { file: '00s/espanol/son-by-four - a-puro-dolor.mp3', display: 'Son By Four - A Puro Dolor', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_A_PURO_DOLOR', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/sonia-y-selena - yo-quiero-bailar.mp3', display: 'Sonia Y Selena - Yo Quiero Bailar', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_YO_QUIERO_BAILAR', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
     { file: '00s/espanol/queco - tengo.mp3', display: 'Queco - tengo', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_QUECO_TENGO', platform: 'spotify', originalDecade: '00s', originalCategory: 'espanol' },
-    
+    { file: '00s/espanol/zucchero - baila-morena.mp3', display: 'Zucchero - Baila Morena', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ZUCCHERO___BAILA_MORENA', platform: 'youtube', originalDecade: '00s', originalCategory: 'espanol' },
+
     ]

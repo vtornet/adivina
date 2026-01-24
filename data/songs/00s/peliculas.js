@@ -103,7 +103,18 @@ window.allSongsByDecadeAndCategory['00s'].peliculas = [
         { file: '00s/peliculas/up - 2009.mp3',                                    display: 'Up - (2009)',                                      listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_UP',                       platform: 'spotify', originalDecade: '00s', originalCategory: 'peliculas' },
         { file: '00s/peliculas/v-de-vendetta - 2005.mp3',                         display: 'V de Vendetta - (2005)',                           listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_V_VENDETTA',              platform: 'spotify', originalDecade: '00s', originalCategory: 'peliculas' },
         { file: '00s/peliculas/wall-e - 2008.mp3',                                display: 'WALL·E - (2008)',                                  listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WALLE',                    platform: 'spotify', originalDecade: '00s', originalCategory: 'peliculas' },
-        { file: '00s/peliculas/watchmen - 2009.mp3',                              display: 'Watchmen - (2009)',                                 listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WATCHMEN',                 platform: 'spotify', originalDecade: '00s', originalCategory: 'peliculas' }
+        { file: '00s/peliculas/watchmen - 2009.mp3',                              display: 'Watchmen - (2009)',                                 listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_WATCHMEN',                 platform: 'spotify', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/300 - 2006.mp3', display: '300 - (2006)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_300___2006', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/50-primeras-citas - 2004.mp3', display: '50 Primeras Citas - (2004)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_50_PRIMERAS_CITAS___2004', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/buscando-a-nemo - 2003.mp3', display: 'Buscando a Nemo - (2003)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BUSCANDO_A_NEMO___2003', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/el-fuego-de-la-venganza - 2004.mp3', display: 'El Fuego de la Venganza - (2004)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_FUEGO_DE_LA_VENGANZA___2004', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/el-niño-con-el-pijama-de-rayas - 2008.mp3', display: 'El Niño con el Pijama de Rayas - (2008)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_NINO_CON_EL_PIJAMA_DE_RAYAS___2008', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/el-pianista - 2002.mp3', display: 'El Pianista - (2002)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_EL_PIANISTA___2002', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/ice-age - 2002.mp3', display: 'Ice Age - (2002)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ICE_AGE___2002', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/la-pasion-de-cristo - 2004.mp3', display: 'La Pasión de Cristo - (2004)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LA_PASION_DE_CRISTO___2004', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/pequeña-miss-sunshine - 2006.mp3', display: 'Pequeña Miss Sunshine - (2006)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_PEQUENA_MISS_SUNSHINE___2006', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+        { file: '00s/peliculas/siempre-a-tu-lado-hachiko - 2009.mp3', display: 'Siempre a tu Lado: Hachiko - (2009)', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_SIEMPRE_A_TU_LADO_HACHIKO___2009', platform: 'youtube', originalDecade: '00s', originalCategory: 'peliculas' },
+
 ];
 
 

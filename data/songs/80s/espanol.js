@@ -111,5 +111,8 @@ window.allSongsByDecadeAndCategory['80s'].espanol = [
         { file: '80s/espanol/tam-tam-go - manuel-raquel.mp3', display: 'Tam Tam Go - Manuel Raquel', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MANUEL_RAQUEL', platform: 'spotify', originalDecade: '80s', originalCategory: 'espanol' },
         { file: '80s/espanol/the-refrescos - aqui-no-hay-playa.mp3', display: 'The Refrescos - Aquí No Hay Playa', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AQUI_NO_HAY_PLAYA', platform: 'spotify', originalDecade: '80s', originalCategory: 'espanol' },
         { file: '80s/espanol/camaron - como-el-agua.mp3', display: 'Camarón - Como el Agua', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAMARON_COMO_EL_AGUA', platform: 'spotify', originalDecade: '80s', originalCategory: 'espanol' },
+        { file: '80s/espanol/los-secretos - ojos-de-gata.mp3', display: 'Los Secretos - Ojos de Gata', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_LOS_SECRETOS___OJOS_DE_GATA', platform: 'youtube', originalDecade: '80s', originalCategory: 'espanol' },
+        { file: '80s/espanol/mecano - hijo-de-la-luna.mp3', display: 'Mecano - Hijo de la Luna', listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MECANO___HIJO_DE_LA_LUNA', platform: 'youtube', originalDecade: '80s', originalCategory: 'espanol' },
+
       ]
       

@@ -7,7 +7,7 @@ window.allSongsByDecadeAndCategory['90s'].tv = [
         { file: '90s/tv/art-attack - 1999.mp3',               display: 'Art Attack - 1999',                     listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_ARTATTACK',           platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: '90s/tv/ay-que-calor - 1990.mp3',             display: '¡Ay, Qué Calor! - 1990',                   listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_AYQUECALOR',          platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: '90s/tv/bellezas-al-agua - 1990.mp3',         display: 'Bellezas al Agua - 1990',               listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BELLEZASALAGUA',      platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
-        { file: '90s/tv/bricomani­a - 1994.mp3',              display: 'Bricomanía - 1994',                     listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BRICOMANIA',          platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
+        { file: '90s/tv/bricomania - 1994.mp3',              display: 'Bricomanía - 1994',                     listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_BRICOMANIA',          platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: '90s/tv/cada-manana - 1991.mp3',              display: 'Cada Mañana - 1991',                    listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CADAMANANA',          platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: '90s/tv/caiga-quien-caiga - 1995.mp3',        display: 'Caiga Quien Caiga - 1995',              listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CAIGAQUIENCAIGA',     platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: '90s/tv/caliente - 1991.mp3',                 display: 'Caliente - 1991',                       listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_CALIENTE',            platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
@@ -93,7 +93,6 @@ window.allSongsByDecadeAndCategory['90s'].tv = [
         { file: '90s/tv/videos-videos - 1994.mp3',            display: 'Vídeos Vídeos - 1994',           listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIDEOS_VIDEOS',   platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: '90s/tv/vip-noche - 1990.mp3',                display: 'VIP Noche - 1990',               listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIP_NOCHE',       platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
         { file: '90s/tv/videos-de-primera - 1990.mp3',        display: 'Vídeos de Primera - 1990',       listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_VIDEOS_PRIMERA',  platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' },
-        { file: '90s/tv/menudo-show - 1995.mp3',        display: 'Menudo Show - 1995',       listenUrl: 'URL_DE_BUSQUEDA_PENDIENTE_MENUDO_SHOW',  platform: 'spotify', originalDecade: '90s', originalCategory: 'tv' }
 ];
 
 

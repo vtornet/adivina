@@ -22,6 +22,7 @@ window.allSongsByDecadeAndCategory['10s'].espanol = [
   { file: '10s/espanol/chino-y-nacho - andas-en-mi-cabeza.mp3', display: 'Chino y Nacho - Andas En Mi Cabeza', listenUrl: 'URL_PENDIENTE_CHINO_Y_NACHO', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: '10s/espanol/daddy-yankee - limbo.mp3', display: 'Daddy Yankee - Limbo', listenUrl: 'URL_PENDIENTE_DADDY_YANKEE', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: '10s/espanol/david-bisbal - diez-mil-maneras.mp3', display: 'David Bisbal - Diez Mil Maneras', listenUrl: 'URL_PENDIENTE_DAVID_BISBAL', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
+  { file: '10s/espanol/david-bisbal - esclavo-de-sus-besos.mp3', display: 'David Bisbal - Esclavo de Sus Besos', listenUrl: 'URL_PENDIENTE_DAVID_BISBAL', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: '10s/espanol/don-omar - taboo.mp3', display: 'Don Omar - Taboo', listenUrl: 'URL_PENDIENTE_DON_OMAR_TABOO', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: '10s/espanol/don-omar-y-lucenzo - danza-kuduro.mp3', display: 'Don Omar y Lucenzo - Danza Kuduro', listenUrl: 'URL_PENDIENTE_DON_OMAR_LUCENZO', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
   { file: '10s/espanol/dvicio - paraiso.mp3', display: 'Dvicio - Paraiso', listenUrl: 'URL_PENDIENTE_DVICIO', platform: 'spotify', originalDecade: '10s', originalCategory: 'espanol' },
