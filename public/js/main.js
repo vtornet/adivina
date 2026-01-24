@@ -3854,25 +3854,87 @@ function acceptCookieConsent() {
     }
 }
 
+// public/js/main.js
+
+// Función para sincronizar permisos con el servidor sin hacer login de nuevo
+async function syncUserPermissions() {
+    if (!currentUser || !currentUser.email) return;
+
+    try {
+        console.log("Sincronizando permisos...");
+        // Usamos el endpoint existente que devuelve los datos del usuario
+        const response = await fetch(`${API_BASE_URL}/api/users/${currentUser.email}`);
+        
+        if (response.ok) {
+            const data = await response.json();
+            // Si el servidor devuelve nuevas secciones desbloqueadas
+            if (data.user && data.user.unlocked_sections) {
+                const perms = {
+                    email: data.user.email,
+                    unlocked_sections: data.user.unlocked_sections,
+                    is_admin: (data.user.email === ADMIN_EMAIL) // Asegúrate de que ADMIN_EMAIL esté definido o usa string directo
+                };
+                
+                // Actualizamos el almacenamiento local
+                const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+                allPerms[data.user.email] = perms;
+                localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
+                
+                console.log("Permisos actualizados:", data.user.unlocked_sections);
+                
+                // Forzamos el redibujado de los botones si estamos en la pantalla de selección
+                const currentScreen = document.querySelector('.screen.active');
+                if (currentScreen && currentScreen.id === 'category-screen') {
+                    generateCategoryButtons();
+                }
+                if (currentScreen && currentScreen.id === 'decade-selection-screen') {
+                    updatePremiumButtonsState();
+                }
+            }
+        }
+    } catch (error) {
+        console.warn("No se pudo sincronizar el perfil:", error);
+    }
+}
+
 window.onload = async () => {
+    // 1. Comprobaciones iniciales
     checkCookieConsent();
     const urlParams = new URLSearchParams(window.location.search);
+
+    // 2. Lógica de Modo "Elderly" (Fácil)
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
         // Asegúrate de que el input del jugador 1 esté siempre visible al entrar a esta pantalla
-        document.getElementById('elderly-player-1-name').value = ''; 
-        document.getElementById('elderly-other-player-names-inputs').innerHTML = ''; // Limpiar inputs extra
+        const p1Input = document.getElementById('elderly-player-1-name');
+        if (p1Input) p1Input.value = ''; 
+        
+        const extraInputs = document.getElementById('elderly-other-player-names-inputs');
+        if (extraInputs) extraInputs.innerHTML = ''; // Limpiar inputs extra
+
     } else {
+        // 3. Lógica de Usuario Estándar (Login y Datos)
         const userDataString = localStorage.getItem('userData');
         const sessionActive = localStorage.getItem('sessionActive') === 'true';
+
         if (sessionActive && userDataString) {
             const storedUser = JSON.parse(userDataString);
             currentUser = storedUser;
+            
+            // A. Cargar permisos locales (lo que ya sabe el navegador)
             getUserPermissions(currentUser.email);
 
+            // B. SINCRONIZACIÓN CON EL SERVIDOR (NUEVO)
+            // Esto pregunta a la base de datos: "¿Ha comprado algo nuevo?" y actualiza el candado.
+            if (typeof syncUserPermissions === 'function') {
+                await syncUserPermissions();
+            }
+
+            // C. Cargar puntuaciones e historial
             await loadUserScores(currentUser.email);
             await loadGameHistory(currentUser.email);
 
+            // D. Redirección según estado del perfil
             if (currentUser.playerName) {
                 showScreen('decade-selection-screen');
                 generateDecadeButtons();
@@ -3881,12 +3943,16 @@ window.onload = async () => {
                 showScreen('set-player-name-screen');
             }
         } else {
+            // Si no hay sesión, mandar al login
             showScreen('login-screen');
         }
     }
+
+    // 4. Configuración Global y Polling
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
-    startOnlineInvitePolling();
-    updateNotificationBadge();
+    
+    if (typeof startOnlineInvitePolling === 'function') startOnlineInvitePolling();
+    if (typeof updateNotificationBadge === 'function') updateNotificationBadge();
 };
