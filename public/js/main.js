@@ -78,6 +78,7 @@ let useLocalApiFallback = false;
 let currentUser = null;
 let userAccumulatedScores = {}; 
 let gameHistory = []; 
+let pendingPurchaseCategory = null;
 
 const PREMIUM_CATEGORIES = new Set(['peliculas', 'series', 'tv', 'infantiles', 'anuncios']);
 const PREMIUM_DECADES = new Set(['Todas', 'verano']);
@@ -217,6 +218,12 @@ function showPremiumModal(message, categoryKey = null) {
     let fullPackBtn = document.getElementById('premium-full-pack-btn'); // Botón secundario
     
     if (!modal || !text) return;
+
+    // --- NUEVO: GUARDAMOS LA INTENCIÓN DE COMPRA PARA EL DESBLOQUEO INMEDIATO ---
+    // Si no hay categoryKey, asumimos que es el pack completo
+    pendingPurchaseCategory = categoryKey || 'full_pack'; 
+    console.log("🛒 Iniciando proceso de compra para:", pendingPurchaseCategory);
+    // -----------------------------------------------------------------------------
     
     text.innerHTML = message || 'Desbloquea contenido Premium.';
 
@@ -3939,61 +3946,81 @@ async function syncUserPermissions() {
 
 let isSyncing = false;
 
+// public/js/main.js
+
 function setupPaymentListeners() {
     console.log("🎧 Iniciando escuchas de pago...");
 
-    // Estrategia de reintento progresivo
-    const triggerSmartSync = () => {
-        if (isSyncing) return; // Evitar llamadas simultáneas
-        isSyncing = true;
-        
-        console.log("💳 Detectado retorno de pago. Iniciando secuencia de comprobación...");
-        showAppAlert("Verificando tu compra...", { title: "Procesando" });
-
-        // Intento 1: Inmediato (por si fue rápido)
-        syncUserPermissions();
-
-        // Intento 2: a los 2 segundos (tiempo medio del webhook)
-        setTimeout(() => syncUserPermissions(), 2000);
-
-        // Intento 3: a los 5 segundos (por si la red va lenta)
-        setTimeout(() => {
-            syncUserPermissions();
-            // Cerramos el modal de "Procesando" automáticamente tras el último intento
-            const appModal = document.getElementById('app-modal');
-            if (appModal && !appModal.classList.contains('hidden')) {
-                 // Solo cerramos si dice "Procesando"
-                 const title = document.getElementById('app-modal-title');
-                 if (title && title.textContent === 'Procesando') {
-                     appModal.classList.add('hidden');
-                 }
+    // Función auxiliar para desbloqueo inmediato (Optimista)
+    const instantUnlock = () => {
+        if (pendingPurchaseCategory && currentUser && currentUser.email) {
+            console.log(`⚡ Desbloqueo OPTIMISTA de: ${pendingPurchaseCategory}`);
+            
+            // 1. Leer permisos actuales
+            const perms = getUserPermissions(currentUser.email);
+            
+            // 2. Añadir la nueva categoría manualmente
+            if (!perms.unlocked_sections.includes(pendingPurchaseCategory)) {
+                perms.unlocked_sections.push(pendingPurchaseCategory);
             }
-            isSyncing = false;
-        }, 5000);
+            
+            // Si es pack completo, añadir la flag maestra
+            if (pendingPurchaseCategory === 'full_pack') {
+                if (!perms.unlocked_sections.includes('premium_all')) {
+                    perms.unlocked_sections.push('premium_all');
+                }
+            }
+
+            // 3. Guardar en LocalStorage INMEDIATAMENTE
+            const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+            allPerms[currentUser.email] = perms;
+            localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
+
+            // 4. Actualizar UI al instante
+            const currentScreen = document.querySelector('.screen.active');
+            if (currentScreen) {
+                if (currentScreen.id === 'category-screen') generateCategoryButtons();
+                if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
+                if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
+            }
+            
+            showAppAlert("¡Compra verificada! Contenido desbloqueado.", { title: "¡Gracias!" });
+            
+            // Limpiamos la variable
+            pendingPurchaseCategory = null;
+        }
     };
 
-    // 1. Detectar vuelta a la pestaña (Móvil/PC)
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") {
-            console.log("👁️ App visible de nuevo. Forzando actualización...");
-            // Llamada inmediata para que se note rápido
-            syncUserPermissions(); 
-        }
-    });
-
-    // 2. Escuchar eventos de Lemon Squeezy (Overlay)
+    // 1. Listeners de Lemon Squeezy (La clave del éxito)
     if (window.LemonSqueezy) {
         window.LemonSqueezy.Setup({
             eventHandler: (event) => {
-                // Si el pago fue exitoso o se cerró el modal (usuario vuelve)
-                if (event.event === 'Payment.Success' || event.event === 'Checkout.Closed') {
-                    console.log("🍋 Evento Lemon Squeezy:", event.event);
-                    closePremiumModal(); // Cerramos el modal de "Desbloquear"
-                    triggerSmartSync();  // Iniciamos la búsqueda de la compra
+                // Si el pago es exitoso, DESBLOQUEAMOS YA (no esperamos al servidor)
+                if (event.event === 'Payment.Success') {
+                    console.log("🍋 Pago exitoso detectado.");
+                    closePremiumModal();
+                    instantUnlock(); // <--- LA MAGIA ESTÁ AQUÍ
+                    
+                    // Sincronizamos con el servidor en segundo plano por seguridad
+                    setTimeout(() => syncUserPermissions(), 2000);
+                }
+                else if (event.event === 'Checkout.Closed') {
+                    console.log("🍋 Checkout cerrado.");
+                    closePremiumModal();
+                    // Por si el evento Success falló pero el usuario cerró tras pagar
+                    setTimeout(() => syncUserPermissions(), 1000); 
                 }
             }
         });
     }
+
+    // 2. Listener de visibilidad (Backup por si paga en otra pestaña/móvil)
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            // Aquí sí necesitamos preguntar al servidor obligatoriamente
+            syncUserPermissions(); 
+        }
+    });
 }
 
 window.onload = async () => {
