@@ -3868,6 +3868,8 @@ function acceptCookieConsent() {
 
 // public/js/main.js
 
+// public/js/main.js
+
 async function syncUserPermissions() {
     // 1. Asegurar que tenemos usuario
     if (!currentUser || !currentUser.email) {
@@ -3884,36 +3886,37 @@ async function syncUserPermissions() {
     try {
         console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
         
-        // --- CAMBIO CLAVE AQUÍ ---
-        // Añadimos ?t=${Date.now()} para obligar al navegador a no usar caché
+        // Cache busting con timestamp
         const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
-            cache: "no-store", // Instrucción explícita para no guardar caché
+            cache: "no-store", 
             headers: {
                 'Pragma': 'no-cache',
                 'Cache-Control': 'no-cache'
             }
         });
-        // -------------------------
         
         if (response.ok) {
             const data = await response.json();
             
             if (data.user && Array.isArray(data.user.unlocked_sections)) {
                 
-                // Protección de datos previos
+                // 1. Leemos lo que tenemos localmente (incluyendo el desbloqueo optimista reciente)
                 const currentPerms = getUserPermissions(safeEmail);
                 const serverSections = data.user.unlocked_sections;
                 
-                const hadFullPack = currentPerms.unlocked_sections.includes('premium_all');
-                const serverHasFullPack = serverSections.includes('premium_all');
-                
-                if (hadFullPack && !serverHasFullPack) {
-                    serverSections.push('premium_all');
+                // --- CORRECCIÓN CRÍTICA: FUSIÓN (MERGE) ---
+                // En lugar de borrar lo local con lo del servidor, los unimos.
+                // Si el servidor va lento, mantenemos lo que desbloqueamos localmente.
+                const mergedSections = [...new Set([...currentPerms.unlocked_sections, ...serverSections])];
+
+                // Si teníamos 'premium_all' localmente, asegurarnos de mantenerlo
+                if (currentPerms.unlocked_sections.includes('premium_all') && !mergedSections.includes('premium_all')) {
+                     mergedSections.push('premium_all');
                 }
 
                 const perms = {
                     email: safeEmail,
-                    unlocked_sections: serverSections,
+                    unlocked_sections: mergedSections, // <--- USAMOS LA FUSIÓN
                     is_admin: (safeEmail === ADMIN_EMAIL)
                 };
                 
@@ -3922,15 +3925,12 @@ async function syncUserPermissions() {
                 allPerms[safeEmail] = perms;
                 localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
                 
-                console.log("✅ Permisos actualizados (Frescos):", serverSections);
+                console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
                 
                 // Forzar redibujado visual INMEDIATO
                 const currentScreen = document.querySelector('.screen.active');
                 if (currentScreen) {
-                    if (currentScreen.id === 'category-screen') {
-                        console.log("Redibujando botones de categoría...");
-                        generateCategoryButtons();
-                    }
+                    if (currentScreen.id === 'category-screen') generateCategoryButtons();
                     if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
                     if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
                 }
