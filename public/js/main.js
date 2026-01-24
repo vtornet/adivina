@@ -253,25 +253,26 @@ function showPremiumModal(message, categoryKey = null) {
     const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
     let buyBtn = document.getElementById('premium-buy-btn');
-    let fullPackBtn = document.getElementById('premium-full-pack-btn'); // Botón secundario
+    let fullPackBtn = document.getElementById('premium-full-pack-btn');
     
     if (!modal || !text) return;
 
-    // --- NUEVO: GUARDAMOS LA INTENCIÓN DE COMPRA PARA EL DESBLOQUEO INMEDIATO ---
-    // Si no hay categoryKey, asumimos que es el pack completo
-    pendingPurchaseCategory = categoryKey || 'full_pack'; 
-    console.log("🛒 Iniciando proceso de compra para:", pendingPurchaseCategory);
-    // -----------------------------------------------------------------------------
+    // --- CORRECCIÓN CRÍTICA: PERSISTENCIA ---
+    // Guardamos en disco qué se va a comprar. Esto sobrevive a la recarga de página.
+    const intent = categoryKey || 'full_pack';
+    localStorage.setItem('pending_purchase_intent', intent);
+    localStorage.setItem('purchase_start_time', Date.now()); 
+    console.log("🛒 Intención de compra guardada en disco:", intent);
+    // ----------------------------------------
     
     text.innerHTML = message || 'Desbloquea contenido Premium.';
 
     // Configuración por defecto: Pack Completo
     let checkoutUrl = LEMON_SQUEEZY_URLS.full_pack; 
     let btnText = '🔓 Desbloquear TODO (2.99€)';
-    let webhookKey = 'full_pack'; // Clave que enviaremos al webhook
+    let webhookKey = 'full_pack'; 
     let showIndividual = false;
 
-    // Si nos pasan una categoría específica y existe su URL (ej: 'peliculas')
     if (categoryKey && LEMON_SQUEEZY_URLS[categoryKey]) {
         checkoutUrl = LEMON_SQUEEZY_URLS[categoryKey];
         btnText = `🔓 Desbloquear Categoría (0.99€)`;
@@ -279,7 +280,6 @@ function showPremiumModal(message, categoryKey = null) {
         showIndividual = true;
     }
 
-    // --- BOTÓN PRINCIPAL (Dorado/Color primario) ---
     if (!buyBtn) {
         buyBtn = document.createElement('a');
         buyBtn.id = 'premium-buy-btn';
@@ -293,20 +293,14 @@ function showPremiumModal(message, categoryKey = null) {
         modalContent.insertBefore(buyBtn, closeBtn);
     }
     
-    // --- CONSTRUCCIÓN INTELIGENTE DE LA URL ---
     if (checkoutUrl && checkoutUrl.includes('http')) {
-        // 1. Añadimos ?embed=1 para que salga en popup
         let finalUrl = checkoutUrl + '?embed=1';
         
-        // 2. Inyectar datos del usuario (si está logueado)
         if (currentUser && currentUser.email) {
-            // Rellena el campo email del formulario automáticamente
             finalUrl += `&checkout[email]=${encodeURIComponent(currentUser.email)}`;
-            // Pasa el email como dato oculto (custom data) para seguridad del webhook
             finalUrl += `&checkout[custom][user_email]=${encodeURIComponent(currentUser.email)}`;
         }
         
-        // 3. Inyectar qué está comprando (category_key) para el Webhook
         finalUrl += `&checkout[custom][category_key]=${webhookKey}`;
 
         buyBtn.href = finalUrl; 
@@ -316,8 +310,6 @@ function showPremiumModal(message, categoryKey = null) {
         buyBtn.style.display = 'none'; 
     }
 
-    // --- BOTÓN SECUNDARIO (Upselling del Pack Completo) ---
-    // Solo lo mostramos si estamos viendo una categoría individual, para tentar al usuario
     if (showIndividual) {
         if (!fullPackBtn) {
             fullPackBtn = document.createElement('a');
@@ -333,7 +325,6 @@ function showPremiumModal(message, categoryKey = null) {
             modalContent.insertBefore(fullPackBtn, closeBtn);
         }
         
-        // Construimos también la URL inteligente para el pack completo
         let fullUrl = LEMON_SQUEEZY_URLS.full_pack;
         if (fullUrl && fullUrl.includes('http')) {
              fullUrl += '?embed=1';
@@ -345,11 +336,15 @@ function showPremiumModal(message, categoryKey = null) {
 
              fullPackBtn.href = fullUrl;
              fullPackBtn.style.display = 'flex';
+             // IMPORTANTE: Si pulsan este botón secundario, actualizamos la intención
+             fullPackBtn.onclick = () => {
+                 localStorage.setItem('pending_purchase_intent', 'full_pack');
+                 localStorage.setItem('purchase_start_time', Date.now());
+             };
         } else {
              fullPackBtn.style.display = 'none';
         }
     } else {
-        // Si ya estamos mostrando el pack completo en el principal, ocultamos este
         if (fullPackBtn) fullPackBtn.style.display = 'none';
     }
 
@@ -947,21 +942,18 @@ window.loginUser = loginUser;
 function logout() {
     currentUser = null;
     localStorage.removeItem('loggedInUserEmail');
-    localStorage.removeItem('userData'); // <-- AÑADE ESTA LÍNEA
+    localStorage.removeItem('userData');
     localStorage.removeItem('sessionActive');
-    localStorage.removeItem('currentOnlineGameData'); // <-- AÑADE ESTA LÍNEA
+    localStorage.removeItem('currentOnlineGameData');
+    
+    // --- LIMPIEZA DE PAGOS ---
+    localStorage.removeItem('pending_purchase_intent');
+    localStorage.removeItem('purchase_start_time');
+    // -------------------------
+    
     showAppAlert('Sesión cerrada correctamente.');
     showScreen('login-screen');
 }
-
-// main.js - Nuevas funciones para borrar historial de partidas online
-async function confirmClearOnlineGameHistory() {
-    const confirmed = await showAppConfirm("¿Estás seguro de que quieres borrar TODO tu historial de partidas online? Esta acción es irreversible.");
-    if (confirmed) {
-        clearOnlineGameHistory();
-    }
-}
-
 async function clearOnlineGameHistory() {
     const playerData = getCurrentUserData();
     if (!playerData || !playerData.email) {
@@ -3980,109 +3972,90 @@ let isSyncing = false;
 // ==========================================
 
 function setupPaymentListeners() {
-    console.log("🎧 Iniciando sistema de pagos (v3 - Polling)...");
+    console.log("🎧 Iniciando sistema de pagos (v4 - Persistence)...");
 
-    // Función de desbloqueo optimista (intento inmediato)
-    const instantUnlock = () => {
-        if (pendingPurchaseCategory && currentUser && currentUser.email) {
-            console.log(`⚡ Intento de desbloqueo rápido para: ${pendingPurchaseCategory}`);
-            
-            // 1. Añadir a memoria y persistencia
-            let currentList = getActivePermissions();
-            const newList = [...currentList];
-            
-            if (!newList.includes(pendingPurchaseCategory)) {
-                newList.push(pendingPurchaseCategory);
-            }
-            if (pendingPurchaseCategory === 'full_pack' && !newList.includes('premium_all')) {
-                newList.push('premium_all');
-            }
+    // Función que valida contra el servidor si la compra ya aparece
+    const checkAndUnlock = async (intent) => {
+        if (!intent) return false;
 
-            // 2. Guardar en todas partes
-            currentUser.unlocked_sections = newList;
-            
-            const userData = JSON.parse(localStorage.getItem("userData") || '{}');
-            userData.unlocked_sections = newList;
-            localStorage.setItem("userData", JSON.stringify(userData));
-
-            const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
-            allPerms[currentUser.email] = {
-                email: currentUser.email,
-                unlocked_sections: newList,
-                is_admin: (currentUser.email === ADMIN_EMAIL)
-            };
-            localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
-
-            // 3. Actualizar UI
-            refreshUI();
-            showAppAlert("Procesando compra... el contenido se desbloqueará en breve.");
-        }
-    };
-
-    // Función de Polling: Pregunta al servidor repetidamente
-    const startPolling = () => {
-        console.log("⏳ Iniciando búsqueda de confirmación en servidor...");
-        let attempts = 0;
-        const maxAttempts = 6; 
+        console.log(`🕵️ Verificando compra pendiente: ${intent}`);
         
-        // Ejecutar sync inmediatamente
-        syncUserPermissions();
+        // 1. Forzar sincronización con servidor
+        if (typeof syncUserPermissions === 'function') {
+            await syncUserPermissions();
+        }
 
-        const interval = setInterval(async () => {
-            attempts++;
-            console.log(`🔄 Comprobando pago en servidor... (Intento ${attempts}/${maxAttempts})`);
+        // 2. Comprobar si ya lo tenemos
+        const currentPerms = typeof getActivePermissions === 'function' 
+            ? getActivePermissions() 
+            : (currentUser.unlocked_sections || []);
             
-            await syncUserPermissions(); 
+        const hasUnlocked = currentPerms.includes(intent) || currentPerms.includes('premium_all');
 
-            // Comprobar si ya tenemos lo que queríamos
-            const perms = getActivePermissions();
-            const target = pendingPurchaseCategory; 
-            
-            if (target && (perms.includes(target) || perms.includes('premium_all'))) {
-                console.log("✅ ¡Compra confirmada por el servidor!");
-                showAppAlert("¡Contenido desbloqueado correctamente!");
-                clearInterval(interval);
-                pendingPurchaseCategory = null; 
-            } else if (attempts >= maxAttempts) {
-                console.log("⚠️ Fin de intentos de polling.");
-                clearInterval(interval);
-            }
-        }, 2500); 
+        if (hasUnlocked) {
+            console.log("✅ ¡COMPRA VERIFICADA! Limpiando intención.");
+            localStorage.removeItem('pending_purchase_intent');
+            localStorage.removeItem('purchase_start_time');
+            showAppAlert("¡Contenido desbloqueado correctamente! Gracias por tu apoyo.", { title: "¡Gracias!" });
+            refreshUI(); 
+            return true;
+        }
+        return false;
     };
 
-    // Verificar si LemonSqueezy está cargado
-    if (!window.LemonSqueezy) {
-        console.warn("LemonSqueezy no está listo, reintentando en 1s...");
-        setTimeout(setupPaymentListeners, 1000);
-        return;
+    // --- LÓGICA DE INICIO (ON LOAD) ---
+    // Verificar si venimos de una recarga post-pago
+    const savedIntent = localStorage.getItem('pending_purchase_intent');
+    const startTime = parseInt(localStorage.getItem('purchase_start_time') || '0');
+    const now = Date.now();
+
+    // Si hay intención y es reciente (menos de 15 minutos)
+    if (savedIntent && (now - startTime < 900000)) {
+        console.log("🔄 Detectado retorno de pago. Iniciando comprobación...");
+        
+        let attempts = 0;
+        const maxAttempts = 10; // Intentar durante ~20 segundos
+        
+        // Ejecutar comprobación inmediata
+        checkAndUnlock(savedIntent);
+
+        // Polling agresivo
+        const poller = setInterval(async () => {
+            attempts++;
+            const success = await checkAndUnlock(savedIntent);
+            
+            if (success) {
+                clearInterval(poller);
+            } else if (attempts >= maxAttempts) {
+                clearInterval(poller);
+                console.log("⚠️ No se detectó desbloqueo tras varios intentos.");
+                // No borramos la intención, por si refresca de nuevo manualmente
+            }
+        }, 2000);
     }
 
-    window.LemonSqueezy.Setup({
-        eventHandler: (event) => {
-            console.log("🍋 Evento Lemon:", event);
-            
-            if (event.event === 'Payment.Success') {
-                closePremiumModal();
-                instantUnlock(); 
-                startPolling();  
-            }
-            else if (event.event === 'Checkout.Closed') {
-                console.log("🍋 Checkout cerrado.");
-                closePremiumModal();
-                if (pendingPurchaseCategory) {
-                    startPolling(); 
+    // --- LISTENERS DE LEMON SQUEEZY (Para cuando NO hay recarga) ---
+    if (window.LemonSqueezy) {
+        window.LemonSqueezy.Setup({
+            eventHandler: (event) => {
+                if (event.event === 'Payment.Success' || event.event === 'Checkout.Closed') {
+                    console.log("🍋 Evento de cierre/éxito. Comprobando...");
+                    closePremiumModal();
+                    
+                    const intent = localStorage.getItem('pending_purchase_intent');
+                    if (intent) {
+                        checkAndUnlock(intent);
+                        // Disparar un polling corto por si el webhook se retrasa
+                        let fastAttempts = 0;
+                        const fastPoller = setInterval(async () => {
+                            fastAttempts++;
+                            if (await checkAndUnlock(intent) || fastAttempts > 5) clearInterval(fastPoller);
+                        }, 1500);
+                    }
                 }
             }
-        }
-    });
-
-    // Listener de visibilidad (Backup para pagos en móvil/otra pestaña)
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") {
-            console.log("👀 Tab visible, comprobando permisos...");
-            syncUserPermissions(); 
-        }
-    });
+        });
+    }
 }
 
 // ==========================================
