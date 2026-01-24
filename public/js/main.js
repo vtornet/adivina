@@ -3897,11 +3897,53 @@ async function syncUserPermissions() {
     }
 }
 
+// public/js/main.js
+
+function setupPaymentListeners() {
+    console.log("🎧 Iniciando escuchas de pago...");
+
+    // 1. Detectar cuando el usuario vuelve a la pestaña/app (Móvil y PC)
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            console.log("👁️ App visible: Buscando cambios en permisos...");
+            // Pequeño retardo para asegurar que el servidor ya procesó el webhook
+            setTimeout(syncUserPermissions, 1000); 
+        }
+    });
+
+    // 2. Detectar cuando la ventana recupera el foco
+    window.addEventListener("focus", () => {
+        console.log("🎯 Foco recuperado: Buscando cambios...");
+        syncUserPermissions();
+    });
+
+    // 3. Escuchar eventos directos de Lemon Squeezy (Overlay)
+    // Esto detecta cuando cierras la ventanita de pago o el pago es exitoso
+    if (window.LemonSqueezy) {
+        window.LemonSqueezy.Setup({
+            eventHandler: (event) => {
+                if (event.event === 'Payment.Success' || event.event === 'Checkout.Closed') {
+                    console.log("🍋 Evento Lemon Squeezy detectado:", event.event);
+                    showAppAlert("Comprobando tu compra...", { title: "Procesando" });
+                    // Damos 2 segundos al servidor para recibir el webhook antes de preguntar
+                    setTimeout(() => {
+                        syncUserPermissions();
+                        // Forzamos cierre del modal de instrucciones/premium si sigue abierto
+                        closePremiumModal(); 
+                    }, 2000);
+                }
+            }
+        });
+    }
+}
+
 window.onload = async () => {
     // 1. Comprobaciones iniciales
     checkCookieConsent();
     const urlParams = new URLSearchParams(window.location.search);
-
+    if (typeof setupPaymentListeners === 'function') {
+        setupPaymentListeners();
+    }
     // 2. Lógica de Modo "Elderly" (Fácil)
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
