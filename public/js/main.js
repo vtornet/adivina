@@ -1426,20 +1426,29 @@ async function selectDecade(decade) {
     }
 }
 
-// ==========================================
-// FUNCIÓN: generateCategoryButtons (COMPLETA)
-// ==========================================
-
+/**
+ * Genera y muestra los botones de categoría para la década seleccionada.
+ */
+/**
+ * Genera y muestra los botones de categoría.
+ * AHORA: Muestra botones "Próximamente" si no hay canciones, para llenar la UI.
+ */
+/**
+ * Genera y muestra los botones de categoría.
+ * VERSIÓN FINAL: Integra corrección de datos (mapeo) + Lógica de Próximamente/Premium
+ */
+/**
+ * Genera y muestra los botones de categoría.
+ * VERSIÓN BLINDADA: Fuerza la conexión de 'Actual' (mayúscula) con 'actual' (minúscula).
+ */
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
-    if (!container) return; // Seguridad
     container.innerHTML = '';
     
     // Clave que viene del botón (Ej: 'Actual', '2010s', '80s')
     const key = gameState.selectedDecade; 
 
     // --- 1. PUENTE DE DATOS (MAPPING) ---
-    // Aseguramos que encontramos los datos aunque la clave tenga mayúsculas/minúsculas distintas
     if (typeof window.allSongsByDecadeAndCategory !== 'undefined') {
         let dataFound = window.allSongsByDecadeAndCategory[key]; 
         
@@ -1479,12 +1488,9 @@ function generateCategoryButtons() {
         btnVerano.className = 'category-btn';
         btnVerano.innerText = '☀️ Canciones del Verano';
         
-        // Verificación Premium para Verano
-        // Usamos hasCategoryAccess para ser consistentes con la compra individual si existiera
-        if (!hasCategoryAccess('verano') && !hasPremiumAccess()) {
+        if (!hasPremiumAccess()) {
              btnVerano.classList.add('locked');
-             // Al hacer clic, abrimos modal para 'verano'
-             btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.', 'verano');
+             btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.');
         } else {
              btnVerano.onclick = () => startSummerSongsGame();
         }
@@ -1519,7 +1525,7 @@ function generateCategoryButtons() {
     // --- LÓGICA ESTÁNDAR (Décadas normales) ---
     const currentDecadeSongs = configuracionCanciones[key];
 
-    // Si tras el puente sigue sin haber datos, mostramos el aviso
+    // Si tras el puente sigue sin haber datos, mostramos el aviso (pero no bloqueamos si es un error de carga parcial)
     if (!currentDecadeSongs) {
         container.innerHTML = `
             <div class="warning-text">
@@ -1542,11 +1548,11 @@ function generateCategoryButtons() {
     catsToRender.forEach(categoryId => {
         const songsArray = currentDecadeSongs[categoryId];
         
-        // 1. Determinar si hay contenido real (Mínimo 4 canciones para jugar)
+        // 1. Determinar si hay contenido real
         let hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
 
         // 2. REGLA ESPECIAL: Década Actual
-        // Forzamos "sin contenido" para todo lo que no sea español o inglés en la década actual
+        // Forzamos "sin contenido" para todo lo que no sea español o inglés
         const isActualDecade = (gameState.selectedDecade === 'actual' || gameState.selectedDecade === 'Actual');
         const allowedCategories = ['espanol', 'ingles'];
 
@@ -1559,8 +1565,10 @@ function generateCategoryButtons() {
         
         // --- LÓGICA DE VISUALIZACIÓN POR JERARQUÍA ---
 
+        // ... dentro del forEach en generateCategoryButtons ...
+
         // PRIORIDAD 1: ¿Es Premium y NO tienes acceso? -> CANDADO 🔒
-        // Aquí usamos la función hasCategoryAccess actualizada que lee la "Fuente de Verdad"
+        // Usamos la nueva función hasCategoryAccess(categoryId)
         if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
             button.innerText = getCategoryLabel(categoryId);
             button.classList.add('locked');
@@ -1570,6 +1578,8 @@ function generateCategoryButtons() {
                 categoryId 
             );
         } 
+        
+        // ... continúan las Prioridades 2 y 3 igual que antes ...
         
         // PRIORIDAD 2: ¿No hay canciones (o está forzado)? -> PRÓXIMAMENTE
         // (Solo llegamos aquí si el usuario YA es Premium o la categoría es Gratuita)
@@ -3892,56 +3902,82 @@ function acceptCookieConsent() {
 }
 
 
+// Sustituye la función existente syncUserPermissions por esta:
 async function syncUserPermissions() {
-    if (!currentUser || !currentUser.email) return;
+    // 1. Asegurar que tenemos usuario
+    if (!currentUser || !currentUser.email) {
+        const stored = getCurrentUserData();
+        if (stored && stored.email) {
+            currentUser = stored;
+        } else {
+            return; 
+        }
+    }
 
     const safeEmail = currentUser.email.trim();
 
     try {
-        // El parámetro t=${Date.now()} es vital para evitar caché
+        console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
+        
+        // Fetch con Cache Busting agresivo
         const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
-            headers: { 'Cache-Control': 'no-cache, no-store' } // Forzar red
+            cache: "no-store",
+            headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
         });
-
+        
         if (response.ok) {
             const data = await response.json();
-            const serverSections = (data.user && data.user.unlocked_sections) ? data.user.unlocked_sections : [];
-            const localSections = getActivePermissions();
-
-            // Fusión
-            const mergedSections = [...new Set([...localSections, ...serverSections])];
-
-            // Actualizar todo
-            currentUser.unlocked_sections = mergedSections;
             
-            // Actualizar UserData para persistencia
-            const userData = JSON.parse(localStorage.getItem("userData") || '{}');
-            userData.unlocked_sections = mergedSections;
-            localStorage.setItem("userData", JSON.stringify(userData));
+            if (data.user && Array.isArray(data.user.unlocked_sections)) {
+                
+                // 1. Leemos lo que tenemos localmente (incluyendo el desbloqueo optimista reciente)
+                const activeNow = getActivePermissions(); // Usamos el helper
+                const serverSections = data.user.unlocked_sections;
+                
+                // 2. FUSIÓN (MERGE): Local (Optimista) + Servidor (Persistente)
+                const mergedSections = [...new Set([...activeNow, ...serverSections])];
 
-            // Actualizar UserPermissions
-            const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
-            allPerms[safeEmail] = {
-                email: safeEmail,
-                unlocked_sections: mergedSections,
-                is_admin: (safeEmail === ADMIN_EMAIL)
-            };
-            localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
+                // 3. ACTUALIZAR MEMORIA (CRÍTICO PARA LA UI INMEDIATA)
+                if (currentUser) {
+                    currentUser.unlocked_sections = mergedSections;
+                    // Opcional: Actualizar también userData en localStorage si lo usas para persistir sesión
+                    const userData = JSON.parse(localStorage.getItem("userData") || '{}');
+                    userData.unlocked_sections = mergedSections;
+                    localStorage.setItem("userData", JSON.stringify(userData));
+                }
 
-            // IMPORTANTE: Refrescar la UI si cambió algo
-            if (JSON.stringify(localSections) !== JSON.stringify(mergedSections)) {
-                console.log("✨ Nuevos permisos detectados, actualizando UI...");
-                refreshUI();
+                // 4. ACTUALIZAR ALMACÉN DE PERMISOS
+                const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
+                allPerms[safeEmail] = {
+                    email: safeEmail,
+                    unlocked_sections: mergedSections,
+                    is_admin: (safeEmail === ADMIN_EMAIL)
+                };
+                localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
+                
+                console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
+                
+                // 5. REDIBUJAR UI (Solo si es necesario)
+                const currentScreen = document.querySelector('.screen.active');
+                if (currentScreen) {
+                    if (currentScreen.id === 'category-screen') generateCategoryButtons();
+                    if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
+                    if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
+                }
             }
         }
     } catch (error) {
-        console.warn("Sync error:", error);
+        console.warn("❌ Error al sincronizar perfil:", error);
     }
 }
 
 
 let isSyncing = false;
 
+
+// ==========================================
+// SISTEMA DE PAGOS Y EVENTOS (CORREGIDO)
+// ==========================================
 
 function setupPaymentListeners() {
     console.log("🎧 Iniciando sistema de pagos (v3 - Polling)...");
@@ -3987,7 +4023,7 @@ function setupPaymentListeners() {
     const startPolling = () => {
         console.log("⏳ Iniciando búsqueda de confirmación en servidor...");
         let attempts = 0;
-        const maxAttempts = 6; // Intentar durante 12-15 segundos aprox
+        const maxAttempts = 6; 
         
         // Ejecutar sync inmediatamente
         syncUserPermissions();
@@ -3996,26 +4032,25 @@ function setupPaymentListeners() {
             attempts++;
             console.log(`🔄 Comprobando pago en servidor... (Intento ${attempts}/${maxAttempts})`);
             
-            await syncUserPermissions(); // Esto actualiza la UI si encuentra algo nuevo
+            await syncUserPermissions(); 
 
             // Comprobar si ya tenemos lo que queríamos
             const perms = getActivePermissions();
-            const target = pendingPurchaseCategory; // La categoría que intentábamos comprar
+            const target = pendingPurchaseCategory; 
             
             if (target && (perms.includes(target) || perms.includes('premium_all'))) {
                 console.log("✅ ¡Compra confirmada por el servidor!");
                 showAppAlert("¡Contenido desbloqueado correctamente!");
                 clearInterval(interval);
-                pendingPurchaseCategory = null; // Limpiar pendiente
+                pendingPurchaseCategory = null; 
             } else if (attempts >= maxAttempts) {
                 console.log("⚠️ Fin de intentos de polling.");
                 clearInterval(interval);
-                // Si llegamos aquí y no se desbloqueó, mantenemos la variable por si el usuario refresca
             }
-        }, 2500); // Preguntar cada 2.5 segundos
+        }, 2500); 
     };
 
-    // Verificar si LemonSqueezy está cargado, si no, reintentar
+    // Verificar si LemonSqueezy está cargado
     if (!window.LemonSqueezy) {
         console.warn("LemonSqueezy no está listo, reintentando en 1s...");
         setTimeout(setupPaymentListeners, 1000);
@@ -4028,22 +4063,32 @@ function setupPaymentListeners() {
             
             if (event.event === 'Payment.Success') {
                 closePremiumModal();
-                instantUnlock(); // Intento local
-                startPolling();  // Confirmación servidor
+                instantUnlock(); 
+                startPolling();  
             }
             else if (event.event === 'Checkout.Closed') {
                 console.log("🍋 Checkout cerrado.");
                 closePremiumModal();
-                // Si el usuario cierra la ventana, asumimos que quizás pagó y el evento Success no llegó a tiempo
                 if (pendingPurchaseCategory) {
                     startPolling(); 
                 }
             }
         }
     });
+
+    // Listener de visibilidad (Backup para pagos en móvil/otra pestaña)
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            console.log("👀 Tab visible, comprobando permisos...");
+            syncUserPermissions(); 
+        }
+    });
 }
 
-// Helper para refrescar pantallas activas
+// ==========================================
+// HELPER GLOBAL PARA REFRESCAR UI
+// (Debe estar FUERA de setupPaymentListeners)
+// ==========================================
 function refreshUI() {
     const currentScreen = document.querySelector('.screen.active');
     if (currentScreen) {
@@ -4053,69 +4098,68 @@ function refreshUI() {
     }
 }
 
-    // 2. Listener de visibilidad (Backup para pagos en móvil/otra pestaña)
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") {
-            console.log("👀 Tab visible, comprobando permisos...");
-            syncUserPermissions(); 
-        }
-    });
-}
-
+// ==========================================
+// INICIALIZACIÓN (WINDOW.ONLOAD)
+// ==========================================
 window.onload = async () => {
     // 1. Comprobaciones iniciales
-    checkCookieConsent();
+    if (typeof checkCookieConsent === 'function') checkCookieConsent();
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // Iniciar listeners de pago
     if (typeof setupPaymentListeners === 'function') {
         setupPaymentListeners();
     }
+
     // 2. Lógica de Modo "Elderly" (Fácil)
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
-        // Asegúrate de que el input del jugador 1 esté siempre visible al entrar a esta pantalla
         const p1Input = document.getElementById('elderly-player-1-name');
         if (p1Input) p1Input.value = ''; 
-        
         const extraInputs = document.getElementById('elderly-other-player-names-inputs');
-        if (extraInputs) extraInputs.innerHTML = ''; // Limpiar inputs extra
+        if (extraInputs) extraInputs.innerHTML = ''; 
 
     } else {
-        // 3. Lógica de Usuario Estándar (Login y Datos)
+        // 3. Lógica de Usuario Estándar
         const userDataString = localStorage.getItem('userData');
         const sessionActive = localStorage.getItem('sessionActive') === 'true';
 
         if (sessionActive && userDataString) {
-            const storedUser = JSON.parse(userDataString);
-            currentUser = storedUser;
-            
-            // A. Cargar permisos locales (lo que ya sabe el navegador)
-            getUserPermissions(currentUser.email);
+            try {
+                const storedUser = JSON.parse(userDataString);
+                currentUser = storedUser;
+                
+                // A. Cargar permisos locales
+                getUserPermissions(currentUser.email);
 
-            // B. SINCRONIZACIÓN CON EL SERVIDOR (NUEVO)
-            // Esto pregunta a la base de datos: "¿Ha comprado algo nuevo?" y actualiza el candado.
-            if (typeof syncUserPermissions === 'function') {
-                await syncUserPermissions();
-            }
+                // B. Sincronización Servidor
+                if (typeof syncUserPermissions === 'function') {
+                    // No usamos await aquí para no bloquear la UI si el servidor tarda
+                    syncUserPermissions().catch(e => console.warn("Sync background error:", e));
+                }
 
-            // C. Cargar puntuaciones e historial
-            await loadUserScores(currentUser.email);
-            await loadGameHistory(currentUser.email);
+                // C. Cargar datos
+                await loadUserScores(currentUser.email);
+                await loadGameHistory(currentUser.email);
 
-            // D. Redirección según estado del perfil
-            if (currentUser.playerName) {
-                showScreen('decade-selection-screen');
-                generateDecadeButtons();
-                updatePremiumButtonsState();
-            } else {
-                showScreen('set-player-name-screen');
+                // D. Redirección
+                if (currentUser.playerName) {
+                    showScreen('decade-selection-screen');
+                    generateDecadeButtons();
+                    updatePremiumButtonsState();
+                } else {
+                    showScreen('set-player-name-screen');
+                }
+            } catch (e) {
+                console.error("Error al recuperar sesión:", e);
+                showScreen('login-screen');
             }
         } else {
-            // Si no hay sesión, mandar al login
             showScreen('login-screen');
         }
     }
 
-    // 4. Configuración Global y Polling
+    // 4. Configuración Global
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
