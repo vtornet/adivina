@@ -3857,80 +3857,129 @@ function acceptCookieConsent() {
 // public/js/main.js
 
 // Función para sincronizar permisos con el servidor sin hacer login de nuevo
+// public/js/main.js
+
 async function syncUserPermissions() {
-    if (!currentUser || !currentUser.email) return;
+    // 1. Asegurar que tenemos usuario. Si falta en memoria, intentamos recuperarlo de localStorage
+    if (!currentUser || !currentUser.email) {
+        const stored = getCurrentUserData();
+        if (stored && stored.email) {
+            currentUser = stored;
+        } else {
+            return; // No hay usuario, no podemos sincronizar
+        }
+    }
+
+    const safeEmail = currentUser.email.trim(); // Quitamos espacios por seguridad
 
     try {
-        console.log("Sincronizando permisos...");
-        // Usamos el endpoint existente que devuelve los datos del usuario
-        const response = await fetch(`${API_BASE_URL}/api/users/${currentUser.email}`);
+        console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
+        const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}`);
         
         if (response.ok) {
             const data = await response.json();
-            // Si el servidor devuelve nuevas secciones desbloqueadas
-            if (data.user && data.user.unlocked_sections) {
+            
+            // Solo actualizamos si el servidor nos devuelve una lista de secciones válida
+            if (data.user && Array.isArray(data.user.unlocked_sections)) {
+                
+                // --- PROTECCIÓN DE DATOS ---
+                // Leemos los permisos actuales para comparar
+                const currentPerms = getUserPermissions(safeEmail);
+                const serverSections = data.user.unlocked_sections;
+                
+                // Si teníamos 'premium_all' y el servidor no lo trae (error raro), NO lo borramos
+                // Esto evita el bloqueo accidental de cosas antiguas
+                const hadFullPack = currentPerms.unlocked_sections.includes('premium_all');
+                const serverHasFullPack = serverSections.includes('premium_all');
+                
+                if (hadFullPack && !serverHasFullPack) {
+                    console.warn("⚠️ Advertencia: El servidor no devolvió premium_all pero el usuario lo tenía. Manteniendo acceso local por seguridad.");
+                    serverSections.push('premium_all');
+                }
+
                 const perms = {
-                    email: data.user.email,
-                    unlocked_sections: data.user.unlocked_sections,
-                    is_admin: (data.user.email === ADMIN_EMAIL) // Asegúrate de que ADMIN_EMAIL esté definido o usa string directo
+                    email: safeEmail,
+                    unlocked_sections: serverSections,
+                    is_admin: (safeEmail === ADMIN_EMAIL)
                 };
                 
-                // Actualizamos el almacenamiento local
+                // Guardamos en LocalStorage
                 const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
-                allPerms[data.user.email] = perms;
+                allPerms[safeEmail] = perms;
                 localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
                 
-                console.log("Permisos actualizados:", data.user.unlocked_sections);
+                console.log("✅ Permisos actualizados:", serverSections);
                 
-                // Forzamos el redibujado de los botones si estamos en la pantalla de selección
+                // Forzamos el redibujado de la pantalla actual
                 const currentScreen = document.querySelector('.screen.active');
-                if (currentScreen && currentScreen.id === 'category-screen') {
-                    generateCategoryButtons();
-                }
-                if (currentScreen && currentScreen.id === 'decade-selection-screen') {
-                    updatePremiumButtonsState();
+                if (currentScreen) {
+                    if (currentScreen.id === 'category-screen') generateCategoryButtons();
+                    if (currentScreen.id === 'decade-selection-screen') updatePremiumButtonsState();
+                    if (currentScreen.id === 'songs-list-category-screen') showSongsListCategorySelection();
                 }
             }
         }
     } catch (error) {
-        console.warn("No se pudo sincronizar el perfil:", error);
+        console.warn("❌ Error de red al sincronizar perfil (manteniendo datos offline):", error);
     }
 }
+// public/js/main.js
 
 // public/js/main.js
+
+let isSyncing = false;
 
 function setupPaymentListeners() {
     console.log("🎧 Iniciando escuchas de pago...");
 
-    // 1. Detectar cuando el usuario vuelve a la pestaña/app (Móvil y PC)
+    // Estrategia de reintento progresivo
+    const triggerSmartSync = () => {
+        if (isSyncing) return; // Evitar llamadas simultáneas
+        isSyncing = true;
+        
+        console.log("💳 Detectado retorno de pago. Iniciando secuencia de comprobación...");
+        showAppAlert("Verificando tu compra...", { title: "Procesando" });
+
+        // Intento 1: Inmediato (por si fue rápido)
+        syncUserPermissions();
+
+        // Intento 2: a los 2 segundos (tiempo medio del webhook)
+        setTimeout(() => syncUserPermissions(), 2000);
+
+        // Intento 3: a los 5 segundos (por si la red va lenta)
+        setTimeout(() => {
+            syncUserPermissions();
+            // Cerramos el modal de "Procesando" automáticamente tras el último intento
+            const appModal = document.getElementById('app-modal');
+            if (appModal && !appModal.classList.contains('hidden')) {
+                 // Solo cerramos si dice "Procesando"
+                 const title = document.getElementById('app-modal-title');
+                 if (title && title.textContent === 'Procesando') {
+                     appModal.classList.add('hidden');
+                 }
+            }
+            isSyncing = false;
+        }, 5000);
+    };
+
+    // 1. Detectar vuelta a la pestaña (Móvil/PC)
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
-            console.log("👁️ App visible: Buscando cambios en permisos...");
-            // Pequeño retardo para asegurar que el servidor ya procesó el webhook
-            setTimeout(syncUserPermissions, 1000); 
+            // Solo sincronizamos si ha pasado un tiempo prudencial o venimos de pagar
+            // Para no saturar, aquí hacemos una sync simple, no la agresiva
+            syncUserPermissions(); 
         }
     });
 
-    // 2. Detectar cuando la ventana recupera el foco
-    window.addEventListener("focus", () => {
-        console.log("🎯 Foco recuperado: Buscando cambios...");
-        syncUserPermissions();
-    });
-
-    // 3. Escuchar eventos directos de Lemon Squeezy (Overlay)
-    // Esto detecta cuando cierras la ventanita de pago o el pago es exitoso
+    // 2. Escuchar eventos de Lemon Squeezy (Overlay)
     if (window.LemonSqueezy) {
         window.LemonSqueezy.Setup({
             eventHandler: (event) => {
+                // Si el pago fue exitoso o se cerró el modal (usuario vuelve)
                 if (event.event === 'Payment.Success' || event.event === 'Checkout.Closed') {
-                    console.log("🍋 Evento Lemon Squeezy detectado:", event.event);
-                    showAppAlert("Comprobando tu compra...", { title: "Procesando" });
-                    // Damos 2 segundos al servidor para recibir el webhook antes de preguntar
-                    setTimeout(() => {
-                        syncUserPermissions();
-                        // Forzamos cierre del modal de instrucciones/premium si sigue abierto
-                        closePremiumModal(); 
-                    }, 2000);
+                    console.log("🍋 Evento Lemon Squeezy:", event.event);
+                    closePremiumModal(); // Cerramos el modal de "Desbloquear"
+                    triggerSmartSync();  // Iniciamos la búsqueda de la compra
                 }
             }
         });
