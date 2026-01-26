@@ -6,7 +6,10 @@ const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const crypto = require("crypto");
 const path = require("path");
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error("⚠️ CRÍTICO: STRIPE_SECRET_KEY no está definida en las variables de entorno.");
+}
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_for_build');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
