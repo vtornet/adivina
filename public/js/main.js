@@ -4119,71 +4119,86 @@ function refreshUI() {
 }
 
 // ==========================================
-// INICIALIZACIÓN (WINDOW.ONLOAD)
+// INICIALIZACIÓN (ORDEN CORREGIDO PARA PAGOS)
 // ==========================================
+
 window.onload = async () => {
-    // 1. Comprobaciones iniciales
+    // 1. Consentimiento de Cookies
     if (typeof checkCookieConsent === 'function') checkCookieConsent();
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Iniciar listeners de pago
+
+    // 2. RECUPERACIÓN DE SESIÓN (PRIORIDAD ABSOLUTA)
+    // Antes de configurar pagos o pantallas, necesitamos saber quién es el usuario.
+    const userDataString = localStorage.getItem('userData');
+    const sessionActive = localStorage.getItem('sessionActive') === 'true';
+
+    // Variable de control local
+    let isUserLoaded = false;
+
+    if (sessionActive && userDataString) {
+        try {
+            // Cargamos el usuario en la variable global
+            currentUser = JSON.parse(userDataString);
+            isUserLoaded = true;
+            console.log("✅ Sesión recuperada para:", currentUser.email);
+
+            // Cargas dependientes del usuario
+            if (typeof getUserPermissions === 'function') getUserPermissions(currentUser.email);
+            if (typeof loadUserScores === 'function') await loadUserScores(currentUser.email);
+            if (typeof loadGameHistory === 'function') await loadGameHistory(currentUser.email);
+            
+            // Sincronización silenciosa de permisos
+            if (typeof syncUserPermissions === 'function') {
+                syncUserPermissions().catch(e => console.warn("Sync background:", e));
+            }
+
+        } catch (e) {
+            console.error("⚠️ Error recuperando sesión:", e);
+            logout(); 
+            return;
+        }
+    }
+
+    // 3. LISTENERS DE PAGO (AHORA ES SEGURO)
+    // Ahora setupPaymentListeners encontrará a 'currentUser' cargado.
     if (typeof setupPaymentListeners === 'function') {
         setupPaymentListeners();
     }
 
-    // 2. Lógica de Modo "Elderly" (Fácil)
+    // 4. RUTAS Y PANTALLAS
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Modo Elderly (Prioridad alta si viene por URL)
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
+        // Limpiezas de UI específicas
         const p1Input = document.getElementById('elderly-player-1-name');
         if (p1Input) p1Input.value = ''; 
         const extraInputs = document.getElementById('elderly-other-player-names-inputs');
         if (extraInputs) extraInputs.innerHTML = ''; 
-
-    } else {
-        // 3. Lógica de Usuario Estándar
-        const userDataString = localStorage.getItem('userData');
-        const sessionActive = localStorage.getItem('sessionActive') === 'true';
-
-        if (sessionActive && userDataString) {
-            try {
-                const storedUser = JSON.parse(userDataString);
-                currentUser = storedUser;
-                
-                // A. Cargar permisos locales
-                getUserPermissions(currentUser.email);
-
-                // B. Sincronización Servidor
-                if (typeof syncUserPermissions === 'function') {
-                    // No usamos await aquí para no bloquear la UI si el servidor tarda
-                    syncUserPermissions().catch(e => console.warn("Sync background error:", e));
-                }
-
-                // C. Cargar datos
-                await loadUserScores(currentUser.email);
-                await loadGameHistory(currentUser.email);
-
-                // D. Redirección
-                if (currentUser.playerName) {
-                    showScreen('decade-selection-screen');
-                    generateDecadeButtons();
-                    updatePremiumButtonsState();
-                } else {
-                    showScreen('set-player-name-screen');
-                }
-            } catch (e) {
-                console.error("Error al recuperar sesión:", e);
-                showScreen('login-screen');
-            }
+    } 
+    // Usuario Logueado
+    else if (isUserLoaded) {
+        if (currentUser.playerName) {
+            showScreen('decade-selection-screen');
+            if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
+            if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
         } else {
-            showScreen('login-screen');
+            showScreen('set-player-name-screen');
         }
+    } 
+    // Usuario No Logueado
+    else {
+        showScreen('login-screen');
     }
 
-    // 4. Configuración Global
+    // 5. Inicialización de componentes globales
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
-    
-    if (typeof startOnlineInvitePolling === 'function') startOnlineInvitePolling();
-    if (typeof updateNotificationBadge === 'function') updateNotificationBadge();
+
+    // Polling y notificaciones
+    if (isUserLoaded) {
+        if (typeof startOnlineInvitePolling === 'function') startOnlineInvitePolling();
+        if (typeof updateNotificationBadge === 'function') updateNotificationBadge();
+    }
 };
