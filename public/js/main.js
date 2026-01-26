@@ -236,121 +236,87 @@ function hasPremiumAccess() {
     return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
 }
 
-function showPremiumModal(message, categoryKey = null) {
-    const modal = document.getElementById('premium-modal');
+const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
     let buyBtn = document.getElementById('premium-buy-btn');
-    let fullPackBtn = document.getElementById('premium-full-pack-btn'); // Definimos la variable
 
     if (!modal || !text) return;
 
-    // Guardar intención
-    const intent = categoryKey || 'full_pack';
-    localStorage.setItem('pending_purchase_intent', intent);
-    localStorage.setItem('purchase_start_time', Date.now());
-
+    // 1. Limpieza: Texto informativo para el usuario
     text.innerHTML = message || 'Desbloquea contenido Premium.';
 
-    // Configuración URLs
-    let checkoutUrl = LEMON_SQUEEZY_URLS.full_pack;
-    let btnText = '🔓 Desbloquear TODO (2.99€)';
-    let webhookKey = 'full_pack';
-    let showIndividual = false;
-
-    if (categoryKey && LEMON_SQUEEZY_URLS[categoryKey]) {
-        checkoutUrl = LEMON_SQUEEZY_URLS[categoryKey];
-        btnText = `🔓 Desbloquear Categoría (0.99€)`;
-        webhookKey = categoryKey;
-        showIndividual = true;
-    }
-
-    // --- BOTÓN PRINCIPAL ---
+    // 2. Gestión del botón: Si no existe, lo inyectamos en el modal
     if (!buyBtn) {
-        buyBtn = document.createElement('a');
+        buyBtn = document.createElement('button');
         buyBtn.id = 'premium-buy-btn';
-        buyBtn.className = 'btn lemon-squeezy-button';
+        buyBtn.className = 'btn'; 
         buyBtn.style.marginTop = '15px';
-        buyBtn.style.background = 'linear-gradient(45deg, #FFC107, #FF9800)';
-        buyBtn.style.color = '#000';
-        
-        const modalContent = modal.querySelector('.modal-content');
-        const closeBtn = modalContent.querySelector('.btn.secondary');
-        modalContent.insertBefore(buyBtn, closeBtn);
+        buyBtn.style.background = 'linear-gradient(45deg, #6772E5, #5469D4)'; // Azul Stripe
+        modal.querySelector('.modal-content').insertBefore(buyBtn, modal.querySelector('.secondary'));
     }
 
-    if (checkoutUrl && checkoutUrl.includes('http')) {
-        // Construcción URL Segura
-        const urlObj = new URL(checkoutUrl);
-        urlObj.searchParams.set('embed', '1');
-        if (currentUser && currentUser.email) {
-            urlObj.searchParams.set('checkout[email]', currentUser.email);
-            urlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
-        }
-        urlObj.searchParams.set('checkout[custom][category_key]', webhookKey);
-        
-        const finalUrl = urlObj.toString();
-
-        // LÓGICA DE APERTURA SEGURA
-        buyBtn.setAttribute('href', finalUrl); // Por si falla JS, mantenemos enlace
-        buyBtn.textContent = btnText;
-        buyBtn.style.display = 'flex';
-
-        buyBtn.onclick = (e) => {
-            e.preventDefault(); // IMPORTANTE: Detenemos navegación normal
-            
-            // Verificamos si la librería está cargada
-            if (window.LemonSqueezy) {
-                console.log("🍋 Abriendo Overlay...");
-                window.LemonSqueezy.Url.Open(finalUrl);
-            } else {
-                console.error("⚠️ Lemon Squeezy no cargado. Redirigiendo...");
-                // Solo si falla, redirigimos, pero el Paso 2 (window.onload) salvará la sesión
-                window.location.href = finalUrl;
-            }
-        };
-    } else {
-        buyBtn.style.display = 'none';
-    }
-
-    // --- BOTÓN PACK COMPLETO (Secundario) ---
-    // (Limpiamos botones antiguos para no duplicar si existen)
-    const oldFullBtn = document.getElementById('premium-full-pack-btn');
-    if (oldFullBtn) oldFullBtn.remove();
-
-    if (showIndividual) {
-        fullPackBtn = document.createElement('a'); // Creamos uno nuevo siempre para asegurar listeners
-        fullPackBtn.id = 'premium-full-pack-btn';
-        fullPackBtn.className = 'btn lemon-squeezy-button';
-        fullPackBtn.style.marginTop = '10px';
-        fullPackBtn.style.background = 'var(--secondary-color)';
-        fullPackBtn.style.fontSize = '0.9rem';
-        fullPackBtn.textContent = 'O llévatelo TODO por 2.99€';
-        
-        const modalContent = modal.querySelector('.modal-content');
-        const closeBtn = modalContent.querySelector('.btn.secondary');
-        modalContent.insertBefore(fullPackBtn, closeBtn);
-
-        let fullUrlStr = LEMON_SQUEEZY_URLS.full_pack;
-        if (fullUrlStr) {
-            const fullUrlObj = new URL(fullUrlStr);
-            fullUrlObj.searchParams.set('embed', '1');
-            if (currentUser) {
-                 fullUrlObj.searchParams.set('checkout[email]', currentUser.email);
-                 fullUrlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
-            }
-            fullUrlObj.searchParams.set('checkout[custom][category_key]', 'full_pack');
-            
-            fullPackBtn.onclick = (e) => {
-                e.preventDefault();
-                localStorage.setItem('pending_purchase_intent', 'full_pack');
-                if (window.LemonSqueezy) window.LemonSqueezy.Url.Open(fullUrlObj.toString());
-                else window.location.href = fullUrlObj.toString();
-            };
-            fullPackBtn.style.display = 'flex';
-        }
-    }
+    // 3. Texto dinámico según la categoría (p.ej: "Desbloquear PELICULAS")
+    buyBtn.innerText = categoryKey ? `🔓 Desbloquear ${categoryKey.toUpperCase()}` : '🔓 Desbloquear TODO';
+    
+    // 4. Acción: Llamada a la futura lógica de redirección
+    buyBtn.onclick = () => redirectToStripe(categoryKey || 'full_pack');
 
     modal.classList.remove('hidden');
+
+/**
+ * Redirige al usuario a la pasarela de pago de Stripe.
+ * @param {string} categoryKey - La clave de la categoría a comprar (ej: 'peliculas', 'full_pack')
+ */
+async function redirectToStripe(categoryKey) {
+    if (!currentUser || !currentUser.email) {
+        showAppAlert("Debes iniciar sesión para realizar compras.");
+        return;
+    }
+
+    // Mapeo de productos (Sustituir con IDs reales de tu Stripe Dashboard)
+    const priceMap = {
+        'espanol':    'price_AQUI', 
+        'ingles':     'price_AQUI',
+        'peliculas':  'price_AQUI',
+        'series':     'price_AQUI',
+        'tv':         'price_AQUI',
+        'infantiles': 'price_AQUI',
+        'anuncios':   'price_AQUI',
+        'full_pack':  'price_AQUI'
+    };
+
+    const priceId = priceMap[categoryKey];
+    
+    if (!priceId || priceId === 'price_AQUI') {
+        showAppAlert("Error: ID de producto no configurado. Contacta con soporte.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/create-checkout-session`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: currentUser.email,
+                categoryKey: categoryKey,
+                priceId: priceId
+            })
+        });
+
+        const session = await response.json();
+        
+        if (response.ok && session.id) {
+            // Inicializar Stripe con tu Clave Pública
+            // Asegúrate de tener <script src="https://js.stripe.com/v3/"></script> en index.html
+            const stripe = Stripe('TU_STRIPE_PUBLIC_KEY_AQUI'); 
+            await stripe.redirectToCheckout({ sessionId: session.id });
+        } else {
+            throw new Error(session.error || "Error al crear sesión de pago.");
+        }
+    } catch (err) {
+        console.error("Error Stripe:", err);
+        showAppAlert("No se pudo iniciar el proceso de pago. Intenta de nuevo.");
+    }
 }
 
 function closePremiumModal() {
@@ -2694,9 +2660,10 @@ async function displaySongsForCategory(decadeId, categoryId) {
     let songsToDisplay;
 
     try {
-        if (isPremiumSelection(decadeId, categoryId) && !hasPremiumAccess()) {
-            showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
-            return;
+       if (isPremiumSelection(decadeId, categoryId) && !hasPremiumAccess()) {
+        // INDICACIÓN PRECISA: Usamos 'categoryId' que es la variable disponible en esta función
+        showPremiumModal('Esta categoría es Premium. Desbloquéala para ver el listado de canciones.', categoryId);
+        return;
         }
         if (decadeId === 'Todas') {
             await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
@@ -3183,9 +3150,10 @@ async function invitePlayerByName() {
         return;
     }
     if (isPremiumSelection(decade, category) && !hasPremiumAccess()) {
-        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
-        return;
-    }
+    // INDICACIÓN PRECISA: Pasamos 'category' para que el modal sepa qué categoría ofrecer
+    showPremiumModal('Esta categoría es Premium. Desbloquéala para invitar a tus amigos.', category);
+    return;
+    } 
 
     const songsArray = await getSongsForOnlineMatch(decade, category);
     if (!songsArray || songsArray.length < 10) {
@@ -4057,7 +4025,7 @@ function setupPaymentListeners() {
             }
         });
     }
-}
+
 
 // ==========================================
 // HELPER GLOBAL PARA REFRESCAR UI
@@ -4076,44 +4044,33 @@ function refreshUI() {
 // INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
 window.onload = async () => {
-    console.log("🚀 Aplicación Iniciada");
+    console.log("🚀 Aplicación Iniciada - Stripe Mode");
 
-    // 1. Restauración Forzada de Sesión
-    const sessionExists = localStorage.getItem('sessionActive') === 'true';
+    // 1. Recuperar Sesión
     const savedUser = localStorage.getItem('userData');
-
-    if (sessionExists && savedUser) {
+    if (savedUser) {
         try {
             currentUser = JSON.parse(savedUser);
-            console.log("✅ Sesión recuperada:", currentUser.email);
-            
-            // Sincronizar permisos sin bloquear la UI
-            syncUserPermissions();
-            loadUserScores(currentUser.email);
-            loadGameHistory(currentUser.email);
+            // Sincronizar permisos inmediatamente para ver cambios tras pago
+            syncUserPermissions(); 
         } catch (e) {
-            console.error("Error al parsear sesión:", e);
-            logout();
+            console.error("Fallo al recuperar sesión");
         }
     }
 
-    // 2. Configuración de Pagos
-    setupPaymentListeners();
-    checkCookieConsent();
-
-    // 3. Enrutamiento Inicial
+    // 2. Procesar Retorno de Pago (Stripe)
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('mode') === 'elderly') {
-        showScreen('elderly-mode-intro-screen');
-    } else if (currentUser && currentUser.email) {
-        if (currentUser.playerName) {
-            showScreen('decade-selection-screen');
-            generateDecadeButtons();
-        } else {
-            showScreen('set-player-name-screen');
-        }
-        startOnlineInvitePolling();
+    if (urlParams.get('session_id')) {
+        showAppAlert("✅ Procesando tu compra... ¡Gracias!");
+        await syncUserPermissions();
+        window.history.replaceState({}, document.title, "/"); // Limpiar URL
+    }
+
+    // 3. Enrutamiento
+    if (currentUser && currentUser.email) {
+        showScreen(currentUser.playerName ? 'decade-selection-screen' : 'set-player-name-screen');
+        if (currentUser.playerName) generateDecadeButtons();
     } else {
         showScreen('login-screen');
     }
-}; 
+};
