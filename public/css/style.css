@@ -950,3 +950,35 @@ select.text-input optgroup {
     font-size: 0.95em;             /* Un pelín más pequeño para que quepan nombres largos */
     max-width: 100%;               /* Asegura que no desborde horizontalmente */
 }
+
+/* =========================================
+   FIX ESPECÍFICO: BOTONES DE CATEGORÍA
+   ========================================= */
+
+.category-btn {
+    /* Permitir que el texto salte de línea */
+    white-space: normal !important; 
+    
+    /* Romper palabras si son excesivamente largas */
+    word-wrap: break-word !important;
+    
+    /* Altura automática para crecer según el contenido */
+    height: auto !important;
+    
+    /* Altura mínima para mantener estética uniforme */
+    min-height: 60px;
+    
+    /* Ajuste de padding para que el texto respire */
+    padding: 10px 15px !important;
+    
+    /* Asegurar centrado vertical y horizontal */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* Interlineado más compacto para textos de varias líneas */
+    line-height: 1.2 !important;
+    
+    /* Asegurar alineación de texto central */
+    text-align: center !important;
+}
