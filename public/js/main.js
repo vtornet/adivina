@@ -295,21 +295,33 @@ function showPremiumModal(message, categoryKey = null) {
     }
     
     if (checkoutUrl && checkoutUrl.includes('http')) {
-        let finalUrl = checkoutUrl + '?embed=1';
-        
-        if (currentUser && currentUser.email) {
-            finalUrl += `&checkout[email]=${encodeURIComponent(currentUser.email)}`;
-            finalUrl += `&checkout[custom][user_email]=${encodeURIComponent(currentUser.email)}`;
-        }
-        
-        finalUrl += `&checkout[custom][category_key]=${webhookKey}`;
-
-        buyBtn.href = finalUrl; 
-        buyBtn.textContent = btnText;
-        buyBtn.style.display = 'flex';
-    } else {
-        buyBtn.style.display = 'none'; 
+    // Construcción de URL limpia
+    const urlObj = new URL(checkoutUrl);
+    urlObj.searchParams.set('embed', '1'); // Forma segura de añadir embed=1
+    
+    if (currentUser && currentUser.email) {
+        urlObj.searchParams.set('checkout[email]', currentUser.email);
+        urlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
     }
+    urlObj.searchParams.set('checkout[custom][category_key]', webhookKey);
+
+    const finalUrl = urlObj.toString();
+
+    // LÓGICA BLINDADA: Forzar JS
+    buyBtn.href = "#"; // Anulamos la navegación estándar
+    buyBtn.onclick = (e) => {
+        e.preventDefault();
+        if (window.LemonSqueezy) {
+            window.LemonSqueezy.Url.Open(finalUrl); // ¡ESTO ES EL OVERLAY PURO!
+        } else {
+            // Solo si falla el script, permitimos salir
+            window.location.href = finalUrl;
+        }
+    };
+    
+    buyBtn.textContent = btnText;
+    buyBtn.style.display = 'flex';
+}
 
     if (showIndividual) {
         if (!fullPackBtn) {
