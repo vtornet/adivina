@@ -275,7 +275,7 @@ async function redirectToStripe(categoryKey) {
 
     // Mapeo de productos (Sustituir con IDs reales de tu Stripe Dashboard)
     const priceMap = {
-        'espanol':    'price_AQUI', 
+        'espanol':    'price_1Stw76AzxZ5jYRrVcSP4iFVS', 
         'ingles':     'price_AQUI',
         'peliculas':  'price_AQUI',
         'series':     'price_AQUI',
@@ -308,7 +308,7 @@ async function redirectToStripe(categoryKey) {
         if (response.ok && session.id) {
             // Inicializar Stripe con tu Clave Pública
             // Asegúrate de tener <script src="https://js.stripe.com/v3/"></script> en index.html
-            const stripe = Stripe('TU_STRIPE_PUBLIC_KEY_AQUI'); 
+            const stripe = Stripe('pk_test_51StvbzAzxZ5jYRrVht2VaE3PAIbqyJSDq2Ym9XPyohsv5gKjkGRBQ5OsvRR9EE3wTNvbDVQweNfIb8Z7Bc3byFXy00QVZ0iVkD'); 
             await stripe.redirectToCheckout({ sessionId: session.id });
         } else {
             throw new Error(session.error || "Error al crear sesión de pago.");
