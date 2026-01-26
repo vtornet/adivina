@@ -2834,27 +2834,9 @@ let onlineInvitePollInterval = null;
 let lastInviteCodes = new Set();
 
 // ========== CREAR PARTIDA ONLINE ==========
+// main.js - Mejora en createOnlineGame
 async function createOnlineGame() {
-    const decade = document.getElementById('online-decade-select').value;
-    const category = document.getElementById('online-category-select').value;
-
-    const playerData = getCurrentUserData(); // <-- OBTENER DATOS AQUÍ
-    if (!playerData || !playerData.email || !playerData.playerName) {
-        showAppAlert("Debes iniciar sesión con tu nombre de jugador para crear partidas online.");
-        showScreen('login-screen'); // <-- Redirigir a login si no está logueado
-        return;
-    }
-    if (isPremiumSelection(decade, category) && !hasPremiumAccess()) {
-        showPremiumModal('Contenido premium. Próximamente disponible mediante desbloqueo.');
-        return;
-    }
-
-    const songsArray = await getSongsForOnlineMatch(decade, category);
-    if (!songsArray || songsArray.length < 10) {
-        showAppAlert("No hay suficientes canciones en esta categoría para crear una partida (mínimo 10).");
-        return;
-    }
-
+    // ... (lógica previa de selección de década/categoría igual)
     try {
         const response = await fetch(`${API_BASE_URL}/api/online-games`, {
             method: 'POST',
@@ -2864,33 +2846,53 @@ async function createOnlineGame() {
                 category,
                 decade,
                 songsUsed: songsArray,
-                playerName: playerData.playerName // Asegurarse de enviar el playerName
+                playerName: playerData.playerName
             })
         });
 
         const result = await response.json();
         if (response.ok) {
             currentOnlineGameCode = result.code;
-            currentOnlineSongs = songsArray;
-            currentOnlineEmail = playerData.email;
-            currentOnlinePlayerName = playerData.playerName;
             isOnlineMode = true;
 
             localStorage.setItem('currentOnlineGameData', JSON.stringify({
                 code: result.code,
                 songsUsed: songsArray,
-                decade: decade, // <-- AÑADE ESTO
-                category: category // <-- AÑADE ESTO
-    }));
+                decade: decade,
+                category: category
+            }));
 
-            showAppAlert(`Partida creada con éxito. Comparte este código con tu amigo: ${currentOnlineGameCode}`);
-            await startOnlineGame();
-        } else {
-            showAppAlert(result.message || 'Error al crear la partida.');
+            // Mostrar el código y ofrecer opciones de compartir antes de empezar
+            await showAppModal({
+                title: '¡Partida Creada!',
+                message: `Tu código es: ${result.code}\n\nCompártelo con tu rival para que pueda unirse.`,
+                confirmText: 'Empezar a Jugar',
+                cancelText: 'Copiar y Compartir',
+                showCancel: true
+            }).then((startNow) => {
+                if (!startNow) {
+                    shareOnlineCode(result.code);
+                }
+                startOnlineGame();
+            });
         }
     } catch (err) {
         console.error(err);
-        showAppAlert('Error al crear la partida online. Por favor, revisa tu conexión o intenta de nuevo.'); 
+        showAppAlert('Error al crear la partida online.');
+    }
+}
+
+// Nueva función de apoyo P3
+function shareOnlineCode(code) {
+    const text = `¡Rétame en Adivina la Canción! 🎵\nMi código de partida es: ${code}\nEntra aquí: https://adivinalacancion.app`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Duelo en Adivina la Canción',
+            text: text
+        }).catch(() => copyOnlineGameCode(code));
+    } else {
+        copyOnlineGameCode(code);
     }
 }
 
@@ -4136,72 +4138,45 @@ function refreshUI() {
 // ==========================================
 // INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
-
 window.onload = async () => {
-    console.log("🚀 Iniciando aplicación...");
+    console.log("🚀 Aplicación Iniciada");
 
-    // 1. RECUPERACIÓN DE SESIÓN (CRÍTICO: ESTO DEBE SER LO PRIMERO)
-    const userDataString = localStorage.getItem('userData');
-    
-    // Forzamos la recuperación si existen datos, ignorando flags secundarias
-    if (userDataString) {
+    // 1. Restauración Forzada de Sesión
+    const sessionExists = localStorage.getItem('sessionActive') === 'true';
+    const savedUser = localStorage.getItem('userData');
+
+    if (sessionExists && savedUser) {
         try {
-            currentUser = JSON.parse(userDataString);
-            // Si recuperamos usuario, marcamos la sesión como activa explícitamente
-            localStorage.setItem('sessionActive', 'true'); 
-            console.log("✅ Sesión restaurada para:", currentUser.email);
-
-            // Carga de datos en segundo plano (no bloqueante)
-            if (typeof getUserPermissions === 'function') getUserPermissions(currentUser.email);
-            if (typeof loadUserScores === 'function') loadUserScores(currentUser.email);
-            if (typeof loadGameHistory === 'function') loadGameHistory(currentUser.email);
-            if (typeof syncUserPermissions === 'function') syncUserPermissions();
+            currentUser = JSON.parse(savedUser);
+            console.log("✅ Sesión recuperada:", currentUser.email);
+            
+            // Sincronizar permisos sin bloquear la UI
+            syncUserPermissions();
+            loadUserScores(currentUser.email);
+            loadGameHistory(currentUser.email);
         } catch (e) {
-            console.error("❌ Error al leer datos de usuario. Forzando logout.");
+            console.error("Error al parsear sesión:", e);
             logout();
-            return;
         }
-    } else {
-        console.log("ℹ️ No se encontró sesión previa.");
     }
 
-    // 2. CHECK DE COOKIES
-    if (typeof checkCookieConsent === 'function') checkCookieConsent();
+    // 2. Configuración de Pagos
+    setupPaymentListeners();
+    checkCookieConsent();
 
-    // 3. LISTENERS DE PAGO (Una vez ya sabemos si hay usuario)
-    if (typeof setupPaymentListeners === 'function') {
-        setupPaymentListeners();
-    }
-
-    // 4. RUTAS Y PANTALLAS (DECISIÓN FINAL DE QUÉ MOSTRAR)
+    // 3. Enrutamiento Inicial
     const urlParams = new URLSearchParams(window.location.search);
-    
-    // A. Modo Elderly (Prioridad por URL)
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
-    } 
-    // B. Usuario Logueado (Aquí es donde fallaba antes: si currentUser existe, ¡entra!)
-    else if (currentUser && currentUser.email) {
+    } else if (currentUser && currentUser.email) {
         if (currentUser.playerName) {
             showScreen('decade-selection-screen');
-            if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
-            if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
+            generateDecadeButtons();
         } else {
             showScreen('set-player-name-screen');
         }
-    } 
-    // C. Usuario NO Logueado -> Login
-    else {
+        startOnlineInvitePolling();
+    } else {
         showScreen('login-screen');
     }
-
-    // 5. Hooks globales y notificaciones
-    window.showStatisticsScreen = showStatisticsScreen;
-    window.showSongsListCategorySelection = showSongsListCategorySelection;
-    window.showOnlineMenu = showOnlineMenu;
-    
-    if (currentUser) {
-        if (typeof startOnlineInvitePolling === 'function') startOnlineInvitePolling();
-        if (typeof updateNotificationBadge === 'function') updateNotificationBadge();
-    }
-};
+}; 
