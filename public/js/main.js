@@ -2102,15 +2102,19 @@ function playAudioSnippet() {
  * @param {boolean} isCorrect - True si la respuesta es correcta, false si es incorrecta.
  * @param {HTMLElement} button - El botón de respuesta que se pulsó.
  */
+// ==========================================
+// FUNCIÓN: checkAnswer (CON BLOQUEO DE ERRORES)
+// ==========================================
+
 function checkAnswer(isCorrect, button) {
     if (!gameState.hasPlayed) {
         showAppAlert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
         return;
     }
+
+    // --- LIMPIEZA DE AUDIO Y LISTENERS (Fix de tiempos) ---
+    clearTimeout(audioPlaybackTimeout); 
     
-    clearTimeout(audioPlaybackTimeout);
-    
-    // --- CAMBIO: Matar el listener si responde antes de tiempo ---
     if (activeTimeUpdateListener) {
         audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
         activeTimeUpdateListener = null;
@@ -2118,7 +2122,9 @@ function checkAnswer(isCorrect, button) {
     
     audioPlayer.pause();
     audioPlayer.currentTime = 0;
+    // -------------------------------------
 
+    // Bloqueamos TODOS momentáneamente al pulsar
     document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
 
     if (isCorrect) {
@@ -2133,14 +2139,25 @@ function checkAnswer(isCorrect, button) {
     } else {
         sfxError.currentTime = 0;
         sfxError.play();
+        
+        // Marcamos visualmente el error (rojo)
         button.classList.add('incorrect');
+        
         gameState.attempts--;
         updateAttemptsCounter();
+        
         if (gameState.attempts > 0) {
             setTimeout(() => {
+                // --- CAMBIO: LÓGICA DE DESCARTES ---
                 document.querySelectorAll('.answer-btn').forEach(btn => {
-                    btn.classList.remove('disabled', 'incorrect', 'correct'); 
+                    // Si el botón YA es incorrecto, lo dejamos disabled (bloqueado)
+                    // Solo rehabilitamos los que no se han pulsado aún
+                    if (!btn.classList.contains('incorrect')) {
+                        btn.classList.remove('disabled');
+                    }
+                    // IMPORTANTE: No quitamos la clase 'incorrect' para que siga rojo
                 });
+                
                 gameState.hasPlayed = false;
                 const playBtn = document.getElementById('play-song-btn');
                 playBtn.disabled = false;
