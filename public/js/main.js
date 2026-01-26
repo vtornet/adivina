@@ -251,7 +251,6 @@ function hasPremiumAccess() {
 }
 
 function showPremiumModal(message, categoryKey = null) {
-function showPremiumModal(message, categoryKey = null) {
     const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
     let buyBtn = document.getElementById('premium-buy-btn');
