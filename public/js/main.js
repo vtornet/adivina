@@ -228,20 +228,29 @@ function hasCategoryAccess(categoryId) {
 
     return false;
 }
-
-// Mantenemos esta por compatibilidad, pero internamente usaremos la de arriba
-function hasPremiumAccess() {
-    if (!currentUser || !currentUser.email) return false;
-    const permissions = getUserPermissions(currentUser.email);
-    return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
-}
-
-const modal = document.getElementById('premium-modal');
+function showPremiumModal(message, categoryKey) {
+    const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
     let buyBtn = document.getElementById('premium-buy-btn');
 
     if (!modal || !text) return;
 
+    text.innerHTML = message || 'Desbloquea contenido Premium.';
+
+    if (!buyBtn) {
+        buyBtn = document.createElement('button');
+        buyBtn.id = 'premium-buy-btn';
+        buyBtn.className = 'btn'; 
+        buyBtn.style.marginTop = '15px';
+        buyBtn.style.background = 'linear-gradient(45deg, #6772E5, #5469D4)';
+        modal.querySelector('.modal-content').insertBefore(buyBtn, modal.querySelector('.secondary'));
+    }
+
+    buyBtn.innerText = categoryKey ? `🔓 Desbloquear ${categoryKey.toUpperCase()}` : '🔓 Desbloquear TODO';
+    buyBtn.onclick = () => redirectToStripe(categoryKey || 'full_pack');
+
+    modal.classList.remove('hidden');
+}
     // 1. Limpieza: Texto informativo para el usuario
     text.innerHTML = message || 'Desbloquea contenido Premium.';
 
