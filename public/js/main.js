@@ -207,20 +207,6 @@ function isPremiumSelection(decadeId, categoryId) {
     return false;
 }
 
-// Variable para el enlace de compra (La rellenaremos cuando te aprueben)
-
-// 1. DICCIONARIO DE URLs DE COMPRA
-// Sustituye las cadenas vacías por los "Checkout Links" que copiaste de Lemon Squeezy
-const LEMON_SQUEEZY_URLS = {
-    full_pack:  'https://adivinalacancion.lemonsqueezy.com/checkout/buy/9fe8d9a6-717e-4ed4-917e-cb5a60ea8056', 
-    peliculas:  'https://adivinalacancion.lemonsqueezy.com/checkout/buy/298630b1-01ec-4fd6-9444-e09293253326',
-    series:     'https://adivinalacancion.lemonsqueezy.com/checkout/buy/f470f782-a181-490f-b35a-414d800be0c5',
-    tv:         'https://adivinalacancion.lemonsqueezy.com/checkout/buy/6d7d59bb-31c5-4324-9c1d-75ac167d2a4e',
-    infantiles: 'https://adivinalacancion.lemonsqueezy.com/checkout/buy/d74b92f2-8c26-4d77-9bb3-75fd5c59f5cc',
-    anuncios:   'https://adivinalacancion.lemonsqueezy.com/checkout/buy/13e93718-3038-45c5-be47-6bac4a5201b3',
-    verano:     'https://adivinalacancion.lemonsqueezy.com/checkout/buy/6770dd9e-d9a4-4c8c-9c33-220785267a34'
-};
-
 // 2. NUEVA FUNCIÓN DE VERIFICACIÓN DE ACCESO
 // Verifica si tienes acceso a una categoría específica (ya sea por Pack Total o compra individual)
 function hasCategoryAccess(categoryId) {
@@ -4036,67 +4022,18 @@ let isSyncing = false;
 // ==========================================
 
 function setupPaymentListeners() {
-    console.log("🎧 Iniciando sistema de pagos (v4 - Persistence)...");
+    // Verificamos si venimos de un pago exitoso de Stripe
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
 
-    // Función que valida contra el servidor si la compra ya aparece
-    const checkAndUnlock = async (intent) => {
-        if (!intent) return false;
-
-        console.log(`🕵️ Verificando compra pendiente: ${intent}`);
-        
-        // 1. Forzar sincronización con servidor
-        if (typeof syncUserPermissions === 'function') {
-            await syncUserPermissions();
-        }
-
-        // 2. Comprobar si ya lo tenemos
-        const currentPerms = typeof getActivePermissions === 'function' 
-            ? getActivePermissions() 
-            : (currentUser.unlocked_sections || []);
-            
-        const hasUnlocked = currentPerms.includes(intent) || currentPerms.includes('premium_all');
-
-        if (hasUnlocked) {
-            console.log("✅ ¡COMPRA VERIFICADA! Limpiando intención.");
-            localStorage.removeItem('pending_purchase_intent');
-            localStorage.removeItem('purchase_start_time');
-            showAppAlert("¡Contenido desbloqueado correctamente! Gracias por tu apoyo.", { title: "¡Gracias!" });
-            refreshUI(); 
-            return true;
-        }
-        return false;
-    };
-
-    // --- LÓGICA DE INICIO (ON LOAD) ---
-    // Verificar si venimos de una recarga post-pago
-    const savedIntent = localStorage.getItem('pending_purchase_intent');
-    const startTime = parseInt(localStorage.getItem('purchase_start_time') || '0');
-    const now = Date.now();
-
-    // Si hay intención y es reciente (menos de 15 minutos)
-    if (savedIntent && (now - startTime < 900000)) {
-        console.log("🔄 Detectado retorno de pago. Iniciando comprobación...");
-        
-        let attempts = 0;
-        const maxAttempts = 10; // Intentar durante ~20 segundos
-        
-        // Ejecutar comprobación inmediata
-        checkAndUnlock(savedIntent);
-
-        // Polling agresivo
-        const poller = setInterval(async () => {
-            attempts++;
-            const success = await checkAndUnlock(savedIntent);
-            
-            if (success) {
-                clearInterval(poller);
-            } else if (attempts >= maxAttempts) {
-                clearInterval(poller);
-                console.log("⚠️ No se detectó desbloqueo tras varios intentos.");
-                // No borramos la intención, por si refresca de nuevo manualmente
-            }
-        }, 2000);
+    if (sessionId) {
+        console.log("💳 Detectado retorno de pago Stripe. Sincronizando...");
+        syncUserPermissions();
+        // Limpiamos la URL para no re-procesar el éxito al recargar
+        window.history.replaceState({}, document.title, window.location.pathname);
+        showAppAlert("¡Gracias por tu compra! Tu contenido se está desbloqueando.");
     }
+}
 
     // --- LISTENERS DE LEMON SQUEEZY (Para cuando NO hay recarga) ---
     if (window.LemonSqueezy) {
