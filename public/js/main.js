@@ -258,17 +258,14 @@ function showPremiumModal(message, categoryKey = null) {
     
     if (!modal || !text) return;
 
-    // --- CORRECCIÓN CRÍTICA: PERSISTENCIA ---
-    // Guardamos en disco qué se va a comprar. Esto sobrevive a la recarga de página.
+    // 1. Guardar intención de compra
     const intent = categoryKey || 'full_pack';
     localStorage.setItem('pending_purchase_intent', intent);
     localStorage.setItem('purchase_start_time', Date.now()); 
-    console.log("🛒 Intención de compra guardada en disco:", intent);
-    // ----------------------------------------
     
     text.innerHTML = message || 'Desbloquea contenido Premium.';
 
-    // Configuración por defecto: Pack Completo
+    // Configuración base
     let checkoutUrl = LEMON_SQUEEZY_URLS.full_pack; 
     let btnText = '🔓 Desbloquear TODO (2.99€)';
     let webhookKey = 'full_pack'; 
@@ -281,8 +278,9 @@ function showPremiumModal(message, categoryKey = null) {
         showIndividual = true;
     }
 
+    // --- CREACIÓN DEL BOTÓN PRINCIPAL ---
     if (!buyBtn) {
-        buyBtn = document.createElement('a');
+        buyBtn = document.createElement('a'); // Seguimos usando 'a' para estilos, pero anulamos comportamiento
         buyBtn.id = 'premium-buy-btn';
         buyBtn.className = 'btn lemon-squeezy-button'; 
         buyBtn.style.marginTop = '15px';
@@ -294,35 +292,43 @@ function showPremiumModal(message, categoryKey = null) {
         modalContent.insertBefore(buyBtn, closeBtn);
     }
     
+    // --- AQUÍ ESTÁ EL ARREGLO DEL OVERLAY ---
     if (checkoutUrl && checkoutUrl.includes('http')) {
-    // Construcción de URL limpia
-    const urlObj = new URL(checkoutUrl);
-    urlObj.searchParams.set('embed', '1'); // Forma segura de añadir embed=1
-    
-    if (currentUser && currentUser.email) {
-        urlObj.searchParams.set('checkout[email]', currentUser.email);
-        urlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
-    }
-    urlObj.searchParams.set('checkout[custom][category_key]', webhookKey);
-
-    const finalUrl = urlObj.toString();
-
-    // LÓGICA BLINDADA: Forzar JS
-    buyBtn.href = "#"; // Anulamos la navegación estándar
-    buyBtn.onclick = (e) => {
-        e.preventDefault();
-        if (window.LemonSqueezy) {
-            window.LemonSqueezy.Url.Open(finalUrl); // ¡ESTO ES EL OVERLAY PURO!
-        } else {
-            // Solo si falla el script, permitimos salir
-            window.location.href = finalUrl;
+        // Construimos la URL con parámetros de forma segura
+        const urlObj = new URL(checkoutUrl);
+        urlObj.searchParams.set('embed', '1'); 
+        
+        if (currentUser && currentUser.email) {
+            urlObj.searchParams.set('checkout[email]', currentUser.email);
+            urlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
         }
-    };
-    
-    buyBtn.textContent = btnText;
-    buyBtn.style.display = 'flex';
-}
+        urlObj.searchParams.set('checkout[custom][category_key]', webhookKey);
 
+        const finalUrl = urlObj.toString();
+
+        // 1. Quitamos el href para que no navegue
+        buyBtn.removeAttribute('href');
+        buyBtn.style.cursor = 'pointer';
+
+        // 2. Forzamos la apertura vía JS
+        buyBtn.onclick = (e) => {
+            e.preventDefault();
+            console.log("Abriendo Lemon Squeezy Overlay...");
+            if (window.LemonSqueezy) {
+                window.LemonSqueezy.Url.Open(finalUrl);
+            } else {
+                // Fallback de emergencia
+                window.location.href = finalUrl;
+            }
+        };
+
+        buyBtn.textContent = btnText;
+        buyBtn.style.display = 'flex';
+    } else {
+        buyBtn.style.display = 'none'; 
+    }
+
+    // --- BOTÓN PACK COMPLETO (SECUNDARIO) ---
     if (showIndividual) {
         if (!fullPackBtn) {
             fullPackBtn = document.createElement('a');
@@ -338,22 +344,28 @@ function showPremiumModal(message, categoryKey = null) {
             modalContent.insertBefore(fullPackBtn, closeBtn);
         }
         
-        let fullUrl = LEMON_SQUEEZY_URLS.full_pack;
-        if (fullUrl && fullUrl.includes('http')) {
-             fullUrl += '?embed=1';
+        let fullUrlStr = LEMON_SQUEEZY_URLS.full_pack;
+        if (fullUrlStr) {
+             const fullUrlObj = new URL(fullUrlStr);
+             fullUrlObj.searchParams.set('embed', '1');
              if (currentUser && currentUser.email) {
-                 fullUrl += `&checkout[email]=${encodeURIComponent(currentUser.email)}`;
-                 fullUrl += `&checkout[custom][user_email]=${encodeURIComponent(currentUser.email)}`;
+                 fullUrlObj.searchParams.set('checkout[email]', currentUser.email);
+                 fullUrlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
              }
-             fullUrl += `&checkout[custom][category_key]=full_pack`;
+             fullUrlObj.searchParams.set('checkout[custom][category_key]', 'full_pack');
+             
+             const finalFullUrl = fullUrlObj.toString();
 
-             fullPackBtn.href = fullUrl;
-             fullPackBtn.style.display = 'flex';
-             // IMPORTANTE: Si pulsan este botón secundario, actualizamos la intención
-             fullPackBtn.onclick = () => {
+             fullPackBtn.removeAttribute('href');
+             fullPackBtn.style.cursor = 'pointer';
+             fullPackBtn.onclick = (e) => {
+                 e.preventDefault();
                  localStorage.setItem('pending_purchase_intent', 'full_pack');
-                 localStorage.setItem('purchase_start_time', Date.now());
+                 if (window.LemonSqueezy) window.LemonSqueezy.Url.Open(finalFullUrl);
+                 else window.location.href = finalFullUrl;
              };
+
+             fullPackBtn.style.display = 'flex';
         } else {
              fullPackBtn.style.display = 'none';
         }
@@ -4135,81 +4147,66 @@ function refreshUI() {
 // ==========================================
 
 window.onload = async () => {
-    // 1. Consentimiento de Cookies
+    // 1. Cargar Cookies
     if (typeof checkCookieConsent === 'function') checkCookieConsent();
 
-    // 2. RECUPERACIÓN DE SESIÓN (PRIORIDAD ABSOLUTA)
-    // Antes de configurar pagos o pantallas, necesitamos saber quién es el usuario.
+    // 2. RECUPERAR SESIÓN (CRÍTICO)
     const userDataString = localStorage.getItem('userData');
-    const sessionActive = localStorage.getItem('sessionActive') === 'true';
-
-    // Variable de control local
-    let isUserLoaded = false;
-
-    if (sessionActive && userDataString) {
+    
+    // Asumimos sesión válida si hay datos, independientemente de la flag 'sessionActive'
+    // que a veces puede fallar. Si userData existe, el usuario existe.
+    if (userDataString) {
         try {
-            // Cargamos el usuario en la variable global
             currentUser = JSON.parse(userDataString);
-            isUserLoaded = true;
-            console.log("✅ Sesión recuperada para:", currentUser.email);
+            // Refrescamos la flag por si acaso
+            localStorage.setItem('sessionActive', 'true');
+            console.log("✅ Usuario recuperado:", currentUser.email);
 
-            // Cargas dependientes del usuario
+            // Cargar datos secundarios en segundo plano
             if (typeof getUserPermissions === 'function') getUserPermissions(currentUser.email);
-            if (typeof loadUserScores === 'function') await loadUserScores(currentUser.email);
-            if (typeof loadGameHistory === 'function') await loadGameHistory(currentUser.email);
-            
-            // Sincronización silenciosa de permisos
-            if (typeof syncUserPermissions === 'function') {
-                syncUserPermissions().catch(e => console.warn("Sync background:", e));
-            }
+            if (typeof loadUserScores === 'function') loadUserScores(currentUser.email);
+            if (typeof loadGameHistory === 'function') loadGameHistory(currentUser.email);
+            if (typeof syncUserPermissions === 'function') syncUserPermissions();
 
         } catch (e) {
-            console.error("⚠️ Error recuperando sesión:", e);
-            logout(); 
+            console.error("Data corrupta, logout forzado.");
+            logout();
             return;
         }
     }
 
-    // 3. LISTENERS DE PAGO (AHORA ES SEGURO)
-    // Ahora setupPaymentListeners encontrará a 'currentUser' cargado.
+    // 3. INICIAR PAGOS (Ahora que currentUser ya existe seguro)
     if (typeof setupPaymentListeners === 'function') {
         setupPaymentListeners();
     }
 
-    // 4. RUTAS Y PANTALLAS
+    // 4. RUTAS
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Modo Elderly (Prioridad alta si viene por URL)
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
-        // Limpiezas de UI específicas
-        const p1Input = document.getElementById('elderly-player-1-name');
-        if (p1Input) p1Input.value = ''; 
-        const extraInputs = document.getElementById('elderly-other-player-names-inputs');
-        if (extraInputs) extraInputs.innerHTML = ''; 
     } 
-    // Usuario Logueado
-    else if (isUserLoaded) {
-        if (currentUser.playerName) {
-            showScreen('decade-selection-screen');
-            if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
-            if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
-        } else {
-            showScreen('set-player-name-screen');
-        }
+    else if (currentUser && currentUser.playerName) {
+        // SI TENEMOS USUARIO -> AL JUEGO
+        showScreen('decade-selection-screen');
+        if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
+        if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
     } 
-    // Usuario No Logueado
+    else if (currentUser && !currentUser.playerName) {
+        // SI TENEMOS USUARIO PERO NO NOMBRE -> A PONER NOMBRE
+        showScreen('set-player-name-screen');
+    }
     else {
+        // SOLO SI NO HAY USUARIO -> AL LOGIN
         showScreen('login-screen');
     }
 
-    // 5. Inicialización de componentes globales
+    // 5. Inicializaciones extra
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
-
-    // Polling y notificaciones
-    if (isUserLoaded) {
+    
+    if (currentUser) {
         if (typeof startOnlineInvitePolling === 'function') startOnlineInvitePolling();
         if (typeof updateNotificationBadge === 'function') updateNotificationBadge();
     }
