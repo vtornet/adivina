@@ -251,24 +251,25 @@ function hasPremiumAccess() {
 }
 
 function showPremiumModal(message, categoryKey = null) {
+function showPremiumModal(message, categoryKey = null) {
     const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
     let buyBtn = document.getElementById('premium-buy-btn');
-    let fullPackBtn = document.getElementById('premium-full-pack-btn');
-    
+    let fullPackBtn = document.getElementById('premium-full-pack-btn'); // Definimos la variable
+
     if (!modal || !text) return;
 
-    // 1. Guardar intención de compra
+    // Guardar intención
     const intent = categoryKey || 'full_pack';
     localStorage.setItem('pending_purchase_intent', intent);
-    localStorage.setItem('purchase_start_time', Date.now()); 
-    
+    localStorage.setItem('purchase_start_time', Date.now());
+
     text.innerHTML = message || 'Desbloquea contenido Premium.';
 
-    // Configuración base
-    let checkoutUrl = LEMON_SQUEEZY_URLS.full_pack; 
+    // Configuración URLs
+    let checkoutUrl = LEMON_SQUEEZY_URLS.full_pack;
     let btnText = '🔓 Desbloquear TODO (2.99€)';
-    let webhookKey = 'full_pack'; 
+    let webhookKey = 'full_pack';
     let showIndividual = false;
 
     if (categoryKey && LEMON_SQUEEZY_URLS[categoryKey]) {
@@ -278,11 +279,11 @@ function showPremiumModal(message, categoryKey = null) {
         showIndividual = true;
     }
 
-    // --- CREACIÓN DEL BOTÓN PRINCIPAL ---
+    // --- BOTÓN PRINCIPAL ---
     if (!buyBtn) {
-        buyBtn = document.createElement('a'); // Seguimos usando 'a' para estilos, pero anulamos comportamiento
+        buyBtn = document.createElement('a');
         buyBtn.id = 'premium-buy-btn';
-        buyBtn.className = 'btn lemon-squeezy-button'; 
+        buyBtn.className = 'btn lemon-squeezy-button';
         buyBtn.style.marginTop = '15px';
         buyBtn.style.background = 'linear-gradient(45deg, #FFC107, #FF9800)';
         buyBtn.style.color = '#000';
@@ -291,86 +292,77 @@ function showPremiumModal(message, categoryKey = null) {
         const closeBtn = modalContent.querySelector('.btn.secondary');
         modalContent.insertBefore(buyBtn, closeBtn);
     }
-    
-    // --- AQUÍ ESTÁ EL ARREGLO DEL OVERLAY ---
+
     if (checkoutUrl && checkoutUrl.includes('http')) {
-        // Construimos la URL con parámetros de forma segura
+        // Construcción URL Segura
         const urlObj = new URL(checkoutUrl);
-        urlObj.searchParams.set('embed', '1'); 
-        
+        urlObj.searchParams.set('embed', '1');
         if (currentUser && currentUser.email) {
             urlObj.searchParams.set('checkout[email]', currentUser.email);
             urlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
         }
         urlObj.searchParams.set('checkout[custom][category_key]', webhookKey);
-
+        
         const finalUrl = urlObj.toString();
 
-        // 1. Quitamos el href para que no navegue
-        buyBtn.removeAttribute('href');
-        buyBtn.style.cursor = 'pointer';
+        // LÓGICA DE APERTURA SEGURA
+        buyBtn.setAttribute('href', finalUrl); // Por si falla JS, mantenemos enlace
+        buyBtn.textContent = btnText;
+        buyBtn.style.display = 'flex';
 
-        // 2. Forzamos la apertura vía JS
         buyBtn.onclick = (e) => {
-            e.preventDefault();
-            console.log("Abriendo Lemon Squeezy Overlay...");
+            e.preventDefault(); // IMPORTANTE: Detenemos navegación normal
+            
+            // Verificamos si la librería está cargada
             if (window.LemonSqueezy) {
+                console.log("🍋 Abriendo Overlay...");
                 window.LemonSqueezy.Url.Open(finalUrl);
             } else {
-                // Fallback de emergencia
+                console.error("⚠️ Lemon Squeezy no cargado. Redirigiendo...");
+                // Solo si falla, redirigimos, pero el Paso 2 (window.onload) salvará la sesión
                 window.location.href = finalUrl;
             }
         };
-
-        buyBtn.textContent = btnText;
-        buyBtn.style.display = 'flex';
     } else {
-        buyBtn.style.display = 'none'; 
+        buyBtn.style.display = 'none';
     }
 
-    // --- BOTÓN PACK COMPLETO (SECUNDARIO) ---
+    // --- BOTÓN PACK COMPLETO (Secundario) ---
+    // (Limpiamos botones antiguos para no duplicar si existen)
+    const oldFullBtn = document.getElementById('premium-full-pack-btn');
+    if (oldFullBtn) oldFullBtn.remove();
+
     if (showIndividual) {
-        if (!fullPackBtn) {
-            fullPackBtn = document.createElement('a');
-            fullPackBtn.id = 'premium-full-pack-btn';
-            fullPackBtn.className = 'btn lemon-squeezy-button';
-            fullPackBtn.style.marginTop = '10px';
-            fullPackBtn.style.background = 'var(--secondary-color)';
-            fullPackBtn.style.fontSize = '0.9rem';
-            fullPackBtn.textContent = 'O llévatelo TODO por 2.99€'; 
-            
-            const modalContent = modal.querySelector('.modal-content');
-            const closeBtn = modalContent.querySelector('.btn.secondary');
-            modalContent.insertBefore(fullPackBtn, closeBtn);
-        }
+        fullPackBtn = document.createElement('a'); // Creamos uno nuevo siempre para asegurar listeners
+        fullPackBtn.id = 'premium-full-pack-btn';
+        fullPackBtn.className = 'btn lemon-squeezy-button';
+        fullPackBtn.style.marginTop = '10px';
+        fullPackBtn.style.background = 'var(--secondary-color)';
+        fullPackBtn.style.fontSize = '0.9rem';
+        fullPackBtn.textContent = 'O llévatelo TODO por 2.99€';
         
+        const modalContent = modal.querySelector('.modal-content');
+        const closeBtn = modalContent.querySelector('.btn.secondary');
+        modalContent.insertBefore(fullPackBtn, closeBtn);
+
         let fullUrlStr = LEMON_SQUEEZY_URLS.full_pack;
         if (fullUrlStr) {
-             const fullUrlObj = new URL(fullUrlStr);
-             fullUrlObj.searchParams.set('embed', '1');
-             if (currentUser && currentUser.email) {
+            const fullUrlObj = new URL(fullUrlStr);
+            fullUrlObj.searchParams.set('embed', '1');
+            if (currentUser) {
                  fullUrlObj.searchParams.set('checkout[email]', currentUser.email);
                  fullUrlObj.searchParams.set('checkout[custom][user_email]', currentUser.email);
-             }
-             fullUrlObj.searchParams.set('checkout[custom][category_key]', 'full_pack');
-             
-             const finalFullUrl = fullUrlObj.toString();
-
-             fullPackBtn.removeAttribute('href');
-             fullPackBtn.style.cursor = 'pointer';
-             fullPackBtn.onclick = (e) => {
-                 e.preventDefault();
-                 localStorage.setItem('pending_purchase_intent', 'full_pack');
-                 if (window.LemonSqueezy) window.LemonSqueezy.Url.Open(finalFullUrl);
-                 else window.location.href = finalFullUrl;
-             };
-
-             fullPackBtn.style.display = 'flex';
-        } else {
-             fullPackBtn.style.display = 'none';
+            }
+            fullUrlObj.searchParams.set('checkout[custom][category_key]', 'full_pack');
+            
+            fullPackBtn.onclick = (e) => {
+                e.preventDefault();
+                localStorage.setItem('pending_purchase_intent', 'full_pack');
+                if (window.LemonSqueezy) window.LemonSqueezy.Url.Open(fullUrlObj.toString());
+                else window.location.href = fullUrlObj.toString();
+            };
+            fullPackBtn.style.display = 'flex';
         }
-    } else {
-        if (fullPackBtn) fullPackBtn.style.display = 'none';
     }
 
     modal.classList.remove('hidden');
@@ -4143,65 +4135,68 @@ function refreshUI() {
 }
 
 // ==========================================
-// INICIALIZACIÓN (ORDEN CORREGIDO PARA PAGOS)
+// INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
 
 window.onload = async () => {
-    // 1. Cargar Cookies
-    if (typeof checkCookieConsent === 'function') checkCookieConsent();
+    console.log("🚀 Iniciando aplicación...");
 
-    // 2. RECUPERAR SESIÓN (CRÍTICO)
+    // 1. RECUPERACIÓN DE SESIÓN (CRÍTICO: ESTO DEBE SER LO PRIMERO)
     const userDataString = localStorage.getItem('userData');
     
-    // Asumimos sesión válida si hay datos, independientemente de la flag 'sessionActive'
-    // que a veces puede fallar. Si userData existe, el usuario existe.
+    // Forzamos la recuperación si existen datos, ignorando flags secundarias
     if (userDataString) {
         try {
             currentUser = JSON.parse(userDataString);
-            // Refrescamos la flag por si acaso
-            localStorage.setItem('sessionActive', 'true');
-            console.log("✅ Usuario recuperado:", currentUser.email);
+            // Si recuperamos usuario, marcamos la sesión como activa explícitamente
+            localStorage.setItem('sessionActive', 'true'); 
+            console.log("✅ Sesión restaurada para:", currentUser.email);
 
-            // Cargar datos secundarios en segundo plano
+            // Carga de datos en segundo plano (no bloqueante)
             if (typeof getUserPermissions === 'function') getUserPermissions(currentUser.email);
             if (typeof loadUserScores === 'function') loadUserScores(currentUser.email);
             if (typeof loadGameHistory === 'function') loadGameHistory(currentUser.email);
             if (typeof syncUserPermissions === 'function') syncUserPermissions();
-
         } catch (e) {
-            console.error("Data corrupta, logout forzado.");
+            console.error("❌ Error al leer datos de usuario. Forzando logout.");
             logout();
             return;
         }
+    } else {
+        console.log("ℹ️ No se encontró sesión previa.");
     }
 
-    // 3. INICIAR PAGOS (Ahora que currentUser ya existe seguro)
+    // 2. CHECK DE COOKIES
+    if (typeof checkCookieConsent === 'function') checkCookieConsent();
+
+    // 3. LISTENERS DE PAGO (Una vez ya sabemos si hay usuario)
     if (typeof setupPaymentListeners === 'function') {
         setupPaymentListeners();
     }
 
-    // 4. RUTAS
+    // 4. RUTAS Y PANTALLAS (DECISIÓN FINAL DE QUÉ MOSTRAR)
     const urlParams = new URLSearchParams(window.location.search);
     
+    // A. Modo Elderly (Prioridad por URL)
     if (urlParams.get('mode') === 'elderly') {
         showScreen('elderly-mode-intro-screen');
     } 
-    else if (currentUser && currentUser.playerName) {
-        // SI TENEMOS USUARIO -> AL JUEGO
-        showScreen('decade-selection-screen');
-        if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
-        if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
+    // B. Usuario Logueado (Aquí es donde fallaba antes: si currentUser existe, ¡entra!)
+    else if (currentUser && currentUser.email) {
+        if (currentUser.playerName) {
+            showScreen('decade-selection-screen');
+            if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
+            if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
+        } else {
+            showScreen('set-player-name-screen');
+        }
     } 
-    else if (currentUser && !currentUser.playerName) {
-        // SI TENEMOS USUARIO PERO NO NOMBRE -> A PONER NOMBRE
-        showScreen('set-player-name-screen');
-    }
+    // C. Usuario NO Logueado -> Login
     else {
-        // SOLO SI NO HAY USUARIO -> AL LOGIN
         showScreen('login-screen');
     }
 
-    // 5. Inicializaciones extra
+    // 5. Hooks globales y notificaciones
     window.showStatisticsScreen = showStatisticsScreen;
     window.showSongsListCategorySelection = showSongsListCategorySelection;
     window.showOnlineMenu = showOnlineMenu;
