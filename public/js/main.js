@@ -64,6 +64,7 @@ function getCategoriesForSelect() {
 
 let gameState = {};
 let audioPlaybackTimeout;
+let activeTimeUpdateListener = null;
 const screens = document.querySelectorAll('.screen');
 const audioPlayer = document.getElementById('audio-player');
 const sfxAcierto = document.getElementById('sfx-acierto');
@@ -1939,14 +1940,27 @@ function setupQuestion() {
     }
     
     clearTimeout(audioPlaybackTimeout);
+    
+    // --- CAMBIO: Limpieza preventiva ---
+    if (activeTimeUpdateListener) {
+        audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
+        activeTimeUpdateListener = null;
+    }
+    
     audioPlayer.pause();
+    // -----------------------------------
+
+    // ... (El resto de la función setupQuestion se mantiene IDÉNTICA a tu archivo original)
+    // Solo asegúrate de copiar el bloque de limpieza al inicio.
+    
     gameState.attempts = 3;
     gameState.hasPlayed = false;
 
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
     
     document.getElementById("player-name-display").textContent = currentPlayer.name;
-    // MODIFICACIÓN VISUAL: Texto personalizado para modos especiales
+    
+    // Lógica de visualización de título (Mantenemos tu lógica de especiales/elderly)
     const categoryDisplayEl = document.getElementById('category-display');
     if (gameState.selectedDecade === 'verano') {
         categoryDisplayEl.innerText = "Especiales - Canciones del Verano";
@@ -1955,6 +1969,7 @@ function setupQuestion() {
     } else {
         categoryDisplayEl.innerText = `${getDecadeLabel(gameState.selectedDecade)} - ${getCategoryLabel(gameState.category)}`;
     }
+    
     document.getElementById('question-counter').innerText = `Pregunta ${currentPlayer.questionsAnswered + 1}/${gameState.totalQuestionsPerPlayer}`;
     document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
     document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
@@ -2022,58 +2037,63 @@ function updateAttemptsCounter() {
 function playAudioSnippet() {
     if (gameState.hasPlayed) return;
     
-    // 1. Definir duración según intentos
-    const durations = { 3: 4.0, 2: 6.0, 1: 10.0 }; // En SEGUNDOS (timeupdate usa segundos)
+    // Tiempos correctos: Intento 3 -> 4s, Intento 2 -> 6s, Intento 1 -> 10s
+    const durations = { 3: 4.0, 2: 6.0, 1: 10.0 }; 
     const durationSecs = durations[gameState.attempts];
     
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
-    // 2. Validaciones
     const fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName || !fileName.includes('.')) {
         showAppAlert("No se pudo reproducir el audio de esta canción.");
         return;
     }
 
-    // 3. Configurar UI
     const playBtn = document.getElementById('play-song-btn');
     playBtn.innerText = "🎵";
     playBtn.disabled = true;
     gameState.hasPlayed = true;
 
-    // 4. Configurar Audio
     const audioSrc = `/audio/${fileName}`;
-    // Solo cambiamos el src si es diferente para evitar recargas innecesarias
     if (!audioPlayer.src.includes(audioSrc)) {
         audioPlayer.src = audioSrc;
     }
     
+    // --- CAMBIO: Limpieza del listener anterior ---
+    if (activeTimeUpdateListener) {
+        audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
+        activeTimeUpdateListener = null;
+    }
+
     audioPlayer.currentTime = 0;
 
-    // 5. DEFINIR EL LISTENER (La magia ocurre aquí)
     const stopAudioListener = () => {
         if (audioPlayer.currentTime >= durationSecs) {
             audioPlayer.pause();
-            audioPlayer.currentTime = 0; // Rebobinar
+            audioPlayer.currentTime = 0; 
             playBtn.innerText = "▶";
             
-            // IMPORTANTE: Limpiar el evento para que no interfiera en el futuro
+            // Limpieza al terminar
             audioPlayer.removeEventListener('timeupdate', stopAudioListener);
+            activeTimeUpdateListener = null;
         }
     };
 
-    // Añadimos el "vigilante" del tiempo
+    activeTimeUpdateListener = stopAudioListener;
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
 
-    // 6. Reproducir (con manejo de promesas para evitar errores de navegador)
     audioPlayer.play().catch(e => {
         console.error("Error al reproducir:", e);
         showAppAlert("El navegador bloqueó el audio. Intenta pulsar de nuevo.");
         playBtn.disabled = false;
         playBtn.innerText = "▶";
-        gameState.hasPlayed = false; // Permitir reintentar
-        audioPlayer.removeEventListener('timeupdate', stopAudioListener);
+        gameState.hasPlayed = false; 
+        
+        if (activeTimeUpdateListener) {
+            audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
+            activeTimeUpdateListener = null;
+        }
     });
 }
 
@@ -2087,8 +2107,18 @@ function checkAnswer(isCorrect, button) {
         showAppAlert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
         return;
     }
+    
     clearTimeout(audioPlaybackTimeout);
+    
+    // --- CAMBIO: Matar el listener si responde antes de tiempo ---
+    if (activeTimeUpdateListener) {
+        audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
+        activeTimeUpdateListener = null;
+    }
+    
     audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+
     document.querySelectorAll('.answer-btn').forEach(btn => btn.classList.add('disabled'));
 
     if (isCorrect) {
