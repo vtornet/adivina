@@ -4000,19 +4000,18 @@ function refreshUI() {
 // ==========================================
 // INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
-// --- REEMPLAZAR BLOQUE FINAL COMPLETO EN main.js ---
-
-// ==========================================
-// INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
-// ==========================================
 
 window.onload = async () => {
-    console.log("🚀 Iniciando aplicación (v13)...");
+    console.log("🚀 Iniciando aplicación (v14) - Fix Persistencia...");
 
-    // 0. Registrar Service Worker (Para PWA y actualizaciones)
+    // 0. Registrar Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').then(registration => {
             console.log('SW registrado:', registration.scope);
+            // Forzar actualización si hay uno nuevo esperando
+            if (registration.waiting) {
+                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
         }).catch(err => {
             console.warn('SW fallo:', err);
         });
@@ -4024,7 +4023,7 @@ window.onload = async () => {
     }
 
     // 2. RECUPERACIÓN DE SESIÓN (CRÍTICO)
-    // Esto es lo que permite que el login persista al refrescar
+    // Leemos localStorage antes de decidir qué pantalla mostrar
     const savedUserJSON = localStorage.getItem('userData');
     
     if (savedUserJSON) {
@@ -4032,7 +4031,7 @@ window.onload = async () => {
             currentUser = JSON.parse(savedUserJSON);
             console.log("✅ Sesión recuperada:", currentUser.email);
             
-            // Sincronización silenciosa para actualizar permisos sin bloquear la UI
+            // Sincronización silenciosa de permisos
             if (typeof syncUserPermissions === 'function') {
                 syncUserPermissions().catch(e => console.warn("Sync background warn:", e));
             }
@@ -4055,18 +4054,18 @@ window.onload = async () => {
             await syncUserPermissions(); 
             showAppAlert("¡Pago realizado con éxito! Categorías desbloqueadas.");
         }
+        // Limpiar URL
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 
     // 4. ENRUTAMIENTO (Router)
     if (currentUser && currentUser.email) {
-        // Usuario logueado -> Pantalla de juego
+        // Usuario logueado -> Pantalla de selección o nombre
         if (currentUser.playerName) {
             showScreen('decade-selection-screen');
             if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
             if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
         } else {
-            // Logueado pero sin nombre -> Pantalla de nombre
             showScreen('set-player-name-screen');
         }
     } else {
