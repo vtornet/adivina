@@ -40,37 +40,37 @@ app.use(
   })
 );
 
-// B. Webhook: Stripe avisa a tu servidor que el pago fue exitoso
-// IMPORTANTE: Esta ruta requiere 'express.raw' para validar la firma de seguridad
-app.post("/api/stripe-webhook", express.raw({ type: 'application/json' }), async (req, res) => {
-    const sig = req.headers['stripe-signature'];
-    let event;
+
+app.post("/api/create-checkout-session", async (req, res) => {
+    // AÑADIDO: Recibimos 'returnUrl' del frontend
+    const { email, categoryKey, priceId, returnUrl } = req.body;
+
+    // Fallback de seguridad por si el frontend no lo envía (usamos tu dominio principal)
+    const baseUrl = returnUrl || 'https://adivinalacancion.app';
 
     try {
-        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+        const session = await stripe.checkout.sessions.create({
+            customer_email: email,
+            payment_method_types: ['card'],
+            line_items: [{
+                price: priceId,
+                quantity: 1,
+            }],
+            mode: 'payment',
+            metadata: {
+                user_email: email,
+                category_key: categoryKey
+            },
+            // USAMOS LA URL DINÁMICA
+            success_url: `${baseUrl}/?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${baseUrl}/`,
+        });
+
+        res.json({ id: session.id });
     } catch (err) {
-        return res.status(400).send(`Webhook Error: ${err.message}`);
+        console.error("Error Stripe Session:", err.message);
+        res.status(500).json({ error: err.message });
     }
-
-    if (event.type === 'checkout.session.completed') {
-        const session = event.data.object;
-        const userEmail = session.metadata.user_email;
-        const categoryUnlocked = session.metadata.category_key;
-
-        // Aquí es donde vinculamos la compra con tu base de datos de MongoDB
-        try {
-            const User = mongoose.model('User'); // Asegúrate de que el modelo esté cargado
-            await User.findOneAndUpdate(
-                { email: userEmail },
-                { $addToSet: { unlocked_sections: categoryUnlocked } }
-            );
-            console.log(`✅ [STRIPE] ${categoryUnlocked} desbloqueado para ${userEmail}`);
-        } catch (dbErr) {
-            console.error("Error actualizando usuario tras pago:", dbErr.message);
-        }
-    }
-
-    res.json({ received: true });
 });
 
 app.use(express.json());

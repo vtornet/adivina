@@ -250,61 +250,50 @@ function showPremiumModal(message, categoryKey) {
  */
 // REEMPLAZA LA FUNCIÓN redirectToStripe COMPLETA EN public/js/main.js
 
+// EN public/js/main.js - Reemplaza la función redirectToStripe completa
+
 async function redirectToStripe(categoryKey) {
-    // 1. Verificación de seguridad básica
     if (!currentUser || !currentUser.email) {
         showAppAlert("Debes iniciar sesión para realizar compras.");
         return;
     }
 
-    // 2. CONFIGURACIÓN DE PRECIOS
-    // Aquí defines qué ID de Stripe corresponde a cada botón.
     const priceMap = {
-        'espanol':    'price_AQUI', // Gratis o ID real si decides cobrarlo
+        'espanol':    'price_AQUI',
         'ingles':     'price_AQUI',
-        
-        // IDs que me has facilitado:
         'peliculas':  'price_1Stw76AzxZ5jYRrVcSP4iFVS',
         'series':     'price_AQUI',
         'tv':         'price_AQUI',
         'infantiles': 'price_AQUI',
         'anuncios':   'price_AQUI',
-        
-        // El ID del pack completo que me has facilitado:
         'full_pack':  'price_1SuACIAzxZ5jYRrVNKmtD0KN'
     };
 
     const priceId = priceMap[categoryKey];
     
-    // 3. Validación: Si el ID sigue diciendo 'price_AQUI', avisamos y paramos.
     if (!priceId || priceId === 'price_AQUI') {
-        console.error(`Falta el ID de Stripe para la categoría: ${categoryKey}`);
-        showAppAlert("Esta categoría aún no está disponible para compra. Intenta con 'Películas' o el Pack Completo.");
+        console.error(`Falta configuración de precio para: ${categoryKey}`);
+        showAppAlert("Esta categoría aún no está disponible para compra.");
         return;
     }
 
-    // 4. CORRECCIÓN DE LÓGICA (EL FIX CRÍTICO)
-    // Cuando el usuario compra el 'full_pack', Stripe cobra ese producto,
-    // pero nosotros le decimos a nuestra Base de Datos que guarde el permiso 'premium_all'.
-    // Si no hacemos esto, el usuario pagará pero el juego seguirá bloqueado.
     const permissionKeyToSave = (categoryKey === 'full_pack') ? 'premium_all' : categoryKey;
 
-    // 5. Iniciar proceso de pago
     try {
         const response = await fetch(`${API_BASE_URL}/api/create-checkout-session`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 email: currentUser.email,
-                categoryKey: permissionKeyToSave, // <--- Enviamos la clave corregida
-                priceId: priceId
+                categoryKey: permissionKeyToSave,
+                priceId: priceId,
+                returnUrl: window.location.origin // <--- ¡LA CLAVE! Enviamos dónde estamos
             })
         });
 
         const session = await response.json();
         
         if (response.ok && session.id) {
-            // Inicializamos Stripe (Clave pública de TEST)
             const stripe = Stripe('pk_test_51StvbzAzxZ5jYRrVht2VaE3PAIbqyJSDq2Ym9XPyohsv5gKjkGRBQ5OsvRR9EE3wTNvbDVQweNfIb8Z7Bc3byFXy00QVZ0iVkD'); 
             await stripe.redirectToCheckout({ sessionId: session.id });
         } else {
@@ -312,7 +301,7 @@ async function redirectToStripe(categoryKey) {
         }
     } catch (err) {
         console.error("Error Stripe:", err);
-        showAppAlert("No se pudo iniciar el proceso de pago. Revisa tu conexión.");
+        showAppAlert("No se pudo iniciar el proceso de pago.");
     }
 }
 
