@@ -1842,17 +1842,35 @@ function startGame() {
 
     gameState.totalQuestionsPerPlayer = 10;
     
-    let allSongsToChooseFrom;
+        let allSongsToChooseFrom;
+
     if (gameState.selectedDecade === 'Todas') {
-        allSongsToChooseFrom = [...configuracionCanciones['Todas']['consolidated']];
+        const mergedPool = configuracionCanciones?.['Todas']?.[gameState.category];
+
+        if (!Array.isArray(mergedPool) || mergedPool.length < 4) {
+            showAppAlert(
+                `Error: No hay suficientes canciones en '${getCategoryLabel(gameState.category)}' para ${getDecadeLabel(gameState.selectedDecade)}.`
+            );
+            showScreen('category-screen');
+            return;
+        }
+
+        allSongsToChooseFrom = [...mergedPool];
     } else {
-        if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
-            showAppAlert(`Error: No se encontraron canciones para la década ${getDecadeLabel(gameState.selectedDecade)} y categoría ${getCategoryLabel(gameState.category)}.`);
+        if (
+            !configuracionCanciones[gameState.selectedDecade] ||
+            !configuracionCanciones[gameState.selectedDecade][gameState.category]
+        ) {
+            showAppAlert(
+                `Error: No se encontraron canciones para la década ${getDecadeLabel(gameState.selectedDecade)} y categoría ${getCategoryLabel(gameState.category)}.`
+            );
             showScreen('decade-selection-screen');
             return;
         }
+
         allSongsToChooseFrom = [...configuracionCanciones[gameState.selectedDecade][gameState.category]];
     }
+
 
     const requiredSongs = gameState.totalQuestionsPerPlayer * gameState.playerCount;
 
