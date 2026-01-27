@@ -1365,25 +1365,19 @@ async function selectDecade(decade) {
 
     gameState.selectedDecade = decade;
 
-    // 4. Lógica para "Todas las Décadas" (MANTENIDA INTACTA)
+     // 4. Lógica para "Todas las Décadas" (REESTRUCTURADA)
     if (decade === 'Todas') {
-        gameState.category = 'consolidated'; // Categoría especial para "Todas"
-        try {
-            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); // Carga/consolida todas las canciones
-            
-            // Verificar que hay suficientes canciones para empezar una partida en modo "Todas"
-            if (configuracionCanciones['Todas']['consolidated'].length < gameState.totalQuestionsPerPlayer) {
-                showAppAlert(`No hay suficientes canciones para jugar en la opción '${getDecadeLabel('Todas')}'. Necesitas al menos ${gameState.totalQuestionsPerPlayer} canciones en total.`);
-                showScreen('decade-selection-screen'); // Vuelve si no hay suficientes
-                return;
-            }
-            showScreen('player-selection-screen');
-        } catch (error) {
-            showAppAlert('Error al cargar todas las canciones. Intenta de nuevo.');
-            console.error(error);
-            showScreen('decade-selection-screen'); // Volver a la selección de década
-        }
-    } 
+        gameState.selectedDecade = 'Todas';
+
+        // NO iniciar partida
+        // NO consolidated
+        // NO carga directa
+        // → ir a categorías
+        generateCategoryButtons();
+        showScreen('category-screen');
+        return;
+    }
+
     // 5. Lógica para Décadas Normales (MANTENIDA INTACTA)
     else {
         // Antes de mostrar la pantalla de categorías, cargamos todas las categorías de la década.
@@ -2956,6 +2950,44 @@ async function joinOnlineGameFromPending(code, playerName, email) {
 // ========== OBTENER CANCIONES PARA LA PARTIDA ONLINE ==========
 async function getSongsForOnlineMatch(decade, category) {
     await loadSongsForDecadeAndCategory(decade, category);
+    // ====== MODO "TODAS LAS DÉCADAS" ======
+    if (gameState.selectedDecade === 'Todas') {
+        gameState.category = category;
+
+        const allDecades = window.allDecadesDefined.filter(d => d !== 'verano' && d !== 'Todas');
+
+        let mergedSongs = [];
+
+        for (const dec of allDecades) {
+            try {
+                await loadSongsForDecadeAndCategory(dec, category);
+
+                if (
+                    configuracionCanciones[dec] &&
+                    configuracionCanciones[dec][category] &&
+                    Array.isArray(configuracionCanciones[dec][category])
+                ) {
+                    mergedSongs = mergedSongs.concat(configuracionCanciones[dec][category]);
+                }
+            } catch (e) {
+                console.warn(`No se pudieron cargar canciones de ${dec} - ${category}`, e);
+            }
+        }
+
+        // Guardamos mezcla global
+        configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
+        configuracionCanciones['Todas'][category] = mergedSongs;
+
+        // Validación mínima
+        if (mergedSongs.length < gameState.totalQuestionsPerPlayer) {
+            showAppAlert(`No hay suficientes canciones en la categoría ${getCategoryLabel(category)} para jugar en Todas las Décadas.`);
+            return;
+        }
+
+        showScreen('player-selection-screen');
+        return;
+    }
+
     const songs = configuracionCanciones[decade][category];
     const shuffled = [...songs].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 10);
