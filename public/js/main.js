@@ -4011,11 +4011,60 @@ function refreshUI() {
 }
 
 // ==========================================
+// ARRANQUE UNIFICADO (PERSISTENCIA DE SESIÓN)
+// ==========================================
+async function startApp(source = 'boot') {
+    // source: 'boot' | 'user'
+    // - boot  => si NO hay sesión, mostrar home-screen
+    // - user  => si NO hay sesión, mostrar login-screen
+
+    // Rehidratación defensiva (no confiamos en RAM)
+    let restored = null;
+    try {
+        const savedUserJSON = localStorage.getItem('userData');
+        if (savedUserJSON) restored = JSON.parse(savedUserJSON);
+    } catch (e) {
+        console.error("❌ userData corrupto. Limpiando.", e);
+        localStorage.removeItem('userData');
+        localStorage.removeItem('loggedInUserEmail');
+        localStorage.removeItem('sessionActive');
+        restored = null;
+    }
+
+    // Validación mínima
+    if (restored && restored.email) {
+        currentUser = restored;
+        localStorage.setItem('sessionActive', 'true');
+
+        // Cargar datos del usuario (sin bloquear el enrutamiento si falla)
+        try { await loadUserScores(currentUser.email); } catch (e) { console.warn("Scores no cargados:", e); }
+        try { await loadGameHistory(currentUser.email); } catch (e) { console.warn("Historial no cargado:", e); }
+
+        // Enrutamiento
+        if (currentUser.playerName) {
+            showScreen('decade-selection-screen');
+            if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
+            if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
+        } else {
+            showScreen('set-player-name-screen');
+        }
+        return;
+    }
+
+    // Sin sesión
+    if (source === 'user') {
+        showScreen('login-screen');
+    } else {
+        showScreen('home-screen');
+    }
+}
+window.startApp = startApp;
+
+// ==========================================
 // INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
-
 window.onload = async () => {
-    console.log("🚀 Iniciando aplicación (v15) - Fix Final...");
+    console.log("🚀 Iniciando aplicación (boot) - Sesión persistente.");
 
     // 0. Registrar Service Worker
     if ('serviceWorker' in navigator) {
@@ -4034,32 +4083,24 @@ window.onload = async () => {
     if (typeof checkCookieConsent === 'function') {
         checkCookieConsent();
     }
-    // 3. GESTIÓN DEL RETORNO DE PAGO (Stripe)
+
+    // 2. RETORNO DE PAGO (Stripe)
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('session_id');
-    
+
     if (sessionId) {
         console.log("💳 Retorno de pago detectado.");
-        if (currentUser) {
-            await syncUserPermissions(); 
+        // Rehidratamos sesión y sincronizamos permisos si procede
+        await startApp('boot');
+        if (currentUser && typeof syncUserPermissions === 'function') {
+            await syncUserPermissions();
             showAppAlert("¡Pago realizado con éxito! Categorías desbloqueadas.");
         }
         // Limpiar URL
         window.history.replaceState({}, document.title, window.location.pathname);
+        return;
     }
 
-    // 4. ENRUTAMIENTO (Router)
-    if (currentUser && currentUser.email) {
-        // Usuario logueado -> Pantalla de selección o nombre
-        if (currentUser.playerName) {
-            showScreen('decade-selection-screen');
-            if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
-            if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
-        } else {
-            showScreen('set-player-name-screen');
-        }
-    } else {
-        // Usuario anónimo -> Pantalla de inicio
-        showScreen('home-screen'); 
-    }
+    // 3. ARRANQUE NORMAL (con persistencia)
+    await startApp('boot');
 };
