@@ -4111,8 +4111,14 @@ window.onload = async () => {
         await startApp('boot');
         if (currentUser && typeof syncUserPermissions === 'function') {
             await syncUserPermissions();
-            showAppAlert("¡Pago realizado con éxito! Categorías desbloqueadas.");
-        }
+            showAppAlert(
+                "¡Pago realizado con éxito! 🎉\n\n" +
+                "Las categorías premium se están desbloqueando en este momento. " +
+                "Este proceso puede tardar unos segundos.\n\n" +
+                "Si no ves el contenido desbloqueado inmediatamente, " +
+                "espera un momento o refresca la página para actualizar el estado.",
+                { confirmText: 'Entendido' }
+            );
         // Limpiar URL
         window.history.replaceState({}, document.title, window.location.pathname);
         return;
