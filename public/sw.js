@@ -1,4 +1,4 @@
-const CACHE_NAME = 'adivina-cancion-v16';
+const CACHE_NAME = 'adivina-cancion-v17';
 const PRECACHE_URLS = [
   './',
   'index.html',
@@ -28,37 +28,55 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') {
-    return;
-  }
+    if (event.request.method !== 'GET') return;
 
-  const requestUrl = new URL(event.request.url);
-  if (requestUrl.pathname.startsWith('/api/')) {
-    return;
-  }
+    const requestUrl = new URL(event.request.url);
 
-  if (requestUrl.pathname.startsWith('/audio/')
-    || event.request.headers.get('range')
-    || event.request.destination === 'audio'
-  ) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
+    // 1️⃣ NUNCA cachear llamadas API
+    if (requestUrl.pathname.startsWith('/api/')) {
+        return;
+    }
 
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+    // 2️⃣ Audio: siempre red
+    if (
+        requestUrl.pathname.startsWith('/audio/') ||
+        event.request.headers.get('range') ||
+        event.request.destination === 'audio'
+    ) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
 
-      return fetch(event.request).then(response => {
-        if (!response || !response.ok || response.status !== 200) {
-          return response;
-        }
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
-        return response;
-      });
-    })
-  );
+    // 3️⃣ NAVEGACIÓN (HTML) → NETWORK FIRST (CRÍTICO PARA STRIPE)
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    const clone = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, clone);
+                    });
+                    return response;
+                })
+                .catch(() => caches.match('index.html'))
+        );
+        return;
+    }
+
+    // 4️⃣ ASSETS (JS, CSS, IMG) → CACHE FIRST
+    event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) return cachedResponse;
+
+            return fetch(event.request).then(response => {
+                if (!response || response.status !== 200) return response;
+                const clone = response.clone();
+                caches.open(CACHE_NAME).then(cache => {
+                    cache.put(event.request, clone);
+                });
+                return response;
+            });
+        })
+    );
 });
+
