@@ -4002,7 +4002,7 @@ function refreshUI() {
 // ==========================================
 
 window.onload = async () => {
-    console.log("🚀 Iniciando aplicación (v14) - Fix Persistencia...");
+    console.log("🚀 Iniciando aplicación (v15) - Fix Final...");
 
     // 0. Registrar Service Worker
     if ('serviceWorker' in navigator) {
