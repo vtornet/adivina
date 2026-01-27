@@ -4016,64 +4016,71 @@ function refreshUI() {
 // ==========================================
 // INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
-// REEMPLAZAR EL BLOQUE window.onload AL FINAL DE main.js
+// --- REEMPLAZAR BLOQUE FINAL COMPLETO EN main.js ---
 
 window.onload = async () => {
-    console.log("🚀 Iniciando aplicación...");
+    console.log("🚀 Iniciando aplicación (v13)...");
 
-    // 1. INTENTO DE RECUPERACIÓN DE SESIÓN (CRÍTICO)
+    // 0. Registrar Service Worker (Para PWA y actualizaciones)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then(registration => {
+            console.log('SW registrado:', registration.scope);
+        }).catch(err => {
+            console.warn('SW fallo:', err);
+        });
+    }
+
+    // 1. GESTIÓN DE COOKIES
+    // Recuperamos el aviso de cookies que faltaba en la versión anterior
+    checkCookieConsent();
+
+    // 2. RECUPERACIÓN DE SESIÓN (CRÍTICO)
     const savedUserJSON = localStorage.getItem('userData');
     
     if (savedUserJSON) {
         try {
-            // Recuperamos al usuario de la memoria del teléfono
             currentUser = JSON.parse(savedUserJSON);
-            console.log("✅ Sesión recuperada para:", currentUser.email);
+            console.log("✅ Sesión recuperada:", currentUser.email);
             
-            // Sincronización silenciosa en segundo plano (para actualizar permisos sin bloquear)
-            syncUserPermissions().catch(err => console.warn("Sync background error:", err));
+            // Sincronización silenciosa para actualizar permisos sin bloquear la UI
+            syncUserPermissions().catch(e => console.warn("Sync background warn:", e));
         } catch (e) {
-            console.error("❌ Error: Datos de sesión corruptos. Limpiando.", e);
+            console.error("Error crítico leyendo sesión:", e);
             localStorage.removeItem('userData');
             currentUser = null;
         }
     } else {
-        console.log("ℹ️ No se encontró sesión previa.");
+        console.log("ℹ️ No hay sesión guardada.");
     }
 
-    // 2. GESTIÓN DE RETORNO DE STRIPE
-    // Si la URL tiene ?session_id, venimos de pagar. Aquí SÍ esperamos a la sincronización.
+    // 3. GESTIÓN DEL RETORNO DE PAGO (Stripe)
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('session_id');
     
     if (sessionId) {
-        console.log("💳 Retorno de Stripe detectado. Procesando...");
+        console.log("💳 Retorno de pago detectado.");
         if (currentUser) {
-            // Forzamos espera para asegurar que el servidor ya procesó el Webhook
+            // Aquí sí esperamos (await) para asegurar que el usuario vea su compra
             await syncUserPermissions(); 
-            showAppAlert("¡Pago realizado con éxito! Tus categorías se han desbloqueado.");
+            showAppAlert("¡Pago realizado con éxito! Categorías desbloqueadas.");
         }
-        // Limpiamos la URL para que quede limpia
+        // Limpiamos la URL para evitar bucles
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 
-    // 3. ENRUTAMIENTO (DECISIÓN DE PANTALLA)
+    // 4. ENRUTAMIENTO (Router)
     if (currentUser && currentUser.email) {
-        // --- CASO A: USUARIO LOGUEADO ---
-        console.log("➡️ Usuario autenticado. Yendo al juego.");
-        
+        // Usuario logueado -> Pantalla de juego
         if (currentUser.playerName) {
             showScreen('decade-selection-screen');
-            generateDecadeButtons(); // Generar botones
-            updatePremiumButtonsState(); // Aplicar candados/desbloqueos
+            generateDecadeButtons();
+            updatePremiumButtonsState();
         } else {
-            // Si tiene email pero no nombre (raro, pero posible)
+            // Logueado pero sin nombre -> Pantalla de nombre
             showScreen('set-player-name-screen');
         }
     } else {
-        // --- CASO B: USUARIO NO LOGUEADO ---
-        console.log("➡️ Usuario anónimo. Yendo al inicio.");
-        // Muestra la pantalla de bienvenida (donde sale el logo grande)
+        // Usuario anónimo -> Pantalla de inicio (Logo grande)
         showScreen('home-screen'); 
     }
 };
