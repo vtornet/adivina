@@ -263,7 +263,7 @@ async function redirectToStripe(categoryKey) {
         'tv':         'price_AQUI',
         'infantiles': 'price_AQUI',
         'anuncios':   'price_AQUI',
-        'full_pack':  'price_AQUI'
+        'full_pack':  'price_1SuACIAzxZ5jYRrVNKmtD0KN'
     };
 
     const priceId = priceMap[categoryKey];
