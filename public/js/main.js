@@ -1988,31 +1988,13 @@ function setupQuestion() {
     const answerButtonsContainer = document.getElementById('answer-buttons');
     answerButtonsContainer.innerHTML = '';
 
-    let allSongsToChooseFromForOptions;
-    if (gameState.selectedDecade === 'Todas') {
-    const mergedPool = configuracionCanciones?.['Todas']?.[gameState.category];
-
-    if (!Array.isArray(mergedPool) || mergedPool.length < 4) {
-        console.error(`Error: Pool no válido para Todas - ${gameState.category}`);
-        showAppAlert('Error interno al preparar la pregunta. Vuelve a empezar.');
-        showScreen('category-screen');
-        return;
-    }
-
-    allSongsPool = mergedPool;
-}
-else {
-         if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
-            console.error(`Error: Opciones de canciones no encontradas para ${gameState.selectedDecade} - ${gameState.category}.`);
-            showAppAlert('Error interno al cargar las opciones de respuesta. Intenta de nuevo.');
-            showScreen('decade-selection-screen'); 
-            return;
-        }
-        const allSongsToChooseFromForOptions =
-    gameState.selectedDecade === 'Todas'
+const allSongsToChooseFromForOptions =
+    (gameState.selectedDecade === 'Todas')
         ? configuracionCanciones?.['Todas']?.[gameState.category]
         : configuracionCanciones?.[gameState.selectedDecade]?.[gameState.category];
-        if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
+
+if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
+    console.error(`Error: Pool no válido para ${gameState.selectedDecade} - ${gameState.category}`);
     showAppAlert(
         `No hay suficientes canciones en '${getCategoryLabel(gameState.category)}' para ${getDecadeLabel(gameState.selectedDecade)}.`
     );
@@ -2020,7 +2002,6 @@ else {
     return;
 }
 
-    }
 
     let options = [currentQuestion];
     while (options.length < 4) {
