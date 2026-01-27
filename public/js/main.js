@@ -77,6 +77,19 @@ const LOCAL_GAME_HISTORY_KEY = 'localGameHistory';
 let useLocalApiFallback = false;
 
 let currentUser = null;
+(() => {
+    const savedUserJSON = localStorage.getItem('userData');
+    if (savedUserJSON) {
+        try {
+            currentUser = JSON.parse(savedUserJSON);
+            console.log("✅ Sesión persistente restaurada:", currentUser.email);
+        } catch (e) {
+            console.error("❌ Sesión corrupta. Limpiando localStorage.", e);
+            localStorage.removeItem('userData');
+            currentUser = null;
+        }
+    }
+})();
 let userAccumulatedScores = {}; 
 let gameHistory = []; 
 let pendingPurchaseCategory = null;
@@ -4021,29 +4034,6 @@ window.onload = async () => {
     if (typeof checkCookieConsent === 'function') {
         checkCookieConsent();
     }
-
-    // 2. RECUPERACIÓN DE SESIÓN (CRÍTICO)
-    // Leemos localStorage antes de decidir qué pantalla mostrar
-    const savedUserJSON = localStorage.getItem('userData');
-    
-    if (savedUserJSON) {
-        try {
-            currentUser = JSON.parse(savedUserJSON);
-            console.log("✅ Sesión recuperada:", currentUser.email);
-            
-            // Sincronización silenciosa de permisos
-            if (typeof syncUserPermissions === 'function') {
-                syncUserPermissions().catch(e => console.warn("Sync background warn:", e));
-            }
-        } catch (e) {
-            console.error("Error crítico leyendo sesión:", e);
-            localStorage.removeItem('userData');
-            currentUser = null;
-        }
-    } else {
-        console.log("ℹ️ No hay sesión guardada.");
-    }
-
     // 3. GESTIÓN DEL RETORNO DE PAGO (Stripe)
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('session_id');
