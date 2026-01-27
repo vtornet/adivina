@@ -153,7 +153,40 @@ function getActivePermissions() {
     }
 
     return combined;
+if (combined.includes('premium_all') || currentUser.email === ADMIN_EMAIL) {
+        return ['premium_all', ...combined];
+    }
+
+    return combined;
 }
+
+// --- FUNCIONES AUXILIARES (HELPER FUNCTIONS) ---
+// Necesarias para validar el acceso premium gestionado por Stripe
+
+function isPremiumCategory(categoryId) {
+    return PREMIUM_CATEGORIES.has(categoryId);
+}
+
+function isPremiumDecade(decadeId) {
+    return PREMIUM_DECADES.has(decadeId);
+}
+
+function hasCategoryAccess(categoryId) {
+    // Verifica si el usuario tiene comprada esta categoría específica o el paquete completo
+    const permissions = getActivePermissions();
+    return permissions.includes('premium_all') || permissions.includes(categoryId);
+}
+
+function hasPremiumAccess() {
+    // Verifica si el usuario tiene el paquete completo (necesario para modos como 'Todas' o 'Verano')
+    const permissions = getActivePermissions();
+    return permissions.includes('premium_all');
+}
+
+function isPremiumSelection(decade, category) {
+    return isPremiumDecade(decade) || isPremiumCategory(category);
+}
+// ------------------------------------------------------------
 
 function getLocalUsers() {
     return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || '{}');
@@ -187,47 +220,6 @@ async function parseJsonResponse(response) {
     }
 }
 
-function hasPremiumAccess() {
-    if (!currentUser || !currentUser.email) return false;
-    const permissions = getUserPermissions(currentUser.email);
-    return permissions.is_admin || permissions.unlocked_sections.includes('premium_all');
-}
-
-function isPremiumCategory(categoryId) {
-    return PREMIUM_CATEGORIES.has(categoryId);
-}
-
-function isPremiumDecade(decadeId) {
-    return PREMIUM_DECADES.has(decadeId);
-}
-
-function isPremiumSelection(decadeId, categoryId) {
-    if (isPremiumDecade(decadeId)) return true;
-    if (isPremiumCategory(categoryId)) return true;
-    return false;
-}
-
-// 2. NUEVA FUNCIÓN DE VERIFICACIÓN DE ACCESO
-// Verifica si tienes acceso a una categoría específica (ya sea por Pack Total o compra individual)
-function hasCategoryAccess(categoryId) {
-    if (!currentUser || !currentUser.email) return false;
-    
-    // Si la categoría no es premium, acceso libre
-    if (!isPremiumCategory(categoryId)) return true;
-
-    // USAMOS LA NUEVA FUENTE DE VERDAD
-    const activeSections = getActivePermissions();
-    
-    // 1. Acceso total (Admin o Pack Completo)
-    // Nota: getActivePermissions ya maneja la lógica de ADMIN_EMAIL internamente si quieres, 
-    // pero mantenemos la verificación de 'premium_all' explícita aquí.
-    if (activeSections.includes('premium_all')) return true;
-    
-    // 2. Acceso individual
-    if (activeSections.includes(categoryId)) return true;
-
-    return false;
-}
 function showPremiumModal(message, categoryKey) {
     const modal = document.getElementById('premium-modal');
     const text = document.getElementById('premium-modal-message');
@@ -251,26 +243,6 @@ function showPremiumModal(message, categoryKey) {
 
     modal.classList.remove('hidden');
 }
-    // 1. Limpieza: Texto informativo para el usuario
-    text.innerHTML = message || 'Desbloquea contenido Premium.';
-
-    // 2. Gestión del botón: Si no existe, lo inyectamos en el modal
-    if (!buyBtn) {
-        buyBtn = document.createElement('button');
-        buyBtn.id = 'premium-buy-btn';
-        buyBtn.className = 'btn'; 
-        buyBtn.style.marginTop = '15px';
-        buyBtn.style.background = 'linear-gradient(45deg, #6772E5, #5469D4)'; // Azul Stripe
-        modal.querySelector('.modal-content').insertBefore(buyBtn, modal.querySelector('.secondary'));
-    }
-
-    // 3. Texto dinámico según la categoría (p.ej: "Desbloquear PELICULAS")
-    buyBtn.innerText = categoryKey ? `🔓 Desbloquear ${categoryKey.toUpperCase()}` : '🔓 Desbloquear TODO';
-    
-    // 4. Acción: Llamada a la futura lógica de redirección
-    buyBtn.onclick = () => redirectToStripe(categoryKey || 'full_pack');
-
-    modal.classList.remove('hidden');
 
 /**
  * Redirige al usuario a la pasarela de pago de Stripe.
@@ -4011,30 +3983,6 @@ function setupPaymentListeners() {
         showAppAlert("¡Gracias por tu compra! Tu contenido se está desbloqueando.");
     }
 }
-
-    // --- LISTENERS DE LEMON SQUEEZY (Para cuando NO hay recarga) ---
-    if (window.LemonSqueezy) {
-        window.LemonSqueezy.Setup({
-            eventHandler: (event) => {
-                if (event.event === 'Payment.Success' || event.event === 'Checkout.Closed') {
-                    console.log("🍋 Evento de cierre/éxito. Comprobando...");
-                    closePremiumModal();
-                    
-                    const intent = localStorage.getItem('pending_purchase_intent');
-                    if (intent) {
-                        checkAndUnlock(intent);
-                        // Disparar un polling corto por si el webhook se retrasa
-                        let fastAttempts = 0;
-                        const fastPoller = setInterval(async () => {
-                            fastAttempts++;
-                            if (await checkAndUnlock(intent) || fastAttempts > 5) clearInterval(fastPoller);
-                        }, 1500);
-                    }
-                }
-            }
-        });
-    }
-
 
 // ==========================================
 // HELPER GLOBAL PARA REFRESCAR UI
