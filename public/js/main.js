@@ -1396,73 +1396,31 @@ async function selectDecade(decade) {
     }
 }
 
-/**
- * Genera y muestra los botones de categoría para la década seleccionada.
- */
-/**
- * Genera y muestra los botones de categoría.
- * AHORA: Muestra botones "Próximamente" si no hay canciones, para llenar la UI.
- */
-/**
- * Genera y muestra los botones de categoría.
- * VERSIÓN FINAL: Integra corrección de datos (mapeo) + Lógica de Próximamente/Premium
- */
-/**
- * Genera y muestra los botones de categoría.
- * VERSIÓN BLINDADA: Fuerza la conexión de 'Actual' (mayúscula) con 'actual' (minúscula).
- */
 function generateCategoryButtons() {
     const container = document.getElementById('category-buttons');
     container.innerHTML = '';
-    
-    // Clave que viene del botón (Ej: 'Actual', '2010s', '80s')
-    const key = gameState.selectedDecade; 
 
-    // --- 1. PUENTE DE DATOS (MAPPING) ---
-    if (typeof window.allSongsByDecadeAndCategory !== 'undefined') {
-        let dataFound = window.allSongsByDecadeAndCategory[key]; 
-        
-        // Si no lo encuentra directo, probamos las variantes comunes
-        if (!dataFound) {
-            // FIX ESPECÍFICO PARA ACTUAL
-            if (key === 'Actual' || key === 'actual') {
-                dataFound = window.allSongsByDecadeAndCategory['actual'];
-            }
-            // FIX PARA 2010s
-            else if (key === '2010s' || key === '10s') {
-                dataFound = window.allSongsByDecadeAndCategory['10s'];
-            }
-            // FIX PARA 2000s
-            else if (key === '2000s' || key === '00s') {
-                dataFound = window.allSongsByDecadeAndCategory['00s'];
-            }
-        }
+    const key = gameState.selectedDecade;
 
-        // Si encontramos los datos, los inyectamos en la configuración del juego
-        if (dataFound) {
-            configuracionCanciones[key] = dataFound;
-        }
-    }
-
-    // Título dinámico
+    // --- Título dinámico ---
     const titleEl = document.getElementById('category-screen-title');
     if (titleEl) {
-        titleEl.innerHTML = gameState.selectedDecade === 'especiales' 
-            ? 'Selecciona una Edición Especial' 
-            : `Elige una Categoría (<span id="selected-decade-display">${getDecadeLabel(gameState.selectedDecade)}</span>)`;
+        titleEl.innerHTML = key === 'especiales'
+            ? 'Selecciona una Edición Especial'
+            : `Elige una Categoría (<span id="selected-decade-display">${getDecadeLabel(key)}</span>)`;
     }
 
     // --- RENDERIZADO PARA 'ESPECIALES' ---
-    if (gameState.selectedDecade === 'especiales') {
+    if (key === 'especiales') {
         const btnVerano = document.createElement('button');
         btnVerano.className = 'category-btn';
         btnVerano.innerText = '☀️ Canciones del Verano';
-        
+
         if (!hasPremiumAccess()) {
-             btnVerano.classList.add('locked');
-             btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.');
+            btnVerano.classList.add('locked');
+            btnVerano.onclick = () => showPremiumModal('El modo Verano es contenido Premium.');
         } else {
-             btnVerano.onclick = () => startSummerSongsGame();
+            btnVerano.onclick = () => startSummerSongsGame();
         }
         container.appendChild(btnVerano);
 
@@ -1482,25 +1440,132 @@ function generateCategoryButtons() {
             </p>
         `;
         container.appendChild(infoDiv);
-        
+
         const backBtnEsp = document.createElement('button');
         backBtnEsp.className = 'btn secondary';
         backBtnEsp.style.marginTop = '20px';
         backBtnEsp.innerText = 'Volver';
         backBtnEsp.onclick = () => showScreen('decade-selection-screen');
         container.appendChild(backBtnEsp);
-        return; 
+        return;
     }
 
-    // --- LÓGICA ESTÁNDAR (Décadas normales) ---
+    // --- CASO ESPECIAL: TODAS LAS DÉCADAS (solo categorías, NO canciones aquí) ---
+    if (key === 'Todas') {
+        const catsToRender = (typeof window.allPossibleCategories !== 'undefined')
+            ? window.allPossibleCategories
+            : CATEGORY_ORDER;
+
+        catsToRender.forEach(categoryId => {
+            const button = document.createElement('button');
+            button.className = 'category-btn';
+
+            if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
+                button.innerText = getCategoryLabel(categoryId);
+                button.classList.add('locked');
+                button.onclick = () => showPremiumModal(
+                    `¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong>?`,
+                    categoryId
+                );
+            } else {
+                button.innerText = getCategoryLabel(categoryId);
+                button.onclick = () => selectCategory(categoryId);
+            }
+            container.appendChild(button);
+        });
+
+        const backBtn = document.createElement('button');
+        backBtn.className = 'btn secondary';
+        backBtn.style.marginTop = '20px';
+        backBtn.innerText = 'Volver a Décadas';
+        backBtn.onclick = () => showScreen('decade-selection-screen');
+        container.appendChild(backBtn);
+        return;
+    }
+
+    // --- DÉCADAS NORMALES: preparar datos y pintar categorías ---
+    // (mantiene tu puente de datos)
+    if (typeof window.allSongsByDecadeAndCategory !== 'undefined') {
+        let dataFound = window.allSongsByDecadeAndCategory[key];
+
+        if (!dataFound) {
+            if (key === 'Actual' || key === 'actual') dataFound = window.allSongsByDecadeAndCategory['actual'];
+            else if (key === '2010s' || key === '10s') dataFound = window.allSongsByDecadeAndCategory['10s'];
+            else if (key === '2000s' || key === '00s') dataFound = window.allSongsByDecadeAndCategory['00s'];
+        }
+
+        if (dataFound) {
+            configuracionCanciones[key] = dataFound;
+        }
+    }
+
     const currentDecadeSongs = configuracionCanciones[key];
+    if (!currentDecadeSongs) {
+        container.innerHTML = `
+            <div class="warning-text">
+                <p>No se han encontrado canciones para esta década.</p>
+                <small>Intenta recargar la página.</small>
+            </div>`;
+        const backBtnErr = document.createElement('button');
+        backBtnErr.className = 'btn secondary';
+        backBtnErr.style.marginTop = '20px';
+        backBtnErr.innerText = 'Volver';
+        backBtnErr.onclick = () => showScreen('decade-selection-screen');
+        container.appendChild(backBtnErr);
+        return;
+    }
+
+    const catsToRender = (typeof window.allPossibleCategories !== 'undefined')
+        ? window.allPossibleCategories
+        : CATEGORY_ORDER;
+
+    catsToRender.forEach(categoryId => {
+        const songsArray = currentDecadeSongs[categoryId];
+
+        let hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
+
+        const isActualDecade = (key === 'actual' || key === 'Actual');
+        const allowedCategories = ['espanol', 'ingles'];
+        if (isActualDecade && !allowedCategories.includes(categoryId)) {
+            hasEnoughSongs = false;
+        }
+
+        const button = document.createElement('button');
+        button.className = 'category-btn';
+
+        if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
+            button.innerText = getCategoryLabel(categoryId);
+            button.classList.add('locked');
+            button.onclick = () => showPremiumModal(
+                `¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong> en todas las décadas?`,
+                categoryId
+            );
+        } else if (!hasEnoughSongs) {
+            button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Próximamente)</span>`;
+            button.classList.add('secondary');
+            button.style.opacity = '0.7';
+            button.onclick = () => showAppAlert(`🚧 Estamos recopilando temas de ${getCategoryLabel(categoryId)}. ¡Pronto disponible!`);
+        } else {
+            button.innerText = getCategoryLabel(categoryId);
+            button.onclick = () => selectCategory(categoryId);
+        }
+
+        container.appendChild(button);
+    });
+
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn secondary';
+    backBtn.style.marginTop = '20px';
+    backBtn.innerText = 'Volver a Décadas';
+    backBtn.onclick = () => showScreen('decade-selection-screen');
+    container.appendChild(backBtn);
+}
 
         // Si tras el puente sigue sin haber datos, mostramos el aviso (pero no bloqueamos si es un error de carga parcial)
         // --- LÓGICA ESTÁNDAR (Décadas normales) ---
     // ⚠️ EXCEPCIÓN: "Todas las Décadas" NO es una fuente de datos
     if (key !== 'Todas') {
-        const currentDecadeSongs = configuracionCanciones[key];
-
+        currentDecadeSongs = configuracionCanciones[key];
         if (!currentDecadeSongs) {
             container.innerHTML = `
                 <div class="warning-text">
@@ -1584,6 +1649,26 @@ function generateCategoryButtons() {
     container.appendChild(backBtn);
 }
 
+async function loadAllDecadesForCategory(categoryId) {
+    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual']; // NO incluir verano ni elderly
+
+    // Cargar cada década de esa categoría (reutiliza tus .js existentes)
+    const loads = decadesToMerge.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
+    await Promise.allSettled(loads);
+
+    // Fusionar
+    const merged = [];
+    decadesToMerge.forEach(dec => {
+        const arr = configuracionCanciones?.[dec]?.[categoryId];
+        if (Array.isArray(arr) && arr.length) merged.push(...arr);
+    });
+
+    // Guardar en el bucket 'Todas'
+    configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
+    configuracionCanciones['Todas'][categoryId] = merged;
+}
+
+
 /**
  * Maneja la selección de una categoría, carga las canciones y redirige a la pantalla de selección de jugadores.
  * @param {string} category - La categoría seleccionada.
@@ -1594,31 +1679,42 @@ async function selectCategory(category) {
         showScreen('login-screen');
         return;
     }
-    
-    // CAMBIO AQUÍ: Usamos hasCategoryAccess en lugar de hasPremiumAccess
+
     if (isPremiumCategory(category) && !hasCategoryAccess(category)) {
         showPremiumModal('Contenido premium. Desbloquéalo para jugar.', category);
         return;
     }
-    
-    // ... resto de la función igual ...
+
     gameState.category = category;
 
     try {
-        await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
-        // Verificar si la categoría tiene suficientes canciones después de la carga
-        if (configuracionCanciones[gameState.selectedDecade][gameState.category].length < 4) {
-            showAppAlert(`No hay suficientes canciones en la categoría '${getCategoryLabel(category)}' para la década ${getDecadeLabel(gameState.selectedDecade)}. Necesitas al menos 4 canciones.`);
-            showScreen('category-screen'); // Volver a la selección de categoría
+        if (gameState.selectedDecade === 'Todas') {
+            await loadAllDecadesForCategory(gameState.category);
+        } else {
+            await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
+        }
+
+        const pool = configuracionCanciones?.[gameState.selectedDecade]?.[gameState.category];
+
+        if (!Array.isArray(pool) || pool.length < 4) {
+            showAppAlert(
+                `No hay suficientes canciones en '${getCategoryLabel(category)}' para ${getDecadeLabel(gameState.selectedDecade)}. ` +
+                `Necesitas al menos 4 canciones.`
+            );
+            showScreen('category-screen');
             return;
         }
+
         showScreen('player-selection-screen');
-    }  catch (error) {
-        showAppAlert(`No se pudieron cargar las canciones para la categoría ${getCategoryLabel(category)} en la década ${getDecadeLabel(gameState.selectedDecade)}. Intenta con otra.`);
+    } catch (error) {
+        showAppAlert(
+            `No se pudieron cargar las canciones para '${getCategoryLabel(category)}' en ${getDecadeLabel(gameState.selectedDecade)}. Intenta con otra.`
+        );
         console.error(error);
         showScreen('category-screen');
     }
 }
+
 
 /**
  * Permite al usuario seleccionar el número de jugadores y prepara los inputs para sus nombres.
