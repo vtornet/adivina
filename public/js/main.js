@@ -2954,7 +2954,7 @@ async function getSongsForOnlineMatch(decade, category) {
     if (gameState.selectedDecade === 'Todas') {
         gameState.category = category;
 
-        const allDecades = window.allDecadesDefined.filter(d => d !== 'verano' && d !== 'Todas');
+        const allDecades = ['80s', '90s', '00s', '10s', 'Actual'];
 
         let mergedSongs = [];
 
