@@ -1320,15 +1320,20 @@ async function generateDecadeButtons() {
     });
 
     // Botón de Todas las décadas
-    const allButton = document.createElement('button');
-    allButton.className = 'category-btn tertiary';
-    allButton.innerText = getDecadeLabel('Todas');
-    allButton.onclick = () => selectDecade('Todas');
-    if (!hasPremiumAccess()) {
-        allButton.classList.add('locked');
+        const allButton = document.createElement('button');
+        allButton.className = 'category-btn tertiary';
+        allButton.innerText = getDecadeLabel('Todas');
+        allButton.onclick = () => selectDecade('Todas');
+
+        // 🔐 Control visual correcto del candado
+        if (hasPremiumAccess()) {
+            allButton.classList.remove('locked');
+        } else {
+            allButton.classList.add('locked');
+        }
+
+        container.appendChild(allButton);
     }
-    container.appendChild(allButton);
-}
 
 /**
  * Maneja la selección de una década y redirige a la pantalla de categoría o de jugadores.
