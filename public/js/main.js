@@ -1305,35 +1305,33 @@ async function generateDecadeButtons() {
     const container = document.getElementById('decade-buttons');
     container.innerHTML = '';
     
-    // Aquí usa la lista corregida que acabamos de definir arriba
     DECADES_ORDER.forEach(decadeId => {
         const button = document.createElement('button');
         button.className = 'category-btn';
-        // Si es especiales, le damos un estilo distinto (opcional, pero recomendado)
+
         if (decadeId === 'especiales') {
-            button.className = 'category-btn tertiary'; // Usa tertiary o el que prefieras
-            button.style.border = '2px solid gold'; // Un toque visual para destacarlo
+            button.className = 'category-btn tertiary';
+            button.style.border = '2px solid gold';
         }
+
         button.innerText = getDecadeLabel(decadeId);
         button.onclick = () => selectDecade(decadeId);
         container.appendChild(button);
     });
 
-    // Botón de Todas las décadas
-        const allButton = document.createElement('button');
-        allButton.className = 'category-btn tertiary';
-        allButton.innerText = getDecadeLabel('Todas');
-        allButton.onclick = () => selectDecade('Todas');
+    const allButton = document.createElement('button');
+    allButton.className = 'category-btn tertiary';
+    allButton.innerText = getDecadeLabel('Todas');
+    allButton.onclick = () => selectDecade('Todas');
 
-        // 🔐 Control visual correcto del candado
-        if (hasPremiumAccess()) {
-            allButton.classList.remove('locked');
-        } else {
-            allButton.classList.add('locked');
-        }
-
-        container.appendChild(allButton);
+    if (hasPremiumAccess()) {
+        allButton.classList.remove('locked');
+    } else {
+        allButton.classList.add('locked');
     }
+
+    container.appendChild(allButton);
+}
 
 /**
  * Maneja la selección de una década y redirige a la pantalla de categoría o de jugadores.
@@ -1561,93 +1559,6 @@ function generateCategoryButtons() {
     container.appendChild(backBtn);
 }
 
-        // Si tras el puente sigue sin haber datos, mostramos el aviso (pero no bloqueamos si es un error de carga parcial)
-        // --- LÓGICA ESTÁNDAR (Décadas normales) ---
-    // ⚠️ EXCEPCIÓN: "Todas las Décadas" NO es una fuente de datos
-    if (key !== 'Todas') {
-        currentDecadeSongs = configuracionCanciones[key];
-        if (!currentDecadeSongs) {
-            container.innerHTML = `
-                <div class="warning-text">
-                    <p>No se han encontrado canciones para esta década.</p>
-                    <small>Intenta recargar la página.</small>
-                </div>`;
-            const backBtnErr = document.createElement('button');
-            backBtnErr.className = 'btn secondary';
-            backBtnErr.style.marginTop = '20px';
-            backBtnErr.innerText = 'Volver';
-            backBtnErr.onclick = () => showScreen('decade-selection-screen');
-            container.appendChild(backBtnErr);
-            return;
-        }
-    }
-
-
-    const catsToRender = (typeof window.allPossibleCategories !== 'undefined') 
-        ? window.allPossibleCategories 
-        : CATEGORY_ORDER;
-
-    catsToRender.forEach(categoryId => {
-        const songsArray = currentDecadeSongs[categoryId];
-        
-        // 1. Determinar si hay contenido real
-        let hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
-
-        // 2. REGLA ESPECIAL: Década Actual
-        // Forzamos "sin contenido" para todo lo que no sea español o inglés
-        const isActualDecade = (gameState.selectedDecade === 'actual' || gameState.selectedDecade === 'Actual');
-        const allowedCategories = ['espanol', 'ingles'];
-
-        if (isActualDecade && !allowedCategories.includes(categoryId)) {
-            hasEnoughSongs = false;
-        }
-        
-        const button = document.createElement('button');
-        button.className = 'category-btn';
-        
-        // --- LÓGICA DE VISUALIZACIÓN POR JERARQUÍA ---
-
-        // ... dentro del forEach en generateCategoryButtons ...
-
-        // PRIORIDAD 1: ¿Es Premium y NO tienes acceso? -> CANDADO 🔒
-        // Usamos la nueva función hasCategoryAccess(categoryId)
-        if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
-            button.innerText = getCategoryLabel(categoryId);
-            button.classList.add('locked');
-            // Al hacer clic, pasamos el ID de la categoría (ej: 'peliculas') al modal
-            button.onclick = () => showPremiumModal(
-                `¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong> en todas las décadas?`, 
-                categoryId 
-            );
-        } 
-        
-        // ... continúan las Prioridades 2 y 3 igual que antes ...
-        
-        // PRIORIDAD 2: ¿No hay canciones (o está forzado)? -> PRÓXIMAMENTE
-        // (Solo llegamos aquí si el usuario YA es Premium o la categoría es Gratuita)
-        else if (!hasEnoughSongs) {
-            button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Próximamente)</span>`;
-            button.classList.add('secondary'); 
-            button.style.opacity = '0.7'; 
-            button.onclick = () => showAppAlert(`🚧 Estamos recopilando temas de ${getCategoryLabel(categoryId)}. ¡Pronto disponible!`);
-        } 
-        
-        // PRIORIDAD 3: Todo correcto -> JUGAR
-        else {
-            button.innerText = getCategoryLabel(categoryId);
-            button.onclick = () => selectCategory(categoryId);
-        }
-        
-        container.appendChild(button);
-    });
-
-    const backBtn = document.createElement('button');
-    backBtn.className = 'btn secondary';
-    backBtn.style.marginTop = '20px';
-    backBtn.innerText = 'Volver a Décadas';
-    backBtn.onclick = () => showScreen('decade-selection-screen');
-    container.appendChild(backBtn);
-}
 
 async function loadAllDecadesForCategory(categoryId) {
     const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual']; // NO incluir verano ni elderly
@@ -4273,3 +4184,10 @@ window.onload = async () => {
     // 3. ARRANQUE NORMAL (con persistencia)
     await startApp('boot');
 };
+function startApp() {
+    showScreen('decade-selection-screen');
+    generateDecadeButtons();
+}
+
+window.startApp = startApp;
+
