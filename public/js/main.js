@@ -1990,8 +1990,18 @@ function setupQuestion() {
 
     let allSongsToChooseFromForOptions;
     if (gameState.selectedDecade === 'Todas') {
-        allSongsToChooseFromForOptions = [...configuracionCanciones['Todas']['consolidated']];
-    } else {
+    const mergedPool = configuracionCanciones?.['Todas']?.[gameState.category];
+
+    if (!Array.isArray(mergedPool) || mergedPool.length < 4) {
+        console.error(`Error: Pool no válido para Todas - ${gameState.category}`);
+        showAppAlert('Error interno al preparar la pregunta. Vuelve a empezar.');
+        showScreen('category-screen');
+        return;
+    }
+
+    allSongsPool = mergedPool;
+}
+else {
          if (!configuracionCanciones[gameState.selectedDecade] || !configuracionCanciones[gameState.selectedDecade][gameState.category]) {
             console.error(`Error: Opciones de canciones no encontradas para ${gameState.selectedDecade} - ${gameState.category}.`);
             showAppAlert('Error interno al cargar las opciones de respuesta. Intenta de nuevo.');
@@ -2707,10 +2717,18 @@ async function displaySongsForCategory(decadeId, categoryId) {
         showPremiumModal('Esta categoría es Premium. Desbloquéala para ver el listado de canciones.', categoryId);
         return;
         }
-        if (decadeId === 'Todas') {
-            await loadSongsForDecadeAndCategory('Todas', 'consolidated'); 
-            songsToDisplay = configuracionCanciones['Todas']['consolidated'];
-        } else {
+        if (gameState.selectedDecade === 'Todas') {
+    const mergedPool = configuracionCanciones?.['Todas']?.[gameState.category];
+
+    if (!Array.isArray(mergedPool) || mergedPool.length < 4) {
+        console.error(`Error: Pool no válido para Todas - ${gameState.category}`);
+        showAppAlert('Error interno al preparar la pregunta. Vuelve a empezar.');
+        showScreen('category-screen');
+        return;
+    }
+
+    allSongsPool = mergedPool;
+}  else {
             await loadSongsForDecadeAndCategory(decadeId, categoryId); 
             songsToDisplay = configuracionCanciones[decadeId][categoryId];
         }
