@@ -15,6 +15,34 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==============================
+// 0) Canonical host + HTTPS (CRÍTICO para persistencia de localStorage)
+// ==============================
+app.set("trust proxy", 1);
+
+app.use((req, res, next) => {
+  const host = req.get("host");
+  if (!host) return next();
+
+  // Forzar HTTPS en producción (Railway usa proxy)
+  const xfProto = req.get("x-forwarded-proto");
+  const isProd = process.env.NODE_ENV === "production";
+
+  if (isProd && xfProto && xfProto !== "https") {
+    return res.redirect(301, `https://${host}${req.originalUrl}`);
+  }
+
+  // Host canónico: SIN www (evita split de localStorage)
+  const CANONICAL_HOST = "adivinalacancion.app";
+
+  if (host === `www.${CANONICAL_HOST}`) {
+    return res.redirect(301, `https://${CANONICAL_HOST}${req.originalUrl}`);
+  }
+
+  return next();
+});
+
+
+// ==============================
 // 1) CORS (seguro y compatible)
 // ==============================
 // Si sirves el frontend desde el mismo dominio, CORS no es necesario,
