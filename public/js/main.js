@@ -1495,21 +1495,28 @@ function generateCategoryButtons() {
     // --- LÓGICA ESTÁNDAR (Décadas normales) ---
     const currentDecadeSongs = configuracionCanciones[key];
 
-    // Si tras el puente sigue sin haber datos, mostramos el aviso (pero no bloqueamos si es un error de carga parcial)
-    if (!currentDecadeSongs) {
-        container.innerHTML = `
-            <div class="warning-text">
-                <p>No se han encontrado canciones para esta década.</p>
-                <small>Intenta recargar la página.</small>
-            </div>`;
-        const backBtnErr = document.createElement('button');
-        backBtnErr.className = 'btn secondary';
-        backBtnErr.style.marginTop = '20px';
-        backBtnErr.innerText = 'Volver';
-        backBtnErr.onclick = () => showScreen('decade-selection-screen');
-        container.appendChild(backBtnErr);
-        return;
+        // Si tras el puente sigue sin haber datos, mostramos el aviso (pero no bloqueamos si es un error de carga parcial)
+        // --- LÓGICA ESTÁNDAR (Décadas normales) ---
+    // ⚠️ EXCEPCIÓN: "Todas las Décadas" NO es una fuente de datos
+    if (key !== 'Todas') {
+        const currentDecadeSongs = configuracionCanciones[key];
+
+        if (!currentDecadeSongs) {
+            container.innerHTML = `
+                <div class="warning-text">
+                    <p>No se han encontrado canciones para esta década.</p>
+                    <small>Intenta recargar la página.</small>
+                </div>`;
+            const backBtnErr = document.createElement('button');
+            backBtnErr.className = 'btn secondary';
+            backBtnErr.style.marginTop = '20px';
+            backBtnErr.innerText = 'Volver';
+            backBtnErr.onclick = () => showScreen('decade-selection-screen');
+            container.appendChild(backBtnErr);
+            return;
+        }
     }
+
 
     const catsToRender = (typeof window.allPossibleCategories !== 'undefined') 
         ? window.allPossibleCategories 
