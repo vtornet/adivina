@@ -2008,7 +2008,18 @@ else {
             showScreen('decade-selection-screen'); 
             return;
         }
-        allSongsToChooseFromForOptions = [...configuracionCanciones[gameState.selectedDecade][gameState.category]];
+        const allSongsToChooseFromForOptions =
+    gameState.selectedDecade === 'Todas'
+        ? configuracionCanciones?.['Todas']?.[gameState.category]
+        : configuracionCanciones?.[gameState.selectedDecade]?.[gameState.category];
+        if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
+    showAppAlert(
+        `No hay suficientes canciones en '${getCategoryLabel(gameState.category)}' para ${getDecadeLabel(gameState.selectedDecade)}.`
+    );
+    showScreen('category-screen');
+    return;
+}
+
     }
 
     let options = [currentQuestion];
