@@ -153,11 +153,6 @@ function getActivePermissions() {
     }
 
     return combined;
-if (combined.includes('premium_all') || currentUser.email === ADMIN_EMAIL) {
-        return ['premium_all', ...combined];
-    }
-
-    return combined;
 }
 
 // --- FUNCIONES AUXILIARES (HELPER FUNCTIONS) ---
@@ -4007,6 +4002,10 @@ function refreshUI() {
 // ==========================================
 // --- REEMPLAZAR BLOQUE FINAL COMPLETO EN main.js ---
 
+// ==========================================
+// INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
+// ==========================================
+
 window.onload = async () => {
     console.log("🚀 Iniciando aplicación (v13)...");
 
@@ -4020,10 +4019,12 @@ window.onload = async () => {
     }
 
     // 1. GESTIÓN DE COOKIES
-    // Recuperamos el aviso de cookies que faltaba en la versión anterior
-    checkCookieConsent();
+    if (typeof checkCookieConsent === 'function') {
+        checkCookieConsent();
+    }
 
     // 2. RECUPERACIÓN DE SESIÓN (CRÍTICO)
+    // Esto es lo que permite que el login persista al refrescar
     const savedUserJSON = localStorage.getItem('userData');
     
     if (savedUserJSON) {
@@ -4032,7 +4033,9 @@ window.onload = async () => {
             console.log("✅ Sesión recuperada:", currentUser.email);
             
             // Sincronización silenciosa para actualizar permisos sin bloquear la UI
-            syncUserPermissions().catch(e => console.warn("Sync background warn:", e));
+            if (typeof syncUserPermissions === 'function') {
+                syncUserPermissions().catch(e => console.warn("Sync background warn:", e));
+            }
         } catch (e) {
             console.error("Error crítico leyendo sesión:", e);
             localStorage.removeItem('userData');
@@ -4049,11 +4052,9 @@ window.onload = async () => {
     if (sessionId) {
         console.log("💳 Retorno de pago detectado.");
         if (currentUser) {
-            // Aquí sí esperamos (await) para asegurar que el usuario vea su compra
             await syncUserPermissions(); 
             showAppAlert("¡Pago realizado con éxito! Categorías desbloqueadas.");
         }
-        // Limpiamos la URL para evitar bucles
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 
@@ -4062,14 +4063,14 @@ window.onload = async () => {
         // Usuario logueado -> Pantalla de juego
         if (currentUser.playerName) {
             showScreen('decade-selection-screen');
-            generateDecadeButtons();
-            updatePremiumButtonsState();
+            if (typeof generateDecadeButtons === 'function') generateDecadeButtons();
+            if (typeof updatePremiumButtonsState === 'function') updatePremiumButtonsState();
         } else {
             // Logueado pero sin nombre -> Pantalla de nombre
             showScreen('set-player-name-screen');
         }
     } else {
-        // Usuario anónimo -> Pantalla de inicio (Logo grande)
+        // Usuario anónimo -> Pantalla de inicio
         showScreen('home-screen'); 
     }
 };
