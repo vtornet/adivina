@@ -40,37 +40,39 @@ app.use(
   })
 );
 
+// --- PEGAR ESTO ANTES DE app.use(express.json()) ---
 
-app.post("/api/create-checkout-session", async (req, res) => {
-    // AÑADIDO: Recibimos 'returnUrl' del frontend
-    const { email, categoryKey, priceId, returnUrl } = req.body;
-
-    // Fallback de seguridad por si el frontend no lo envía (usamos tu dominio principal)
-    const baseUrl = returnUrl || 'https://adivinalacancion.app';
+// Ruta Webhook: Stripe avisa a tu servidor (Requiere express.raw)
+app.post("/api/stripe-webhook", express.raw({ type: 'application/json' }), async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
 
     try {
-        const session = await stripe.checkout.sessions.create({
-            customer_email: email,
-            payment_method_types: ['card'],
-            line_items: [{
-                price: priceId,
-                quantity: 1,
-            }],
-            mode: 'payment',
-            metadata: {
-                user_email: email,
-                category_key: categoryKey
-            },
-            // USAMOS LA URL DINÁMICA
-            success_url: `${baseUrl}/?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${baseUrl}/`,
-        });
-
-        res.json({ id: session.id });
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
     } catch (err) {
-        console.error("Error Stripe Session:", err.message);
-        res.status(500).json({ error: err.message });
+        console.error("Webhook Error:", err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
     }
+
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        const userEmail = session.metadata.user_email;
+        const categoryUnlocked = session.metadata.category_key;
+
+        try {
+            // Usamos mongoose.model para evitar errores de referencia circular si User no está definido aquí
+            const User = mongoose.model('User'); 
+            await User.findOneAndUpdate(
+                { email: userEmail },
+                { $addToSet: { unlocked_sections: categoryUnlocked } }
+            );
+            console.log(`✅ [STRIPE] ${categoryUnlocked} desbloqueado para ${userEmail}`);
+        } catch (dbErr) {
+            console.error("Error DB tras pago:", dbErr.message);
+        }
+    }
+
+    res.json({ received: true });
 });
 
 app.use(express.json());
@@ -173,6 +175,39 @@ async function connectToMongo() {
 // ==============================
 // 4) API
 // ==============================
+
+app.post("/api/create-checkout-session", async (req, res) => {
+    // AÑADIDO: Recibimos 'returnUrl' del frontend
+    const { email, categoryKey, priceId, returnUrl } = req.body;
+
+    // Fallback de seguridad por si el frontend no lo envía (usamos tu dominio principal)
+    const baseUrl = returnUrl || 'https://adivinalacancion.app';
+
+    try {
+        const session = await stripe.checkout.sessions.create({
+            customer_email: email,
+            payment_method_types: ['card'],
+            line_items: [{
+                price: priceId,
+                quantity: 1,
+            }],
+            mode: 'payment',
+            metadata: {
+                user_email: email,
+                category_key: categoryKey
+            },
+            // USAMOS LA URL DINÁMICA
+            success_url: `${baseUrl}/?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${baseUrl}/`,
+        });
+
+        res.json({ id: session.id });
+    } catch (err) {
+        console.error("Error Stripe Session:", err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 // Registro
