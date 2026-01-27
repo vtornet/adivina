@@ -4016,34 +4016,64 @@ function refreshUI() {
 // ==========================================
 // INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
+// REEMPLAZAR EL BLOQUE window.onload AL FINAL DE main.js
+
 window.onload = async () => {
-    console.log("🚀 Aplicación Iniciada - Stripe Mode");
+    console.log("🚀 Iniciando aplicación...");
 
-    // 1. Recuperar Sesión
-    const savedUser = localStorage.getItem('userData');
-    if (savedUser) {
+    // 1. INTENTO DE RECUPERACIÓN DE SESIÓN (CRÍTICO)
+    const savedUserJSON = localStorage.getItem('userData');
+    
+    if (savedUserJSON) {
         try {
-            currentUser = JSON.parse(savedUser);
-            // Sincronizar permisos inmediatamente para ver cambios tras pago
-            syncUserPermissions(); 
+            // Recuperamos al usuario de la memoria del teléfono
+            currentUser = JSON.parse(savedUserJSON);
+            console.log("✅ Sesión recuperada para:", currentUser.email);
+            
+            // Sincronización silenciosa en segundo plano (para actualizar permisos sin bloquear)
+            syncUserPermissions().catch(err => console.warn("Sync background error:", err));
         } catch (e) {
-            console.error("Fallo al recuperar sesión");
+            console.error("❌ Error: Datos de sesión corruptos. Limpiando.", e);
+            localStorage.removeItem('userData');
+            currentUser = null;
         }
-    }
-
-    // 2. Procesar Retorno de Pago (Stripe)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('session_id')) {
-        showAppAlert("✅ Procesando tu compra... ¡Gracias!");
-        await syncUserPermissions();
-        window.history.replaceState({}, document.title, "/"); // Limpiar URL
-    }
-
-    // 3. Enrutamiento
-    if (currentUser && currentUser.email) {
-        showScreen(currentUser.playerName ? 'decade-selection-screen' : 'set-player-name-screen');
-        if (currentUser.playerName) generateDecadeButtons();
     } else {
-        showScreen('login-screen');
+        console.log("ℹ️ No se encontró sesión previa.");
+    }
+
+    // 2. GESTIÓN DE RETORNO DE STRIPE
+    // Si la URL tiene ?session_id, venimos de pagar. Aquí SÍ esperamos a la sincronización.
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    
+    if (sessionId) {
+        console.log("💳 Retorno de Stripe detectado. Procesando...");
+        if (currentUser) {
+            // Forzamos espera para asegurar que el servidor ya procesó el Webhook
+            await syncUserPermissions(); 
+            showAppAlert("¡Pago realizado con éxito! Tus categorías se han desbloqueado.");
+        }
+        // Limpiamos la URL para que quede limpia
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // 3. ENRUTAMIENTO (DECISIÓN DE PANTALLA)
+    if (currentUser && currentUser.email) {
+        // --- CASO A: USUARIO LOGUEADO ---
+        console.log("➡️ Usuario autenticado. Yendo al juego.");
+        
+        if (currentUser.playerName) {
+            showScreen('decade-selection-screen');
+            generateDecadeButtons(); // Generar botones
+            updatePremiumButtonsState(); // Aplicar candados/desbloqueos
+        } else {
+            // Si tiene email pero no nombre (raro, pero posible)
+            showScreen('set-player-name-screen');
+        }
+    } else {
+        // --- CASO B: USUARIO NO LOGUEADO ---
+        console.log("➡️ Usuario anónimo. Yendo al inicio.");
+        // Muestra la pantalla de bienvenida (donde sale el logo grande)
+        showScreen('home-screen'); 
     }
 };
