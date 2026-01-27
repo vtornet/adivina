@@ -916,6 +916,23 @@ function logout() {
     showAppAlert('Sesión cerrada correctamente.');
     showScreen('login-screen');
 }
+
+// ==========================================
+// WRAPPER DE SEGURIDAD (NO ROMPER HTML)
+// ==========================================
+async function confirmClearOnlineGameHistory() {
+    const confirmed = await showAppConfirm(
+        "¿Seguro que quieres borrar TODO el historial de partidas online? Esta acción no se puede deshacer."
+    );
+
+    if (!confirmed) return;
+
+    await clearOnlineGameHistory();
+}
+
+window.confirmClearOnlineGameHistory = confirmClearOnlineGameHistory;
+
+
 async function clearOnlineGameHistory() {
     const playerData = getCurrentUserData();
     if (!playerData || !playerData.email) {
@@ -4014,6 +4031,8 @@ function refreshUI() {
 // ARRANQUE UNIFICADO (PERSISTENCIA DE SESIÓN)
 // ==========================================
 async function startApp(source = 'boot') {
+    window.startApp = startApp;
+
     // source: 'boot' | 'user'
     // - boot  => si NO hay sesión, mostrar home-screen
     // - user  => si NO hay sesión, mostrar login-screen
@@ -4058,8 +4077,6 @@ async function startApp(source = 'boot') {
         showScreen('home-screen');
     }
 }
-window.startApp = startApp;
-
 // ==========================================
 // INICIALIZACIÓN BLINDADA (SESIÓN + PAGOS)
 // ==========================================
