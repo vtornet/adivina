@@ -483,6 +483,20 @@ function generateCode(length = 6) {
   return code;
 }
 
+function escapeRegex(str = "") {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function emailRegex(email = "") {
+  const clean = String(email).trim();
+  return new RegExp(`^${escapeRegex(clean)}$`, "i");
+}
+
+function normEmail(email = "") {
+  return String(email).trim().toLowerCase();
+}
+
+
 // Crear partida online (código aleatorio)
 app.post("/api/online-games", async (req, res) => {
   const { creatorEmail, category, decade, songsUsed, playerName } = req.body || {};
@@ -609,23 +623,25 @@ app.get("/api/online-games/:code", async (req, res) => {
 // Listar partidas de un jugador
 app.get("/api/online-games/player/:playerEmail", async (req, res) => {
   try {
-    const playerEmail = req.params.playerEmail;
+    const playerEmailRaw = req.params.playerEmail;
+    const r = emailRegex(playerEmailRaw);
 
     const games = await OnlineGame.find({
       $or: [
-        { creatorEmail: playerEmail },
-        { "players.email": playerEmail },
-        { waitingFor: playerEmail, "players.email": { $ne: playerEmail } },
+        { creatorEmail: r },
+        { "players.email": r },
+        { waitingFor: r, "players.email": { $not: r } },
       ],
     }).sort({ createdAt: -1 });
 
-    console.log("Online games cargadas para:", playerEmail, "total:", games.length);
+    console.log("Online games cargadas para:", playerEmailRaw, "total:", games.length);
     res.status(200).json(Array.isArray(games) ? games : []);
   } catch (err) {
     console.error("Error get player games:", err.message);
     res.status(200).json([]);
   }
 });
+
 
 // Declinar invitación
 app.post("/api/online-games/decline", async (req, res) => {

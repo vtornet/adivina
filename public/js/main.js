@@ -3106,15 +3106,17 @@ async function submitOnlineScore() {
 
     try {
         const storedGame = JSON.parse(localStorage.getItem('currentOnlineGameData') || '{}');
+        
         const response = await fetch(`${API_BASE_URL}/api/online-games/submit`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                code: storedGame.code || currentOnlineGameCode,
-                email: localPlayer.email,
-                score: localPlayer.score
-            })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            code: storedGame.code || currentOnlineGameCode,
+            email: localPlayer.email,
+            score: localPlayer.score
+        })
         });
+
 
 
         const result = await response.json();
