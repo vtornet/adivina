@@ -529,8 +529,10 @@ function showScreen(screenId) {
         loadPlayerOnlineGames(); //
         requestInviteNotificationPermission();
     }
+    if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') {
+        loadPlayerOnlineGames();
+    }
 }
-
 window.showScreen = showScreen;
 
 function populateDecadeOptions(selectElement, decades) {
