@@ -3302,13 +3302,18 @@ async function invitePlayerByName() {
 
 async function loadPlayerOnlineGames() {
     const playerData = getCurrentUserData();
-    if (!playerData || !playerData.email || !playerData.playerName) {
-         console.warn("No hay datos de jugador para cargar partidas online.");
-         document.getElementById('active-games-list').innerHTML = "<p>Debes iniciar sesión para ver tus partidas online.</p>";
-         document.getElementById('finished-games-list').innerHTML = ""; // Limpiar el otro contenedor
-         showScreen('login-screen');
-         return;
+    if (!playerData || !playerData.email) {
+        console.warn("No hay datos de jugador para cargar partidas online.");
+        document.getElementById('active-games-list').innerHTML = "<p>Debes iniciar sesión para ver tus partidas online.</p>";
+        document.getElementById('finished-games-list').innerHTML = ""; // Limpiar el otro contenedor
+        showScreen('login-screen');
+        return;
     }
+
+// En móvil puede faltar playerName aunque haya sesión por email.
+// No bloqueamos la carga por ese motivo.
+playerData.playerName = playerData.playerName || '';
+
 
     try {
         const emailEnc = encodeURIComponent((playerData.email || '').trim());
