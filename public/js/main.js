@@ -2845,8 +2845,30 @@ let lastInviteCodes = new Set();
 // ========== CREAR PARTIDA ONLINE ==========
 // main.js - Mejora en createOnlineGame
 async function createOnlineGame() {
-    // ... (lógica previa de selección de década/categoría igual)
+    const decade = document.getElementById('online-decade-select').value;
+    const category = document.getElementById('online-category-select').value;
+    const playerData = getCurrentUserData();
+
+    if (!playerData || !playerData.email) {
+        showAppAlert("Debes iniciar sesión para crear una partida.");
+        return;
+    }
+
+    // Validación de acceso premium
+    if (isPremiumSelection(decade, category) && !hasPremiumAccess()) {
+        showPremiumModal('Esta combinación es Premium. Desbloquéala para jugar online.', category);
+        return;
+    }
+
     try {
+        await loadSongsForDecadeAndCategory(decade, category);
+        const songsArray = configuracionCanciones[decade][category].sort(() => 0.5 - Math.random()).slice(0, 10);
+
+        if (songsArray.length < 10) {
+            showAppAlert("No hay suficientes canciones en esta categoría.");
+            return;
+        }
+
         const response = await fetch(`${API_BASE_URL}/api/online-games`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -2860,6 +2882,7 @@ async function createOnlineGame() {
         });
 
         const result = await response.json();
+        
         if (response.ok) {
             currentOnlineGameCode = result.code;
             isOnlineMode = true;
@@ -2871,23 +2894,44 @@ async function createOnlineGame() {
                 category: category
             }));
 
-            // Mostrar el código y ofrecer opciones de compartir antes de empezar
-            await showAppModal({
+            // MODAL CON BOTONES DE COPIAR Y COMPARTIR
+            const shareText = `¡Rétame en Adivina la Canción! 🎵\nMi código de partida es: ${result.code}\nJuega aquí: https://adivinalacancion.app`;
+
+            const modalOptions = {
                 title: '¡Partida Creada!',
-                message: `Tu código es: ${result.code}\n\nCompártelo con tu rival para que pueda unirse.`,
-                confirmText: 'Empezar a Jugar',
+                message: `Tu código es: ${result.code}\n\nComparte este código con tu rival para que pueda unirse.`,
+                confirmText: 'Empezar Partida',
                 cancelText: 'Copiar y Compartir',
                 showCancel: true
-            }).then((startNow) => {
-                if (!startNow) {
-                    shareOnlineCode(result.code);
+            };
+
+            const userChoice = await showAppModal(modalOptions);
+
+            if (!userChoice) {
+                // Si el usuario pulsa "Copiar y Compartir"
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: 'Duelo Online - Adivina la Canción',
+                            text: shareText
+                        });
+                    } catch (err) {
+                        console.log("Compartir cancelado o no disponible");
+                        copyOnlineGameCode(result.code);
+                    }
+                } else {
+                    copyOnlineGameCode(result.code);
                 }
-                startOnlineGame();
-            });
+            }
+
+            // Iniciar la partida tras la interacción
+            startOnlineGame();
+        } else {
+            showAppAlert(result.message || "Error al crear la partida.");
         }
     } catch (err) {
-        console.error(err);
-        showAppAlert('Error al crear la partida online.');
+        console.error("Error en createOnlineGame:", err);
+        showAppAlert("Error de conexión al crear la partida.");
     }
 }
 
