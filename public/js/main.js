@@ -3367,12 +3367,13 @@ async function loadPlayerOnlineGames() {
                 const isCreator = game.creatorEmail === userEmail;
                 const otherPlayer = game.players.find(p => p.email !== userEmail);
                 const otherPlayerName = otherPlayer ? otherPlayer.name : 'Esperando rival';
-                const currentPlayerFinished = game.players.find(p => p.email === userEmail)?.finished;
+                const currentPlayerStatus = game.players.find(p => p.email === userEmail);
+                const currentPlayerFinished = currentPlayerStatus?.finished;
                 const otherPlayerFinished = otherPlayer?.finished;
 
                 let statusText = '';
                 let actionButtonsHTML = '';
-                const isWaitingForCurrentPlayer = game.waitingFor === userEmail && game.players.every(p => p.email !== userEmail);
+                const isWaitingForCurrentPlayer = game.waitingFor === userEmail && !currentPlayerStatus;
 
                 if (isWaitingForCurrentPlayer) {
                     statusText = `¡Te han invitado a jugar contra ${invitingPlayerName}!`;
@@ -3382,8 +3383,10 @@ async function loadPlayerOnlineGames() {
                     `;
                 } else if (game.players.length === 1) { 
                     statusText = 'Esperando a que un rival se una...';
+                    // REGLA: El botón de copiar código SOLO aparece si NO es una invitación directa por nombre
+                    const copyCodeBtn = !game.waitingFor ? `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>` : '';
                     actionButtonsHTML = `
-                        <button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>
+                        ${copyCodeBtn}
                         <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar partida</button>
                         <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar partida</button>
                     `;
