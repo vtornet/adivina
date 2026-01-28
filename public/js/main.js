@@ -71,10 +71,11 @@ const sfxAcierto = document.getElementById('sfx-acierto');
 const sfxError = document.getElementById('sfx-error');
 
 const CANONICAL_PROD_ORIGIN = 'https://adivinalacancion.app';
-const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? window.location.origin
-    : CANONICAL_PROD_ORIGIN;
 
+const API_BASE_URL =
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? window.location.origin
+        : CANONICAL_PROD_ORIGIN;
 
 let currentUser = null;
 let useLocalApiFallback = false;
