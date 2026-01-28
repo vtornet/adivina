@@ -77,6 +77,7 @@ const API_BASE_URL = (window.location.hostname === 'localhost' || window.locatio
 
 
 let currentUser = null;
+let useLocalApiFallback = false;
 (() => {
     const savedUserJSON = localStorage.getItem('userData');
     if (savedUserJSON) {
