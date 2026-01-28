@@ -70,11 +70,11 @@ const audioPlayer = document.getElementById('audio-player');
 const sfxAcierto = document.getElementById('sfx-acierto');
 const sfxError = document.getElementById('sfx-error');
 
-const API_BASE_URL = window.location.origin;
-const LOCAL_USERS_KEY = 'localUsers';
-const LOCAL_SCORES_KEY = 'localScores';
-const LOCAL_GAME_HISTORY_KEY = 'localGameHistory';
-let useLocalApiFallback = false;
+const CANONICAL_PROD_ORIGIN = 'https://adivinalacancion.app';
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? window.location.origin
+    : CANONICAL_PROD_ORIGIN;
+
 
 let currentUser = null;
 (() => {
@@ -3303,7 +3303,12 @@ async function loadPlayerOnlineGames() {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/online-games/player/${playerData.email}`);
+        const emailEnc = encodeURIComponent((playerData.email || '').trim());
+        const response = await fetch(`${API_BASE_URL}/api/online-games/player/${emailEnc}`, {
+            cache: 'no-store',
+            headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+        });
+
         const data = await parseJsonResponse(response);
         const games = Array.isArray(data) ? data : (Array.isArray(data?.games) ? data.games : []);
 
