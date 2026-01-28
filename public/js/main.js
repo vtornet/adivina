@@ -3105,15 +3105,17 @@ async function submitOnlineScore() {
     }
 
     try {
+        const storedGame = JSON.parse(localStorage.getItem('currentOnlineGameData') || '{}');
         const response = await fetch(`${API_BASE_URL}/api/online-games/submit`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                code: currentOnlineGameCode,
-                email: localPlayer.email, // Usar el email del jugador del gameState
-                score: localPlayer.score // Usar la puntuación del jugador del gameState
+                code: storedGame.code || currentOnlineGameCode,
+                email: localPlayer.email,
+                score: localPlayer.score
             })
         });
+
 
         const result = await response.json();
         if (response.ok) {
