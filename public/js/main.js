@@ -3301,28 +3301,31 @@ async function invitePlayerByName() {
 }
 
 async function loadPlayerOnlineGames() {
-    // Forzamos la re-lectura del localStorage para asegurar datos frescos en móvil
+    // 1. RECUPERACIÓN SEGURA (Crítico para móviles)
     const rawData = localStorage.getItem("userData");
     if (!rawData) {
-        console.warn("⚠️ No se encontró userData en localStorage.");
-        const activeGamesContainer = document.getElementById('active-games-list');
-        if (activeGamesContainer) activeGamesContainer.innerHTML = "<p>Debes iniciar sesión para ver tus partidas online.</p>";
+        console.warn("⚠️ No se encontró userData.");
+        const activeContainer = document.getElementById('active-games-list');
+        if (activeContainer) activeContainer.innerHTML = "<p>Inicia sesión para ver tus partidas.</p>";
         return;
     }
     
-    const playerData = JSON.parse(rawData);
-    const userEmail = playerData.email ? playerData.email.trim().toLowerCase() : null;
-
-    if (!userEmail) {
-        console.error("❌ Email no encontrado para carga online.");
+    let playerData;
+    try {
+        playerData = JSON.parse(rawData);
+    } catch (e) {
+        console.error("Error al parsear userData");
         return;
     }
 
+    const userEmail = playerData.email ? playerData.email.trim().toLowerCase() : null;
+    if (!userEmail) return;
+
     try {
         const emailEnc = encodeURIComponent(userEmail);
+        // 2. FETCH CON PREVENCIÓN DE CACHÉ (Asegura ver datos nuevos)
         const response = await fetch(`${API_BASE_URL}/api/online-games/player/${emailEnc}`, {
             method: 'GET',
-            cache: 'no-store',
             headers: { 
                 'Cache-Control': 'no-cache',
                 'Pragma': 'no-cache'
@@ -3346,18 +3349,15 @@ async function loadPlayerOnlineGames() {
 
         const activeGames = games.filter(game => !isOnlineGameFinished(game));
         const finishedGames = games.filter(game => isOnlineGameFinished(game));
+        
+        // Notificaciones
         const pendingInvites = activeGames.filter(game =>
             game.waitingFor === userEmail &&
             game.players.every(p => p.email !== userEmail)
         );
-
         updateOnlineInviteBadge(pendingInvites.length);
 
-        if (!document.getElementById('pending-games-screen')?.classList.contains('active')) {
-            showInviteToast(pendingInvites, playerData.playerName || userEmail);
-        }
-
-        // Renderizar partidas activas
+        // 3. RENDERIZADO DE PARTIDAS ACTIVAS
         if (activeGames.length > 0) {
             activeGames.forEach((game) => {
                 const gameDiv = document.createElement('div');
@@ -3373,33 +3373,35 @@ async function loadPlayerOnlineGames() {
 
                 let statusText = '';
                 let actionButtonsHTML = '';
-                const isWaitingForCurrentPlayer = game.waitingFor === userEmail && !currentPlayerStatus;
 
-                if (isWaitingForCurrentPlayer) {
-                    statusText = `¡Te han invitado a jugar contra ${invitingPlayerName}!`;
+                // LÓGICA DE BOTONES (Corregida según tu petición)
+                const isWaitingForMe = game.waitingFor === userEmail && !currentPlayerStatus;
+
+                if (isWaitingForMe) {
+                    statusText = `¡Te han invitado!`;
                     actionButtonsHTML = `
                         <button class="btn" onclick="joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${userEmail}')">Aceptar y Unirse</button>
-                        <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar invitación</button>
+                        <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar</button>
                     `;
                 } else if (game.players.length === 1) { 
                     statusText = 'Esperando a que un rival se una...';
-                    // REGLA: El botón de copiar código SOLO aparece si NO es una invitación directa por nombre
+                    // El botón de copiar SOLO sale si es partida por código (sin rival asignado por nombre)
                     const copyCodeBtn = !game.waitingFor ? `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>` : '';
                     actionButtonsHTML = `
                         ${copyCodeBtn}
-                        <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar partida</button>
-                        <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar partida</button>
+                        <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar</button>
+                        <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar</button>
                     `;
                 } else if (game.players.length === 2) { 
                     if (currentPlayerFinished && !otherPlayerFinished) {
-                        statusText = `Esperando a que ${otherPlayerName} termine...`;
+                        statusText = `Esperando a ${otherPlayerName}...`;
                         actionButtonsHTML = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
                     } else if (!currentPlayerFinished && otherPlayerFinished) {
                         statusText = `¡Tu turno! ${otherPlayerName} ha terminado.`;
-                        actionButtonsHTML = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Continuar Partida</button>`;
-                    } else if (!currentPlayerFinished && !otherPlayerFinished) {
+                        actionButtonsHTML = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>`;
+                    } else {
                         statusText = `Partida en curso con ${otherPlayerName}.`;
-                        actionButtonsHTML = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Continuar Partida</button>`;
+                        actionButtonsHTML = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Continuar</button>`;
                     }
                 }
 
@@ -3415,49 +3417,29 @@ async function loadPlayerOnlineGames() {
             activeGamesContainer.innerHTML = "<p>No tienes partidas online activas.</p>";
         }
 
-        // Renderizar partidas finalizadas
+        // 4. RENDERIZADO DE PARTIDAS FINALIZADAS
         if (finishedGames.length > 0) {
             finishedGames.forEach((game) => {
                 const gameDiv = document.createElement('div');
                 gameDiv.className = 'online-game-item';
-
-                const invitingPlayerName = game.players[0] ? game.players[0].name : 'Desconocido';
                 const otherPlayer = game.players.find(p => p.email !== userEmail);
-                const otherPlayerName = otherPlayer ? otherPlayer.name : 'Rival Desconocido';
-                const isCreator = game.creatorEmail === userEmail;
-                const currentPlayerFinished = game.players.find(p => p.email === userEmail)?.finished;
-                const otherPlayerFinished = otherPlayer?.finished;
-
-                if (currentPlayerFinished && otherPlayerFinished) {
-                    const notifiedState = getFinishedNotificationsState();
-                    if (!notifiedState[game.code]) {
-                        const opponentName = isCreator ? otherPlayerName : invitingPlayerName;
-                        addNotification(`Partida finalizada: ${opponentName} ha terminado.`, 'result');
-                        sendGameFinishedNotification(opponentName);
-                        notifiedState[game.code] = true;
-                        setFinishedNotificationsState(notifiedState);
-                    }
-                }
-
-                const finishedDateLabel = formatOnlineGameDate(game.finishedAt || game.createdAt);
+                const otherPlayerName = otherPlayer ? otherPlayer.name : 'Rival';
 
                 gameDiv.innerHTML = `
-                    <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
+                    <p><strong>Partida con:</strong> ${otherPlayerName}</p>
                     <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
-                    ${finishedDateLabel ? `<p><strong>Fecha:</strong> ${finishedDateLabel}</p>` : ''}
                     <p><strong>Estado:</strong> FINALIZADA</p>
                     <button class="btn" onclick="viewOnlineGameResults('${game.code}')">Ver Resultados</button>
                 `;
                 finishedGamesContainer.appendChild(gameDiv);
             });
         } else {
-            finishedGamesContainer.innerHTML = "<p>No tienes partidas online finalizadas.</p>";
+            finishedGamesContainer.innerHTML = "<p>No tienes partidas finalizadas.</p>";
         }
 
     } catch (err) {
-        console.error("Error cargando partidas online del jugador:", err);
-        document.getElementById('active-games-list').innerHTML = "<p>Error al cargar tus partidas activas.</p>";
-        document.getElementById('finished-games-list').innerHTML = "<p>Error al cargar tus partidas finalizadas.</p>";
+        console.error("Error en el historial:", err);
+        document.getElementById('active-games-list').innerHTML = "<p>Error de conexión al cargar partidas.</p>";
     }
 }
 
