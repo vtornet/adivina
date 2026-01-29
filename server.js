@@ -25,12 +25,18 @@ const PORT = process.env.PORT || 3000;
 const transporter = nodemailer.createTransport({
     host: "mail.privateemail.com", 
     port: 587,                     
-    secure: true,                  
+    secure: false, // Cambiado a false para STARTTLS 
     auth: {
-        // NO CAMBIES ESTO. Déjalo tal cual. Node leerá el archivo .env por ti.
         user: process.env.EMAIL_USER, 
         pass: process.env.EMAIL_PASS  
-    }
+    },
+    tls: {
+        // Evita fallos de handshake en entornos cloud como Railway 
+        rejectUnauthorized: false,
+        ciphers: 'SSLv3'
+    },
+    connectionTimeout: 15000, // Incrementado para evitar el timeout actual 
+    greetingTimeout: 10000
 });
 
 // Verificación inicial del transporte de correo
