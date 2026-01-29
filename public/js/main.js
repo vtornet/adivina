@@ -4269,10 +4269,5 @@ window.onload = async () => {
     // 3. ARRANQUE NORMAL (con persistencia)
     await startApp('boot');
 };
-function startApp() {
-    showScreen('decade-selection-screen');
-    generateDecadeButtons();
-}
 
-window.startApp = startApp;
 
