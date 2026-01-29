@@ -23,19 +23,13 @@ const PORT = process.env.PORT || 3000;
 // En server.js, sustituye el bloque 'const transporter = ...' por esto:
 
 const transporter = nodemailer.createTransport({
-    host: "mail.privateemail.com", 
-    port: 465, // Cambiado a 465 para SSL
-    secure: true, // true para puerto 465
+    host: "smtp.resend.com",
+    port: 465,
+    secure: true, // SSL para Resend en puerto 465
     auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS  
-    },
-    tls: {
-        // Imprescindible en Railway para evitar fallos de handshake
-        rejectUnauthorized: false
-    },
-    connectionTimeout: 20000, 
-    greetingTimeout: 15000
+        user: "resend", // Valor fijo requerido por Resend
+        pass: process.env.EMAIL_PASS // Tu API Key almacenada en Railway
+    }
 });
 
 // Verificación inicial del transporte de correo
@@ -296,7 +290,7 @@ app.post("/api/register", async (req, res) => {
     // Enviar correo
     try {
         await transporter.sendMail({
-            from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
+            from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
             to: email,
             subject: "Verifica tu cuenta - Adivina la Canción",
             html: `
@@ -371,7 +365,7 @@ app.post("/api/resend-code", async (req, res) => {
 
         try {
             await transporter.sendMail({
-                from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
+                from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
                 to: email,
                 subject: "Nuevo código - Adivina la Canción",
                 html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`
@@ -450,7 +444,7 @@ app.post("/api/password-reset/request", async (req, res) => {
     // Envío real por mail
     try {
         await transporter.sendMail({
-            from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
+            from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
             to: email,
             subject: "Recuperar Contraseña",
             text: `Tu token de recuperación es: ${token}`
