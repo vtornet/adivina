@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 36 (Online Fix)'; 
+const APP_VERSION = 'Versión 37 (Online Fix)'; 
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -770,6 +770,17 @@ async function registerUser() {
         const data = await parseJsonResponse(response);
 
         if (response.ok) {
+            // CAMBIO: Si el servidor pide verificación, vamos a esa pantalla
+            if (data.requireVerification) {
+                showAppAlert(data.message);
+                document.getElementById('verify-email-display').textContent = data.email;
+                // Guardamos temporalmente el email para reenviar si hace falta
+                localStorage.setItem('tempVerifyEmail', data.email); 
+                showScreen('verify-email-screen');
+                return;
+            }
+
+            // Comportamiento antiguo (si no hubiera verificación)
             showAppAlert(data?.message || 'Usuario registrado correctamente.');
             emailInput.value = '';
             passwordInput.value = '';
@@ -824,6 +835,14 @@ async function loginUser() {
         });
 
         const data = await parseJsonResponse(response);
+
+        if (response.status === 403 && data.requireVerification) {
+        showAppAlert(data.message);
+        document.getElementById('verify-email-display').textContent = data.email;
+        localStorage.setItem('tempVerifyEmail', data.email);
+        showScreen('verify-email-screen');
+        return;
+    }
 
         if (response.ok) {
             if (!data || !data.user || !data.user.email) {
@@ -906,6 +925,61 @@ async function loginUser() {
 }
 window.loginUser = loginUser;
 
+// --- NUEVAS FUNCIONES PARA VERIFICACIÓN DE EMAIL ---
+
+async function verifyEmailAction() {
+    const code = document.getElementById('verify-code-input').value.trim();
+    // Recuperamos el email que guardamos al registrar o intentar loguear
+    const email = localStorage.getItem('tempVerifyEmail'); 
+
+    if (!code || !email) {
+        showAppAlert("Falta el código o el email.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/verify-email`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, code })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            showAppAlert(result.message);
+            // Limpieza
+            document.getElementById('verify-code-input').value = '';
+            localStorage.removeItem('tempVerifyEmail');
+            // Mandar al usuario a loguearse
+            showScreen('login-screen');
+        } else {
+            showAppAlert(result.message || "Código incorrecto.");
+        }
+    } catch (err) {
+        console.error(err);
+        showAppAlert("Error de conexión al verificar.");
+    }
+}
+
+async function resendVerificationCode() {
+    const email = localStorage.getItem('tempVerifyEmail');
+    if (!email) {
+        showAppAlert("No hay un email pendiente de verificación.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/resend-code`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const result = await response.json();
+        showAppAlert(result.message || "Código reenviado.");
+    } catch (err) {
+        showAppAlert("Error al reenviar el código.");
+    }
+}
 
 function logout() {
     currentUser = null;

@@ -6,6 +6,9 @@ const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const crypto = require("crypto");
 const path = require("path");
+// --- NUEVO: Nodemailer para correos ---
+const nodemailer = require("nodemailer");
+
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error("⚠️ CRÍTICO: STRIPE_SECRET_KEY no está definida en las variables de entorno.");
 }
@@ -13,6 +16,35 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// ==============================
+// CONFIGURACIÓN DE CORREO (NODEMAILER)
+// ==============================
+// En server.js, sustituye el bloque 'const transporter = ...' por esto:
+
+const transporter = nodemailer.createTransport({
+    host: "mail.privateemail.com", 
+    port: 465,                     
+    secure: true,                  
+    auth: {
+        // NO CAMBIES ESTO. Déjalo tal cual. Node leerá el archivo .env por ti.
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS  
+    }
+});
+
+// Verificación inicial del transporte de correo
+if (process.env.EMAIL_USER) {
+    transporter.verify(function (error, success) {
+        if (error) {
+            console.warn("⚠️ Error configurando Nodemailer:", error);
+        } else {
+            console.log("✅ Servidor listo para enviar correos.");
+        }
+    });
+} else {
+    console.warn("⚠️ EMAIL_USER no definido. El registro con verificación fallará.");
+}
 
 // ==============================
 // 0) Canonical host + HTTPS (CRÍTICO para persistencia de localStorage)
@@ -45,8 +77,6 @@ app.use((req, res, next) => {
 // ==============================
 // 1) CORS (seguro y compatible)
 // ==============================
-// Si sirves el frontend desde el mismo dominio, CORS no es necesario,
-// pero lo dejamos bien configurado para pruebas en local.
 const allowedOrigins = new Set([
   "https://adivinalacancion.app",
   "https://www.adivinalacancion.app",
@@ -68,8 +98,6 @@ app.use(
   })
 );
 
-// --- PEGAR ESTO ANTES DE app.use(express.json()) ---
-
 // Ruta Webhook: Stripe avisa a tu servidor (Requiere express.raw)
 app.post("/api/stripe-webhook", express.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'];
@@ -88,7 +116,6 @@ app.post("/api/stripe-webhook", express.raw({ type: 'application/json' }), async
         const categoryUnlocked = session.metadata.category_key;
 
         try {
-            // Usamos mongoose.model para evitar errores de referencia circular si User no está definido aquí
             const User = mongoose.model('User'); 
             await User.findOneAndUpdate(
                 { email: userEmail },
@@ -111,7 +138,7 @@ app.use(express.json());
 const MONGO_URI =
   process.env.MONGO_URI ||
   process.env.MONGODB_URI ||
-  process.env.MONGO_URL; // por si Railway/otros usan otro nombre
+  process.env.MONGO_URL; 
 
 if (!MONGO_URI) {
   console.error(
@@ -131,8 +158,10 @@ const userSchema = new mongoose.Schema({
   playerName: { type: String, unique: true, sparse: true },
   resetTokenHash: { type: String, default: null },
   resetTokenExpires: { type: Date, default: null },
-  // NUEVO CAMPO:
-  unlocked_sections: { type: [String], default: [] } 
+  unlocked_sections: { type: [String], default: [] },
+  // --- NUEVOS CAMPOS PARA VERIFICACIÓN ---
+  isVerified: { type: Boolean, default: false }, // Por defecto false para nuevos
+  verificationCode: { type: String, default: null }
 });
 
 const scoreSchema = new mongoose.Schema({
@@ -170,7 +199,7 @@ const onlineGameSchema = new mongoose.Schema({
       finished: Boolean,
     },
   ],
-  waitingFor: { type: String, default: null }, // email del invitado
+  waitingFor: { type: String, default: null }, 
   createdAt: { type: Date, default: Date.now },
   finished: { type: Boolean, default: false },
   finishedAt: { type: Date, default: null },
@@ -205,10 +234,7 @@ async function connectToMongo() {
 // ==============================
 
 app.post("/api/create-checkout-session", async (req, res) => {
-    // AÑADIDO: Recibimos 'returnUrl' del frontend
     const { email, categoryKey, priceId, returnUrl } = req.body;
-
-    // Fallback de seguridad por si el frontend no lo envía (usamos tu dominio principal)
     const baseUrl = returnUrl || 'https://adivinalacancion.app';
 
     try {
@@ -224,7 +250,6 @@ app.post("/api/create-checkout-session", async (req, res) => {
                 user_email: email,
                 category_key: categoryKey
             },
-            // USAMOS LA URL DINÁMICA
             success_url: `${baseUrl}/?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${baseUrl}/`,
         });
@@ -238,7 +263,7 @@ app.post("/api/create-checkout-session", async (req, res) => {
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
-// Registro
+// --- REGISTRO CON VERIFICACIÓN ---
 app.post("/api/register", async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) {
@@ -251,19 +276,108 @@ app.post("/api/register", async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(password, salt);
+    
+    // Generar código de 6 dígitos
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    await new User({ email, password: hashed }).save();
-    console.log("Usuario registrado:", email);
-    res.status(201).json({ message: "Usuario registrado exitosamente." });
+    // Guardar usuario como NO verificado
+    await new User({ 
+        email, 
+        password: hashed, 
+        isVerified: false, 
+        verificationCode 
+    }).save();
+
+    // Enviar correo
+    try {
+        await transporter.sendMail({
+            from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
+            to: email,
+            subject: "Verifica tu cuenta - Adivina la Canción",
+            html: `
+                <h3>¡Bienvenido a Adivina la Canción! 🎵</h3>
+                <p>Tu código de verificación es:</p>
+                <h2 style="color: #6a0dad; letter-spacing: 5px;">${verificationCode}</h2>
+                <p>Introdúcelo en la aplicación para activar tu cuenta.</p>
+            `
+        });
+        console.log(`Código enviado a ${email}`);
+    } catch (mailError) {
+        console.error("Error enviando mail:", mailError);
+        // Opcional: Podrías borrar el usuario si falla el mail, pero mejor dejar que reintente
+        return res.status(500).json({ message: "Usuario creado pero falló el envío del email. Contacta soporte." });
+    }
+
+    // Devolvemos flag especial 'requireVerification'
+    res.status(201).json({ 
+        message: "Registro exitoso. Revisa tu email para el código.", 
+        requireVerification: true,
+        email: email 
+    });
+
   } catch (err) {
     console.error("Error en registro:", err.message);
     res.status(500).json({ message: "Error del servidor." });
   }
 });
 
-// Login
-// server.js - CORRECCIÓN BLOQUE LOGIN
+// --- NUEVO: ENDPOINT DE VERIFICACIÓN ---
+app.post("/api/verify-email", async (req, res) => {
+    const { email, code } = req.body;
+    if (!email || !code) return res.status(400).json({ message: "Faltan datos." });
 
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
+
+        if (user.isVerified) {
+            return res.status(200).json({ message: "La cuenta ya estaba verificada." });
+        }
+
+        if (user.verificationCode !== code) {
+            return res.status(400).json({ message: "Código incorrecto." });
+        }
+
+        // Éxito
+        user.isVerified = true;
+        user.verificationCode = null; // Limpiar código
+        await user.save();
+
+        res.status(200).json({ message: "¡Cuenta verificada! Ya puedes iniciar sesión." });
+    } catch (err) {
+        console.error("Error verificando:", err);
+        res.status(500).json({ message: "Error del servidor." });
+    }
+});
+
+// --- NUEVO: REENVIAR CÓDIGO ---
+app.post("/api/resend-code", async (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Falta el email." });
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
+        if (user.isVerified) return res.status(400).json({ message: "Usuario ya verificado." });
+
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        user.verificationCode = verificationCode;
+        await user.save();
+
+        await transporter.sendMail({
+            from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
+            to: email,
+            subject: "Nuevo código - Adivina la Canción",
+            html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`
+        });
+
+        res.status(200).json({ message: "Código reenviado." });
+    } catch (err) {
+        res.status(500).json({ message: "Error al reenviar código." });
+    }
+});
+
+// Login (MODIFICADO para chequear verificación)
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) {
@@ -277,9 +391,19 @@ app.post("/api/login", async (req, res) => {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(400).json({ message: "Credenciales inválidas." });
 
+    // --- BLOQUEO DE NO VERIFICADOS ---
+    // Si isVerified es FALSE explícito, bloqueamos.
+    // Si es undefined (usuarios antiguos), permitimos el paso (Regla de oro).
+    if (user.isVerified === false) {
+        return res.status(403).json({ 
+            message: "Debes verificar tu email antes de entrar.", 
+            requireVerification: true,
+            email: user.email 
+        });
+    }
+
     console.log("Login exitoso:", email);
     
-    // AQUÍ ENVIAMOS LOS PERMISOS AL FRONTEND
     res.status(200).json({
       message: "Inicio de sesión exitoso.",
       user: { 
@@ -294,19 +418,15 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Password reset request (devuelve token; en producción lo ideal es email)
+// Password reset request
 app.post("/api/password-reset/request", async (req, res) => {
   const { email } = req.body || {};
   if (!email) return res.status(400).json({ message: "Debes indicar un email válido." });
 
-  // ... dentro de app.post("/api/password-reset/request") ...
-
   try {
     const user = await User.findOne({ email });
     
-    // IMPORTANTE: Nunca reveles si el usuario existe o no por seguridad (User Enumeration)
     if (!user) {
-      // Retardo artificial para evitar ataques de tiempo (opcional, pero buena práctica)
       return res.status(200).json({ message: "Si el email existe, se ha enviado un código de recuperación." });
     }
 
@@ -314,20 +434,24 @@ app.post("/api/password-reset/request", async (req, res) => {
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
     user.resetTokenHash = tokenHash;
-    user.resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutos
+    user.resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000); 
     await user.save();
 
-    // --- BLOQUE DE SEGURIDAD ---
-    // EN PRODUCCIÓN: Aquí enviarías el email usando nodemailer.
-    // EN DESARROLLO (TU CASO): Lo mostramos en la consola del servidor (la terminal negra donde corre node).
-    console.log("========================================");
-    console.log(`🔐 TOKEN DE RECUPERACIÓN PARA ${email}:`);
-    console.log(token); 
-    console.log("========================================");
+    // Envío real por mail
+    try {
+        await transporter.sendMail({
+            from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
+            to: email,
+            subject: "Recuperar Contraseña",
+            text: `Tu token de recuperación es: ${token}`
+        });
+        console.log(`Token enviado a ${email}`);
+    } catch (e) {
+        console.error("Fallo envío mail reset:", e);
+    }
 
     res.status(200).json({
-      message: "Si el email existe, se ha enviado un código de recuperación.",
-      // token: token <--- ELIMINAMOS ESTA LÍNEA. ¡JAMÁS DEVUELVAS EL TOKEN AQUÍ!
+      message: "Si el email existe, se ha enviado un código de recuperación."
     });
 
   } catch (err) {
@@ -688,38 +812,6 @@ app.delete("/api/online-games/clear-history/:playerEmail", async (req, res) => {
   }
 });
 
-// ==========================================
-// NUEVA SECCIÓN: PAGOS CON STRIPE
-// ==========================================
-
-// A. Endpoint para generar la pasarela de pago
-app.post("/api/create-checkout-session", async (req, res) => {
-    const { email, categoryKey, priceId } = req.body;
-
-    try {
-        const session = await stripe.checkout.sessions.create({
-            customer_email: email,
-            payment_method_types: ['card'],
-            line_items: [{
-                price: priceId, // Este ID lo obtienes de tu Dashboard de Stripe
-                quantity: 1,
-            }],
-            mode: 'payment',
-            metadata: {
-                user_email: email,
-                category_key: categoryKey
-            },
-            // Al terminar, Stripe vuelve aquí. {CHECKOUT_SESSION_ID} es automático.
-            success_url: `https://adivinalacancion.app/?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `https://adivinalacancion.app/`,
-        });
-
-        res.json({ id: session.id });
-    } catch (err) {
-        console.error("Error Stripe Session:", err.message);
-        res.status(500).json({ error: err.message });
-    }
-});
 
 // ==============================
 // 5) Frontend (public + data)

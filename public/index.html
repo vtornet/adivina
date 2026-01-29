@@ -19,7 +19,7 @@
     <div id="home-screen" class="screen active">
         <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
         <button class="btn" onclick="startApp('user')">Jugar</button>
-        
+
         <p id="app-version" style="position: absolute; bottom: 10px; right: 15px; font-size: 0.8rem; opacity: 0.5; color: white;">v.0.0</p>
     </div>
    
@@ -44,6 +44,20 @@
         </div>
         <button class="btn" onclick="registerUser()">Registrar</button>
         <p class="small-text">¿Ya tienes cuenta? <a href="#" onclick="showScreen('login-screen')">Inicia sesión</a></p>
+    </div>
+
+    <div id="verify-email-screen" class="screen">
+        <h2>Verifica tu Cuenta</h2>
+        <p style="text-align: center; margin-bottom: 20px;">
+            Hemos enviado un código a: <br>
+            <strong id="verify-email-display" style="color: var(--secondary-color);"></strong>
+        </p>
+        
+        <input type="text" id="verify-code-input" class="text-input" placeholder="Código de 6 dígitos" maxlength="6" style="text-align: center; letter-spacing: 5px; font-size: 1.5rem;">
+        
+        <button class="btn" onclick="verifyEmailAction()">Verificar</button>
+        <button class="btn secondary" onclick="resendVerificationCode()">Reenviar Código</button>
+        <button class="btn tertiary" onclick="showScreen('login-screen')">Volver al Login</button>
     </div>
 
     <div id="set-player-name-screen" class="screen">
