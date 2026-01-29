@@ -23,12 +23,16 @@ const PORT = process.env.PORT || 3000;
 // En server.js, sustituye el bloque 'const transporter = ...' por esto:
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.resend.com",
+    service: "gmail",
+    host: "smtp.gmail.com",
     port: 465,
-    secure: true, // SSL para Resend en puerto 465
+    secure: true, 
     auth: {
-        user: "resend", // Valor fijo requerido por Resend
-        pass: process.env.EMAIL_PASS // Tu API Key almacenada en Railway
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS 
+    },
+    tls: {
+        rejectUnauthorized: false // Necesario para que Railway no bloquee el handshake
     }
 });
 
