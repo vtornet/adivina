@@ -24,19 +24,17 @@ const PORT = process.env.PORT || 3000;
 
 const transporter = nodemailer.createTransport({
     host: "mail.privateemail.com", 
-    port: 587,                     
-    secure: false, 
-    requireTLS: true, // Fuerza el uso de STARTTLS
+    port: 465, // Cambiado a 465 para SSL
+    secure: true, // true para puerto 465
     auth: {
         user: process.env.EMAIL_USER, 
         pass: process.env.EMAIL_PASS  
     },
     tls: {
-        // Railway requiere relajar la verificación para evitar el timeout en el handshake
-        rejectUnauthorized: false,
-        minVersion: 'TLSv1.2'
+        // Imprescindible en Railway para evitar fallos de handshake
+        rejectUnauthorized: false
     },
-    connectionTimeout: 20000, // Aumentado a 20s para dar margen al handshake
+    connectionTimeout: 20000, 
     greetingTimeout: 15000
 });
 
@@ -371,16 +369,21 @@ app.post("/api/resend-code", async (req, res) => {
         user.verificationCode = verificationCode;
         await user.save();
 
-        await transporter.sendMail({
-            from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
-            to: email,
-            subject: "Nuevo código - Adivina la Canción",
-            html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`
-        });
-
-        res.status(200).json({ message: "Código reenviado." });
+        try {
+            await transporter.sendMail({
+                from: '"Adivina la Canción" <' + process.env.EMAIL_USER + '>',
+                to: email,
+                subject: "Nuevo código - Adivina la Canción",
+                html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`
+            });
+            return res.status(200).json({ message: "Código reenviado." });
+        } catch (mailErr) {
+            console.error("Fallo envío mail reenviado:", mailErr);
+            return res.status(503).json({ message: "Error de conexión con el servidor de correo. Intenta en unos minutos." });
+        }
     } catch (err) {
-        res.status(500).json({ message: "Error al reenviar código." });
+        console.error("Error general resend-code:", err);
+        res.status(500).json({ message: "Error interno del servidor." });
     }
 });
 

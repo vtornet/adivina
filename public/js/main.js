@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 39 (Online Fix)'; 
+const APP_VERSION = 'Versión 40 (Online Fix)'; 
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
