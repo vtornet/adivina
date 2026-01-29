@@ -3346,6 +3346,24 @@ async function invitePlayerByName() {
     }
 }
 
+/**
+ * Actualiza el contador rojo en el botón "Ver Partidas Recibidas"
+ * del menú online.
+ */
+function updateOnlineInviteBadge(count) {
+    const badge = document.getElementById('online-invite-count');
+    if (badge) {
+        badge.textContent = count;
+        if (count > 0) {
+            badge.hidden = false;
+            badge.style.display = 'inline-flex';
+        } else {
+            badge.hidden = true;
+            badge.style.display = 'none';
+        }
+    }
+}
+
 async function loadPlayerOnlineGames() {
     // 1. RECUPERACIÓN SEGURA (Crítico para móviles)
     const rawData = localStorage.getItem("userData");
