@@ -25,18 +25,19 @@ const PORT = process.env.PORT || 3000;
 const transporter = nodemailer.createTransport({
     host: "mail.privateemail.com", 
     port: 587,                     
-    secure: false, // Cambiado a false para STARTTLS 
+    secure: false, 
+    requireTLS: true, // Fuerza el uso de STARTTLS
     auth: {
         user: process.env.EMAIL_USER, 
         pass: process.env.EMAIL_PASS  
     },
     tls: {
-        // Evita fallos de handshake en entornos cloud como Railway 
+        // Railway requiere relajar la verificación para evitar el timeout en el handshake
         rejectUnauthorized: false,
-        ciphers: 'SSLv3'
+        minVersion: 'TLSv1.2'
     },
-    connectionTimeout: 15000, // Incrementado para evitar el timeout actual 
-    greetingTimeout: 10000
+    connectionTimeout: 20000, // Aumentado a 20s para dar margen al handshake
+    greetingTimeout: 15000
 });
 
 // Verificación inicial del transporte de correo
