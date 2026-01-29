@@ -828,7 +828,6 @@ async function loginUser() {
                 return;
             }
             
-            // --- CORRECCIÓN AQUÍ: Coma añadida y array inicializado ---
             currentUser = { 
                 email: data.user.email, 
                 playerName: data.user.playerName,
@@ -836,7 +835,6 @@ async function loginUser() {
             };
             
             // --- Procesar Permisos del Servidor ---
-            // Si el servidor nos devuelve unlocked_sections (porque pagó), actualizamos localStorage
             if (data.user.unlocked_sections) {
                 const perms = {
                     email: data.user.email,
@@ -844,12 +842,15 @@ async function loginUser() {
                     is_admin: (data.user.email === ADMIN_EMAIL)
                 };
                 
-                // Recuperamos todos los permisos y actualizamos solo los de este usuario
                 const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
                 allPerms[data.user.email] = perms;
                 localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
             }
             // ---------------------------------------------
+            
+            // --- ACTIVAR POLLING DE NOTIFICACIONES TRAS LOGIN ---
+            startOnlineInvitePolling();
+            // ----------------------------------------------------
 
         } else if (response.status === 404 || response.status >= 500) {
             useLocalApiFallback = true;
@@ -862,7 +863,7 @@ async function loginUser() {
         useLocalApiFallback = true;
     }
 
-    // Fallback offline (mantiene la lógica antigua por si acaso)
+    // Fallback offline
     if (useLocalApiFallback) {
         const users = getLocalUsers();
         const user = users[email];
@@ -870,7 +871,6 @@ async function loginUser() {
             showAppAlert('Email o contraseña incorrectos.');
             return;
         }
-        // También inicializamos unlocked_sections aquí para consistencia
         currentUser = { 
             email: user.email, 
             playerName: user.playerName,
@@ -879,7 +879,6 @@ async function loginUser() {
     }
 
     if (currentUser) {
-        // Refresca los permisos en memoria llamando a getUserPermissions
         getUserPermissions(currentUser.email);
 
         localStorage.setItem('loggedInUserEmail', currentUser.email);
@@ -3350,7 +3349,9 @@ async function loadPlayerOnlineGames() {
     if (!rawData) {
         console.warn("⚠️ No se encontró userData.");
         const activeContainer = document.getElementById('active-games-list');
+        const finishedContainer = document.getElementById('finished-games-list');
         if (activeContainer) activeContainer.innerHTML = "<p>Inicia sesión para ver tus partidas.</p>";
+        if (finishedContainer) finishedContainer.innerHTML = "";
         return;
     }
     
@@ -3367,7 +3368,7 @@ async function loadPlayerOnlineGames() {
 
     try {
         const emailEnc = encodeURIComponent(userEmail);
-        // 2. FETCH CON PREVENCIÓN DE CACHÉ (Asegura ver datos nuevos)
+        // 2. FETCH CON PREVENCIÓN DE CACHÉ
         const response = await fetch(`${API_BASE_URL}/api/online-games/player/${emailEnc}`, {
             method: 'GET',
             headers: { 
@@ -3382,43 +3383,56 @@ async function loadPlayerOnlineGames() {
         const activeGamesContainer = document.getElementById('active-games-list');
         const finishedGamesContainer = document.getElementById('finished-games-list');
         
-        activeGamesContainer.innerHTML = ''; 
-        finishedGamesContainer.innerHTML = '';
+        if (activeGamesContainer) activeGamesContainer.innerHTML = ''; 
+        if (finishedGamesContainer) finishedGamesContainer.innerHTML = '';
 
         if (games.length === 0) {
-            activeGamesContainer.innerHTML = "<p>No tienes partidas online activas.</p>";
-            finishedGamesContainer.innerHTML = "<p>No tienes partidas online finalizadas.</p>";
+            if (activeGamesContainer) activeGamesContainer.innerHTML = "<p>No tienes partidas online activas.</p>";
+            if (finishedGamesContainer) finishedGamesContainer.innerHTML = "<p>No tienes partidas online finalizadas.</p>";
+            updateOnlineInviteBadge(0);
             return;
         }
 
         const activeGames = games.filter(game => !isOnlineGameFinished(game));
         const finishedGames = games.filter(game => isOnlineGameFinished(game));
         
-        // Notificaciones
+        // --- LÓGICA DE NOTIFICACIONES ---
         const pendingInvites = activeGames.filter(game =>
             game.waitingFor === userEmail &&
             game.players.every(p => p.email !== userEmail)
         );
         updateOnlineInviteBadge(pendingInvites.length);
+        showInviteToast(pendingInvites); // <--- LÍNEA AÑADIDA PARA TOASTS
+        // --------------------------------
 
         // 3. RENDERIZADO DE PARTIDAS ACTIVAS
-        if (activeGames.length > 0) {
+        if (activeGames.length > 0 && activeGamesContainer) {
             activeGames.forEach((game) => {
                 const gameDiv = document.createElement('div');
                 gameDiv.className = 'online-game-item';
 
-                const invitingPlayerName = game.players[0] ? game.players[0].name : 'Desconocido';
+                // Variables de estado
                 const isCreator = game.creatorEmail === userEmail;
-                const otherPlayer = game.players.find(p => p.email !== userEmail);
-                const otherPlayerName = otherPlayer ? otherPlayer.name : 'Esperando rival';
                 const currentPlayerStatus = game.players.find(p => p.email === userEmail);
-                const currentPlayerFinished = currentPlayerStatus?.finished;
-                const otherPlayerFinished = otherPlayer?.finished;
+                const otherPlayer = game.players.find(p => p.email !== userEmail);
+                
+                // Determinar el nombre a mostrar en "Partida con:"
+                let displayRivalName = 'Desconocido';
+                if (game.players.length === 2 && otherPlayer) {
+                    displayRivalName = otherPlayer.name;
+                } else if (game.waitingFor && isCreator) {
+                    displayRivalName = `Esperando a: ${game.waitingFor}`; 
+                } else if (!game.waitingFor && isCreator) {
+                    displayRivalName = 'Esperando rival (Por Código)';
+                } else if (game.players.length > 0 && !isCreator) {
+                    displayRivalName = game.players[0].name; 
+                }
 
+                // LÓGICA DE BOTONES Y ESTADO
                 let statusText = '';
                 let actionButtonsHTML = '';
 
-                // LÓGICA DE BOTONES (Corregida según tu petición)
+                // CASO 1: Me han invitado a mí (Soy el receptor)
                 const isWaitingForMe = game.waitingFor === userEmail && !currentPlayerStatus;
 
                 if (isWaitingForMe) {
@@ -3427,42 +3441,67 @@ async function loadPlayerOnlineGames() {
                         <button class="btn" onclick="joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${userEmail}')">Aceptar y Unirse</button>
                         <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar</button>
                     `;
-                } else if (game.players.length === 1) { 
-                    statusText = 'Esperando a que un rival se una...';
-                    // El botón de copiar SOLO sale si es partida por código (sin rival asignado por nombre)
-                    const copyCodeBtn = !game.waitingFor ? `<button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>` : '';
-                    actionButtonsHTML = `
-                        ${copyCodeBtn}
-                        <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar</button>
-                        <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar</button>
-                    `;
-                } else if (game.players.length === 2) { 
-                    if (currentPlayerFinished && !otherPlayerFinished) {
-                        statusText = `Esperando a ${otherPlayerName}...`;
-                        actionButtonsHTML = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
-                    } else if (!currentPlayerFinished && otherPlayerFinished) {
-                        statusText = `¡Tu turno! ${otherPlayerName} ha terminado.`;
-                        actionButtonsHTML = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>`;
+                } 
+                // CASO 2: Soy el Creador y estoy solo (esperando rival)
+                else if (game.players.length === 1 && isCreator) {
+                    
+                    if (game.waitingFor) {
+                        // A) Invitación por NOMBRE
+                        statusText = `Invitación enviada a ${game.waitingFor}`;
+                        // Solo eliminar, NO copiar código, NO declinar
+                        actionButtonsHTML = `
+                            <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar</button>
+                        `;
                     } else {
-                        statusText = `Partida en curso con ${otherPlayerName}.`;
+                        // B) Invitación por CÓDIGO
+                        statusText = 'Esperando a que alguien use el código...';
+                        // Copiar código y Eliminar
+                        actionButtonsHTML = `
+                            <button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>
+                            <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar</button>
+                        `;
+                    }
+
+                    // Si por algún motivo el creador no jugó, añadir botón Jugar
+                    if (currentPlayerStatus && !currentPlayerStatus.finished) {
+                        statusText = "No has completado tu turno.";
+                        actionButtonsHTML = `
+                            <button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>
+                            ${actionButtonsHTML}
+                        `;
+                    }
+                } 
+                // CASO 3: Partida en curso (2 jugadores o estados intermedios)
+                else if (game.players.length === 2) { 
+                    const otherPlayerFinished = otherPlayer ? otherPlayer.finished : false;
+                    const myFinished = currentPlayerStatus ? currentPlayerStatus.finished : false;
+
+                    if (myFinished && !otherPlayerFinished) {
+                        statusText = `Esperando a ${otherPlayer ? otherPlayer.name : 'rival'}...`;
+                        actionButtonsHTML = `<button class="btn secondary" onclick="goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
+                    } else if (!myFinished && otherPlayerFinished) {
+                        statusText = `¡Tu turno! ${otherPlayer ? otherPlayer.name : 'Rival'} ha terminado.`;
+                        actionButtonsHTML = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>`;
+                    } else if (!myFinished && !otherPlayerFinished) {
+                        statusText = `Partida en curso.`;
                         actionButtonsHTML = `<button class="btn" onclick="continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Continuar</button>`;
                     }
                 }
 
                 gameDiv.innerHTML = `
-                    <p><strong>Partida con:</strong> ${isCreator ? otherPlayerName : invitingPlayerName}</p>
+                    <p><strong>Partida con:</strong> ${displayRivalName}</p>
                     <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> ${statusText}</p>
                     <div class="online-game-actions">${actionButtonsHTML}</div>
                 `;
                 activeGamesContainer.appendChild(gameDiv);
             });
-        } else {
+        } else if (activeGamesContainer) {
             activeGamesContainer.innerHTML = "<p>No tienes partidas online activas.</p>";
         }
 
         // 4. RENDERIZADO DE PARTIDAS FINALIZADAS
-        if (finishedGames.length > 0) {
+        if (finishedGames.length > 0 && finishedGamesContainer) {
             finishedGames.forEach((game) => {
                 const gameDiv = document.createElement('div');
                 gameDiv.className = 'online-game-item';
@@ -3477,16 +3516,16 @@ async function loadPlayerOnlineGames() {
                 `;
                 finishedGamesContainer.appendChild(gameDiv);
             });
-        } else {
+        } else if (finishedGamesContainer) {
             finishedGamesContainer.innerHTML = "<p>No tienes partidas finalizadas.</p>";
         }
 
     } catch (err) {
         console.error("Error en el historial:", err);
-        document.getElementById('active-games-list').innerHTML = "<p>Error de conexión al cargar partidas.</p>";
+        const ac = document.getElementById('active-games-list');
+        if (ac) ac.innerHTML = "<p>Error de conexión al cargar partidas.</p>";
     }
 }
-
 function updateOnlineInviteBadge(count) {
     const badge = document.getElementById('online-invite-count');
     if (!badge) return;
@@ -4190,6 +4229,10 @@ async function startApp(source = 'boot') {
     if (restored && restored.email) {
         currentUser = restored;
         localStorage.setItem('sessionActive', 'true');
+
+        // --- ACTIVAR POLLING DE NOTIFICACIONES ---
+        startOnlineInvitePolling(); 
+        // -----------------------------------------
 
         // Cargar datos del usuario (sin bloquear el enrutamiento si falla)
         try { await loadUserScores(currentUser.email); } catch (e) { console.warn("Scores no cargados:", e); }
