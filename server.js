@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 3000;
 
 const transporter = nodemailer.createTransport({
     host: "mail.privateemail.com", 
-    port: 465,                     
+    port: 587,                     
     secure: true,                  
     auth: {
         // NO CAMBIES ESTO. Déjalo tal cual. Node leerá el archivo .env por ti.
