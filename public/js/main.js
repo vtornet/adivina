@@ -44,6 +44,9 @@ const DECADES_ORDER = BASE_DECADES
 
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
+// ... constantes iniciales ...
+const APP_VERSION = 'Versión 36 (Online Fix)'; 
+
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
     : ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
@@ -3347,7 +3350,6 @@ async function loadPlayerOnlineGames() {
     // 1. RECUPERACIÓN SEGURA (Crítico para móviles)
     const rawData = localStorage.getItem("userData");
     if (!rawData) {
-        console.warn("⚠️ No se encontró userData.");
         const activeContainer = document.getElementById('active-games-list');
         const finishedContainer = document.getElementById('finished-games-list');
         if (activeContainer) activeContainer.innerHTML = "<p>Inicia sesión para ver tus partidas.</p>";
@@ -3368,7 +3370,6 @@ async function loadPlayerOnlineGames() {
 
     try {
         const emailEnc = encodeURIComponent(userEmail);
-        // 2. FETCH CON PREVENCIÓN DE CACHÉ
         const response = await fetch(`${API_BASE_URL}/api/online-games/player/${emailEnc}`, {
             method: 'GET',
             headers: { 
@@ -3396,14 +3397,13 @@ async function loadPlayerOnlineGames() {
         const activeGames = games.filter(game => !isOnlineGameFinished(game));
         const finishedGames = games.filter(game => isOnlineGameFinished(game));
         
-        // --- LÓGICA DE NOTIFICACIONES ---
+        // Notificaciones y Badge
         const pendingInvites = activeGames.filter(game =>
             game.waitingFor === userEmail &&
             game.players.every(p => p.email !== userEmail)
         );
         updateOnlineInviteBadge(pendingInvites.length);
-        showInviteToast(pendingInvites); // <--- LÍNEA AÑADIDA PARA TOASTS
-        // --------------------------------
+        showInviteToast(pendingInvites); 
 
         // 3. RENDERIZADO DE PARTIDAS ACTIVAS
         if (activeGames.length > 0 && activeGamesContainer) {
@@ -3416,14 +3416,16 @@ async function loadPlayerOnlineGames() {
                 const currentPlayerStatus = game.players.find(p => p.email === userEmail);
                 const otherPlayer = game.players.find(p => p.email !== userEmail);
                 
-                // Determinar el nombre a mostrar en "Partida con:"
+                // LÓGICA DE NOMBRE (Optimizada)
                 let displayRivalName = 'Desconocido';
+                
                 if (game.players.length === 2 && otherPlayer) {
                     displayRivalName = otherPlayer.name;
                 } else if (game.waitingFor && isCreator) {
-                    displayRivalName = `Esperando a: ${game.waitingFor}`; 
+                    // Si el backend envía el nombre, lo usamos. Si no, usamos el email limpio.
+                    displayRivalName = game.rivalPlayerName || game.waitingFor; 
                 } else if (!game.waitingFor && isCreator) {
-                    displayRivalName = 'Esperando rival (Por Código)';
+                    displayRivalName = 'Esperando rival';
                 } else if (game.players.length > 0 && !isCreator) {
                     displayRivalName = game.players[0].name; 
                 }
@@ -3432,7 +3434,7 @@ async function loadPlayerOnlineGames() {
                 let statusText = '';
                 let actionButtonsHTML = '';
 
-                // CASO 1: Me han invitado a mí (Soy el receptor)
+                // CASO 1: Me han invitado a mí
                 const isWaitingForMe = game.waitingFor === userEmail && !currentPlayerStatus;
 
                 if (isWaitingForMe) {
@@ -3442,27 +3444,27 @@ async function loadPlayerOnlineGames() {
                         <button class="btn secondary" onclick="declineOnlineGame('${game.code}')">Declinar</button>
                     `;
                 } 
-                // CASO 2: Soy el Creador y estoy solo (esperando rival)
+                // CASO 2: Soy el Creador y estoy esperando
                 else if (game.players.length === 1 && isCreator) {
                     
                     if (game.waitingFor) {
                         // A) Invitación por NOMBRE
-                        statusText = `Invitación enviada a ${game.waitingFor}`;
-                        // Solo eliminar, NO copiar código, NO declinar
+                        statusText = `Invitación enviada.`;
+                        // Solo eliminar (Correcto según tus instrucciones)
                         actionButtonsHTML = `
                             <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar</button>
                         `;
                     } else {
                         // B) Invitación por CÓDIGO
-                        statusText = 'Esperando a que alguien use el código...';
-                        // Copiar código y Eliminar
+                        statusText = 'Esperando a que un rival se una...';
+                        // Copiar código y Eliminar (Quitado Declinar que sobraba)
                         actionButtonsHTML = `
                             <button class="btn secondary" onclick="copyOnlineGameCode('${game.code}')">Copiar Código</button>
                             <button class="btn danger" onclick="deletePendingOnlineGame('${game.code}')">Eliminar</button>
                         `;
                     }
 
-                    // Si por algún motivo el creador no jugó, añadir botón Jugar
+                    // Botón de rescate si el creador no jugó
                     if (currentPlayerStatus && !currentPlayerStatus.finished) {
                         statusText = "No has completado tu turno.";
                         actionButtonsHTML = `
@@ -3471,7 +3473,7 @@ async function loadPlayerOnlineGames() {
                         `;
                     }
                 } 
-                // CASO 3: Partida en curso (2 jugadores o estados intermedios)
+                // CASO 3: Partida en curso (2 jugadores)
                 else if (game.players.length === 2) { 
                     const otherPlayerFinished = otherPlayer ? otherPlayer.finished : false;
                     const myFinished = currentPlayerStatus ? currentPlayerStatus.finished : false;
@@ -3490,7 +3492,8 @@ async function loadPlayerOnlineGames() {
 
                 gameDiv.innerHTML = `
                     <p><strong>Partida con:</strong> ${displayRivalName}</p>
-                    <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
+                    <p><strong>Década:</strong> ${getDecadeLabel(game.decade)}</p>
+                    <p><strong>Categoría:</strong> ${getCategoryLabel(game.category)}</p>
                     <p><strong>Estado:</strong> ${statusText}</p>
                     <div class="online-game-actions">${actionButtonsHTML}</div>
                 `;
@@ -3524,17 +3527,6 @@ async function loadPlayerOnlineGames() {
         console.error("Error en el historial:", err);
         const ac = document.getElementById('active-games-list');
         if (ac) ac.innerHTML = "<p>Error de conexión al cargar partidas.</p>";
-    }
-}
-function updateOnlineInviteBadge(count) {
-    const badge = document.getElementById('online-invite-count');
-    if (!badge) return;
-
-    if (count > 0) {
-        badge.textContent = count;
-        badge.hidden = false;
-    } else {
-        badge.hidden = true;
     }
 }
 
@@ -3597,21 +3589,22 @@ async function requestInviteNotificationPermission() {
 }
 
 function sendInviteNotification(invitingPlayerName) {
-    if (!('Notification' in window)) return;
-    if (Notification.permission !== 'granted') return;
+    // Verificar soporte
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
 
-    const notification = new Notification('Nueva invitación online', {
-        body: `Te ha invitado ${invitingPlayerName}.`,
-        icon: 'img/adivina.png'
-    });
-
-    notification.onclick = () => {
-        window.focus();
-        showScreen('pending-games-screen');
-        notification.close();
-    };
+    if (Notification.permission === 'granted') {
+        // Usar el Service Worker para mostrar la notificación (Compatible con Android/PWA)
+        navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification('Nueva invitación online', {
+                body: `Te ha invitado ${invitingPlayerName}.`,
+                icon: 'img/adivina.png',
+                vibrate: [200, 100, 200],
+                badge: 'img/adivina.png',
+                tag: 'invite-notification'
+            });
+        });
+    }
 }
-
 function sendGameFinishedNotification(opponentName) {
     if (!('Notification' in window)) return;
     if (Notification.permission !== 'granted') return;
@@ -4207,7 +4200,8 @@ function refreshUI() {
 // ==========================================
 async function startApp(source = 'boot') {
     window.startApp = startApp;
-
+    const versionEl = document.getElementById('app-version');
+    if (versionEl) versionEl.textContent = APP_VERSION;
     // source: 'boot' | 'user'
     // - boot  => si NO hay sesión, mostrar home-screen
     // - user  => si NO hay sesión, mostrar login-screen
