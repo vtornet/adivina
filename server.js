@@ -25,10 +25,12 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
+        // ESTA LÍNEA ES LA CLAVE QUE FALTABA PARA DESBLOQUEAR LOS BOTONES:
+        scriptSrcAttr: ["'unsafe-inline'"], 
         frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
         connectSrc: ["'self'", "https://api.stripe.com", "https://api.resend.com"],
         imgSrc: ["'self'", "data:", "https://*.stripe.com"],
-        upgradeInsecureRequests: [], // En Railway fuerza HTTPS automáticamente
+        upgradeInsecureRequests: [], 
       },
     },
   })
