@@ -64,12 +64,14 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
             if (Array.isArray(songsArray)) {
                 songsArray.forEach(song => {
-                    if (!song.originalDecade) song.originalDecade = internalKey;
-                    if (!song.originalCategory) song.originalCategory = category;
+                    // SELLO DE CATEGORÍA INALTERABLE v.54
+                    // Marcamos la canción con la categoría del archivo .js que la contiene.
+                    song.originalDecade = internalKey;
+                    song.originalCategory = category;
                 });
             }
 
-            console.log(`Canciones de ${decade}/${category} cargadas exitosamente.`);
+            console.log(`Carga exitosa y sellado: ${decade}/${category}`);
             resolve();
         };
 

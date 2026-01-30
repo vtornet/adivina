@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 53 (Online Fix)'; 
+const APP_VERSION = 'Versión 54 (Strict Category & Path Bypass)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1641,13 +1641,11 @@ function generateCategoryButtons() {
 
 
 async function loadAllDecadesForCategory(categoryId) {
-    // Definimos las fuentes de datos físicas reales
     const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual', 'verano'];
     
     configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
     configuracionCanciones['Todas'][categoryId] = []; 
 
-    // Disparamos la carga de los archivos .js específicos de cada década
     const loads = decadesToMerge.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
     await Promise.allSettled(loads);
 
@@ -1657,18 +1655,18 @@ async function loadAllDecadesForCategory(categoryId) {
         const arr = configuracionCanciones?.[internalKey]?.[categoryId];
         
         if (Array.isArray(arr)) {
-            // CATEGORY GUARD: Validación estricta para evitar contaminación cruzada
+            // REGLA DE EXCLUSIÓN v.54: 
+            // Solo permitimos canciones cuyo sello original coincida exactamente con la categoría activa.
             const filtered = arr.filter(song => {
-                const isCorrectCategory = !song.category || song.category === categoryId;
-                const isCorrectOriginal = !song.originalCategory || song.originalCategory === categoryId;
-                return isCorrectCategory && isCorrectOriginal;
+                const songCat = song.originalCategory || song.category;
+                return songCat === categoryId;
             });
             merged.push(...filtered);
         }
     });
     
     configuracionCanciones['Todas'][categoryId] = merged;
-    console.log(`Agregación v.53 para 'Todas' - ${categoryId} finalizada: ${merged.length} canciones.`);
+    console.log(`Pool 'Todas' purificado para ${categoryId}: ${merged.length} canciones.`);
 }
 
 function playAudioSnippet() {
@@ -1682,13 +1680,17 @@ function playAudioSnippet() {
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName) return;
 
-    // NORMALIZACIÓN LINUX (v.53): Forzamos la carpeta de década a minúsculas para el audio
+    // NORMALIZACIÓN DE RUTA v.54:
+    // Si la ruta viene como "10s/series/cancion.mp3" pero el audio está en "10s/cancion.mp3",
+    // corregimos la ruta para apuntar a la carpeta física de la década.
     if (fileName.includes('/')) {
-        const parts = fileName.split('/');
-        if (parts.length >= 2) {
-            // El primer segmento (década) siempre a minúsculas: "Actual/..." -> "actual/..."
-            parts[0] = parts[0].toLowerCase();
-            fileName = parts.join('/');
+        let parts = fileName.split('/');
+        if (parts.length >= 3) {
+            // Caso: decada/categoria/archivo -> decada/archivo
+            fileName = `${parts[0].toLowerCase()}/${parts[2]}`;
+        } else if (parts.length === 2) {
+            // Caso: decada/archivo -> decada/archivo
+            fileName = `${parts[0].toLowerCase()}/${parts[1]}`;
         }
     }
 
@@ -1717,11 +1719,11 @@ function playAudioSnippet() {
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
     
     audioPlayer.play().catch(e => {
-        console.error("Fallo 404 en archivo:", audioSrc);
+        console.error("Audio 404 corregido:", audioSrc);
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         gameState.hasPlayed = false;
-        showAppAlert("Error de carga: El archivo no se encuentra en el servidor.");
+        showAppAlert("Error de audio: No se encuentra el archivo en " + audioSrc);
     });
 }
 
