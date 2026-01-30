@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 47 (Online Fix)'; 
+const APP_VERSION = 'Versión 49 (Online Fix)'; 
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1641,22 +1641,29 @@ function generateCategoryButtons() {
 
 
 async function loadAllDecadesForCategory(categoryId) {
-    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual'];
-    
-    // CORRECCIÓN: Limpiamos el pool antes de fusionar para evitar "Series" en "Películas"
-    configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
-    configuracionCanciones['Todas'][categoryId] = []; 
+    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual']; 
 
+    // CORRECCIÓN CRÍTICA: Forzamos la limpieza absoluta de la categoría seleccionada
+    // en el bucket de 'Todas' para que no queden restos de partidas anteriores.
+    if (!configuracionCanciones['Todas']) configuracionCanciones['Todas'] = {};
+    configuracionCanciones['Todas'][categoryId] = [];
+
+    // Cargamos cada década de forma aislada para esa categoría específica
     const loads = decadesToMerge.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
     await Promise.allSettled(loads);
 
+    // Realizamos la fusión garantizando que solo sumamos el array correcto
     const merged = [];
     decadesToMerge.forEach(dec => {
         const arr = configuracionCanciones?.[dec]?.[categoryId];
-        if (Array.isArray(arr) && arr.length) merged.push(...arr);
+        if (Array.isArray(arr) && arr.length > 0) {
+            merged.push(...arr);
+        }
     });
 
+    // Guardamos el resultado final filtrado y limpio
     configuracionCanciones['Todas'][categoryId] = merged;
+    console.log(`✅ Fusión completada para "Todas" - Categoría: ${categoryId}. Total: ${merged.length} temas.`);
 }
 
 
@@ -2128,17 +2135,30 @@ function updateAttemptsCounter() {
 function playAudioSnippet() {
     if (gameState.hasPlayed) return;
     
-    // Tiempos correctos: Intento 3 -> 4s, Intento 2 -> 6s, Intento 1 -> 10s
     const durations = { 3: 4.0, 2: 6.0, 1: 10.0 }; 
     const durationSecs = durations[gameState.attempts];
     
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
-    const fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
+    // 1. Limpieza y Normalización de la ruta
+    let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
+    
     if (!fileName || !fileName.includes('.')) {
-        showAppAlert("No se pudo reproducir el audio de esta canción.");
+        showAppAlert("Error: Archivo de audio no válido.");
         return;
+    }
+
+    // CORRECCIÓN LINUX (Railway): Convertimos 'Actual/' o '10s/PELICULAS/' a minúsculas
+    // para que coincidan con la estructura de carpetas real y evitar 404.
+    if (fileName.includes('/')) {
+        const parts = fileName.split('/');
+        // La década (primer parte) y categoría (segunda parte) siempre a minúsculas
+        if (parts.length >= 2) {
+            parts[0] = parts[0].toLowerCase();
+            parts[1] = parts[1].toLowerCase();
+            fileName = parts.join('/');
+        }
     }
 
     const playBtn = document.getElementById('play-song-btn');
@@ -2146,9 +2166,7 @@ function playAudioSnippet() {
     playBtn.disabled = true;
     gameState.hasPlayed = true;
 
-    // CORRECCIÓN DE RUTA (Anti-404):
-    // Si el fileName ya incluye una carpeta (como 'Actual/series/'), no forzamos el prefijo /audio/
-    // de forma que genere rutas inexistentes. Verificamos si ya es una ruta absoluta o relativa.
+    // Construcción de la URL final
     let audioSrc = fileName;
     if (!fileName.startsWith('/') && !fileName.startsWith('http')) {
         audioSrc = `/audio/${fileName}`;
@@ -2158,7 +2176,6 @@ function playAudioSnippet() {
         audioPlayer.src = audioSrc;
     }
     
-    // Limpieza del listener anterior si existiera
     if (activeTimeUpdateListener) {
         audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
         activeTimeUpdateListener = null;
@@ -2171,8 +2188,6 @@ function playAudioSnippet() {
             audioPlayer.pause();
             audioPlayer.currentTime = 0; 
             playBtn.innerText = "▶";
-            
-            // Limpieza al terminar
             audioPlayer.removeEventListener('timeupdate', stopAudioListener);
             activeTimeUpdateListener = null;
         }
@@ -2182,16 +2197,11 @@ function playAudioSnippet() {
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
 
     audioPlayer.play().catch(e => {
-        console.error("Error al reproducir:", e);
-        showAppAlert("El navegador bloqueó el audio o el archivo no existe. Intenta pulsar de nuevo.");
+        console.error("Error al reproducir audio:", audioSrc, e);
+        showAppAlert("Error 404: El archivo no existe o la ruta es incorrecta.");
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         gameState.hasPlayed = false; 
-        
-        if (activeTimeUpdateListener) {
-            audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
-            activeTimeUpdateListener = null;
-        }
     });
 }
 

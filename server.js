@@ -380,7 +380,7 @@ app.post("/api/resend-code", async (req, res) => {
     }
 });
 
-// Login (MODIFICADO para chequear verificación)
+// Login (MODIFICADO con Bypass de Administrador y Regla de Oro)
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) {
@@ -394,10 +394,12 @@ app.post("/api/login", async (req, res) => {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) return res.status(400).json({ message: "Credenciales inválidas." });
 
-    // --- BLOQUEO DE NO VERIFICADOS ---
-    // Si isVerified es FALSE explícito, bloqueamos.
-    // Si es undefined (usuarios antiguos), permitimos el paso (Regla de oro).
-    if (user.isVerified === false) {
+    // --- REGLA DE ORO: BYPASS PARA ADMIN ---
+    const isAdmin = (email.toLowerCase() === 'vtornet@gmail.com');
+
+    // Solo bloqueamos si el campo es explícitamente FALSE y NO es el administrador.
+    // Si es undefined (usuarios antiguos), el check (undefined === false) es falso y entran.
+    if (user.isVerified === false && !isAdmin) {
         return res.status(403).json({ 
             message: "Debes verificar tu email antes de entrar.", 
             requireVerification: true,
