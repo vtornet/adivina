@@ -1683,9 +1683,13 @@ function playAudioSnippet() {
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName) return;
 
-    // [CORRECCIÓN v.75]
-    // Hemos eliminado aquí el bloque "RECONSTRUCCIÓN FÍSICA v.57" que rompía las rutas.
-    // Ahora 'fileName' mantiene la ruta original completa (ej: "80s/espanol/cancion.mp3").
+    // [CORRECCIÓN v.76 - Case Sensitivity Fix]
+    // Detectamos si la ruta viene con Mayúscula (Actual) y la forzamos a minúscula (actual)
+    // para coincidir con el nombre físico de la carpeta en el servidor Linux.
+    if (fileName.startsWith('Actual/')) {
+        fileName = fileName.replace('Actual/', 'actual/');
+    }
+    // --------------------------------------------------
 
     const playBtn = document.getElementById('play-song-btn');
     playBtn.innerText = "🎵";
@@ -1718,7 +1722,7 @@ function playAudioSnippet() {
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
     
     audioPlayer.play().catch(e => {
-        console.error("Fallo 404 en ruta física:", audioSrc); // Quitamos 'e' del log para limpiar consola si prefieres
+        console.error("Fallo 404 en ruta física:", audioSrc); 
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         playBtn.classList.remove('is-playing');
