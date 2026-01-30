@@ -984,19 +984,21 @@ select.text-input optgroup {
 }
 
 .footer-brand {
+    position: relative; /* Cambiado de fixed a relative */
     text-align: center;
-    padding: 20px;
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: auto; /* Empuja el footer al fondo si usas flexbox */
+    padding: 25px 10px; /* Espacio generoso para evitar toques accidentales */
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.3);
+    width: 100%;
+    clear: both;
+    z-index: 1;
 }
 
 .footer-brand a {
-    color: #6a0dad; /* El color morado que usas en el código */
+    color: #a282cc;
     text-decoration: none;
     font-weight: bold;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease;
+    padding: 5px; /* Área de clic más cómoda para el enlace */
 }
 
 .footer-brand a:hover {
