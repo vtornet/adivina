@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'v1.0 (Producción)';
+const APP_VERSION = 'v1.0.1 (Fix Permisos Login)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -838,12 +838,12 @@ async function loginUser() {
         const data = await parseJsonResponse(response);
 
         if (response.status === 403 && data.requireVerification) {
-        showAppAlert(data.message);
-        document.getElementById('verify-email-display').textContent = data.email;
-        localStorage.setItem('tempVerifyEmail', data.email);
-        showScreen('verify-email-screen');
-        return;
-    }
+            showAppAlert(data.message);
+            document.getElementById('verify-email-display').textContent = data.email;
+            localStorage.setItem('tempVerifyEmail', data.email);
+            showScreen('verify-email-screen');
+            return;
+        }
 
         if (response.ok) {
             if (!data || !data.user || !data.user.email) {
@@ -857,7 +857,7 @@ async function loginUser() {
                 unlocked_sections: data.user.unlocked_sections || [] 
             };
             
-            // --- Procesar Permisos del Servidor ---
+            // Procesar Permisos iniciales del Servidor
             if (data.user.unlocked_sections) {
                 const perms = {
                     email: data.user.email,
@@ -869,11 +869,8 @@ async function loginUser() {
                 allPerms[data.user.email] = perms;
                 localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
             }
-            // ---------------------------------------------
             
-            // --- ACTIVAR POLLING DE NOTIFICACIONES TRAS LOGIN ---
             startOnlineInvitePolling();
-            // ----------------------------------------------------
 
         } else if (response.status === 404 || response.status >= 500) {
             useLocalApiFallback = true;
@@ -902,6 +899,14 @@ async function loginUser() {
     }
 
     if (currentUser) {
+        // [FIX v.67] Forzamos la sincronización con la BD para recuperar compras perdidas
+        // Esto arregla el problema tras reset de contraseña
+        try {
+            await syncUserPermissions(); 
+        } catch (e) {
+            console.error("Error sincronizando permisos en login:", e);
+        }
+
         getUserPermissions(currentUser.email);
 
         localStorage.setItem('loggedInUserEmail', currentUser.email);
