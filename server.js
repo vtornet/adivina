@@ -1,11 +1,13 @@
-require("dotenv").config(); // Debe ser la primera línea
-
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const crypto = require("crypto");
 const path = require("path");
+// Módulos de Producción
+const compression = require("compression");
+const helmet = require("helmet");
 
 
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -14,6 +16,23 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_for_build');
 
 const app = express();
+app.use(compression());
+
+// 2. Seguridad Helmet (Protege cabeceras HTTP y configura CSP para Stripe/Resend)
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
+        frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
+        connectSrc: ["'self'", "https://api.stripe.com", "https://api.resend.com"],
+        imgSrc: ["'self'", "data:", "https://*.stripe.com"],
+        upgradeInsecureRequests: [], // En Railway fuerza HTTPS automáticamente
+      },
+    },
+  })
+);
 const PORT = process.env.PORT || 3000;
 
 const sendEmail = async ({ to, subject, html }) => {
@@ -818,8 +837,12 @@ app.delete("/api/online-games/clear-history/:playerEmail", async (req, res) => {
 
 // ==============================
 // 5) Frontend (public + data)
-// ==============================
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+  maxAge: '1d', 
+  etag: false
+}));
+
+// 2. Audios con caché de 7 días y cabeceras correctas
 app.use(
   "/audio",
   express.static(path.join(__dirname, "public", "audio"), {
@@ -829,11 +852,13 @@ app.use(
         res.setHeader("Content-Type", "audio/mpeg");
       }
       res.setHeader("Accept-Ranges", "bytes");
+      res.setHeader("Cache-Control", "public, max-age=604800"); 
     },
   })
 );
-app.use("/data", express.static(path.join(__dirname, "data")));
 
+// 3. Archivos de datos (Songs)
+app.use("/data", express.static(path.join(__dirname, "data")));
 // Fallback: cualquier ruta que NO empiece por /api/, /audio/ o /data/ -> index.html
 app.get(/^\/(?!api|audio|data).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
