@@ -1,4 +1,4 @@
-const CACHE_NAME = 'adivina-cancion-42';
+const CACHE_NAME = 'adivina-cancion-43';
 const PRECACHE_URLS = [
   './',
   'index.html',
