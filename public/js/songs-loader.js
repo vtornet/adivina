@@ -61,31 +61,23 @@ async function loadSongsForDecadeAndCategory(decade, category) {
         script.src = currentPath;
         script.onload = () => {
             const songsArray = window.allSongsByDecadeAndCategory[internalKey][category];
-
             if (Array.isArray(songsArray)) {
                 songsArray.forEach(song => {
-                    // SELLO DE CATEGORÍA INALTERABLE v.54
-                    // Marcamos la canción con la categoría del archivo .js que la contiene.
+                    // SELLO IMPERATIVO v.55: Sobreescribe cualquier metadato previo
                     song.originalDecade = internalKey;
                     song.originalCategory = category;
                 });
             }
-
-            console.log(`Carga exitosa y sellado: ${decade}/${category}`);
+            console.log(`Carga exitosa y sellado (v.55): ${decade}/${category}`);
             resolve();
         };
 
         script.onerror = (e) => {
             script.remove();
-            if (restPaths.length > 0) {
-                loadScript(restPaths, resolve, reject);
-                return;
-            }
-            // Si hay un error al cargar el script (ej. archivo no encontrado, error de sintaxis),
-            // registramos el error y rechazamos la promesa.
-            // El array para esta categoría ya está inicializado como vacío arriba, lo cual es seguro.
-            console.error(`Error al cargar las canciones de ${decade}/${category} desde ${currentPath}:`, e);
-            reject(new Error(`No se pudo cargar el archivo de canciones para ${decade}/${category}.`));
+            // Limpieza preventiva: si el archivo no existe, el array queda vacío y sellado
+            window.allSongsByDecadeAndCategory[internalKey][category] = [];
+            console.warn(`Archivo inexistente o corrupto: ${decade}/${category}. Ignorando década.`);
+            resolve(); // Resolvemos para no bloquear el Promise.allSettled del juego
         };
         // Añade el script al <head> del documento para que se cargue y ejecute.
         document.head.appendChild(script);

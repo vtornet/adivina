@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 54 (Strict Category & Path Bypass)';
+const APP_VERSION = 'Versión 55 (Total Path & Category Purge)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -532,10 +532,8 @@ function showScreen(screenId) {
         loadPlayerOnlineGames(); //
         requestInviteNotificationPermission();
     }
-    if (screenId === 'pending-games-screen' || screenId === 'online-mode-screen') {
-        loadPlayerOnlineGames();
-    }
 }
+
 window.showScreen = showScreen;
 
 function populateDecadeOptions(selectElement, decades) {
@@ -1655,18 +1653,14 @@ async function loadAllDecadesForCategory(categoryId) {
         const arr = configuracionCanciones?.[internalKey]?.[categoryId];
         
         if (Array.isArray(arr)) {
-            // REGLA DE EXCLUSIÓN v.54: 
-            // Solo permitimos canciones cuyo sello original coincida exactamente con la categoría activa.
-            const filtered = arr.filter(song => {
-                const songCat = song.originalCategory || song.category;
-                return songCat === categoryId;
-            });
+            // PURGA v.55: Solo entra lo que tenga el sello de la categoría solicitada
+            const filtered = arr.filter(song => song.originalCategory === categoryId);
             merged.push(...filtered);
         }
     });
     
     configuracionCanciones['Todas'][categoryId] = merged;
-    console.log(`Pool 'Todas' purificado para ${categoryId}: ${merged.length} canciones.`);
+    console.log(`Pool 'Todas' purificado (v.55) para ${categoryId}: ${merged.length} temas.`);
 }
 
 function playAudioSnippet() {
@@ -1680,17 +1674,14 @@ function playAudioSnippet() {
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName) return;
 
-    // NORMALIZACIÓN DE RUTA v.54:
-    // Si la ruta viene como "10s/series/cancion.mp3" pero el audio está en "10s/cancion.mp3",
-    // corregimos la ruta para apuntar a la carpeta física de la década.
+    // RECONSTRUCCIÓN v.55: Ignorar carpetas intermedias (categorías)
     if (fileName.includes('/')) {
-        let parts = fileName.split('/');
-        if (parts.length >= 3) {
-            // Caso: decada/categoria/archivo -> decada/archivo
-            fileName = `${parts[0].toLowerCase()}/${parts[2]}`;
-        } else if (parts.length === 2) {
-            // Caso: decada/archivo -> decada/archivo
-            fileName = `${parts[0].toLowerCase()}/${parts[1]}`;
+        const parts = fileName.split('/');
+        // Forzamos: decada/archivo.mp3 (eliminamos 'series', 'espanol', etc. del medio)
+        if (parts.length >= 2) {
+            const decadePart = parts[0].toLowerCase();
+            const filePart = parts[parts.length - 1]; // Siempre el último elemento es el archivo
+            fileName = `${decadePart}/${filePart}`;
         }
     }
 
@@ -1700,7 +1691,11 @@ function playAudioSnippet() {
     gameState.hasPlayed = true;
 
     let audioSrc = fileName.startsWith('/') ? fileName : `/audio/${fileName}`;
-    if (!audioPlayer.src.includes(audioSrc)) audioPlayer.src = audioSrc;
+    
+    // Forzar actualización del src si es distinto
+    if (!audioPlayer.src.endsWith(audioSrc)) {
+        audioPlayer.src = audioSrc;
+    }
     
     if (activeTimeUpdateListener) audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
     audioPlayer.currentTime = 0;
@@ -1719,11 +1714,11 @@ function playAudioSnippet() {
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
     
     audioPlayer.play().catch(e => {
-        console.error("Audio 404 corregido:", audioSrc);
+        console.error("Fallo 404 (v.55):", audioSrc);
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         gameState.hasPlayed = false;
-        showAppAlert("Error de audio: No se encuentra el archivo en " + audioSrc);
+        showAppAlert(`Error 404: El archivo no existe en la ruta física: ${audioSrc}`);
     });
 }
 
