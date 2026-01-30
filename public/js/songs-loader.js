@@ -64,23 +64,23 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
             if (Array.isArray(songsArray)) {
                 songsArray.forEach(song => {
-                    // SELLO DE CATEGORÍA v.56: Forzamos el origen real del archivo
+                    // SELLADO DE METADATOS v.57
+                    // Marcamos de forma inamovible la categoría y década de origen
                     song.originalDecade = internalKey;
                     song.originalCategory = category;
                 });
             }
-            console.log(`Carga exitosa y sellado v.56: ${decade}/${category}`);
+            console.log(`Sello v.57 aplicado: ${decade}/${category}`);
             resolve();
         };
 
         script.onerror = () => {
-            // Si el archivo no existe (404), Railway devuelve HTML y causa el SyntaxError.
-            // Aquí limpiamos el array para que no contenga basura de intentos fallidos.
-            window.allSongsByDecadeAndCategory[internalKey][category] = [];
             script.remove();
-            console.warn(`Aviso: El archivo /data/songs/${folderName}/${category}.js no existe. Omitiendo.`);
-            // Resolvemos de todos modos para que el juego no se quede bloqueado esperando un archivo que no existe
-            resolve(); 
+            // Si el archivo no existe (404), Railway devuelve HTML y causa errores de sintaxis.
+            // Limpiamos el array para evitar datos corruptos.
+            window.allSongsByDecadeAndCategory[internalKey][category] = [];
+            console.warn(`Aviso: Archivo inexistente /data/songs/${folderName}/${category}.js. Omitiendo.`);
+            resolve(); // Resolvemos para que el flujo de consolidación no se detenga
         };
         // Añade el script al <head> del documento para que se cargue y ejecute.
         document.head.appendChild(script);

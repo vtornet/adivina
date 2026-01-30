@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 56 (Path Reconstruction & Sync Fix)';
+const APP_VERSION = 'Versión 57 (Consolidación Dinámica)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1639,28 +1639,30 @@ function generateCategoryButtons() {
 
 
 async function loadAllDecadesForCategory(categoryId) {
-    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual', 'verano'];
+    // Definimos las décadas físicas reales que vamos a consultar
+    const decadesToFetch = ['80s', '90s', '00s', '10s', 'actual', 'verano'];
     
     configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
     configuracionCanciones['Todas'][categoryId] = []; 
 
-    const loads = decadesToMerge.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
-    await Promise.allSettled(loads);
+    // Lanzamos las peticiones en paralelo para cada década existente
+    const fetchPromises = decadesToFetch.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
+    await Promise.allSettled(fetchPromises);
 
-    const merged = [];
-    decadesToMerge.forEach(dec => {
+    const consolidatedPool = [];
+    decadesToFetch.forEach(dec => {
         const internalKey = dec.toLowerCase() === 'actual' ? 'actual' : dec;
-        const arr = configuracionCanciones?.[internalKey]?.[categoryId];
+        const songsInDecade = configuracionCanciones?.[internalKey]?.[categoryId];
         
-        if (Array.isArray(arr)) {
-            // PURGA v.55: Solo entra lo que tenga el sello de la categoría solicitada
-            const filtered = arr.filter(song => song.originalCategory === categoryId);
-            merged.push(...filtered);
+        if (Array.isArray(songsInDecade)) {
+            // FILTRADO DE SEGURIDAD: Solo pasan canciones selladas con la categoría correcta
+            const safeSongs = songsInDecade.filter(song => song.originalCategory === categoryId);
+            consolidatedPool.push(...safeSongs);
         }
     });
     
-    configuracionCanciones['Todas'][categoryId] = merged;
-    console.log(`Pool 'Todas' purificado (v.55) para ${categoryId}: ${merged.length} temas.`);
+    configuracionCanciones['Todas'][categoryId] = consolidatedPool;
+    console.log(`Pool 'Todas' (v.57) consolidado para ${categoryId}: ${consolidatedPool.length} canciones.`);
 }
 
 function playAudioSnippet() {
@@ -1674,15 +1676,15 @@ function playAudioSnippet() {
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName) return;
 
-    // RECONSTRUCCIÓN FORZADA v.56:
-    // Si fileName es "10s/series/cancion.mp3", lo convertimos en "10s/cancion.mp3"
-    // Esto elimina el error 404 al buscar en carpetas de categoría que no existen.
+    // RECONSTRUCCIÓN FÍSICA v.57:
+    // Ignoramos carpetas de categoría intermedias (ej. /series/) para evitar 404.
+    // Buscamos directamente en /audio/[década]/[archivo.mp3]
     if (fileName.includes('/')) {
-        const parts = fileName.split('/');
-        if (parts.length >= 2) {
-            const decadePart = parts[0].toLowerCase(); // "10s", "00s", "actual", etc.
-            const filePart = parts[parts.length - 1];   // El nombre del archivo .mp3
-            fileName = `${decadePart}/${filePart}`;
+        const pathParts = fileName.split('/');
+        if (pathParts.length >= 2) {
+            const decadeDir = pathParts[0].toLowerCase(); // "10s", "00s", "actual", etc.
+            const realFile = pathParts[pathParts.length - 1]; // El nombre del .mp3
+            fileName = `${decadeDir}/${realFile}`;
         }
     }
 
@@ -1691,9 +1693,7 @@ function playAudioSnippet() {
     playBtn.disabled = true;
     gameState.hasPlayed = true;
 
-    // Aseguramos que la ruta empiece por /audio/
     let audioSrc = fileName.startsWith('/') ? fileName : `/audio/${fileName}`;
-    
     if (!audioPlayer.src.endsWith(audioSrc)) {
         audioPlayer.src = audioSrc;
     }
@@ -1715,11 +1715,11 @@ function playAudioSnippet() {
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
     
     audioPlayer.play().catch(e => {
-        console.error("Fallo 404 Real:", audioSrc);
+        console.error("Fallo 404 en ruta física:", audioSrc);
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         gameState.hasPlayed = false;
-        showAppAlert("El audio no existe en la carpeta física: " + audioSrc);
+        showAppAlert("Error 404: El archivo no se encuentra en el servidor.");
     });
 }
 
