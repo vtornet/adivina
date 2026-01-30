@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 61 (Fix Mayúsculas Actual)';
+const APP_VERSION = 'v1.0 (Producción)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -300,14 +300,17 @@ async function redirectToStripe(categoryKey) {
                 email: currentUser.email,
                 categoryKey: permissionKeyToSave,
                 priceId: priceId,
-                returnUrl: window.location.origin // <--- ¡LA CLAVE! Enviamos dónde estamos
+                returnUrl: window.location.origin
             })
         });
 
         const session = await response.json();
         
         if (response.ok && session.id) {
-            const stripe = Stripe('pk_test_51StvbzAzxZ5jYRrVht2VaE3PAIbqyJSDq2Ym9XPyohsv5gKjkGRBQ5OsvRR9EE3wTNvbDVQweNfIb8Z7Bc3byFXy00QVZ0iVkD'); 
+            // v.66: Preparado para producción. 
+            // Cuando tengas la clave REAL, cambia 'pk_test_...' por 'pk_live_...'
+            const stripeKey = 'pk_test_51StvbzAzxZ5jYRrVht2VaE3PAIbqyJSDq2Ym9XPyohsv5gKjkGRBQ5OsvRR9EE3wTNvbDVQweNfIb8Z7Bc3byFXy00QVZ0iVkD';
+            const stripe = Stripe(stripeKey); 
             await stripe.redirectToCheckout({ sessionId: session.id });
         } else {
             throw new Error(session.error || "Error al crear sesión de pago.");
@@ -4302,7 +4305,8 @@ async function syncUserPermissions() {
     const safeEmail = currentUser.email.trim();
 
     try {
-        console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
+        // v.66: Log silenciado para producción
+        // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
         
         // Fetch con Cache Busting agresivo
         const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
@@ -4315,23 +4319,18 @@ async function syncUserPermissions() {
             
             if (data.user && Array.isArray(data.user.unlocked_sections)) {
                 
-                // 1. Leemos lo que tenemos localmente (incluyendo el desbloqueo optimista reciente)
-                const activeNow = getActivePermissions(); // Usamos el helper
+                const activeNow = getActivePermissions(); 
                 const serverSections = data.user.unlocked_sections;
                 
-                // 2. FUSIÓN (MERGE): Local (Optimista) + Servidor (Persistente)
                 const mergedSections = [...new Set([...activeNow, ...serverSections])];
 
-                // 3. ACTUALIZAR MEMORIA (CRÍTICO PARA LA UI INMEDIATA)
                 if (currentUser) {
                     currentUser.unlocked_sections = mergedSections;
-                    // Opcional: Actualizar también userData en localStorage si lo usas para persistir sesión
                     const userData = JSON.parse(localStorage.getItem("userData") || '{}');
                     userData.unlocked_sections = mergedSections;
                     localStorage.setItem("userData", JSON.stringify(userData));
                 }
 
-                // 4. ACTUALIZAR ALMACÉN DE PERMISOS
                 const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || '{}');
                 allPerms[safeEmail] = {
                     email: safeEmail,
@@ -4340,9 +4339,9 @@ async function syncUserPermissions() {
                 };
                 localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
                 
-                console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
+                // v.66: Log silenciado
+                // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
                 
-                // 5. REDIBUJAR UI (Solo si es necesario)
                 const currentScreen = document.querySelector('.screen.active');
                 if (currentScreen) {
                     if (currentScreen.id === 'category-screen') generateCategoryButtons();
@@ -4370,7 +4369,8 @@ function setupPaymentListeners() {
     const sessionId = urlParams.get('session_id');
 
     if (sessionId) {
-        console.log("💳 Detectado retorno de pago Stripe. Sincronizando...");
+        // v.66: Log silenciado
+        // console.log("💳 Detectado retorno de pago Stripe. Sincronizando...");
         syncUserPermissions();
         // Limpiamos la URL para no re-procesar el éxito al recargar
         window.history.replaceState({}, document.title, window.location.pathname);
