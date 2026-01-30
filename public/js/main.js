@@ -1697,6 +1697,7 @@ function playAudioSnippet() {
     const playBtn = document.getElementById('play-song-btn');
     playBtn.innerText = "🎵";
     playBtn.disabled = true;
+    playBtn.classList.add('is-playing'); // <--- AÑADE ESTA LÍNEA
     gameState.hasPlayed = true;
 
     let audioSrc = fileName.startsWith('/') ? fileName : `/audio/${fileName}`;
@@ -1712,6 +1713,7 @@ function playAudioSnippet() {
             audioPlayer.pause();
             audioPlayer.currentTime = 0; 
             playBtn.innerText = "▶";
+            playBtn.classList.remove('is-playing');
             audioPlayer.removeEventListener('timeupdate', stopAudioListener);
             activeTimeUpdateListener = null;
         }
@@ -1724,6 +1726,7 @@ function playAudioSnippet() {
         console.error("Fallo 404 en ruta física:", audioSrc);
         playBtn.disabled = false;
         playBtn.innerText = "▶";
+        playBtn.classList.remove('is-playing');
         gameState.hasPlayed = false;
         showAppAlert("Error 404: El archivo no se encuentra en el servidor.");
     });
@@ -2365,6 +2368,7 @@ function checkAnswer(isCorrect, button) {
                 const playBtn = document.getElementById('play-song-btn');
                 playBtn.disabled = false;
                 playBtn.innerText = "▶";
+                playBtn.classList.remove('is-playing'); // <--- AÑADE ESTA LÍNEA
             }, 1500);
         } else {
             gameState.players[gameState.currentPlayerIndex].questionsAnswered++;
