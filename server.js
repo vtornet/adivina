@@ -291,7 +291,6 @@ app.post("/api/register", async (req, res) => {
     // Enviar correo
     try {
         await sendEmail({
-            from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
             to: email,
             subject: "Verifica tu cuenta - Adivina la Canción",
             html: `
@@ -366,11 +365,10 @@ app.post("/api/resend-code", async (req, res) => {
 
         try {
             await sendEmail({
-                from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
-                to: email,
-                subject: "Nuevo código - Adivina la Canción",
-                html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`
-            });
+            to: email,
+            subject: "Nuevo código - Adivina la Canción",
+            html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`
+        });
             return res.status(200).json({ message: "Código reenviado." });
         } catch (mailErr) {
             console.error("Fallo envío mail reenviado:", mailErr);
@@ -445,10 +443,9 @@ app.post("/api/password-reset/request", async (req, res) => {
     // Envío real por mail
     try {
         await sendEmail({
-            from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
             to: email,
             subject: "Recuperar Contraseña",
-            text: `Tu token de recuperación es: ${token}`
+            html: `<p>Tu token de recuperación es: <b>${token}</b></p>`
         });
         console.log(`Token enviado a ${email}`);
     } catch (e) {

@@ -1002,3 +1002,30 @@ select.text-input optgroup {
 .footer-brand a:hover {
     border-bottom-color: #6a0dad;
 }
+
+/* Estilo Profesional para la Firma Appstracta */
+.footer-brand {
+    position: fixed;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4); /* Color discreto */
+    letter-spacing: 0.5px;
+    z-index: 5;
+    pointer-events: none; /* No bloquea clics accidentales */
+}
+
+.footer-brand a {
+    pointer-events: auto; /* El enlace sí es clickable */
+    color: #a282cc; /* Tono lila suave acorde a tu UI */
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.footer-brand a:hover {
+    color: var(--secondary-color);
+    text-shadow: 0 0 5px var(--secondary-color);
+}
