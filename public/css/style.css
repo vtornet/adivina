@@ -982,3 +982,23 @@ select.text-input optgroup {
     /* Asegurar alineación de texto central */
     text-align: center !important;
 }
+
+.footer-brand {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: auto; /* Empuja el footer al fondo si usas flexbox */
+}
+
+.footer-brand a {
+    color: #6a0dad; /* El color morado que usas en el código */
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.footer-brand a:hover {
+    border-bottom-color: #6a0dad;
+}
