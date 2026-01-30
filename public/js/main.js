@@ -2082,6 +2082,10 @@ function startGame() {
 }
 
 
+/**
+ * Configura la siguiente pregunta del juego.
+ * v.58: Incluye filtro estricto de categoría para distractores y protección contra bucles.
+ */
 function setupQuestion() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
 
@@ -2121,6 +2125,7 @@ function setupQuestion() {
     document.getElementById('player-turn').innerText = `Turno de ${currentPlayer.name}`;
     document.getElementById('points-display').innerText = `Puntos: ${currentPlayer.score}`;
 
+    // Llamada a la función que debe existir justo debajo
     updateAttemptsCounter();
 
     const answerButtonsContainer = document.getElementById('answer-buttons');
@@ -2155,7 +2160,6 @@ function setupQuestion() {
         const isCorrectAnswer = randomSong.file === currentQuestion.file;
 
         // 3. FILTRO ESTRICTO DE CATEGORÍA (v.58)
-        // Si no es un modo consolidado (mix), aseguramos que la categoría coincida.
         let isCategoryMismatch = false;
         if (gameState.category !== 'consolidated' && randomSong.originalCategory && randomSong.originalCategory !== gameState.category) {
             isCategoryMismatch = true;
@@ -2166,7 +2170,7 @@ function setupQuestion() {
         }
     }
 
-    // Fallback de seguridad si el filtro estricto es demasiado restrictivo
+    // Fallback de seguridad
     if (options.length < 4) {
          console.warn("Advertencia: No se encontraron suficientes distractores estrictos. Rellenando con pool disponible.");
          let fallbackSafety = 0;
@@ -2194,6 +2198,20 @@ function setupQuestion() {
     playBtn.onclick = playAudioSnippet;
     playBtn.disabled = false;
     playBtn.innerText = "▶";
+}
+
+/**
+ * Actualiza el contador de intentos y su color.
+ * (Esta es la función que faltaba y causaba el ReferenceError)
+ */
+function updateAttemptsCounter() {
+    const counter = document.getElementById('attempts-counter');
+    if (!counter) return; // Protección extra
+    
+    counter.innerText = `Intentos: ${gameState.attempts}`;
+    if (gameState.attempts === 3) counter.style.backgroundColor = 'var(--correct-color)';
+    else if (gameState.attempts === 2) counter.style.backgroundColor = 'var(--warning-color)';
+    else counter.style.backgroundColor = 'var(--incorrect-color)';
 }
 
 /**
