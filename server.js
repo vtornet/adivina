@@ -17,37 +17,30 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ==============================
-// CONFIGURACIÓN DE CORREO (NODEMAILER)
-// ==============================
-// En server.js, sustituye el bloque 'const transporter = ...' por esto:
-
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, 
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS 
-    },
-    tls: {
-        rejectUnauthorized: false // Necesario para que Railway no bloquee el handshake
+// Reemplazo para la gestión de correos vía API (Evita bloqueos de puertos)
+const sendEmail = async ({ to, subject, html }) => {
+    try {
+        const response = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.EMAIL_PASS}`, // Tu API Key re_...
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: 'Adivina la Canción <onboarding@resend.dev>',
+                to,
+                subject,
+                html
+            })
+        });
+        const data = await response.json();
+        if (!response.ok) console.error("Error API Resend:", data);
+        return response.ok;
+    } catch (err) {
+        console.error("Fallo conexión API:", err);
+        return false;
     }
-});
-
-// Verificación inicial del transporte de correo
-if (process.env.EMAIL_USER) {
-    transporter.verify(function (error, success) {
-        if (error) {
-            console.warn("⚠️ Error configurando Nodemailer:", error);
-        } else {
-            console.log("✅ Servidor listo para enviar correos.");
-        }
-    });
-} else {
-    console.warn("⚠️ EMAIL_USER no definido. El registro con verificación fallará.");
-}
+};
 
 // ==============================
 // 0) Canonical host + HTTPS (CRÍTICO para persistencia de localStorage)
@@ -293,7 +286,7 @@ app.post("/api/register", async (req, res) => {
 
     // Enviar correo
     try {
-        await transporter.sendMail({
+        await sendEmail({
             from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
             to: email,
             subject: "Verifica tu cuenta - Adivina la Canción",
@@ -368,7 +361,7 @@ app.post("/api/resend-code", async (req, res) => {
         await user.save();
 
         try {
-            await transporter.sendMail({
+            await sendEmail({
                 from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
                 to: email,
                 subject: "Nuevo código - Adivina la Canción",
@@ -447,7 +440,7 @@ app.post("/api/password-reset/request", async (req, res) => {
 
     // Envío real por mail
     try {
-        await transporter.sendMail({
+        await sendEmail({
             from: '"Adivina la Canción" <onboarding@resend.dev>', // Cambiado temporalmente para validación
             to: email,
             subject: "Recuperar Contraseña",
