@@ -4269,6 +4269,60 @@ function refreshUI() {
     }
 }
 
+/**
+ * Maneja la selección de una categoría, carga las canciones y redirige a la pantalla de selección de jugadores.
+ * @param {string} category - La categoría seleccionada.
+ */
+async function selectCategory(category) {
+    // 1. Verificación de usuario
+    if (!currentUser || !currentUser.playerName) {
+        showAppAlert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
+        showScreen('login-screen');
+        return;
+    }
+
+    // 2. Verificación Premium
+    if (isPremiumCategory(category) && !hasCategoryAccess(category)) {
+        showPremiumModal(`Contenido premium. Desbloquéalo para jugar a ${getCategoryLabel(category)}.`, category);
+        return;
+    }
+
+    gameState.category = category;
+
+    try {
+        // 3. Carga de canciones según el modo
+        if (gameState.selectedDecade === 'Todas') {
+            await loadAllDecadesForCategory(gameState.category);
+        } else {
+            await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
+        }
+
+        // 4. Verificación de cantidad de canciones
+        const pool = (gameState.selectedDecade === 'Todas') 
+            ? configuracionCanciones?.['Todas']?.[gameState.category]
+            : configuracionCanciones?.[gameState.selectedDecade]?.[gameState.category];
+
+        if (!Array.isArray(pool) || pool.length < 4) {
+            showAppAlert(
+                `No hay suficientes canciones en '${getCategoryLabel(category)}' para ${getDecadeLabel(gameState.selectedDecade)}. ` +
+                `Necesitas al menos 4 canciones.`
+            );
+            showScreen('category-screen');
+            return;
+        }
+
+        // 5. Éxito: Ir a selección de jugadores
+        showScreen('player-selection-screen');
+
+    } catch (error) {
+        showAppAlert(
+            `No se pudieron cargar las canciones para '${getCategoryLabel(category)}'. Intenta con otra.`
+        );
+        console.error(error);
+        showScreen('category-screen');
+    }
+}
+
 // ==========================================
 // ARRANQUE UNIFICADO (PERSISTENCIA DE SESIÓN)
 // ==========================================
