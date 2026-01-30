@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 46 (Online Fix)'; 
+const APP_VERSION = 'Versión 47 (Online Fix)'; 
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1641,21 +1641,21 @@ function generateCategoryButtons() {
 
 
 async function loadAllDecadesForCategory(categoryId) {
-    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual']; // NO incluir verano ni elderly
+    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual'];
+    
+    // CORRECCIÓN: Limpiamos el pool antes de fusionar para evitar "Series" en "Películas"
+    configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
+    configuracionCanciones['Todas'][categoryId] = []; 
 
-    // Cargar cada década de esa categoría (reutiliza tus .js existentes)
     const loads = decadesToMerge.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
     await Promise.allSettled(loads);
 
-    // Fusionar
     const merged = [];
     decadesToMerge.forEach(dec => {
         const arr = configuracionCanciones?.[dec]?.[categoryId];
         if (Array.isArray(arr) && arr.length) merged.push(...arr);
     });
 
-    // Guardar en el bucket 'Todas'
-    configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
     configuracionCanciones['Todas'][categoryId] = merged;
 }
 
@@ -2146,12 +2146,19 @@ function playAudioSnippet() {
     playBtn.disabled = true;
     gameState.hasPlayed = true;
 
-    const audioSrc = `/audio/${fileName}`;
+    // CORRECCIÓN DE RUTA (Anti-404):
+    // Si el fileName ya incluye una carpeta (como 'Actual/series/'), no forzamos el prefijo /audio/
+    // de forma que genere rutas inexistentes. Verificamos si ya es una ruta absoluta o relativa.
+    let audioSrc = fileName;
+    if (!fileName.startsWith('/') && !fileName.startsWith('http')) {
+        audioSrc = `/audio/${fileName}`;
+    }
+
     if (!audioPlayer.src.includes(audioSrc)) {
         audioPlayer.src = audioSrc;
     }
     
-    // --- CAMBIO: Limpieza del listener anterior ---
+    // Limpieza del listener anterior si existiera
     if (activeTimeUpdateListener) {
         audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
         activeTimeUpdateListener = null;
@@ -2176,7 +2183,7 @@ function playAudioSnippet() {
 
     audioPlayer.play().catch(e => {
         console.error("Error al reproducir:", e);
-        showAppAlert("El navegador bloqueó el audio. Intenta pulsar de nuevo.");
+        showAppAlert("El navegador bloqueó el audio o el archivo no existe. Intenta pulsar de nuevo.");
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         gameState.hasPlayed = false; 
