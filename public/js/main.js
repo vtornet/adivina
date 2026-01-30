@@ -44,10 +44,9 @@ const DECADES_ORDER = BASE_DECADES
 
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
-const CACHE_NAME = 'adivina-cancion-v1.2.3-recovery';
+const APP_VERSION = 'v1.3.1 (Fixed)';
 
-// ... constantes iniciales ...
-const CACHE_NAME = 'adivina-cancion-v1.2.2-stable-fix';
+const CACHE_NAME = 'adivina-cancion-v1.3.1-clean';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
