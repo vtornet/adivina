@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 51 (Online Fix)'; 
+const APP_VERSION = 'Versión 52 (Online Fix)'; 
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1641,39 +1641,53 @@ function generateCategoryButtons() {
 
 
 async function loadAllDecadesForCategory(categoryId) {
-    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual'];
+    // Definimos las fuentes de datos físicas reales
+    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual', 'verano'];
     
-    // LIMPIEZA: Evita que "Series" aparezca cuando eliges "Películas"
     configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
     configuracionCanciones['Todas'][categoryId] = []; 
 
+    // Disparamos la carga de los archivos .js específicos de cada década
     const loads = decadesToMerge.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
     await Promise.allSettled(loads);
 
     const merged = [];
     decadesToMerge.forEach(dec => {
-        const arr = configuracionCanciones?.[dec]?.[categoryId];
-        if (Array.isArray(arr) && arr.length) merged.push(...arr);
+        const internalKey = dec.toLowerCase() === 'actual' ? 'actual' : dec;
+        const arr = configuracionCanciones?.[internalKey]?.[categoryId];
+        
+        if (Array.isArray(arr)) {
+            // CATEGORY GUARD: Solo aceptamos canciones que coincidan con la categoría solicitada
+            // Esto garantiza que si Actual/anuncios.js tiene pop comercial, no contamine el modo Todas/Anuncios.
+            const filtered = arr.filter(song => {
+                const isCorrectCategory = !song.category || song.category === categoryId;
+                const isCorrectOriginal = !song.originalCategory || song.originalCategory === categoryId;
+                return isCorrectCategory && isCorrectOriginal;
+            });
+            merged.push(...filtered);
+        }
     });
+    
     configuracionCanciones['Todas'][categoryId] = merged;
+    console.log(`Agregación dinámica para 'Todas' - ${categoryId} finalizada: ${merged.length} canciones.`);
 }
 
 function playAudioSnippet() {
     if (gameState.hasPlayed) return;
+    
     const durations = { 3: 4.0, 2: 6.0, 1: 10.0 }; 
     const durationSecs = durations[gameState.attempts];
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
     const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
-    
-    // NORMALIZACIÓN LINUX: 'Actual/Series' -> 'actual/series' para evitar 404
-    if (fileName.includes('/')) {
+    if (!fileName) return;
+
+    // Normalización: Si la ruta apunta a 'actual/', forzamos la ruta física real 'Actual/'
+    if (fileName.toLowerCase().includes('actual/')) {
         const parts = fileName.split('/');
         if (parts.length >= 2) {
-            parts[0] = parts[0].toLowerCase();
-            parts[1] = parts[1].toLowerCase();
-            fileName = parts.join('/');
+            fileName = 'Actual/' + parts.slice(1).join('/');
         }
     }
 
@@ -1700,10 +1714,13 @@ function playAudioSnippet() {
 
     activeTimeUpdateListener = stopAudioListener;
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
-    audioPlayer.play().catch(() => {
+    
+    audioPlayer.play().catch(e => {
+        console.error("Fallo 404 en archivo:", audioSrc);
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         gameState.hasPlayed = false;
+        showAppAlert("Error de carga: El archivo no se encuentra en el servidor.");
     });
 }
 

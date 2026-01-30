@@ -6,7 +6,7 @@ window.allSongsByDecadeAndCategory = {};
 // Las categorías que esperamos en cada década
 const allPossibleCategories = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
 // Las décadas que esperamos (ajustado a tus décadas existentes)
-const allDecadesDefined = ['80s', '90s', '00s', '10s', 'actual', 'verano']; // <-- AÑADE 'verano'
+const allDecadesDefined = ['80s', '90s', '00s', '10s', 'actual', 'verano']; 
 
 window.allPossibleCategories = allPossibleCategories;
 window.allDecadesDefined = allDecadesDefined;
@@ -28,47 +28,52 @@ async function loadSongsForDecadeAndCategory(decade, category) {
     // Inicializa la estructura para la década si no existe.
     // Esto es crucial para asegurar que window.allSongsByDecadeAndCategory[decade] no sea 'undefined'
     // antes de intentar acceder a window.allSongsByDecadeAndCategory[decade][category].
-    window.allSongsByDecadeAndCategory[decade] = window.allSongsByDecadeAndCategory[decade] || {};
+    const internalKey = decade.toLowerCase() === 'actual' ? 'actual' : decade;
+    window.allSongsByDecadeAndCategory[internalKey] = window.allSongsByDecadeAndCategory[internalKey] || {};
 
     // Si ya tenemos las canciones cargadas para esta combinación (decade/category)
     // y el array no está vacío, no las volvemos a cargar y resolvemos la promesa inmediatamente.
-    if (window.allSongsByDecadeAndCategory[decade][category] && window.allSongsByDecadeAndCategory[decade][category].length > 0) {
-        console.log(`Canciones de ${decade}/${category} ya cargadas.`);
-        return Promise.resolve(); // Resuelve la promesa inmediatamente
+    if (window.allSongsByDecadeAndCategory[internalKey][category] && window.allSongsByDecadeAndCategory[internalKey][category].length > 0) {
+        console.log(`Canciones de ${internalKey}/${category} ya cargadas.`);
+        return Promise.resolve(); 
     }
 
     // Asegura que el array para esta categoría específica exista y esté vacío.
     // Esto es importante por si el archivo JS que se va a cargar falla o está vacío.
-    // Así, si el script no define completamente la estructura, el programa no fallará al intentar
-    // acceder a una lista de canciones inexistente.
-    window.allSongsByDecadeAndCategory[decade][category] = [];
+    window.allSongsByDecadeAndCategory[internalKey][category] = [];
 
     // Construye la ruta al archivo JavaScript de canciones.
-    // Para 'verano' y 'consolidated' será: data/songs/verano/consolidated.js
-    // Para '80s' y 'espanol' será: data/songs/80s/espanol.js
+    // NORMALIZACIÓN: Usamos 'Actual' con mayúscula para el sistema de archivos Linux.
+    const folderName = (decade.toLowerCase() === 'actual') ? 'Actual' : decade;
     const scriptPaths = [
-        `/data/songs/${decade}/${category}.js`,
-        `data/songs/${decade}/${category}.js`,
-        `../data/songs/${decade}/${category}.js`
+        `/data/songs/${folderName}/${category}.js`,
+        `data/songs/${folderName}/${category}.js`,
+        `../data/songs/${folderName}/${category}.js`
     ];
 
     const loadScript = (paths, resolve, reject) => {
+        if (paths.length === 0) {
+            reject(new Error(`No se pudo cargar el archivo de canciones para ${decade}/${category}.`));
+            return;
+        }
+
         const [currentPath, ...restPaths] = paths;
         const script = document.createElement('script');
         script.src = currentPath;
         script.onload = () => {
-    const songsArray = window.allSongsByDecadeAndCategory[decade][category];
+            const songsArray = window.allSongsByDecadeAndCategory[internalKey][category];
 
-    if (Array.isArray(songsArray)) {
-        songsArray.forEach(song => {
-            if (!song.originalDecade) song.originalDecade = decade;
-            if (!song.originalCategory) song.originalCategory = category;
-        });
-    }
+            if (Array.isArray(songsArray)) {
+                songsArray.forEach(song => {
+                    if (!song.originalDecade) song.originalDecade = internalKey;
+                    if (!song.originalCategory) song.originalCategory = category;
+                });
+            }
 
-    console.log(`Canciones de ${decade}/${category} cargadas exitosamente.`);
-    resolve();
-};
+            console.log(`Canciones de ${decade}/${category} cargadas exitosamente.`);
+            resolve();
+        };
+
         script.onerror = (e) => {
             script.remove();
             if (restPaths.length > 0) {
@@ -122,13 +127,14 @@ async function loadAllSongs() {
 
     // Consolidar todas las canciones cargadas
     for (const decade of allDecadesDefined) {
-        const decadeData = window.allSongsByDecadeAndCategory[decade];
+        const internalKey = decade.toLowerCase() === 'actual' ? 'actual' : decade;
+        const decadeData = window.allSongsByDecadeAndCategory[internalKey];
         if (decadeData) {
             for (const category in decadeData) {
                 const songsArray = decadeData[category];
                 if (Array.isArray(songsArray)) {
                     songsArray.forEach(song => {
-                        if (!song.originalDecade) song.originalDecade = decade;
+                        if (!song.originalDecade) song.originalDecade = internalKey;
                         if (!song.originalCategory) song.originalCategory = category;
                     });
                     allConsolidatedSongs = allConsolidatedSongs.concat(songsArray);
@@ -145,17 +151,12 @@ async function loadAllSongs() {
 
 /**
  * Función auxiliar para obtener todas las categorías que existen para una década.
- * Esto es para que main.js pueda pedir la lista de categorías sin cargarlas todas.
  * @param {string} decadeId - La década.
  * @returns {Array<string>} Un array de nombres de categorías esperadas para esa década.
  */
 function getExpectedCategoriesForDecade(decadeId) {
-    // Esta función debería ser más inteligente si las categorías varían mucho por década.
-    // Por ahora, asumimos que todas las décadas pueden tener todas las categorías.
-    // La verdadera validación de si hay canciones se hace al cargar los archivos.
     return allPossibleCategories; 
 }
-
 
 // `configuracionCanciones` ahora es un proxy para `window.allSongsByDecadeAndCategory`
 const configuracionCanciones = window.allSongsByDecadeAndCategory;
