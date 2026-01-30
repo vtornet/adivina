@@ -17,25 +17,29 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Reemplazo para la gestión de correos vía API (Evita bloqueos de puertos)
 const sendEmail = async ({ to, subject, html }) => {
     try {
         const response = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${process.env.EMAIL_PASS}`, // Tu API Key re_...
+                // CORRECTO: Usamos el nombre de la variable definida en Railway
+                'Authorization': `Bearer ${process.env.EMAIL_PASS}`, 
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                from: 'Adivina la Canción <onboarding@resend.dev>',
-                to,
-                subject,
-                html
+                from: 'Adivina la Canción <contact@appstracta.app>',
+                to: to,
+                subject: subject,
+                html: html
             })
         });
         const data = await response.json();
-        if (!response.ok) console.error("Error API Resend:", data);
-        return response.ok;
+        if (!response.ok) {
+            console.error("Error API Resend:", data);
+            return false;
+        }
+        console.log("✅ Email enviado con éxito a:", to);
+        return true;
     } catch (err) {
         console.error("Fallo conexión API:", err);
         return false;
