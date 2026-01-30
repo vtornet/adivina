@@ -1032,3 +1032,8 @@ select.text-input optgroup {
     color: var(--secondary-color);
     text-shadow: 0 0 5px var(--secondary-color);
 }
+
+/* Corrección específica para la nota musical */
+#play-song-btn.is-playing {
+    padding-left: 0 !important; /* Elimina el empujón cuando es 🎵 */
+}
