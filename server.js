@@ -19,17 +19,40 @@ const app = express();
 app.use(compression());
 
 // 2. Seguridad Helmet (Protege cabeceras HTTP y configura CSP para Stripe/Resend)
+// 2. Seguridad Helmet (Protege cabeceras HTTP y configura CSP)
 app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
+        
+        // Scripts permitidos (Stripe + Inline)
         scriptSrc: ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
-        // ESTA LÍNEA ES LA CLAVE QUE FALTABA PARA DESBLOQUEAR LOS BOTONES:
-        scriptSrcAttr: ["'unsafe-inline'"], 
+        scriptSrcAttr: ["'unsafe-inline'"], // Permite botones onclick
+        
+        // Estilos permitidos (Tus CSS + Google Fonts)
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        
+        // Fuentes permitidas (Archivos de fuente de Google)
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        
+        // Iframes permitidos (Stripe)
         frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
-        connectSrc: ["'self'", "https://api.stripe.com", "https://api.resend.com"],
+        
+        // Conexiones permitidas (Fetch/XHR/WebSockets)
+        // AQUÍ ESTABA EL BLOQUEO DEL SERVICE WORKER
+        connectSrc: [
+            "'self'", 
+            "https://api.stripe.com", 
+            "https://api.resend.com",
+            "https://fonts.googleapis.com", // Permitir al SW cachear la hoja de estilos
+            "https://fonts.gstatic.com",    // Permitir al SW cachear los archivos de fuente
+            "https://js.stripe.com"         // Permitir al SW cachear el script de Stripe
+        ],
+        
+        // Imágenes permitidas
         imgSrc: ["'self'", "data:", "https://*.stripe.com"],
+        
         upgradeInsecureRequests: [], 
       },
     },
