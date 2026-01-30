@@ -44,6 +44,8 @@ const DECADES_ORDER = BASE_DECADES
 
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
+const CACHE_NAME = 'adivina-cancion-v1.2.3-recovery';
+
 // ... constantes iniciales ...
 const CACHE_NAME = 'adivina-cancion-v1.2.2-stable-fix';
 
