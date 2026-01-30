@@ -47,8 +47,7 @@ async function loadSongsForDecadeAndCategory(decade, category) {
     const folderName = (decade.toLowerCase() === 'actual') ? 'Actual' : decade;
     const scriptPaths = [
         `/data/songs/${folderName}/${category}.js`,
-        `data/songs/${folderName}/${category}.js`,
-        `../data/songs/${folderName}/${category}.js`
+        `data/songs/${folderName}/${category}.js`
     ];
 
     const loadScript = (paths, resolve, reject) => {

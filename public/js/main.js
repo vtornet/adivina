@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 52 (Online Fix)'; 
+const APP_VERSION = 'Versión 53 (Online Fix)'; 
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1657,8 +1657,7 @@ async function loadAllDecadesForCategory(categoryId) {
         const arr = configuracionCanciones?.[internalKey]?.[categoryId];
         
         if (Array.isArray(arr)) {
-            // CATEGORY GUARD: Solo aceptamos canciones que coincidan con la categoría solicitada
-            // Esto garantiza que si Actual/anuncios.js tiene pop comercial, no contamine el modo Todas/Anuncios.
+            // CATEGORY GUARD: Validación estricta para evitar contaminación cruzada
             const filtered = arr.filter(song => {
                 const isCorrectCategory = !song.category || song.category === categoryId;
                 const isCorrectOriginal = !song.originalCategory || song.originalCategory === categoryId;
@@ -1669,7 +1668,7 @@ async function loadAllDecadesForCategory(categoryId) {
     });
     
     configuracionCanciones['Todas'][categoryId] = merged;
-    console.log(`Agregación dinámica para 'Todas' - ${categoryId} finalizada: ${merged.length} canciones.`);
+    console.log(`Agregación v.53 para 'Todas' - ${categoryId} finalizada: ${merged.length} canciones.`);
 }
 
 function playAudioSnippet() {
@@ -1683,11 +1682,13 @@ function playAudioSnippet() {
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName) return;
 
-    // Normalización: Si la ruta apunta a 'actual/', forzamos la ruta física real 'Actual/'
-    if (fileName.toLowerCase().includes('actual/')) {
+    // NORMALIZACIÓN LINUX (v.53): Forzamos la carpeta de década a minúsculas para el audio
+    if (fileName.includes('/')) {
         const parts = fileName.split('/');
         if (parts.length >= 2) {
-            fileName = 'Actual/' + parts.slice(1).join('/');
+            // El primer segmento (década) siempre a minúsculas: "Actual/..." -> "actual/..."
+            parts[0] = parts[0].toLowerCase();
+            fileName = parts.join('/');
         }
     }
 
