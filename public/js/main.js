@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 55 (Total Path & Category Purge)';
+const APP_VERSION = 'Versión 56 (Path Reconstruction & Sync Fix)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1674,13 +1674,14 @@ function playAudioSnippet() {
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName) return;
 
-    // RECONSTRUCCIÓN v.55: Ignorar carpetas intermedias (categorías)
+    // RECONSTRUCCIÓN FORZADA v.56:
+    // Si fileName es "10s/series/cancion.mp3", lo convertimos en "10s/cancion.mp3"
+    // Esto elimina el error 404 al buscar en carpetas de categoría que no existen.
     if (fileName.includes('/')) {
         const parts = fileName.split('/');
-        // Forzamos: decada/archivo.mp3 (eliminamos 'series', 'espanol', etc. del medio)
         if (parts.length >= 2) {
-            const decadePart = parts[0].toLowerCase();
-            const filePart = parts[parts.length - 1]; // Siempre el último elemento es el archivo
+            const decadePart = parts[0].toLowerCase(); // "10s", "00s", "actual", etc.
+            const filePart = parts[parts.length - 1];   // El nombre del archivo .mp3
             fileName = `${decadePart}/${filePart}`;
         }
     }
@@ -1690,9 +1691,9 @@ function playAudioSnippet() {
     playBtn.disabled = true;
     gameState.hasPlayed = true;
 
+    // Aseguramos que la ruta empiece por /audio/
     let audioSrc = fileName.startsWith('/') ? fileName : `/audio/${fileName}`;
     
-    // Forzar actualización del src si es distinto
     if (!audioPlayer.src.endsWith(audioSrc)) {
         audioPlayer.src = audioSrc;
     }
@@ -1714,11 +1715,11 @@ function playAudioSnippet() {
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
     
     audioPlayer.play().catch(e => {
-        console.error("Fallo 404 (v.55):", audioSrc);
+        console.error("Fallo 404 Real:", audioSrc);
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         gameState.hasPlayed = false;
-        showAppAlert(`Error 404: El archivo no existe en la ruta física: ${audioSrc}`);
+        showAppAlert("El audio no existe en la carpeta física: " + audioSrc);
     });
 }
 
