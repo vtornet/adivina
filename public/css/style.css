@@ -149,8 +149,8 @@ h1 {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 20px; /* <--- ESTA ES LA CLAVE QUE FALTABA */
 }
-
 .password-field .text-input {
     margin-bottom: 0;
     flex: 1;

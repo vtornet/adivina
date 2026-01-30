@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'v1.0.1 (Fix Permisos Login)';
+const CACHE_NAME = 'adivina-cancion-v1.2.2-stable-fix';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1682,25 +1682,19 @@ function playAudioSnippet() {
     let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
     if (!fileName) return;
 
-    // RECONSTRUCCIÓN FÍSICA v.57:
-    // Ignoramos carpetas de categoría intermedias (ej. /series/) para evitar 404.
-    // Buscamos directamente en /audio/[década]/[archivo.mp3]
-    if (fileName.includes('/')) {
-        const pathParts = fileName.split('/');
-        if (pathParts.length >= 2) {
-            const decadeDir = pathParts[0].toLowerCase(); // "10s", "00s", "actual", etc.
-            const realFile = pathParts[pathParts.length - 1]; // El nombre del .mp3
-            fileName = `${decadeDir}/${realFile}`;
-        }
-    }
+    // [CORRECCIÓN v.75]
+    // Hemos eliminado aquí el bloque "RECONSTRUCCIÓN FÍSICA v.57" que rompía las rutas.
+    // Ahora 'fileName' mantiene la ruta original completa (ej: "80s/espanol/cancion.mp3").
 
     const playBtn = document.getElementById('play-song-btn');
     playBtn.innerText = "🎵";
     playBtn.disabled = true;
-    playBtn.classList.add('is-playing'); // <--- AÑADE ESTA LÍNEA
+    playBtn.classList.add('is-playing');
     gameState.hasPlayed = true;
 
     let audioSrc = fileName.startsWith('/') ? fileName : `/audio/${fileName}`;
+    
+    // Usamos tu lógica original de comprobación para no alterar el comportamiento
     if (!audioPlayer.src.endsWith(audioSrc)) {
         audioPlayer.src = audioSrc;
     }
@@ -1723,60 +1717,13 @@ function playAudioSnippet() {
     audioPlayer.addEventListener('timeupdate', stopAudioListener);
     
     audioPlayer.play().catch(e => {
-        console.error("Fallo 404 en ruta física:", audioSrc);
+        console.error("Fallo 404 en ruta física:", audioSrc); // Quitamos 'e' del log para limpiar consola si prefieres
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         playBtn.classList.remove('is-playing');
         gameState.hasPlayed = false;
         showAppAlert("Error 404: El archivo no se encuentra en el servidor.");
     });
-}
-
-
-/**
- * Maneja la selección de una categoría, carga las canciones y redirige a la pantalla de selección de jugadores.
- * @param {string} category - La categoría seleccionada.
- */
-async function selectCategory(category) {
-    if (!currentUser || !currentUser.playerName) {
-        showAppAlert('Debes iniciar sesión y establecer tu nombre de jugador para continuar.');
-        showScreen('login-screen');
-        return;
-    }
-
-    if (isPremiumCategory(category) && !hasCategoryAccess(category)) {
-        showPremiumModal('Contenido premium. Desbloquéalo para jugar.', category);
-        return;
-    }
-
-    gameState.category = category;
-
-    try {
-        if (gameState.selectedDecade === 'Todas') {
-            await loadAllDecadesForCategory(gameState.category);
-        } else {
-            await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
-        }
-
-        const pool = configuracionCanciones?.[gameState.selectedDecade]?.[gameState.category];
-
-        if (!Array.isArray(pool) || pool.length < 4) {
-            showAppAlert(
-                `No hay suficientes canciones en '${getCategoryLabel(category)}' para ${getDecadeLabel(gameState.selectedDecade)}. ` +
-                `Necesitas al menos 4 canciones.`
-            );
-            showScreen('category-screen');
-            return;
-        }
-
-        showScreen('player-selection-screen');
-    } catch (error) {
-        showAppAlert(
-            `No se pudieron cargar las canciones para '${getCategoryLabel(category)}' en ${getDecadeLabel(gameState.selectedDecade)}. Intenta con otra.`
-        );
-        console.error(error);
-        showScreen('category-screen');
-    }
 }
 
 
