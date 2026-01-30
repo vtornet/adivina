@@ -37,6 +37,10 @@ window.VALID_CATEGORIES_PER_DECADE = VALID_CATEGORIES_PER_DECADE;
  * Carga las canciones verificando primero la Lista Blanca.
  * v.61: Incluye PUENTE DE REPARACIÓN para mayúsculas/minúsculas (Actual vs actual).
  */
+/**
+ * Carga las canciones.
+ * v.63: Fuerza la ruta 'actual' (minúscula) para compatibilidad total Linux/Windows.
+ */
 async function loadSongsForDecadeAndCategory(decade, category) {
     if (decade === 'Todas') {
         return loadAllSongs();
@@ -44,28 +48,21 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
     const internalKey = decade.toLowerCase() === 'actual' ? 'actual' : decade;
     
-    // 1. CHEQUEO DE LISTA BLANCA
-    const allowed = VALID_CATEGORIES_PER_DECADE[internalKey];
-    if (!allowed || !allowed.includes(category)) {
-        window.allSongsByDecadeAndCategory[internalKey] = window.allSongsByDecadeAndCategory[internalKey] || {};
-        window.allSongsByDecadeAndCategory[internalKey][category] = [];
-        return Promise.resolve();
-    }
-
+    // Inicialización segura
     window.allSongsByDecadeAndCategory[internalKey] = window.allSongsByDecadeAndCategory[internalKey] || {};
 
-    // Si ya están cargadas, salimos
+    // Si ya hay datos, salimos
     if (window.allSongsByDecadeAndCategory[internalKey][category] && window.allSongsByDecadeAndCategory[internalKey][category].length > 0) {
         return Promise.resolve(); 
     }
 
     window.allSongsByDecadeAndCategory[internalKey][category] = [];
 
-    const folderName = (decade.toLowerCase() === 'actual') ? 'Actual' : decade;
-    const scriptPaths = [
-        `/data/songs/${folderName}/${category}.js`,
-        `data/songs/${folderName}/${category}.js`
-    ];
+    // CAMBIO CRÍTICO v.63: Forzamos siempre 'actual' en minúscula.
+    // Esto coincidirá con el nombre de carpeta que vamos a fijar en el Paso 2.
+    const folderName = (decade.toLowerCase() === 'actual') ? 'actual' : decade;
+    
+    const scriptPaths = [`/data/songs/${folderName}/${category}.js`];
 
     const loadScript = (paths, resolve, reject) => {
         if (paths.length === 0) {
@@ -78,18 +75,6 @@ async function loadSongsForDecadeAndCategory(decade, category) {
         script.src = currentPath;
         
         script.onload = () => {
-            // === PUENTE DE REPARACIÓN (v.61) ===
-            // Si el archivo guardó los datos en 'Actual' (Mayúscula), los movemos a 'actual' (minúscula).
-            if (internalKey === 'actual') {
-                if (window.allSongsByDecadeAndCategory['Actual'] && 
-                    window.allSongsByDecadeAndCategory['Actual'][category] &&
-                    window.allSongsByDecadeAndCategory['Actual'][category].length > 0) {
-                    
-                    console.log(`🔧 Puente activado: Moviendo datos de Actual -> actual para ${category}`);
-                    window.allSongsByDecadeAndCategory['actual'][category] = window.allSongsByDecadeAndCategory['Actual'][category];
-                }
-            }
-
             const songsArray = window.allSongsByDecadeAndCategory[internalKey][category];
             if (Array.isArray(songsArray)) {
                 songsArray.forEach(song => {
@@ -102,7 +87,13 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
         script.onerror = () => {
             script.remove();
-            loadScript(restPaths, resolve, reject);
+            // Si falla, intentamos rutas alternativas si las hubiera (aquí solo hay una estricta)
+            if (restPaths.length > 0) {
+                loadScript(restPaths, resolve, reject);
+            } else {
+                console.warn(`⚠️ No se pudo cargar: ${currentPath}`);
+                resolve(); 
+            }
         };
         document.head.appendChild(script);
     };
