@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 57 (Consolidación Dinámica)';
+const APP_VERSION = 'Versión 58 (Distractores Estrictos & Fallback)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -2081,9 +2081,7 @@ function startGame() {
     // Para simplificar, lo haremos al final de la partida en `endGame()`.
 }
 
-/**
- * Configura la siguiente pregunta del juego.
- */
+
 function setupQuestion() {
     const currentPlayer = gameState.players[gameState.currentPlayerIndex];
 
@@ -2094,17 +2092,13 @@ function setupQuestion() {
     
     clearTimeout(audioPlaybackTimeout);
     
-    // --- CAMBIO: Limpieza preventiva ---
+    // Limpieza preventiva de listeners de audio
     if (activeTimeUpdateListener) {
         audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
         activeTimeUpdateListener = null;
     }
     
     audioPlayer.pause();
-    // -----------------------------------
-
-    // ... (El resto de la función setupQuestion se mantiene IDÉNTICA a tu archivo original)
-    // Solo asegúrate de copiar el bloque de limpieza al inicio.
     
     gameState.attempts = 3;
     gameState.hasPlayed = false;
@@ -2113,7 +2107,7 @@ function setupQuestion() {
     
     document.getElementById("player-name-display").textContent = currentPlayer.name;
     
-    // Lógica de visualización de título (Mantenemos tu lógica de especiales/elderly)
+    // Lógica de visualización de título
     const categoryDisplayEl = document.getElementById('category-display');
     if (gameState.selectedDecade === 'verano') {
         categoryDisplayEl.innerText = "Especiales - Canciones del Verano";
@@ -2132,28 +2126,59 @@ function setupQuestion() {
     const answerButtonsContainer = document.getElementById('answer-buttons');
     answerButtonsContainer.innerHTML = '';
 
-const allSongsToChooseFromForOptions =
-    (gameState.selectedDecade === 'Todas')
-        ? configuracionCanciones?.['Todas']?.[gameState.category]
-        : configuracionCanciones?.[gameState.selectedDecade]?.[gameState.category];
+    // Seleccionar el Pool correcto
+    const allSongsToChooseFromForOptions =
+        (gameState.selectedDecade === 'Todas')
+            ? configuracionCanciones?.['Todas']?.[gameState.category]
+            : configuracionCanciones?.[gameState.selectedDecade]?.[gameState.category];
 
-if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
-    console.error(`Error: Pool no válido para ${gameState.selectedDecade} - ${gameState.category}`);
-    showAppAlert(
-        `No hay suficientes canciones en '${getCategoryLabel(gameState.category)}' para ${getDecadeLabel(gameState.selectedDecade)}.`
-    );
-    showScreen('category-screen');
-    return;
-}
-
+    if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
+        console.error(`Error: Pool no válido para ${gameState.selectedDecade} - ${gameState.category}`);
+        showAppAlert(
+            `No hay suficientes canciones en '${getCategoryLabel(gameState.category)}' para ${getDecadeLabel(gameState.selectedDecade)}.`
+        );
+        showScreen('category-screen');
+        return;
+    }
 
     let options = [currentQuestion];
-    while (options.length < 4) {
+    let safetyCounter = 0; // Protección contra bucles infinitos (v.58)
+
+    while (options.length < 4 && safetyCounter < 200) {
+        safetyCounter++;
         const randomSong = allSongsToChooseFromForOptions[Math.floor(Math.random() * allSongsToChooseFromForOptions.length)];
-        if (!options.some(opt => opt.file === randomSong.file) && randomSong.file !== currentQuestion.file) {
+        
+        // 1. Evitar duplicados
+        const isDuplicate = options.some(opt => opt.file === randomSong.file);
+        
+        // 2. Evitar que sea la respuesta correcta
+        const isCorrectAnswer = randomSong.file === currentQuestion.file;
+
+        // 3. FILTRO ESTRICTO DE CATEGORÍA (v.58)
+        // Si no es un modo consolidado (mix), aseguramos que la categoría coincida.
+        let isCategoryMismatch = false;
+        if (gameState.category !== 'consolidated' && randomSong.originalCategory && randomSong.originalCategory !== gameState.category) {
+            isCategoryMismatch = true;
+        }
+
+        if (!isDuplicate && !isCorrectAnswer && !isCategoryMismatch) {
             options.push(randomSong);
         }
     }
+
+    // Fallback de seguridad si el filtro estricto es demasiado restrictivo
+    if (options.length < 4) {
+         console.warn("Advertencia: No se encontraron suficientes distractores estrictos. Rellenando con pool disponible.");
+         let fallbackSafety = 0;
+         while (options.length < 4 && fallbackSafety < 100) {
+            fallbackSafety++;
+            const randomSong = allSongsToChooseFromForOptions[Math.floor(Math.random() * allSongsToChooseFromForOptions.length)];
+            if (!options.some(opt => opt.file === randomSong.file) && randomSong.file !== currentQuestion.file) {
+                 options.push(randomSong);
+            }
+         }
+    }
+
     options.sort(() => 0.5 - Math.random());
 
     options.forEach(option => {
@@ -2169,17 +2194,6 @@ if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOpt
     playBtn.onclick = playAudioSnippet;
     playBtn.disabled = false;
     playBtn.innerText = "▶";
-}
-
-/**
- * Actualiza el contador de intentos y su color.
- */
-function updateAttemptsCounter() {
-    const counter = document.getElementById('attempts-counter');
-    counter.innerText = `Intentos: ${gameState.attempts}`;
-    if (gameState.attempts === 3) counter.style.backgroundColor = 'var(--correct-color)';
-    else if (gameState.attempts === 2) counter.style.backgroundColor = 'var(--warning-color)';
-    else counter.style.backgroundColor = 'var(--incorrect-color)';
 }
 
 /**
