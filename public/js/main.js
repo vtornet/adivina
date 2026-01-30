@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 50 (Online Fix)'; 
+const APP_VERSION = 'Versión 51 (Online Fix)'; 
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1641,29 +1641,70 @@ function generateCategoryButtons() {
 
 
 async function loadAllDecadesForCategory(categoryId) {
-    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual']; 
+    const decadesToMerge = ['80s', '90s', '00s', '10s', 'actual'];
+    
+    // LIMPIEZA: Evita que "Series" aparezca cuando eliges "Películas"
+    configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
+    configuracionCanciones['Todas'][categoryId] = []; 
 
-    // CORRECCIÓN CRÍTICA: Forzamos la limpieza absoluta de la categoría seleccionada
-    // en el bucket de 'Todas' para que no queden restos de partidas anteriores.
-    if (!configuracionCanciones['Todas']) configuracionCanciones['Todas'] = {};
-    configuracionCanciones['Todas'][categoryId] = [];
-
-    // Cargamos cada década de forma aislada para esa categoría específica
     const loads = decadesToMerge.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
     await Promise.allSettled(loads);
 
-    // Realizamos la fusión garantizando que solo sumamos el array correcto
     const merged = [];
     decadesToMerge.forEach(dec => {
         const arr = configuracionCanciones?.[dec]?.[categoryId];
-        if (Array.isArray(arr) && arr.length > 0) {
-            merged.push(...arr);
-        }
+        if (Array.isArray(arr) && arr.length) merged.push(...arr);
     });
-
-    // Guardamos el resultado final filtrado y limpio
     configuracionCanciones['Todas'][categoryId] = merged;
-    console.log(`✅ Fusión completada para "Todas" - Categoría: ${categoryId}. Total: ${merged.length} temas.`);
+}
+
+function playAudioSnippet() {
+    if (gameState.hasPlayed) return;
+    const durations = { 3: 4.0, 2: 6.0, 1: 10.0 }; 
+    const durationSecs = durations[gameState.attempts];
+    const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+    const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
+
+    let fileName = typeof currentQuestion.file === 'string' ? currentQuestion.file.trim() : '';
+    
+    // NORMALIZACIÓN LINUX: 'Actual/Series' -> 'actual/series' para evitar 404
+    if (fileName.includes('/')) {
+        const parts = fileName.split('/');
+        if (parts.length >= 2) {
+            parts[0] = parts[0].toLowerCase();
+            parts[1] = parts[1].toLowerCase();
+            fileName = parts.join('/');
+        }
+    }
+
+    const playBtn = document.getElementById('play-song-btn');
+    playBtn.innerText = "🎵";
+    playBtn.disabled = true;
+    gameState.hasPlayed = true;
+
+    let audioSrc = fileName.startsWith('/') ? fileName : `/audio/${fileName}`;
+    if (!audioPlayer.src.includes(audioSrc)) audioPlayer.src = audioSrc;
+    
+    if (activeTimeUpdateListener) audioPlayer.removeEventListener('timeupdate', activeTimeUpdateListener);
+    audioPlayer.currentTime = 0;
+
+    const stopAudioListener = () => {
+        if (audioPlayer.currentTime >= durationSecs) {
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0; 
+            playBtn.innerText = "▶";
+            audioPlayer.removeEventListener('timeupdate', stopAudioListener);
+            activeTimeUpdateListener = null;
+        }
+    };
+
+    activeTimeUpdateListener = stopAudioListener;
+    audioPlayer.addEventListener('timeupdate', stopAudioListener);
+    audioPlayer.play().catch(() => {
+        playBtn.disabled = false;
+        playBtn.innerText = "▶";
+        gameState.hasPlayed = false;
+    });
 }
 
 

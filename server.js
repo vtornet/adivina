@@ -6,8 +6,7 @@ const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const crypto = require("crypto");
 const path = require("path");
-// --- NUEVO: Nodemailer para correos ---
-const nodemailer = require("nodemailer");
+
 
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error("⚠️ CRÍTICO: STRIPE_SECRET_KEY no está definida en las variables de entorno.");
