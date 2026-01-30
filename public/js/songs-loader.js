@@ -3,13 +3,25 @@
 // Será lo que antes era 'configuracionCanciones'
 window.allSongsByDecadeAndCategory = {};
 
-// Las categorías que esperamos en cada década
-const allPossibleCategories = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
-// Las décadas que esperamos (ajustado a tus décadas existentes)
-const allDecadesDefined = ['80s', '90s', '00s', '10s', 'actual', 'verano']; 
+// === LISTA BLANCA ESTRICTA (v.60) ===
+// Define QUÉ categorías existen realmente. Si no está aquí, se bloquea.
+const VALID_CATEGORIES_PER_DECADE = {
+    '80s':    ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'],
+    '90s':    ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'],
+    '00s':    ['espanol', 'ingles', 'peliculas', 'series', 'tv'], // Sin infantiles/anuncios
+    '10s':    ['espanol', 'ingles'], // Solo música
+    'actual': ['espanol', 'ingles'], // Solo música
+    'verano': ['consolidated'],
+    'elderly': ['consolidated']
+};
 
-window.allPossibleCategories = allPossibleCategories;
+const allDecadesDefined = ['80s', '90s', '00s', '10s', 'actual', 'verano']; 
+const allPossibleCategories = ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'];
+
 window.allDecadesDefined = allDecadesDefined;
+window.allPossibleCategories = allPossibleCategories;
+// Exportamos la lista blanca para que main.js la pueda leer
+window.VALID_CATEGORIES_PER_DECADE = VALID_CATEGORIES_PER_DECADE;
 
 /**
  * Carga las canciones para una década y categoría específica desde un archivo JS.
@@ -18,33 +30,37 @@ window.allDecadesDefined = allDecadesDefined;
  * @param {string} category - La categoría seleccionada (ej. 'espanol', 'consolidated').
  * @returns {Promise<void>} Una promesa que se resuelve cuando las canciones han sido cargadas.
  */
+/**
+ * Carga las canciones verificando primero la Lista Blanca (v.60).
+ */
 async function loadSongsForDecadeAndCategory(decade, category) {
-    // Si la década es 'Todas', la categoría siempre es 'consolidated'.
-    // En este caso, delegamos la carga a loadAllSongs(), que se encarga de consolidar.
     if (decade === 'Todas') {
         return loadAllSongs();
     }
 
-    // Inicializa la estructura para la década si no existe.
-    // Esto es crucial para asegurar que window.allSongsByDecadeAndCategory[decade] no sea 'undefined'
-    // antes de intentar acceder a window.allSongsByDecadeAndCategory[decade][category].
     const internalKey = decade.toLowerCase() === 'actual' ? 'actual' : decade;
+    
+    // 1. CHEQUEO DE LISTA BLANCA (v.60)
+    // Si la categoría no está permitida en esta década, abortamos silenciosamente.
+    // Esto evita cargar archivos que no existen (ej: Actual/series.js).
+    const allowed = VALID_CATEGORIES_PER_DECADE[internalKey];
+    if (!allowed || !allowed.includes(category)) {
+        window.allSongsByDecadeAndCategory[internalKey] = window.allSongsByDecadeAndCategory[internalKey] || {};
+        window.allSongsByDecadeAndCategory[internalKey][category] = [];
+        return Promise.resolve();
+    }
+
     window.allSongsByDecadeAndCategory[internalKey] = window.allSongsByDecadeAndCategory[internalKey] || {};
 
-    // Si ya tenemos las canciones cargadas para esta combinación (decade/category)
-    // y el array no está vacío, no las volvemos a cargar y resolvemos la promesa inmediatamente.
+    // Si ya están cargadas, salimos
     if (window.allSongsByDecadeAndCategory[internalKey][category] && window.allSongsByDecadeAndCategory[internalKey][category].length > 0) {
-        console.log(`Canciones de ${internalKey}/${category} ya cargadas.`);
         return Promise.resolve(); 
     }
 
-    // Asegura que el array para esta categoría específica exista y esté vacío.
-    // Esto es importante por si el archivo JS que se va a cargar falla o está vacío.
     window.allSongsByDecadeAndCategory[internalKey][category] = [];
 
-    // Construye la ruta al archivo JavaScript de canciones.
-    // NORMALIZACIÓN: Usamos 'Actual' con mayúscula para el sistema de archivos Linux.
     const folderName = (decade.toLowerCase() === 'actual') ? 'Actual' : decade;
+    // Intentamos cargar ambos paths (absoluto y relativo) por seguridad
     const scriptPaths = [
         `/data/songs/${folderName}/${category}.js`,
         `data/songs/${folderName}/${category}.js`
@@ -52,37 +68,30 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
     const loadScript = (paths, resolve, reject) => {
         if (paths.length === 0) {
-            reject(new Error(`No se pudo cargar el archivo de canciones para ${decade}/${category}.`));
+            resolve(); // Terminamos sin error aunque no cargue
             return;
         }
 
         const [currentPath, ...restPaths] = paths;
         const script = document.createElement('script');
         script.src = currentPath;
+        
         script.onload = () => {
             const songsArray = window.allSongsByDecadeAndCategory[internalKey][category];
-
             if (Array.isArray(songsArray)) {
                 songsArray.forEach(song => {
-                    // SELLADO DE METADATOS v.57
-                    // Marcamos de forma inamovible la categoría y década de origen
                     song.originalDecade = internalKey;
                     song.originalCategory = category;
                 });
             }
-            console.log(`Sello v.57 aplicado: ${decade}/${category}`);
             resolve();
         };
 
         script.onerror = () => {
             script.remove();
-            // Si el archivo no existe (404), Railway devuelve HTML y causa errores de sintaxis.
-            // Limpiamos el array para evitar datos corruptos.
-            window.allSongsByDecadeAndCategory[internalKey][category] = [];
-            console.warn(`Aviso: Archivo inexistente /data/songs/${folderName}/${category}.js. Omitiendo.`);
-            resolve(); // Resolvemos para que el flujo de consolidación no se detenga
+            // Si falla este path, probamos el siguiente
+            loadScript(restPaths, resolve, reject);
         };
-        // Añade el script al <head> del documento para que se cargue y ejecute.
         document.head.appendChild(script);
     };
 

@@ -45,7 +45,7 @@ const DECADES_ORDER = BASE_DECADES
 const DECADES_WITH_SPECIALS = [...DECADES_ORDER, 'Todas'];
 
 // ... constantes iniciales ...
-const APP_VERSION = 'Versión 58 (Distractores Estrictos & Fallback)';
+const APP_VERSION = 'Versión 60 (Whitelist Estricta)';
 
 const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
     ? window.allPossibleCategories
@@ -1478,7 +1478,7 @@ function generateCategoryButtons() {
 
     const key = gameState.selectedDecade;
 
-    // --- Título dinámico ---
+    // --- 1. Título dinámico ---
     const titleEl = document.getElementById('category-screen-title');
     if (titleEl) {
         titleEl.innerHTML = key === 'especiales'
@@ -1486,7 +1486,7 @@ function generateCategoryButtons() {
             : `Elige una Categoría (<span id="selected-decade-display">${getDecadeLabel(key)}</span>)`;
     }
 
-    // --- RENDERIZADO PARA 'ESPECIALES' ---
+    // --- 2. CASO ESPECIAL: VERANO (Mantenido igual) ---
     if (key === 'especiales') {
         const btnVerano = document.createElement('button');
         btnVerano.className = 'category-btn';
@@ -1526,7 +1526,7 @@ function generateCategoryButtons() {
         return;
     }
 
-    // --- CASO ESPECIAL: TODAS LAS DÉCADAS (solo categorías, NO canciones aquí) ---
+    // --- 3. CASO ESPECIAL: TODAS LAS DÉCADAS (Mantenido igual) ---
     if (key === 'Todas') {
         const catsToRender = (typeof window.allPossibleCategories !== 'undefined')
             ? window.allPossibleCategories
@@ -1559,71 +1559,61 @@ function generateCategoryButtons() {
         return;
     }
 
-    // --- DÉCADAS NORMALES: preparar datos y pintar categorías ---
-    // (mantiene tu puente de datos)
+    // --- 4. DÉCADAS NORMALES (Optimizado v.60) ---
+    const internalKey = key.toLowerCase() === 'actual' ? 'actual' : key;
+    
+    // AQUÍ ESTÁ LA MAGIA: Leemos la whitelist en lugar de hacer 'ifs' manuales
+    const allowedCategories = window.VALID_CATEGORIES_PER_DECADE ? window.VALID_CATEGORIES_PER_DECADE[internalKey] : [];
+
+    // Mapeo seguro de datos
     if (typeof window.allSongsByDecadeAndCategory !== 'undefined') {
-        let dataFound = window.allSongsByDecadeAndCategory[key];
-
-        if (!dataFound) {
-            if (key === 'Actual' || key === 'actual') dataFound = window.allSongsByDecadeAndCategory['actual'];
-            else if (key === '2010s' || key === '10s') dataFound = window.allSongsByDecadeAndCategory['10s'];
-            else if (key === '2000s' || key === '00s') dataFound = window.allSongsByDecadeAndCategory['00s'];
-        }
-
-        if (dataFound) {
-            configuracionCanciones[key] = dataFound;
-        }
+        let dataFound = window.allSongsByDecadeAndCategory[internalKey];
+        if (dataFound) configuracionCanciones[key] = dataFound;
     }
 
-    const currentDecadeSongs = configuracionCanciones[key];
-    if (!currentDecadeSongs) {
-        container.innerHTML = `
-            <div class="warning-text">
-                <p>No se han encontrado canciones para esta década.</p>
-                <small>Intenta recargar la página.</small>
-            </div>`;
-        const backBtnErr = document.createElement('button');
-        backBtnErr.className = 'btn secondary';
-        backBtnErr.style.marginTop = '20px';
-        backBtnErr.innerText = 'Volver';
-        backBtnErr.onclick = () => showScreen('decade-selection-screen');
-        container.appendChild(backBtnErr);
-        return;
-    }
-
+    const currentDecadeSongs = configuracionCanciones[key] || {};
+    
     const catsToRender = (typeof window.allPossibleCategories !== 'undefined')
         ? window.allPossibleCategories
         : CATEGORY_ORDER;
 
     catsToRender.forEach(categoryId => {
-        const songsArray = currentDecadeSongs[categoryId];
-
-        let hasEnoughSongs = Array.isArray(songsArray) && songsArray.length >= 4;
-
-        const isActualDecade = (key === 'actual' || key === 'Actual');
-        const allowedCategories = ['espanol', 'ingles'];
-        if (isActualDecade && !allowedCategories.includes(categoryId)) {
-            hasEnoughSongs = false;
-        }
-
         const button = document.createElement('button');
         button.className = 'category-btn';
+        
+        // VERIFICACIÓN: ¿Está permitido en la whitelist?
+        const isAvailable = allowedCategories.includes(categoryId);
 
-        if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
-            button.innerText = getCategoryLabel(categoryId);
-            button.classList.add('locked');
-            button.onclick = () => showPremiumModal(
-                `¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong> en todas las décadas?`,
-                categoryId
-            );
-        } else if (!hasEnoughSongs) {
+        if (!isAvailable) {
+            // Lógica para categorías que NO existen en esta década (ej: Series en Actual)
             button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Próximamente)</span>`;
-            button.classList.add('secondary');
-            button.style.opacity = '0.7';
-            button.onclick = () => showAppAlert(`🚧 Estamos recopilando temas de ${getCategoryLabel(categoryId)}. ¡Pronto disponible!`);
+            button.classList.add('secondary'); 
+            button.style.opacity = '0.6';
+            button.style.cursor = 'not-allowed';
+            button.onclick = () => showAppAlert(`🚧 Estamos trabajando en ${getCategoryLabel(categoryId)} para esta década.`);
         } else {
-            button.innerText = getCategoryLabel(categoryId);
-            button.onclick = () => selectCategory(categoryId);
+            // Lógica para categorías que SÍ existen (Español, Inglés, etc.)
+            const songsArray = currentDecadeSongs[categoryId];
+            const hasSongs = Array.isArray(songsArray) && songsArray.length >= 4;
+
+            if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
+                // Caso Premium Bloqueado
+                button.innerText = getCategoryLabel(categoryId);
+                button.classList.add('locked');
+                button.onclick = () => showPremiumModal(
+                    `¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong> en todas las décadas?`,
+                    categoryId
+                );
+            } else if (!hasSongs) {
+                // Caso Error de carga o vacío
+                button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Mantenimiento)</span>`;
+                button.classList.add('secondary');
+                button.onclick = () => showAppAlert("Estamos actualizando esta categoría. Inténtalo más tarde.");
+            } else {
+                // Caso OK
+                button.innerText = getCategoryLabel(categoryId);
+                button.onclick = () => selectCategory(categoryId);
+            }
         }
 
         container.appendChild(button);
@@ -1639,30 +1629,38 @@ function generateCategoryButtons() {
 
 
 async function loadAllDecadesForCategory(categoryId) {
-    // Definimos las décadas físicas reales que vamos a consultar
-    const decadesToFetch = ['80s', '90s', '00s', '10s', 'actual', 'verano'];
+    const decadesToFetch = ['80s', '90s', '00s', '10s', 'actual']; 
     
     configuracionCanciones['Todas'] = configuracionCanciones['Todas'] || {};
     configuracionCanciones['Todas'][categoryId] = []; 
 
-    // Lanzamos las peticiones en paralelo para cada década existente
+    // Cargar en paralelo (songs-loader ya se encarga de ignorar lo que no esté en whitelist)
     const fetchPromises = decadesToFetch.map(dec => loadSongsForDecadeAndCategory(dec, categoryId));
     await Promise.allSettled(fetchPromises);
 
     const consolidatedPool = [];
+    
     decadesToFetch.forEach(dec => {
         const internalKey = dec.toLowerCase() === 'actual' ? 'actual' : dec;
-        const songsInDecade = configuracionCanciones?.[internalKey]?.[categoryId];
         
-        if (Array.isArray(songsInDecade)) {
-            // FILTRADO DE SEGURIDAD: Solo pasan canciones selladas con la categoría correcta
-            const safeSongs = songsInDecade.filter(song => song.originalCategory === categoryId);
-            consolidatedPool.push(...safeSongs);
+        // CHECKEO EXTRA (v.60): Solo consolidamos si la década permite esta categoría
+        const allowedInDecade = window.VALID_CATEGORIES_PER_DECADE ? window.VALID_CATEGORIES_PER_DECADE[internalKey] : [];
+        
+        if (allowedInDecade.includes(categoryId)) {
+            const songsInDecade = configuracionCanciones?.[internalKey]?.[categoryId];
+            if (Array.isArray(songsInDecade)) {
+                // Filtro básico de seguridad
+                const safeSongs = songsInDecade.filter(song => {
+                    if (song.originalCategory && song.originalCategory !== categoryId) return false;
+                    return true;
+                });
+                consolidatedPool.push(...safeSongs);
+            }
         }
     });
     
     configuracionCanciones['Todas'][categoryId] = consolidatedPool;
-    console.log(`Pool 'Todas' (v.57) consolidado para ${categoryId}: ${consolidatedPool.length} canciones.`);
+    console.log(`Pool 'Todas' (v.60 Whitelist) consolidado para ${categoryId}: ${consolidatedPool.length} canciones.`);
 }
 
 function playAudioSnippet() {
