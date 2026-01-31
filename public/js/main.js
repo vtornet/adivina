@@ -22,6 +22,21 @@ import {
   isPremiumSelection,
 } from "./files/premium-functions";
 
+import {
+  getCurrentUserData,
+  getUserPermissions,
+  getActivePermissions,
+  getLocalUsers,
+  saveLocalUsers,
+  getLocalScores,
+  saveLocalScores,
+  getLocalGameHistory,
+  saveLocalGameHistory,
+} from "./files/user-functions";
+
+import { parseJsonResponse } from "./files/helpers";
+import { showAppAlert, showAppConfirm, showAppModal, showInstructions } from "./files/modal-functions";
+
 let gameState = {};
 let audioPlaybackTimeout;
 let activeTimeUpdateListener = null;
@@ -35,7 +50,7 @@ const API_BASE_URL =
     ? window.location.origin
     : CANONICAL_PROD_ORIGIN;
 
-let currentUser = null;
+export let currentUser = null;
 let useLocalApiFallback = false;
 (() => {
   const savedUserJSON = localStorage.getItem("userData");
@@ -54,270 +69,7 @@ let userAccumulatedScores = {};
 let gameHistory = [];
 let pendingPurchaseCategory = null;
 
-const PREMIUM_CATEGORIES = new Set(["peliculas", "series", "tv", "infantiles", "anuncios"]);
-const PREMIUM_DECADES = new Set(["Todas", "verano"]);
-
-function getCurrentUserData() {
-  const userDataString = localStorage.getItem("userData");
-  if (!userDataString) return null;
-  return JSON.parse(userDataString);
-}
-
-function getUserPermissions(email) {
-  const storedPermissions = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || "{}");
-  if (!storedPermissions[email]) {
-    storedPermissions[email] = {
-      email,
-      unlocked_sections: [],
-      no_ads: false,
-      is_admin: false,
-    };
-  }
-
-  if (email === ADMIN_EMAIL) {
-    storedPermissions[email] = {
-      email,
-      unlocked_sections: ["premium_all"],
-      no_ads: true,
-      is_admin: true,
-    };
-  }
-
-  localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(storedPermissions));
-  return storedPermissions[email];
-}
-
-function getActivePermissions() {
-  // Si no hay usuario, no hay permisos
-  if (!currentUser || !currentUser.email) return [];
-
-  let localSections = [];
-  let memorySections = [];
-
-  // 1. Memoria (RAM) - Lo más inmediato
-  if (currentUser.unlocked_sections && Array.isArray(currentUser.unlocked_sections)) {
-    memorySections = currentUser.unlocked_sections;
-  }
-
-  // 2. Disco (LocalStorage) - La persistencia
-  try {
-    const storedPermsJSON = localStorage.getItem(PERMISSIONS_STORAGE_KEY);
-    if (storedPermsJSON) {
-      const parsed = JSON.parse(storedPermsJSON);
-      if (parsed[currentUser.email] && Array.isArray(parsed[currentUser.email].unlocked_sections)) {
-        localSections = parsed[currentUser.email].unlocked_sections;
-      }
-    }
-  } catch (e) {
-    console.error("Error leyendo permisos locales:", e);
-  }
-
-  // 3. Fusión
-  const combined = [...new Set([...localSections, ...memorySections])];
-
-  // 4. Lógica Admin / Premium All
-  if (combined.includes("premium_all") || currentUser.email === ADMIN_EMAIL) {
-    return ["premium_all", ...combined];
-  }
-
-  return combined;
-}
-
-function getLocalUsers() {
-  return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || "{}");
-}
-
-function saveLocalUsers(users) {
-  localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
-}
-
-function getLocalScores() {
-  return JSON.parse(localStorage.getItem(LOCAL_SCORES_KEY) || "{}");
-}
-
-function saveLocalScores(scores) {
-  localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(scores));
-}
-
-function getLocalGameHistory() {
-  return JSON.parse(localStorage.getItem(LOCAL_GAME_HISTORY_KEY) || "{}");
-}
-
-function saveLocalGameHistory(history) {
-  localStorage.setItem(LOCAL_GAME_HISTORY_KEY, JSON.stringify(history));
-}
-
-async function parseJsonResponse(response) {
-  try {
-    return await response.json();
-  } catch (error) {
-    return null;
-  }
-}
-
-function showPremiumModal(message, categoryKey) {
-  const modal = document.getElementById("premium-modal");
-  const text = document.getElementById("premium-modal-message");
-  let buyBtn = document.getElementById("premium-buy-btn");
-
-  if (!modal || !text) return;
-
-  text.innerHTML = message || "Desbloquea contenido Premium.";
-
-  if (!buyBtn) {
-    buyBtn = document.createElement("button");
-    buyBtn.id = "premium-buy-btn";
-    buyBtn.className = "btn";
-    buyBtn.style.marginTop = "15px";
-    buyBtn.style.background = "linear-gradient(45deg, #6772E5, #5469D4)";
-    modal.querySelector(".modal-content").insertBefore(buyBtn, modal.querySelector(".secondary"));
-  }
-
-  buyBtn.innerText = categoryKey ? `🔓 Desbloquear ${categoryKey.toUpperCase()}` : "🔓 Desbloquear TODO";
-  buyBtn.onclick = () => redirectToStripe(categoryKey || "full_pack");
-
-  modal.classList.remove("hidden");
-}
-
-/**
- * Redirige al usuario a la pasarela de pago de Stripe.
- * @param {string} categoryKey - La clave de la categoría a comprar (ej: 'peliculas', 'full_pack')
- */
-// REEMPLAZA LA FUNCIÓN redirectToStripe COMPLETA EN public/js/main.js
-
-// EN public/js/main.js - Reemplaza la función redirectToStripe completa
-
-async function redirectToStripe(categoryKey) {
-  if (!currentUser || !currentUser.email) {
-    showAppAlert("Debes iniciar sesión para realizar compras.");
-    return;
-  }
-
-  const priceMap = {
-    espanol: "price_AQUI",
-    ingles: "price_AQUI",
-    peliculas: "price_1Stw76AzxZ5jYRrVcSP4iFVS",
-    series: "price_AQUI",
-    tv: "price_AQUI",
-    infantiles: "price_AQUI",
-    anuncios: "price_AQUI",
-    full_pack: "price_1SuACIAzxZ5jYRrVNKmtD0KN",
-  };
-
-  const priceId = priceMap[categoryKey];
-
-  if (!priceId || priceId === "price_AQUI") {
-    console.error(`Falta configuración de precio para: ${categoryKey}`);
-    showAppAlert("Esta categoría aún no está disponible para compra.");
-    return;
-  }
-
-  const permissionKeyToSave = categoryKey === "full_pack" ? "premium_all" : categoryKey;
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/create-checkout-session`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: currentUser.email,
-        categoryKey: permissionKeyToSave,
-        priceId: priceId,
-        returnUrl: window.location.origin,
-      }),
-    });
-
-    const session = await response.json();
-
-    if (response.ok && session.id) {
-      // v.66: Preparado para producción.
-      // Cuando tengas la clave REAL, cambia 'pk_test_...' por 'pk_live_...'
-      const stripeKey =
-        "pk_test_51StvbzAzxZ5jYRrVht2VaE3PAIbqyJSDq2Ym9XPyohsv5gKjkGRBQ5OsvRR9EE3wTNvbDVQweNfIb8Z7Bc3byFXy00QVZ0iVkD";
-      const stripe = Stripe(stripeKey);
-      await stripe.redirectToCheckout({ sessionId: session.id });
-    } else {
-      throw new Error(session.error || "Error al crear sesión de pago.");
-    }
-  } catch (err) {
-    console.error("Error Stripe:", err);
-    showAppAlert("No se pudo iniciar el proceso de pago.");
-  }
-}
-
-function closePremiumModal() {
-  const modal = document.getElementById("premium-modal");
-  if (modal) modal.classList.add("hidden");
-}
-
-function showInstructions() {
-  const modal = document.getElementById("instructions-modal");
-  closeHamburgerMenu();
-  if (modal) modal.classList.remove("hidden");
-}
-
-function closeInstructions() {
-  const modal = document.getElementById("instructions-modal");
-  if (modal) modal.classList.add("hidden");
-}
-
 let appModalResolver = null;
-
-function showAppModal({ title, message, confirmText = "Aceptar", cancelText = "Cancelar", showCancel = false } = {}) {
-  const modal = document.getElementById("app-modal");
-  const titleEl = document.getElementById("app-modal-title");
-  const messageEl = document.getElementById("app-modal-message");
-  const confirmBtn = document.getElementById("app-modal-confirm");
-  const cancelBtn = document.getElementById("app-modal-cancel");
-
-  if (!modal || !titleEl || !messageEl || !confirmBtn || !cancelBtn) {
-    if (showCancel) {
-      return Promise.resolve(window.confirm(message || ""));
-    }
-    window.alert(message || "");
-    return Promise.resolve(true);
-  }
-
-  titleEl.textContent = title || "Aviso";
-  messageEl.textContent = message || "";
-  confirmBtn.textContent = confirmText;
-  cancelBtn.textContent = cancelText;
-  cancelBtn.style.display = showCancel ? "inline-flex" : "none";
-
-  modal.classList.remove("hidden");
-
-  return new Promise((resolve) => {
-    appModalResolver = resolve;
-    confirmBtn.onclick = () => {
-      modal.classList.add("hidden");
-      appModalResolver?.(true);
-      appModalResolver = null;
-    };
-    cancelBtn.onclick = () => {
-      modal.classList.add("hidden");
-      appModalResolver?.(false);
-      appModalResolver = null;
-    };
-  });
-}
-
-function showAppAlert(message, options = {}) {
-  return showAppModal({
-    title: options.title || "Aviso",
-    message,
-    confirmText: options.confirmText || "Aceptar",
-    showCancel: false,
-  });
-}
-
-function showAppConfirm(message, options = {}) {
-  return showAppModal({
-    title: options.title || "Confirmación",
-    message,
-    confirmText: options.confirmText || "Aceptar",
-    cancelText: options.cancelText || "Cancelar",
-    showCancel: true,
-  });
-}
 
 function getNotifications() {
   const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
