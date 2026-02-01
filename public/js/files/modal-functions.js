@@ -68,4 +68,51 @@ function showAppModal({ title, message, confirmText = "Aceptar", cancelText = "C
   });
 }
 
-module.exports = { showAppAlert, showAppModal, showAppConfirm, showInstructions, showAppModal };
+function openPasswordResetModal() {
+  closeHamburgerMenu();
+  const modal = document.getElementById("password-reset-modal");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function closePasswordResetModal() {
+  const modal = document.getElementById("password-reset-modal");
+  if (modal) modal.classList.add("hidden");
+  const tokenInfo = document.getElementById("password-reset-token-info");
+  if (tokenInfo) tokenInfo.textContent = "";
+  [
+    "password-reset-email",
+    "password-reset-token",
+    "password-reset-new-password",
+    "password-reset-confirm-password",
+  ].forEach((id) => {
+    const input = document.getElementById(id);
+    if (input) input.value = "";
+  });
+}
+
+function showChangePasswordModal() {
+  closeHamburgerMenu();
+  const modal = document.getElementById("password-change-modal");
+  if (modal) modal.classList.remove("hidden");
+}
+
+function closeChangePasswordModal() {
+  const modal = document.getElementById("password-change-modal");
+  if (modal) modal.classList.add("hidden");
+  ["password-change-current", "password-change-new", "password-change-confirm"].forEach((id) => {
+    const input = document.getElementById(id);
+    if (input) input.value = "";
+  });
+}
+
+module.exports = {
+  showAppAlert,
+  showAppModal,
+  showAppConfirm,
+  showInstructions,
+  showAppModal,
+  openPasswordResetModal,
+  closePasswordResetModal,
+  showChangePasswordModal,
+  closeChangePasswordModal,
+};
