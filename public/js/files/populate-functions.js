@@ -1,6 +1,6 @@
-import { getDecadeLabel, getCategoryLabel } from "./app-info-functions";
+import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 
-function populateDecadeOptions(selectElement, decades) {
+export function populateDecadeOptions(selectElement, decades) {
   selectElement.innerHTML = "";
   decades.forEach((dec) => {
     const option = document.createElement("option");
@@ -10,7 +10,7 @@ function populateDecadeOptions(selectElement, decades) {
   });
 }
 
-function populateCategoryOptions(selectElement, categories) {
+export function populateCategoryOptions(selectElement, categories) {
   selectElement.innerHTML = "";
   categories.forEach((cat) => {
     const option = document.createElement("option");
@@ -19,5 +19,3 @@ function populateCategoryOptions(selectElement, categories) {
     selectElement.appendChild(option);
   });
 }
-
-module.exports = { populateCategoryOptions, populateDecadeOptions };

@@ -1,13 +1,13 @@
-import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../../constants/constants";
-import { currentUser } from "../main";
+import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../../constants/constants.js";
+import { currentUser } from "../main.js";
 
-function getCurrentUserData() {
+export function getCurrentUserData() {
   const userDataString = localStorage.getItem("userData");
   if (!userDataString) return null;
   return JSON.parse(userDataString);
 }
 
-function getUserPermissions(email) {
+export function getUserPermissions(email) {
   const storedPermissions = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || "{}");
   if (!storedPermissions[email]) {
     storedPermissions[email] = {
@@ -31,7 +31,7 @@ function getUserPermissions(email) {
   return storedPermissions[email];
 }
 
-function getActivePermissions() {
+export function getActivePermissions() {
   // Si no hay usuario, no hay permisos
   if (!currentUser || !currentUser.email) return [];
 
@@ -67,31 +67,31 @@ function getActivePermissions() {
   return combined;
 }
 
-function getLocalUsers() {
+export function getLocalUsers() {
   return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || "{}");
 }
 
-function saveLocalUsers(users) {
+export function saveLocalUsers(users) {
   localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
 }
 
-function getLocalScores() {
+export function getLocalScores() {
   return JSON.parse(localStorage.getItem(LOCAL_SCORES_KEY) || "{}");
 }
 
-function saveLocalScores(scores) {
+export function saveLocalScores(scores) {
   localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(scores));
 }
 
-function getLocalGameHistory() {
+export function getLocalGameHistory() {
   return JSON.parse(localStorage.getItem(LOCAL_GAME_HISTORY_KEY) || "{}");
 }
 
-function saveLocalGameHistory(history) {
+export function saveLocalGameHistory(history) {
   localStorage.setItem(LOCAL_GAME_HISTORY_KEY, JSON.stringify(history));
 }
 
-async function redirectToStripe(categoryKey) {
+export async function redirectToStripe(categoryKey) {
   if (!currentUser || !currentUser.email) {
     showAppAlert("Debes iniciar sesión para realizar compras.");
     return;
@@ -148,20 +148,7 @@ async function redirectToStripe(categoryKey) {
   }
 }
 
-function closePremiumModal() {
+export function closePremiumModal() {
   const modal = document.getElementById("premium-modal");
   if (modal) modal.classList.add("hidden");
 }
-
-module.exports = {
-  getCurrentUserData,
-  getUserPermissions,
-  getActivePermissions,
-  getLocalUsers,
-  saveLocalUsers,
-  getLocalScores,
-  saveLocalScores,
-  getLocalGameHistory,
-  saveLocalGameHistory,
-  redirectToStripe
-};

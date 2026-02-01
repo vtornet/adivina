@@ -1,19 +1,22 @@
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const cors = require("cors");
-const crypto = require("crypto");
-const path = require("path");
+import "dotenv/config";
+import express from "express";
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import cors from "cors";
+import crypto from "crypto";
+import path from "path";
+import { fileURLToPath } from "url";
 // Módulos de Producción
-const compression = require("compression");
-const helmet = require("helmet");
+import compression from "compression";
+import helmet from "helmet";
+import Stripe from "stripe";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error("⚠️ CRÍTICO: STRIPE_SECRET_KEY no está definida en las variables de entorno.");
 }
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_for_build');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_for_build');
 
 const app = express();
 app.use(compression());
@@ -884,8 +887,8 @@ app.use(
 
 // 3. Archivos de datos (Songs)
 app.use("/data", express.static(path.join(__dirname, "data")));
-// Fallback: cualquier ruta que NO empiece por /api/, /audio/ o /data/ -> index.html
-app.get(/^\/(?!api|audio|data).*/, (req, res) => {
+// Fallback: cualquier ruta que NO empiece por /api/, /audio/, /data/, /js/, /constants/, /css/, /img/ -> index.html
+app.get(/^\/(?!api|audio|data|js|constants|css|img).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 

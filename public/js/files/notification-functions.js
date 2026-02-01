@@ -1,6 +1,6 @@
-import { NOTIFICATIONS_STORAGE_KEY } from "../../constants/constants";
+import { NOTIFICATIONS_STORAGE_KEY } from "../../constants/constants.js";
 
-function getNotifications() {
+export function getNotifications() {
   const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
   if (stored) {
     return JSON.parse(stored);
@@ -17,7 +17,7 @@ function getNotifications() {
   return initial;
 }
 
-function updateNotificationBadge() {
+export function updateNotificationBadge() {
   const notifications = getNotifications();
   // Contamos las que no tienen 'read' o 'read' es false
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -37,7 +37,7 @@ function updateNotificationBadge() {
   }
 }
 
-function renderNotifications() {
+export function renderNotifications() {
   const list = document.getElementById("notifications-list");
   if (!list) return;
   const notifications = getNotifications();
@@ -62,7 +62,7 @@ function renderNotifications() {
   });
 }
 
-function addNotification(message, type = "info") {
+export function addNotification(message, type = "info") {
   const notifications = getNotifications();
   notifications.unshift({
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -76,17 +76,17 @@ function addNotification(message, type = "info") {
   updateNotificationBadge(); // <--- NUEVO: Actualizamos el contador visualmente
 }
 
-function getFinishedNotificationsState() {
+export function getFinishedNotificationsState() {
   const stored = localStorage.getItem(FINISHED_NOTIFICATIONS_KEY);
   if (!stored) return {};
   return JSON.parse(stored);
 }
 
-function setFinishedNotificationsState(state) {
+export function setFinishedNotificationsState(state) {
   localStorage.setItem(FINISHED_NOTIFICATIONS_KEY, JSON.stringify(state));
 }
 
-function toggleNotificationsPanel() {
+export function toggleNotificationsPanel() {
   const panel = document.getElementById("notifications-panel");
   if (!panel) return;
   const isHidden = panel.classList.contains("hidden");
@@ -106,13 +106,3 @@ function toggleNotificationsPanel() {
     panel.classList.add("hidden");
   }
 }
-
-module.exports = {
-  getNotifications,
-  updateNotificationBadge,
-  renderNotifications,
-  addNotification,
-  getFinishedNotificationsState,
-  setFinishedNotificationsState,
-  toggleNotificationsPanel,
-};

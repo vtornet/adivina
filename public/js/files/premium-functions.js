@@ -1,29 +1,29 @@
 // --- FUNCIONES AUXILIARES (HELPER FUNCTIONS) ---
 // Necesarias para validar el acceso premium gestionado por Stripe
 
-import appInfo from "../../app_info/app-info.json";
+import appInfo from "../../app_info/app-info.js";
 
-function isPremiumCategory(categoryId) {
+export function isPremiumCategory(categoryId) {
   return appInfo.premium.premiumCategories.has(categoryId);
 }
 
-function isPremiumDecade(decadeId) {
+export function isPremiumDecade(decadeId) {
   return appInfo.premium.premiumDecades.has(decadeId);
 }
 
-function hasCategoryAccess(categoryId) {
+export function hasCategoryAccess(categoryId) {
   // Verifica si el usuario tiene comprada esta categoría específica o el paquete completo
   const permissions = getActivePermissions();
   return permissions.includes("premium_all") || permissions.includes(categoryId);
 }
 
-function hasPremiumAccess() {
+export function hasPremiumAccess() {
   // Verifica si el usuario tiene el paquete completo (necesario para modos como 'Todas' o 'Verano')
   const permissions = getActivePermissions();
   return permissions.includes("premium_all");
 }
 
-function isPremiumSelection(decade, category) {
+export function isPremiumSelection(decade, category) {
   return isPremiumDecade(decade) || isPremiumCategory(category);
 }
 
@@ -32,7 +32,7 @@ function isPremiumSelection(decade, category) {
  * @param {string} categoryKey - La clave de la categoría a comprar (ej: 'peliculas', 'full_pack')
  */
 
-function showPremiumModal(message, categoryKey) {
+export function showPremiumModal(message, categoryKey) {
   const modal = document.getElementById("premium-modal");
   const text = document.getElementById("premium-modal-message");
   let buyBtn = document.getElementById("premium-buy-btn");
@@ -55,12 +55,3 @@ function showPremiumModal(message, categoryKey) {
 
   modal.classList.remove("hidden");
 }
-
-module.exports = {
-  isPremiumCategory,
-  isPremiumDecade,
-  hasCategoryAccess,
-  hasPremiumAccess,
-  isPremiumSelection,
-  showPremiumModal,
-};

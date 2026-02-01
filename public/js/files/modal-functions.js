@@ -1,4 +1,4 @@
-function showAppAlert(message, options = {}) {
+export function showAppAlert(message, options = {}) {
   return showAppModal({
     title: options.title || "Aviso",
     message,
@@ -7,7 +7,7 @@ function showAppAlert(message, options = {}) {
   });
 }
 
-function showAppConfirm(message, options = {}) {
+export function showAppConfirm(message, options = {}) {
   return showAppModal({
     title: options.title || "Confirmación",
     message,
@@ -17,20 +17,20 @@ function showAppConfirm(message, options = {}) {
   });
 }
 
-function showInstructions() {
+export function showInstructions() {
   const modal = document.getElementById("instructions-modal");
   closeHamburgerMenu();
   if (modal) modal.classList.remove("hidden");
 }
 
-function closeInstructions() {
+export function closeInstructions() {
   const modal = document.getElementById("instructions-modal");
   if (modal) modal.classList.add("hidden");
 }
 
 let appModalResolver = null;
 
-function showAppModal({ title, message, confirmText = "Aceptar", cancelText = "Cancelar", showCancel = false } = {}) {
+export function showAppModal({ title, message, confirmText = "Aceptar", cancelText = "Cancelar", showCancel = false } = {}) {
   const modal = document.getElementById("app-modal");
   const titleEl = document.getElementById("app-modal-title");
   const messageEl = document.getElementById("app-modal-message");
@@ -68,13 +68,13 @@ function showAppModal({ title, message, confirmText = "Aceptar", cancelText = "C
   });
 }
 
-function openPasswordResetModal() {
+export function openPasswordResetModal() {
   closeHamburgerMenu();
   const modal = document.getElementById("password-reset-modal");
   if (modal) modal.classList.remove("hidden");
 }
 
-function closePasswordResetModal() {
+export function closePasswordResetModal() {
   const modal = document.getElementById("password-reset-modal");
   if (modal) modal.classList.add("hidden");
   const tokenInfo = document.getElementById("password-reset-token-info");
@@ -90,13 +90,13 @@ function closePasswordResetModal() {
   });
 }
 
-function showChangePasswordModal() {
+export function showChangePasswordModal() {
   closeHamburgerMenu();
   const modal = document.getElementById("password-change-modal");
   if (modal) modal.classList.remove("hidden");
 }
 
-function closeChangePasswordModal() {
+export function closeChangePasswordModal() {
   const modal = document.getElementById("password-change-modal");
   if (modal) modal.classList.add("hidden");
   ["password-change-current", "password-change-new", "password-change-confirm"].forEach((id) => {
@@ -104,15 +104,3 @@ function closeChangePasswordModal() {
     if (input) input.value = "";
   });
 }
-
-module.exports = {
-  showAppAlert,
-  showAppModal,
-  showAppConfirm,
-  showInstructions,
-  showAppModal,
-  openPasswordResetModal,
-  closePasswordResetModal,
-  showChangePasswordModal,
-  closeChangePasswordModal,
-};

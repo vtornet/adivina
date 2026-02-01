@@ -1,4 +1,4 @@
-function showScreen(screenId) {
+export function showScreen(screenId) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
   });
@@ -21,5 +21,3 @@ function showScreen(screenId) {
     requestInviteNotificationPermission();
   }
 }
-
-module.exports = { showScreen };

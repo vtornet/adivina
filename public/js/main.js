@@ -3,7 +3,7 @@ import {
   getCategoryLabel,
   getDecadesForSelect,
   getCategoriesForSelect,
-} from "./files/app-info-functions";
+} from "./files/app-info-functions.js";
 import {
   ADMIN_EMAIL,
   APP_VERSION,
@@ -12,15 +12,15 @@ import {
   NOTIFICATIONS_PROMPTED_KEY,
   NOTIFICATIONS_STORAGE_KEY,
   PERMISSIONS_STORAGE_KEY,
-} from "../constants/constants";
-import { CATEGORY_ORDER, DECADES_ORDER } from "../constants/button-constants";
+} from "../constants/constants.js";
+import { CATEGORY_ORDER, DECADES_ORDER } from "../constants/button-constants.js";
 import {
   hasCategoryAccess,
   hasPremiumAccess,
   isPremiumCategory,
   isPremiumDecade,
   isPremiumSelection,
-} from "./files/premium-functions";
+} from "./files/premium-functions.js";
 
 import {
   getCurrentUserData,
@@ -32,7 +32,8 @@ import {
   saveLocalScores,
   getLocalGameHistory,
   saveLocalGameHistory,
-} from "./files/user-functions";
+  closePremiumModal,
+} from "./files/user-functions.js";
 
 import {
   loginUser,
@@ -41,16 +42,26 @@ import {
   changePassword,
   registerUser,
   logout,
-} from "./files/login";
+} from "./files/login.js";
 
-import { addNotification, toggleNotificationsPanel } from "./files/notification-functions";
+import { addNotification, toggleNotificationsPanel } from "./files/notification-functions.js";
 
-import { populateDecadeOptions, populateCategoryOptions } from "./files/populate-functions";
+import { populateDecadeOptions, populateCategoryOptions } from "./files/populate-functions.js";
 
-import { parseJsonResponse } from "./files/helpers";
-import { showAppAlert, showAppConfirm, showAppModal, showInstructions } from "./files/modal-functions";
-import { closeHamburgerMenu, toggleHamburgerMenu } from "./files/burger-functions";
-import { showScreen } from "./files/screen-functions";
+import { parseJsonResponse } from "./files/helpers.js";
+import {
+  showAppAlert,
+  showAppConfirm,
+  showAppModal,
+  showInstructions,
+  showChangePasswordModal,
+  closeChangePasswordModal,
+  openPasswordResetModal,
+  closePasswordResetModal,
+  closeInstructions,
+} from "./files/modal-functions.js";
+import { closeHamburgerMenu, toggleHamburgerMenu } from "./files/burger-functions.js";
+import { showScreen } from "./files/screen-functions.js";
 
 let gameState = {};
 let audioPlaybackTimeout;

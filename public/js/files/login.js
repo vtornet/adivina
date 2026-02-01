@@ -1,6 +1,6 @@
-import { showAppAlert } from "./modal-functions";
+import { showAppAlert } from "./modal-functions.js";
 
-async function loginUser() {
+export async function loginUser() {
   const emailInput = document.getElementById("login-email");
   const passwordInput = document.getElementById("login-password");
   const email = emailInput.value.trim();
@@ -112,7 +112,7 @@ async function loginUser() {
   }
 }
 
-async function requestPasswordReset() {
+export async function requestPasswordReset() {
   const emailInput = document.getElementById("password-reset-email");
   const email = emailInput?.value.trim();
   const tokenInfo = document.getElementById("password-reset-token-info");
@@ -146,7 +146,7 @@ async function requestPasswordReset() {
   }
 }
 
-async function confirmPasswordReset() {
+export async function confirmPasswordReset() {
   const email = document.getElementById("password-reset-email")?.value.trim();
   const token = document.getElementById("password-reset-token")?.value.trim();
   const newPassword = document.getElementById("password-reset-new-password")?.value.trim();
@@ -181,7 +181,7 @@ async function confirmPasswordReset() {
   }
 }
 
-async function changePassword() {
+export async function changePassword() {
   if (!currentUser || !currentUser.email) {
     showAppAlert("Debes iniciar sesión para cambiar la contraseña.");
     showScreen("login-screen");
@@ -221,13 +221,13 @@ async function changePassword() {
   }
 }
 
-function isValidEmail(email) {
+export function isValidEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
 
-async function registerUser() {
+export async function registerUser() {
   const emailInput = document.getElementById("register-email");
   const passwordInput = document.getElementById("register-password");
   const email = emailInput.value.trim();
@@ -298,7 +298,7 @@ async function registerUser() {
   }
 }
 
-async function verifyEmailAction() {
+export async function verifyEmailAction() {
   const code = document.getElementById("verify-code-input").value.trim();
   // Recuperamos el email que guardamos al registrar o intentar loguear
   const email = localStorage.getItem("tempVerifyEmail");
@@ -332,7 +332,7 @@ async function verifyEmailAction() {
   }
 }
 
-async function resendVerificationCode() {
+export async function resendVerificationCode() {
   const email = localStorage.getItem("tempVerifyEmail");
   if (!email) {
     showAppAlert("No hay un email pendiente de verificación.");
@@ -352,7 +352,7 @@ async function resendVerificationCode() {
   }
 }
 
-function logout() {
+export function logout() {
   currentUser = null;
   localStorage.removeItem("loggedInUserEmail");
   localStorage.removeItem("userData");
@@ -367,14 +367,3 @@ function logout() {
   showAppAlert("Sesión cerrada correctamente.");
   showScreen("login-screen");
 }
-
-module.exports = {
-  loginUser,
-  requestPasswordReset,
-  confirmPasswordReset,
-  changePassword,
-  registerUser,
-  verifyEmailAction,
-  resendVerificationCode,
-  logout,
-};
