@@ -1,495 +1,582 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adivina la Canción</title>
-    <meta name="theme-color" content="#3b1b52">
-    <meta name="color-scheme" content="dark">
-    <link rel="manifest" href="manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#3b1b52" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="stylesheet" href="css/style.css"> 
-    
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <button class="hamburger-btn" type="button" onclick="toggleHamburgerMenu()" aria-label="Abrir menú">☰</button>
     <div id="home-screen" class="screen active">
-        <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
-        <button class="btn" onclick="startApp('user')">Jugar</button>
+      <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo" />
+      <button class="btn" onclick="startApp('user')">Jugar</button>
 
-        <p id="app-version" style="position: absolute; bottom: 10px; right: 15px; font-size: 0.8rem; opacity: 0.5; color: white;">v.0.0</p>
+      <p
+        id="app-version"
+        style="position: absolute; bottom: 10px; right: 15px; font-size: 0.8rem; opacity: 0.5; color: white"
+      >
+        v.0.0
+      </p>
     </div>
-   
+
     <div id="login-screen" class="screen">
-        <h2>Iniciar Sesión</h2>
-        <input type="email" id="login-email" class="text-input" placeholder="Correo electrónico">
-        <div class="password-field">
-            <input type="password" id="login-password" class="text-input" placeholder="Contraseña">
-            <button class="btn icon-btn" type="button" onclick="togglePasswordVisibility('login-password', this)">👁️</button>
-        </div>
-        <button class="btn" onclick="loginUser()">Entrar</button>
-        <button class="btn tertiary small-link" type="button" onclick="showPasswordRecoveryInfo()">¿Olvidaste tu contraseña?</button>
-        <p class="small-text">¿No tienes cuenta? <a href="#" onclick="showScreen('register-screen')">Regístrate aquí</a></p>
+      <h2>Iniciar Sesión</h2>
+      <input type="email" id="login-email" class="text-input" placeholder="Correo electrónico" />
+      <div class="password-field">
+        <input type="password" id="login-password" class="text-input" placeholder="Contraseña" />
+        <button class="btn icon-btn" type="button" onclick="togglePasswordVisibility('login-password', this)">
+          👁️
+        </button>
+      </div>
+      <button class="btn" onclick="loginUser()">Entrar</button>
+      <button class="btn tertiary small-link" type="button" onclick="showPasswordRecoveryInfo()">
+        ¿Olvidaste tu contraseña?
+      </button>
+      <p class="small-text">
+        ¿No tienes cuenta? <a href="#" onclick="showScreen('register-screen')">Regístrate aquí</a>
+      </p>
     </div>
 
     <footer class="footer-brand">
-        Desarrollado por <a href="https://appstracta.app/" target="_blank">Appstracta</a>
+      Desarrollado por <a href="https://appstracta.app/" target="_blank">Appstracta</a>
     </footer>
 
     <div id="register-screen" class="screen">
-        <h2>Registro</h2>
-        <input type="email" id="register-email" class="text-input" placeholder="Correo electrónico">
-        <div class="password-field">
-            <input type="password" id="register-password" class="text-input" placeholder="Contraseña">
-            <button class="btn icon-btn" type="button" onclick="togglePasswordVisibility('register-password', this)">👁️</button>
-        </div>
-        <button class="btn" onclick="registerUser()">Registrar</button>
-        <p class="small-text">¿Ya tienes cuenta? <a href="#" onclick="showScreen('login-screen')">Inicia sesión</a></p>
+      <h2>Registro</h2>
+      <input type="email" id="register-email" class="text-input" placeholder="Correo electrónico" />
+      <div class="password-field">
+        <input type="password" id="register-password" class="text-input" placeholder="Contraseña" />
+        <button class="btn icon-btn" type="button" onclick="togglePasswordVisibility('register-password', this)">
+          👁️
+        </button>
+      </div>
+      <button class="btn" onclick="registerUser()">Registrar</button>
+      <p class="small-text">¿Ya tienes cuenta? <a href="#" onclick="showScreen('login-screen')">Inicia sesión</a></p>
     </div>
 
-        <div id="verify-email-screen" class="screen">
-        <h2>Verifica tu Cuenta</h2>
-        <p style="text-align: center; margin-bottom: 20px;">
-            Hemos enviado un código a: <br>
-            <strong id="verify-email-display" style="color: var(--secondary-color);"></strong>
-        </p>
-        
-        <input type="text" id="verify-code-input" class="text-input" placeholder="Código de 6 dígitos" maxlength="6" style="text-align: center; letter-spacing: 5px; font-size: 1.5rem;">
-        
-        <button class="btn" onclick="verifyEmailAction()">Verificar</button>
-        <button class="btn secondary" onclick="resendVerificationCode()">Reenviar Código</button>
-        <button class="btn tertiary" onclick="showScreen('login-screen')">Volver al Login</button>
+    <div id="verify-email-screen" class="screen">
+      <h2>Verifica tu Cuenta</h2>
+      <p style="text-align: center; margin-bottom: 20px">
+        Hemos enviado un código a: <br />
+        <strong id="verify-email-display" style="color: var(--secondary-color)"></strong>
+      </p>
+
+      <input
+        type="text"
+        id="verify-code-input"
+        class="text-input"
+        placeholder="Código de 6 dígitos"
+        maxlength="6"
+        style="text-align: center; letter-spacing: 5px; font-size: 1.5rem"
+      />
+
+      <button class="btn" onclick="verifyEmailAction()">Verificar</button>
+      <button class="btn secondary" onclick="resendVerificationCode()">Reenviar Código</button>
+      <button class="btn tertiary" onclick="showScreen('login-screen')">Volver al Login</button>
     </div>
 
     <div id="set-player-name-screen" class="screen">
-        <div id="set-player-game-info" style="margin-bottom: 15px;">
-        </div>
-        <h2>Nombre de Jugador</h2>
-        <input type="text" id="player-name-input" class="text-input" placeholder="Introduce tu nombre de jugador">
-        <button class="btn" onclick="setPlayerName()">Continuar</button>
+      <div id="set-player-game-info" style="margin-bottom: 15px"></div>
+      <h2>Nombre de Jugador</h2>
+      <input type="text" id="player-name-input" class="text-input" placeholder="Introduce tu nombre de jugador" />
+      <button class="btn" onclick="setPlayerName()">Continuar</button>
     </div>
 
     <div id="decade-selection-screen" class="screen">
-        <button class="bell-btn" type="button" onclick="toggleNotificationsPanel()" aria-label="Ver notificaciones">
-            🔔
-            <span id="notification-badge" class="notification-badge hidden">0</span>
-        </button>
-        <h2>Selecciona una década</h2>
-        <div id="decade-buttons" class="button-container"></div>
-        
-        <button class="btn tertiary" onclick="showOnlineMenu()" style="margin-top: 20px;">
-            🌍 Jugar Online
-        </button>
+      <button class="bell-btn" type="button" onclick="toggleNotificationsPanel()" aria-label="Ver notificaciones">
+        🔔
+        <span id="notification-badge" class="notification-badge hidden">0</span>
+      </button>
+      <h2>Selecciona una década</h2>
+      <div id="decade-buttons" class="button-container"></div>
+
+      <button class="btn tertiary" onclick="showOnlineMenu()" style="margin-top: 20px">🌍 Jugar Online</button>
     </div>
 
-
     <div id="category-screen" class="screen">
-        <h2 id="category-screen-title">Elige una Categoría (<span id="selected-decade-display"></span>)</h2>
-        <div id="category-buttons"></div>
+      <h2 id="category-screen-title">Elige una Categoría (<span id="selected-decade-display"></span>)</h2>
+      <div id="category-buttons"></div>
     </div>
 
     <div id="online-mode-screen" class="screen">
-        <h2>Jugar Online</h2>
-        <button class="btn" onclick="showScreen('create-online-screen')">Crear Partida</button>
-        <button class="btn" onclick="showScreen('pending-games-screen')">Ver Partidas Recibidas <span id="online-invite-count" class="badge" hidden>0</span></button>
-        <button class="btn" onclick="showScreen('join-online-screen')">Unirse a Partida</button>
-        <button class="btn" onclick="showScreen('invite-online-screen')">Invitar por Nombre</button>
-        <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
-        
-        
+      <h2>Jugar Online</h2>
+      <button class="btn" onclick="showScreen('create-online-screen')">Crear Partida</button>
+      <button class="btn" onclick="showScreen('pending-games-screen')">
+        Ver Partidas Recibidas <span id="online-invite-count" class="badge" hidden>0</span>
+      </button>
+      <button class="btn" onclick="showScreen('join-online-screen')">Unirse a Partida</button>
+      <button class="btn" onclick="showScreen('invite-online-screen')">Invitar por Nombre</button>
+      <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
     </div>
 
     <div id="create-online-screen" class="screen">
-        <h2>Crear Partida Online</h2>
-        <p>Selecciona década y categoría:</p>
-        <select id="online-decade-select" class="text-input"></select>
-        <select id="online-category-select" class="text-input"></select>
-        <button class="btn" onclick="createOnlineGame()">Crear y Compartir Código</button>
-        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+      <h2>Crear Partida Online</h2>
+      <p>Selecciona década y categoría:</p>
+      <select id="online-decade-select" class="text-input"></select>
+      <select id="online-category-select" class="text-input"></select>
+      <button class="btn" onclick="createOnlineGame()">Crear y Compartir Código</button>
+      <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
     </div>
 
     <div id="join-online-screen" class="screen">
-        <h2>Unirse a Partida</h2>
-        <input type="text" id="join-code-input" class="text-input" placeholder="Código de Partida">
-        <button class="btn" onclick="joinOnlineGame()">Unirse</button>
-        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+      <h2>Unirse a Partida</h2>
+      <input type="text" id="join-code-input" class="text-input" placeholder="Código de Partida" />
+      <button class="btn" onclick="joinOnlineGame()">Unirse</button>
+      <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
     </div>
 
     <div id="invite-online-screen" class="screen">
-        <h2>Invitar a Jugador</h2>
-        <input type="text" id="rival-name-input" class="text-input" placeholder="Nombre del rival">
-        <select id="invite-decade-select" class="text-input"></select>
-        <select id="invite-category-select" class="text-input"></select>
-        <button class="btn" onclick="invitePlayerByName()">Invitar</button>
-        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+      <h2>Invitar a Jugador</h2>
+      <input type="text" id="rival-name-input" class="text-input" placeholder="Nombre del rival" />
+      <select id="invite-decade-select" class="text-input"></select>
+      <select id="invite-category-select" class="text-input"></select>
+      <button class="btn" onclick="invitePlayerByName()">Invitar</button>
+      <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
     </div>
 
     <div id="pending-games-screen" class="screen">
-        <h2>Mis Partidas Online</h2>
+      <h2>Mis Partidas Online</h2>
 
-        <div id="active-games-section" style="margin-bottom: 30px;">
-            <h3>Partidas Activas y Pendientes</h3>
-            <div id="active-games-list">
-                <p>Cargando partidas activas...</p>
-            </div>
+      <div id="active-games-section" style="margin-bottom: 30px">
+        <h3>Partidas Activas y Pendientes</h3>
+        <div id="active-games-list">
+          <p>Cargando partidas activas...</p>
         </div>
+      </div>
 
-        <div id="finished-games-section">
-            <h3>Partidas Finalizadas</h3>
-            <div id="finished-games-list">
-                <p>Cargando partidas finalizadas...</p>
-            </div>
+      <div id="finished-games-section">
+        <h3>Partidas Finalizadas</h3>
+        <div id="finished-games-list">
+          <p>Cargando partidas finalizadas...</p>
         </div>
+      </div>
 
-        <button class="btn danger" onclick="confirmClearOnlineGameHistory()" style="margin-top: 20px;">Borrar Historial Online</button>
-        <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
+      <button class="btn danger" onclick="confirmClearOnlineGameHistory()" style="margin-top: 20px">
+        Borrar Historial Online
+      </button>
+      <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
     </div>
 
-
     <div id="online-wait-screen" class="screen">
-        <h2>Esperando al Otro Jugador...</h2>
-        <p id="online-status-text">Una vez ambos hayan terminado, verás el resultado.</p>
-        <button class="btn secondary" onclick="goToOnlineMenu()">Volver al Menú Online</button>
-        <button class="btn tertiary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
+      <h2>Esperando al Otro Jugador...</h2>
+      <p id="online-status-text">Una vez ambos hayan terminado, verás el resultado.</p>
+      <button class="btn secondary" onclick="goToOnlineMenu()">Volver al Menú Online</button>
+      <button class="btn tertiary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
     </div>
 
     <div id="statistics-screen" class="screen">
-        <h2>Mis Estadísticas</h2>
-        <div id="user-total-scores" style="margin-bottom: 20px;">
-            <h3>Puntos Acumulados por Década y Categoría</h3>
-            <div id="category-scores-list">
-                <p>Cargando estadísticas...</p>
-            </div>
+      <h2>Mis Estadísticas</h2>
+      <div id="user-total-scores" style="margin-bottom: 20px">
+        <h3>Puntos Acumulados por Década y Categoría</h3>
+        <div id="category-scores-list">
+          <p>Cargando estadísticas...</p>
         </div>
+      </div>
 
-        <div id="duel-history">
-            <h3>Historial de Duelos (2 Jugadores)</h3>
-            <div id="duel-list">
-                <p>Cargando historial...</p>
-            </div>
+      <div id="duel-history">
+        <h3>Historial de Duelos (2 Jugadores)</h3>
+        <div id="duel-list">
+          <p>Cargando historial...</p>
         </div>
+      </div>
 
-        <p class="small-text" style="margin-top: 16px;">Si borras las estadísticas, comenzarán de cero desde este momento y no podrás recuperar las actuales.</p>
-        <button class="btn secondary" onclick="confirmResetStatistics()">Borrar estadísticas</button>
-        <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
+      <p class="small-text" style="margin-top: 16px">
+        Si borras las estadísticas, comenzarán de cero desde este momento y no podrás recuperar las actuales.
+      </p>
+      <button class="btn secondary" onclick="confirmResetStatistics()">Borrar estadísticas</button>
+      <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
     </div>
 
     <div id="songs-list-category-screen" class="screen">
-        <h2>Listado de Canciones por Categoría y Década</h2>
-        <div id="songs-list-category-buttons"></div>
-        <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
+      <h2>Listado de Canciones por Categoría y Década</h2>
+      <div id="songs-list-category-buttons"></div>
+      <button class="btn secondary" onclick="showScreen('decade-selection-screen')">Volver</button>
     </div>
 
     <div id="songs-list-display-screen" class="screen">
-        <h2 id="songs-list-category-title"></h2>
+      <h2 id="songs-list-category-title"></h2>
 
-        <div id="songs-list-scroll-content">
-            <div id="songs-list-container">
-                <p>Cargando canciones...</p>
-            </div>
+      <div id="songs-list-scroll-content">
+        <div id="songs-list-container">
+          <p>Cargando canciones...</p>
         </div>
-        <button class="btn secondary" onclick="showSongsListCategorySelection()" style="margin-top: 20px;">Volver a Categorías de Canciones</button>
-        <button class="btn secondary" onclick="showScreen('category-screen')">Volver al Menú Principal</button>
+      </div>
+      <button class="btn secondary" onclick="showSongsListCategorySelection()" style="margin-top: 20px">
+        Volver a Categorías de Canciones
+      </button>
+      <button class="btn secondary" onclick="showScreen('category-screen')">Volver al Menú Principal</button>
     </div>
 
     <div id="player-selection-screen" class="screen">
-        <h2>Introduce el número de jugadores</h2>
-        <div class="player-selection-grid">
-            <button class="player-btn" onclick="selectPlayers(1)">1 Jugador</button>
-            <button class="player-btn" onclick="selectPlayers(2)">2 Jugadores</button>
-            <button class="player-btn" onclick="selectPlayers(3)">3 Jugadores</button>
-            <button class="player-btn" onclick="selectPlayers(4)">4 Jugadores</button>
-            <button class="player-btn" onclick="selectPlayers(5)">5 Jugadores</button>
-            <button class="player-btn" onclick="selectPlayers(6)">6 Jugadores</button>
-        </div>
-        <button class="btn secondary" onclick="confirmReturnToMenu()" style="margin-top: 20px;">Menú Principal</button>
+      <h2>Introduce el número de jugadores</h2>
+      <div class="player-selection-grid">
+        <button class="player-btn" onclick="selectPlayers(1)">1 Jugador</button>
+        <button class="player-btn" onclick="selectPlayers(2)">2 Jugadores</button>
+        <button class="player-btn" onclick="selectPlayers(3)">3 Jugadores</button>
+        <button class="player-btn" onclick="selectPlayers(4)">4 Jugadores</button>
+        <button class="player-btn" onclick="selectPlayers(5)">5 Jugadores</button>
+        <button class="player-btn" onclick="selectPlayers(6)">6 Jugadores</button>
+      </div>
+      <button class="btn secondary" onclick="confirmReturnToMenu()" style="margin-top: 20px">Menú Principal</button>
     </div>
     <div id="player-names-input-screen" class="screen">
-        <h2>Nombres de los Jugadores</h2>
-        <p class="small-text">El primer jugador es tu usuario logueado: <strong id="logged-in-player-name"></strong></p>
-        <div id="other-player-names-inputs"></div>
-        <button class="btn" onclick="startGame()">Comenzar Partida</button>
-        <button class="btn secondary" onclick="showScreen('player-selection-screen')">Volver a selección de jugadores</button>
+      <h2>Nombres de los Jugadores</h2>
+      <p class="small-text">El primer jugador es tu usuario logueado: <strong id="logged-in-player-name"></strong></p>
+      <div id="other-player-names-inputs"></div>
+      <button class="btn" onclick="startGame()">Comenzar Partida</button>
+      <button class="btn secondary" onclick="showScreen('player-selection-screen')">
+        Volver a selección de jugadores
+      </button>
     </div>
 
     <div id="player-transition-screen" class="screen">
-        <h2>Turno Terminado</h2>
-        <p id="current-player-score-summary" style="font-size: 1.3rem; margin-bottom: 20px; color: var(--warning-color);"></p>
-        <h3 id="next-player-prompt" style="color: var(--secondary-color); margin-bottom: 30px;"></h3>
-        <button class="btn" onclick="continueToNextPlayerTurn()">Comenzar</button>
+      <h2>Turno Terminado</h2>
+      <p
+        id="current-player-score-summary"
+        style="font-size: 1.3rem; margin-bottom: 20px; color: var(--warning-color)"
+      ></p>
+      <h3 id="next-player-prompt" style="color: var(--secondary-color); margin-bottom: 30px"></h3>
+      <button class="btn" onclick="continueToNextPlayerTurn()">Comenzar</button>
     </div>
 
     <div id="game-screen" class="screen">
-        <div id="game-info" style="margin-bottom: 15px;">
-            <strong>Turno de:</strong> <span id="player-name-display"></span>
-        </div>
+      <div id="game-info" style="margin-bottom: 15px">
+        <strong>Turno de:</strong> <span id="player-name-display"></span>
+      </div>
 
-        <div class="game-header">
-            <div class="game-info">
-                <div id="category-display"></div>
-                <div id="question-counter"></div>
-            </div>
-            <div class="game-score">
-                <span id="attempts-counter" class="attempts-counter"></span>
-                <div id="points-display"></div>
-            </div>
+      <div class="game-header">
+        <div class="game-info">
+          <div id="category-display"></div>
+          <div id="question-counter"></div>
         </div>
-        <h3 id="player-turn"></h3>
-        <button id="play-song-btn" class="btn">▶</button>
-        <div id="answer-buttons"></div>
-        <button class="btn secondary" onclick="confirmReturnToMenu()" style="margin-top: 20px;">Menú Principal</button>
+        <div class="game-score">
+          <span id="attempts-counter" class="attempts-counter"></span>
+          <div id="points-display"></div>
+        </div>
+      </div>
+      <h3 id="player-turn"></h3>
+      <button id="play-song-btn" class="btn">▶</button>
+      <div id="answer-buttons"></div>
+      <button class="btn secondary" onclick="confirmReturnToMenu()" style="margin-top: 20px">Menú Principal</button>
     </div>
     <div id="end-game-screen" class="screen">
-        <h2>Partida Terminada</h2>
-        <div id="winner-display"></div>
-        <div id="final-scores"></div>
-        <div id="final-scores"></div>
-        
-        <button class="btn tertiary" id="share-result-btn" style="margin-top: 15px; background-color: #25D366; color: white; border: none;">
-            📤 Compartir Resultado
-        </button>
+      <h2>Partida Terminada</h2>
+      <div id="winner-display"></div>
+      <div id="final-scores"></div>
+      <div id="final-scores"></div>
 
-        <button class="btn" id="play-again-btn">Volver a Jugar</button>
-        <button class="btn secondary" id="back-to-categories-btn" type="button">Volver a Categorías</button>
-        <button class="btn secondary" id="back-to-decades-btn" type="button">Volver a Décadas</button>
-        <button class="btn secondary" id="online-menu-btn" onclick="goToOnlineMenu()">Volver al Menú Online</button>
+      <button
+        class="btn tertiary"
+        id="share-result-btn"
+        style="margin-top: 15px; background-color: #25d366; color: white; border: none"
+      >
+        📤 Compartir Resultado
+      </button>
+
+      <button class="btn" id="play-again-btn">Volver a Jugar</button>
+      <button class="btn secondary" id="back-to-categories-btn" type="button">Volver a Categorías</button>
+      <button class="btn secondary" id="back-to-decades-btn" type="button">Volver a Décadas</button>
+      <button class="btn secondary" id="online-menu-btn" onclick="goToOnlineMenu()">Volver al Menú Online</button>
     </div>
 
     <div id="elderly-mode-intro-screen" class="screen">
-        <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo">
-        <h2>Modo Fácil</h2>
-        <p class="small-text">Bienvenido al juego simplificado. Introduce los nombres de los jugadores.</p>
-        <input type="text" id="elderly-player-1-name" class="text-input" placeholder="Nombre del Jugador 1">
-        <div id="elderly-other-player-names-inputs"></div>
-        
-    <div class="player-selection-grid" style="margin-top: 20px;">
+      <img src="img/adivina.png" alt="Logotipo de Adivina la Canción" class="logo" />
+      <h2>Modo Fácil</h2>
+      <p class="small-text">Bienvenido al juego simplificado. Introduce los nombres de los jugadores.</p>
+      <input type="text" id="elderly-player-1-name" class="text-input" placeholder="Nombre del Jugador 1" />
+      <div id="elderly-other-player-names-inputs"></div>
+
+      <div class="player-selection-grid" style="margin-top: 20px">
         <button class="player-btn" onclick="addElderlyPlayerInput(1)">1 Jugador</button>
         <button class="player-btn" onclick="addElderlyPlayerInput(2)">2 Jugadores</button>
         <button class="player-btn" onclick="addElderlyPlayerInput(3)">3 Jugadores</button>
         <button class="player-btn" onclick="addElderlyPlayerInput(4)">4 Jugadores</button>
+      </div>
+      <button class="btn" onclick="startElderlyModeGame()" style="margin-top: 20px">Comenzar Partida</button>
     </div>
-    <button class="btn" onclick="startElderlyModeGame()" style="margin-top: 20px;">Comenzar Partida</button>
-</div>
 
     <audio id="audio-player"></audio>
     <audio id="sfx-acierto" src="/audio/sfx/acierto.mp3"></audio>
     <audio id="sfx-error" src="/audio/sfx/error.mp3"></audio>
 
-    <div id="premium-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="premium-modal-title">
-        <div class="modal-content">
-            <h3 id="premium-modal-title">Contenido premium</h3>
-            <p id="premium-modal-message">Contenido premium. Próximamente disponible mediante desbloqueo.</p>
-            <button class="btn secondary" type="button" onclick="closePremiumModal()">Cerrar</button>
-        </div>
+    <div
+      id="premium-modal"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="premium-modal-title"
+    >
+      <div class="modal-content">
+        <h3 id="premium-modal-title">Contenido premium</h3>
+        <p id="premium-modal-message">Contenido premium. Próximamente disponible mediante desbloqueo.</p>
+        <button class="btn secondary" type="button" onclick="closePremiumModal()">Cerrar</button>
+      </div>
     </div>
 
-    <div id="instructions-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="instructions-modal-title">
-        <div class="modal-content">
-            <h3 id="instructions-modal-title">Instrucciones</h3>
-            <div class="modal-body">
-                <p class="modal-section-title">🎵 ¿CÓMO JUGAR A ADIVINA LA CANCIÓN?</p>
+    <div
+      id="instructions-modal"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="instructions-modal-title"
+    >
+      <div class="modal-content">
+        <h3 id="instructions-modal-title">Instrucciones</h3>
+        <div class="modal-body">
+          <p class="modal-section-title">🎵 ¿CÓMO JUGAR A ADIVINA LA CANCIÓN?</p>
 
-                <p class="modal-section-title">1. Inicio y acceso</p>
-                <p>Para jugar necesitas iniciar sesión o registrarte. Tus datos se guardan en el dispositivo, por lo que no tendrás que registrarte cada vez que entres.</p>
-                <p>Desde el menú principal podrás:</p>
-                <ul>
-                    <li>Iniciar una nueva partida.</li>
-                    <li>Volver a jugar tras terminar una sesión.</li>
-                    <li>Acceder a modos online y estadísticas.</li>
-                </ul>
+          <p class="modal-section-title">1. Inicio y acceso</p>
+          <p>
+            Para jugar necesitas iniciar sesión o registrarte. Tus datos se guardan en el dispositivo, por lo que no
+            tendrás que registrarte cada vez que entres.
+          </p>
+          <p>Desde el menú principal podrás:</p>
+          <ul>
+            <li>Iniciar una nueva partida.</li>
+            <li>Volver a jugar tras terminar una sesión.</li>
+            <li>Acceder a modos online y estadísticas.</li>
+          </ul>
 
-                <p class="modal-section-title">2. Selección de categoría</p>
-                <p>Elige la categoría musical en la que quieres jugar.</p>
-                <p><strong>Categorías disponibles</strong></p>
-                <ul>
-                    <li>Canciones en Español ✅ (gratuita)</li>
-                    <li>Canciones en Inglés ✅ (gratuita)</li>
-                </ul>
-                <p>Estas categorías están disponibles por década (80, 90, 2000, 2010 y Actual).</p>
-                <p><strong>Contenido premium 🔒</strong></p>
-                <p>Las siguientes categorías requieren desbloqueo:</p>
-                <ul>
-                    <li>Bandas Sonoras de Películas</li>
-                    <li>Bandas Sonoras de Series</li>
-                    <li>Programas de TV</li>
-                    <li>Series Infantiles</li>
-                    <li>Anuncios</li>
-                    <li>Modos especiales como “Todas las Décadas” o “Canciones del Verano”</li>
-                </ul>
-                <p>El desbloqueo es permanente y amplía la experiencia de juego.</p>
+          <p class="modal-section-title">2. Selección de categoría</p>
+          <p>Elige la categoría musical en la que quieres jugar.</p>
+          <p><strong>Categorías disponibles</strong></p>
+          <ul>
+            <li>Canciones en Español ✅ (gratuita)</li>
+            <li>Canciones en Inglés ✅ (gratuita)</li>
+          </ul>
+          <p>Estas categorías están disponibles por década (80, 90, 2000, 2010 y Actual).</p>
+          <p><strong>Contenido premium 🔒</strong></p>
+          <p>Las siguientes categorías requieren desbloqueo:</p>
+          <ul>
+            <li>Bandas Sonoras de Películas</li>
+            <li>Bandas Sonoras de Series</li>
+            <li>Programas de TV</li>
+            <li>Series Infantiles</li>
+            <li>Anuncios</li>
+            <li>Modos especiales como “Todas las Décadas” o “Canciones del Verano”</li>
+          </ul>
+          <p>El desbloqueo es permanente y amplía la experiencia de juego.</p>
 
-                <p class="modal-section-title">3. Selección de jugadores</p>
-                <p>Puedes jugar:</p>
-                <ul>
-                    <li>En solitario</li>
-                    <li>De 2 a 6 jugadores en modo local</li>
-                </ul>
-                <p>En partidas multijugador local:</p>
-                <ul>
-                    <li>Los turnos se realizan de forma secuencial.</li>
-                    <li>Cada jugador tiene su propia puntuación.</li>
-                    <li>Gana quien más puntos consiga al final.</li>
-                </ul>
+          <p class="modal-section-title">3. Selección de jugadores</p>
+          <p>Puedes jugar:</p>
+          <ul>
+            <li>En solitario</li>
+            <li>De 2 a 6 jugadores en modo local</li>
+          </ul>
+          <p>En partidas multijugador local:</p>
+          <ul>
+            <li>Los turnos se realizan de forma secuencial.</li>
+            <li>Cada jugador tiene su propia puntuación.</li>
+            <li>Gana quien más puntos consiga al final.</li>
+          </ul>
 
-                <p class="modal-section-title">4. Desarrollo de la partida</p>
-                <p>Cada partida consta de 10 preguntas. En cada pregunta:</p>
-                <ul>
-                    <li>Se reproduce un fragmento de audio.</li>
-                    <li>El jugador dispone de hasta 3 intentos para adivinar la canción.</li>
-                </ul>
-                <p>En cada intento se escucha un fragmento más largo del audio:</p>
-                <ul>
-                    <li>Primer intento: 4 segundos</li>
-                    <li>Segundo intento: 6 segundos</li>
-                    <li>Tercer intento: 10 segundos</li>
-                </ul>
-                <p>Tras cada intento fallido, la puntuación posible se reduce.</p>
+          <p class="modal-section-title">4. Desarrollo de la partida</p>
+          <p>Cada partida consta de 10 preguntas. En cada pregunta:</p>
+          <ul>
+            <li>Se reproduce un fragmento de audio.</li>
+            <li>El jugador dispone de hasta 3 intentos para adivinar la canción.</li>
+          </ul>
+          <p>En cada intento se escucha un fragmento más largo del audio:</p>
+          <ul>
+            <li>Primer intento: 4 segundos</li>
+            <li>Segundo intento: 6 segundos</li>
+            <li>Tercer intento: 10 segundos</li>
+          </ul>
+          <p>Tras cada intento fallido, la puntuación posible se reduce.</p>
 
-                <p class="modal-section-title">5. Sistema de puntuación</p>
-                <p>La puntuación depende del intento en el que aciertes:</p>
-                <ul>
-                    <li>✅ Primer intento → 3 puntos</li>
-                    <li>✅ Segundo intento → 2 puntos</li>
-                    <li>✅ Tercer intento → 1 punto</li>
-                    <li>❌ Sin acierto → 0 puntos</li>
-                </ul>
-                <p>La puntuación se actualiza en tiempo real durante la partida.</p>
+          <p class="modal-section-title">5. Sistema de puntuación</p>
+          <p>La puntuación depende del intento en el que aciertes:</p>
+          <ul>
+            <li>✅ Primer intento → 3 puntos</li>
+            <li>✅ Segundo intento → 2 puntos</li>
+            <li>✅ Tercer intento → 1 punto</li>
+            <li>❌ Sin acierto → 0 puntos</li>
+          </ul>
+          <p>La puntuación se actualiza en tiempo real durante la partida.</p>
 
-                <p class="modal-section-title">6. Interfaz durante el juego</p>
-                <p>Durante la partida dispondrás de:</p>
-                <ul>
-                    <li>Botón para reproducir el audio.</li>
-                    <li>Opciones de respuesta claras y accesibles.</li>
-                    <li>Acceso al menú.</li>
-                </ul>
-                <p>Siempre verás en pantalla:</p>
-                <ul>
-                    <li>Número de pregunta.</li>
-                    <li>Intentos restantes.</li>
-                    <li>Puntuación actual.</li>
-                </ul>
-                <p>El diseño está optimizado para pantallas táctiles.</p>
+          <p class="modal-section-title">6. Interfaz durante el juego</p>
+          <p>Durante la partida dispondrás de:</p>
+          <ul>
+            <li>Botón para reproducir el audio.</li>
+            <li>Opciones de respuesta claras y accesibles.</li>
+            <li>Acceso al menú.</li>
+          </ul>
+          <p>Siempre verás en pantalla:</p>
+          <ul>
+            <li>Número de pregunta.</li>
+            <li>Intentos restantes.</li>
+            <li>Puntuación actual.</li>
+          </ul>
+          <p>El diseño está optimizado para pantallas táctiles.</p>
 
-                <p class="modal-section-title">7. Duelos Online 🌐</p>
-                <p>También puedes jugar contra otros jugadores online.</p>
-                <p><strong>Opciones disponibles</strong></p>
-                <ul>
-                    <li>Crear partida online.</li>
-                    <li>Unirse a una partida.</li>
-                    <li>Invitar por código de invitación.</li>
-                    <li>Invitar por nombre de usuario.</li>
-                    <li>Ver partidas recibidas.</li>
-                </ul>
-                <p>En los duelos online:</p>
-                <ul>
-                    <li>Cada jugador juega cuando quiere, desde su dispositivo.</li>
-                    <li>Las partidas pueden ser secuenciales o no, según disponibilidad.</li>
-                    <li>No es necesario que todos los jugadores jueguen al mismo tiempo.</li>
-                    <li>Ambos jugadores reciben las mismas canciones y en el mismo orden.</li>
-                    <li>El sistema registra automáticamente los resultados.</li>
-                    <li>Gana el jugador que obtenga mayor puntuación.</li>
-                </ul>
+          <p class="modal-section-title">7. Duelos Online 🌐</p>
+          <p>También puedes jugar contra otros jugadores online.</p>
+          <p><strong>Opciones disponibles</strong></p>
+          <ul>
+            <li>Crear partida online.</li>
+            <li>Unirse a una partida.</li>
+            <li>Invitar por código de invitación.</li>
+            <li>Invitar por nombre de usuario.</li>
+            <li>Ver partidas recibidas.</li>
+          </ul>
+          <p>En los duelos online:</p>
+          <ul>
+            <li>Cada jugador juega cuando quiere, desde su dispositivo.</li>
+            <li>Las partidas pueden ser secuenciales o no, según disponibilidad.</li>
+            <li>No es necesario que todos los jugadores jueguen al mismo tiempo.</li>
+            <li>Ambos jugadores reciben las mismas canciones y en el mismo orden.</li>
+            <li>El sistema registra automáticamente los resultados.</li>
+            <li>Gana el jugador que obtenga mayor puntuación.</li>
+          </ul>
 
-                <p class="modal-section-title">8. Final de la partida</p>
-                <p>Al finalizar las 10 preguntas:</p>
-                <ul>
-                    <li>Se muestra un resumen completo de la partida.</li>
-                    <li>En multijugador, se indica claramente el ganador.</li>
-                </ul>
-                <p>Opciones disponibles:</p>
-                <ul>
-                    <li>Volver a jugar.</li>
-                    <li>Cambiar de categoría.</li>
-                    <li>Volver al menú principal.</li>
-                    <li>Salir del juego.</li>
-                </ul>
+          <p class="modal-section-title">8. Final de la partida</p>
+          <p>Al finalizar las 10 preguntas:</p>
+          <ul>
+            <li>Se muestra un resumen completo de la partida.</li>
+            <li>En multijugador, se indica claramente el ganador.</li>
+          </ul>
+          <p>Opciones disponibles:</p>
+          <ul>
+            <li>Volver a jugar.</li>
+            <li>Cambiar de categoría.</li>
+            <li>Volver al menú principal.</li>
+            <li>Salir del juego.</li>
+          </ul>
 
-                <p class="modal-section-title">⭐ Consejo</p>
-                <p>Empieza con las categorías gratuitas para familiarizarte con el juego y, si te gusta, desbloquea nuevas categorías para ampliar el reto y la diversión.</p>
-                <p>¡Demuestra cuánto sabes de música y reta a tus amigos! 🎶🎉</p>
-            </div>
-            <button class="btn secondary" type="button" onclick="closeInstructions()">Cerrar</button>
+          <p class="modal-section-title">⭐ Consejo</p>
+          <p>
+            Empieza con las categorías gratuitas para familiarizarte con el juego y, si te gusta, desbloquea nuevas
+            categorías para ampliar el reto y la diversión.
+          </p>
+          <p>¡Demuestra cuánto sabes de música y reta a tus amigos! 🎶🎉</p>
         </div>
+        <button class="btn secondary" type="button" onclick="closeInstructions()">Cerrar</button>
+      </div>
     </div>
 
-    <div id="notifications-panel" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="notifications-title">
-        <div class="modal-content">
-            <h3 id="notifications-title">Notificaciones</h3>
-            <div id="notifications-list" class="modal-body"></div>
-            <button class="btn secondary" type="button" onclick="toggleNotificationsPanel()">Cerrar</button>
-        </div>
+    <div
+      id="notifications-panel"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="notifications-title"
+    >
+      <div class="modal-content">
+        <h3 id="notifications-title">Notificaciones</h3>
+        <div id="notifications-list" class="modal-body"></div>
+        <button class="btn secondary" type="button" onclick="toggleNotificationsPanel()">Cerrar</button>
+      </div>
     </div>
 
     <div id="app-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="app-modal-title">
-        <div class="modal-content">
-            <h3 id="app-modal-title">Aviso</h3>
-            <p id="app-modal-message" class="modal-body"></p>
-            <div class="modal-actions">
-                <button class="btn" id="app-modal-confirm" type="button">Aceptar</button>
-                <button class="btn secondary" id="app-modal-cancel" type="button">Cancelar</button>
-            </div>
+      <div class="modal-content">
+        <h3 id="app-modal-title">Aviso</h3>
+        <p id="app-modal-message" class="modal-body"></p>
+        <div class="modal-actions">
+          <button class="btn" id="app-modal-confirm" type="button">Aceptar</button>
+          <button class="btn secondary" id="app-modal-cancel" type="button">Cancelar</button>
         </div>
+      </div>
     </div>
 
-    <div id="hamburger-menu" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="hamburger-menu-title">
-        <div class="modal-content">
-            <h3 id="hamburger-menu-title">Menú</h3>
-            <div class="modal-body">
-                <button class="btn secondary" type="button" onclick="showStats()">Estadísticas</button>
-                <button class="btn secondary" type="button" onclick="showAllSongs()">Canciones</button>
-                <button class="btn secondary" type="button" onclick="showInstructions()">Instrucciones</button>
-                <button class="btn secondary" type="button" onclick="showPasswordRecoveryInfo()">Recuperar contraseña</button>
-                <button class="btn secondary" type="button" onclick="showChangePasswordModal()">Cambiar contraseña</button>
-                <button class="btn secondary" type="button" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
-                <button class="btn tertiary" type="button" onclick="exitGame()">Salir del Juego</button>
-            </div>
-            <button class="btn" type="button" onclick="closeHamburgerMenu()">Cerrar</button>
+    <div
+      id="hamburger-menu"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="hamburger-menu-title"
+    >
+      <div class="modal-content">
+        <h3 id="hamburger-menu-title">Menú</h3>
+        <div class="modal-body">
+          <button class="btn secondary" type="button" onclick="showStats()">Estadísticas</button>
+          <button class="btn secondary" type="button" onclick="showAllSongs()">Canciones</button>
+          <button class="btn secondary" type="button" onclick="showInstructions()">Instrucciones</button>
+          <button class="btn secondary" type="button" onclick="showPasswordRecoveryInfo()">Recuperar contraseña</button>
+          <button class="btn secondary" type="button" onclick="showChangePasswordModal()">Cambiar contraseña</button>
+          <button class="btn secondary" type="button" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
+          <button class="btn tertiary" type="button" onclick="exitGame()">Salir del Juego</button>
         </div>
+        <button class="btn" type="button" onclick="closeHamburgerMenu()">Cerrar</button>
+      </div>
     </div>
 
-    <div id="password-reset-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="password-reset-title">
-        <div class="modal-content">
-            <h3 id="password-reset-title">Recuperar contraseña</h3>
-            <div class="modal-body">
-                <input type="email" id="password-reset-email" class="text-input" placeholder="Correo electrónico">
-                <button class="btn secondary" type="button" onclick="requestPasswordReset()">Enviar token</button>
-                <p id="password-reset-token-info" class="small-text" style="margin-top: 8px;"></p>
-                <input type="text" id="password-reset-token" class="text-input" placeholder="Token de recuperación">
-                <input type="password" id="password-reset-new-password" class="text-input" placeholder="Nueva contraseña">
-                <input type="password" id="password-reset-confirm-password" class="text-input" placeholder="Repite la nueva contraseña">
-                <button class="btn" type="button" onclick="confirmPasswordReset()">Cambiar contraseña</button>
-            </div>
-            <button class="btn secondary" type="button" onclick="closePasswordResetModal()">Cerrar</button>
+    <div
+      id="password-reset-modal"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="password-reset-title"
+    >
+      <div class="modal-content">
+        <h3 id="password-reset-title">Recuperar contraseña</h3>
+        <div class="modal-body">
+          <input type="email" id="password-reset-email" class="text-input" placeholder="Correo electrónico" />
+          <button class="btn secondary" type="button" onclick="requestPasswordReset()">Enviar token</button>
+          <p id="password-reset-token-info" class="small-text" style="margin-top: 8px"></p>
+          <input type="text" id="password-reset-token" class="text-input" placeholder="Token de recuperación" />
+          <input type="password" id="password-reset-new-password" class="text-input" placeholder="Nueva contraseña" />
+          <input
+            type="password"
+            id="password-reset-confirm-password"
+            class="text-input"
+            placeholder="Repite la nueva contraseña"
+          />
+          <button class="btn" type="button" onclick="confirmPasswordReset()">Cambiar contraseña</button>
         </div>
+        <button class="btn secondary" type="button" onclick="closePasswordResetModal()">Cerrar</button>
+      </div>
     </div>
 
-    <div id="password-change-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="password-change-title">
-        <div class="modal-content">
-            <h3 id="password-change-title">Cambiar contraseña</h3>
-            <div class="modal-body">
-                <input type="password" id="password-change-current" class="text-input" placeholder="Contraseña actual">
-                <input type="password" id="password-change-new" class="text-input" placeholder="Nueva contraseña">
-                <input type="password" id="password-change-confirm" class="text-input" placeholder="Repite la nueva contraseña">
-                <button class="btn" type="button" onclick="changePassword()">Actualizar contraseña</button>
-            </div>
-            <button class="btn secondary" type="button" onclick="closeChangePasswordModal()">Cerrar</button>
+    <div
+      id="password-change-modal"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="password-change-title"
+    >
+      <div class="modal-content">
+        <h3 id="password-change-title">Cambiar contraseña</h3>
+        <div class="modal-body">
+          <input type="password" id="password-change-current" class="text-input" placeholder="Contraseña actual" />
+          <input type="password" id="password-change-new" class="text-input" placeholder="Nueva contraseña" />
+          <input
+            type="password"
+            id="password-change-confirm"
+            class="text-input"
+            placeholder="Repite la nueva contraseña"
+          />
+          <button class="btn" type="button" onclick="changePassword()">Actualizar contraseña</button>
         </div>
+        <button class="btn secondary" type="button" onclick="closeChangePasswordModal()">Cerrar</button>
+      </div>
     </div>
 
     <div id="cookie-consent-banner" class="cookie-banner hidden">
-        <div class="cookie-content">
-            <p>🍪 <strong>¿Cookies? Solo las musicales.</strong><br>
-            Usamos memoria local para que tus récords no desaparezcan como un <em>One Hit Wonder</em> de los 90. Si sigues jugando, ¡asumimos que hay trato!</p>
-            <button class="btn small-btn" onclick="acceptCookieConsent()">¡Dale ritmo!</button>
-        </div>
+      <div class="cookie-content">
+        <p>
+          🍪 <strong>¿Cookies? Solo las musicales.</strong><br />
+          Usamos memoria local para que tus récords no desaparezcan como un <em>One Hit Wonder</em> de los 90. Si sigues
+          jugando, ¡asumimos que hay trato!
+        </p>
+        <button class="btn small-btn" onclick="acceptCookieConsent()">¡Dale ritmo!</button>
+      </div>
     </div>
 
     <script src="https://js.stripe.com/v3/"></script>
     <script src="js/songs-loader.js" defer></script>
+    <script src="js/constants/constants.js"></script>
     <script type="module" src="js/main.js"></script>
-
-</body>
+  </body>
 </html>

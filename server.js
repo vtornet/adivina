@@ -16,7 +16,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 if (!process.env.STRIPE_SECRET_KEY) {
   console.error("⚠️ CRÍTICO: STRIPE_SECRET_KEY no está definida en las variables de entorno.");
 }
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_dummy_key_for_build');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_dummy_key_for_build");
 
 const app = express();
 app.use(compression());
@@ -28,68 +28,68 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        
+
         // Scripts permitidos (Stripe + Inline)
         scriptSrc: ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
         scriptSrcAttr: ["'unsafe-inline'"], // Permite botones onclick
-        
+
         // Estilos permitidos (Tus CSS + Google Fonts)
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        
+
         // Fuentes permitidas (Archivos de fuente de Google)
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        
+
         // Iframes permitidos (Stripe)
         frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
-        
+
         // Conexiones permitidas (Fetch/XHR/WebSockets)
         // AQUÍ ESTABA EL BLOQUEO DEL SERVICE WORKER
         connectSrc: [
-            "'self'", 
-            "https://api.stripe.com", 
-            "https://api.resend.com",
-            "https://fonts.googleapis.com", // Permitir al SW cachear la hoja de estilos
-            "https://fonts.gstatic.com",    // Permitir al SW cachear los archivos de fuente
-            "https://js.stripe.com"         // Permitir al SW cachear el script de Stripe
+          "'self'",
+          "https://api.stripe.com",
+          "https://api.resend.com",
+          "https://fonts.googleapis.com", // Permitir al SW cachear la hoja de estilos
+          "https://fonts.gstatic.com", // Permitir al SW cachear los archivos de fuente
+          "https://js.stripe.com", // Permitir al SW cachear el script de Stripe
         ],
-        
+
         // Imágenes permitidas
         imgSrc: ["'self'", "data:", "https://*.stripe.com"],
-        
-        upgradeInsecureRequests: [], 
+
+        upgradeInsecureRequests: [],
       },
     },
-  })
+  }),
 );
 const PORT = process.env.PORT || 3000;
 
 const sendEmail = async ({ to, subject, html }) => {
-    try {
-        const response = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                // CORRECTO: Usamos el nombre de la variable definida en Railway
-                'Authorization': `Bearer ${process.env.EMAIL_PASS}`, 
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                from: 'Adivina la Canción <contact@appstracta.app>',
-                to: to,
-                subject: subject,
-                html: html
-            })
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            console.error("Error API Resend:", data);
-            return false;
-        }
-        console.log("✅ Email enviado con éxito a:", to);
-        return true;
-    } catch (err) {
-        console.error("Fallo conexión API:", err);
-        return false;
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        // CORRECTO: Usamos el nombre de la variable definida en Railway
+        Authorization: `Bearer ${process.env.EMAIL_PASS}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Adivina la Canción <contact@appstracta.app>",
+        to: to,
+        subject: subject,
+        html: html,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      console.error("Error API Resend:", data);
+      return false;
     }
+    console.log("✅ Email enviado con éxito a:", to);
+    return true;
+  } catch (err) {
+    console.error("Fallo conexión API:", err);
+    return false;
+  }
 };
 
 // ==============================
@@ -119,7 +119,6 @@ app.use((req, res, next) => {
   return next();
 });
 
-
 // ==============================
 // 1) CORS (seguro y compatible)
 // ==============================
@@ -141,39 +140,36 @@ app.use(
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
-  })
+  }),
 );
 
 // Ruta Webhook: Stripe avisa a tu servidor (Requiere express.raw)
-app.post("/api/stripe-webhook", express.raw({ type: 'application/json' }), async (req, res) => {
-    const sig = req.headers['stripe-signature'];
-    let event;
+app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error("Webhook Error:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    const userEmail = session.metadata.user_email;
+    const categoryUnlocked = session.metadata.category_key;
 
     try {
-        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-    } catch (err) {
-        console.error("Webhook Error:", err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
+      const User = mongoose.model("User");
+      await User.findOneAndUpdate({ email: userEmail }, { $addToSet: { unlocked_sections: categoryUnlocked } });
+      console.log(`✅ [STRIPE] ${categoryUnlocked} desbloqueado para ${userEmail}`);
+    } catch (dbErr) {
+      console.error("Error DB tras pago:", dbErr.message);
     }
+  }
 
-    if (event.type === 'checkout.session.completed') {
-        const session = event.data.object;
-        const userEmail = session.metadata.user_email;
-        const categoryUnlocked = session.metadata.category_key;
-
-        try {
-            const User = mongoose.model('User'); 
-            await User.findOneAndUpdate(
-                { email: userEmail },
-                { $addToSet: { unlocked_sections: categoryUnlocked } }
-            );
-            console.log(`✅ [STRIPE] ${categoryUnlocked} desbloqueado para ${userEmail}`);
-        } catch (dbErr) {
-            console.error("Error DB tras pago:", dbErr.message);
-        }
-    }
-
-    res.json({ received: true });
+  res.json({ received: true });
 });
 
 app.use(express.json());
@@ -181,15 +177,10 @@ app.use(express.json());
 // ==============================
 // 2) MongoDB
 // ==============================
-const MONGO_URI =
-  process.env.MONGO_URI ||
-  process.env.MONGODB_URI ||
-  process.env.MONGO_URL; 
+const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI || process.env.MONGO_URL;
 
 if (!MONGO_URI) {
-  console.error(
-    "ERROR: Falta la variable de entorno MONGO_URI (o MONGODB_URI/MONGO_URL)."
-  );
+  console.error("ERROR: Falta la variable de entorno MONGO_URI (o MONGODB_URI/MONGO_URL).");
   process.exit(1);
 }
 
@@ -207,7 +198,7 @@ const userSchema = new mongoose.Schema({
   unlocked_sections: { type: [String], default: [] },
   // --- NUEVOS CAMPOS PARA VERIFICACIÓN ---
   isVerified: { type: Boolean, default: false }, // Por defecto false para nuevos
-  verificationCode: { type: String, default: null }
+  verificationCode: { type: String, default: null },
 });
 
 const scoreSchema = new mongoose.Schema({
@@ -245,7 +236,7 @@ const onlineGameSchema = new mongoose.Schema({
       finished: Boolean,
     },
   ],
-  waitingFor: { type: String, default: null }, 
+  waitingFor: { type: String, default: null },
   createdAt: { type: Date, default: Date.now },
   finished: { type: Boolean, default: false },
   finishedAt: { type: Date, default: null },
@@ -280,31 +271,33 @@ async function connectToMongo() {
 // ==============================
 
 app.post("/api/create-checkout-session", async (req, res) => {
-    const { email, categoryKey, priceId, returnUrl } = req.body;
-    const baseUrl = returnUrl || 'https://adivinalacancion.app';
+  const { email, categoryKey, priceId, returnUrl } = req.body;
+  const baseUrl = returnUrl || "https://adivinalacancion.app";
 
-    try {
-        const session = await stripe.checkout.sessions.create({
-            customer_email: email,
-            payment_method_types: ['card'],
-            line_items: [{
-                price: priceId,
-                quantity: 1,
-            }],
-            mode: 'payment',
-            metadata: {
-                user_email: email,
-                category_key: categoryKey
-            },
-            success_url: `${baseUrl}/?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${baseUrl}/`,
-        });
+  try {
+    const session = await stripe.checkout.sessions.create({
+      customer_email: email,
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      metadata: {
+        user_email: email,
+        category_key: categoryKey,
+      },
+      success_url: `${baseUrl}/?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/`,
+    });
 
-        res.json({ id: session.id });
-    } catch (err) {
-        console.error("Error Stripe Session:", err.message);
-        res.status(500).json({ error: err.message });
-    }
+    res.json({ id: session.id });
+  } catch (err) {
+    console.error("Error Stripe Session:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
@@ -322,44 +315,43 @@ app.post("/api/register", async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(password, salt);
-    
+
     // Generar código de 6 dígitos
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Guardar usuario como NO verificado
-    await new User({ 
-        email, 
-        password: hashed, 
-        isVerified: false, 
-        verificationCode 
+    await new User({
+      email,
+      password: hashed,
+      isVerified: false,
+      verificationCode,
     }).save();
 
     // Enviar correo
     try {
-        await sendEmail({
-            to: email,
-            subject: "Verifica tu cuenta - Adivina la Canción",
-            html: `
+      await sendEmail({
+        to: email,
+        subject: "Verifica tu cuenta - Adivina la Canción",
+        html: `
                 <h3>¡Bienvenido a Adivina la Canción! 🎵</h3>
                 <p>Tu código de verificación es:</p>
                 <h2 style="color: #6a0dad; letter-spacing: 5px;">${verificationCode}</h2>
                 <p>Introdúcelo en la aplicación para activar tu cuenta.</p>
-            `
-        });
-        console.log(`Código enviado a ${email}`);
+            `,
+      });
+      console.log(`Código enviado a ${email}`);
     } catch (mailError) {
-        console.error("Error enviando mail:", mailError);
-        // Opcional: Podrías borrar el usuario si falla el mail, pero mejor dejar que reintente
-        return res.status(500).json({ message: "Usuario creado pero falló el envío del email. Contacta soporte." });
+      console.error("Error enviando mail:", mailError);
+      // Opcional: Podrías borrar el usuario si falla el mail, pero mejor dejar que reintente
+      return res.status(500).json({ message: "Usuario creado pero falló el envío del email. Contacta soporte." });
     }
 
     // Devolvemos flag especial 'requireVerification'
-    res.status(201).json({ 
-        message: "Registro exitoso. Revisa tu email para el código.", 
-        requireVerification: true,
-        email: email 
+    res.status(201).json({
+      message: "Registro exitoso. Revisa tu email para el código.",
+      requireVerification: true,
+      email: email,
     });
-
   } catch (err) {
     console.error("Error en registro:", err.message);
     res.status(500).json({ message: "Error del servidor." });
@@ -368,62 +360,62 @@ app.post("/api/register", async (req, res) => {
 
 // --- NUEVO: ENDPOINT DE VERIFICACIÓN ---
 app.post("/api/verify-email", async (req, res) => {
-    const { email, code } = req.body;
-    if (!email || !code) return res.status(400).json({ message: "Faltan datos." });
+  const { email, code } = req.body;
+  if (!email || !code) return res.status(400).json({ message: "Faltan datos." });
 
-    try {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
 
-        if (user.isVerified) {
-            return res.status(200).json({ message: "La cuenta ya estaba verificada." });
-        }
-
-        if (user.verificationCode !== code) {
-            return res.status(400).json({ message: "Código incorrecto." });
-        }
-
-        // Éxito
-        user.isVerified = true;
-        user.verificationCode = null; // Limpiar código
-        await user.save();
-
-        res.status(200).json({ message: "¡Cuenta verificada! Ya puedes iniciar sesión." });
-    } catch (err) {
-        console.error("Error verificando:", err);
-        res.status(500).json({ message: "Error del servidor." });
+    if (user.isVerified) {
+      return res.status(200).json({ message: "La cuenta ya estaba verificada." });
     }
+
+    if (user.verificationCode !== code) {
+      return res.status(400).json({ message: "Código incorrecto." });
+    }
+
+    // Éxito
+    user.isVerified = true;
+    user.verificationCode = null; // Limpiar código
+    await user.save();
+
+    res.status(200).json({ message: "¡Cuenta verificada! Ya puedes iniciar sesión." });
+  } catch (err) {
+    console.error("Error verificando:", err);
+    res.status(500).json({ message: "Error del servidor." });
+  }
 });
 
 // --- NUEVO: REENVIAR CÓDIGO ---
 app.post("/api/resend-code", async (req, res) => {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "Falta el email." });
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Falta el email." });
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
+    if (user.isVerified) return res.status(400).json({ message: "Usuario ya verificado." });
+
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.verificationCode = verificationCode;
+    await user.save();
 
     try {
-        const user = await User.findOne({ email });
-        if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
-        if (user.isVerified) return res.status(400).json({ message: "Usuario ya verificado." });
-
-        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-        user.verificationCode = verificationCode;
-        await user.save();
-
-        try {
-            await sendEmail({
-            to: email,
-            subject: "Nuevo código - Adivina la Canción",
-            html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`
-        });
-            return res.status(200).json({ message: "Código reenviado." });
-        } catch (mailErr) {
-            console.error("Fallo envío mail reenviado:", mailErr);
-            return res.status(503).json({ message: "Error de conexión con el servidor de correo. Intenta en unos minutos." });
-        }
-    } catch (err) {
-        console.error("Error general resend-code:", err);
-        res.status(500).json({ message: "Error interno del servidor." });
+      await sendEmail({
+        to: email,
+        subject: "Nuevo código - Adivina la Canción",
+        html: `<h3>Tu nuevo código es: <b>${verificationCode}</b></h3>`,
+      });
+      return res.status(200).json({ message: "Código reenviado." });
+    } catch (mailErr) {
+      console.error("Fallo envío mail reenviado:", mailErr);
+      return res.status(503).json({ message: "Error de conexión con el servidor de correo. Intenta en unos minutos." });
     }
+  } catch (err) {
+    console.error("Error general resend-code:", err);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
 });
 
 // Login (MODIFICADO con Bypass de Administrador y Regla de Oro)
@@ -441,26 +433,26 @@ app.post("/api/login", async (req, res) => {
     if (!ok) return res.status(400).json({ message: "Credenciales inválidas." });
 
     // --- REGLA DE ORO: BYPASS PARA ADMIN ---
-    const isAdmin = (email.toLowerCase() === 'vtornet@gmail.com');
+    const isAdmin = email.toLowerCase() === "vtornet@gmail.com";
 
     // Solo bloqueamos si el campo es explícitamente FALSE y NO es el administrador.
     // Si es undefined (usuarios antiguos), el check (undefined === false) es falso y entran.
     if (user.isVerified === false && !isAdmin) {
-        return res.status(403).json({ 
-            message: "Debes verificar tu email antes de entrar.", 
-            requireVerification: true,
-            email: user.email 
-        });
+      return res.status(403).json({
+        message: "Debes verificar tu email antes de entrar.",
+        requireVerification: true,
+        email: user.email,
+      });
     }
 
     console.log("Login exitoso:", email);
-    
+
     res.status(200).json({
       message: "Inicio de sesión exitoso.",
-      user: { 
-          email: user.email, 
-          playerName: user.playerName || null,
-          unlocked_sections: user.unlocked_sections || [] 
+      user: {
+        email: user.email,
+        playerName: user.playerName || null,
+        unlocked_sections: user.unlocked_sections || [],
       },
     });
   } catch (err) {
@@ -476,7 +468,7 @@ app.post("/api/password-reset/request", async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    
+
     if (!user) {
       return res.status(200).json({ message: "Si el email existe, se ha enviado un código de recuperación." });
     }
@@ -485,25 +477,24 @@ app.post("/api/password-reset/request", async (req, res) => {
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
     user.resetTokenHash = tokenHash;
-    user.resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000); 
+    user.resetTokenExpires = new Date(Date.now() + 30 * 60 * 1000);
     await user.save();
 
     // Envío real por mail
     try {
-        await sendEmail({
-            to: email,
-            subject: "Recuperar Contraseña",
-            html: `<p>Tu token de recuperación es: <b>${token}</b></p>`
-        });
-        console.log(`Token enviado a ${email}`);
+      await sendEmail({
+        to: email,
+        subject: "Recuperar Contraseña",
+        html: `<p>Tu token de recuperación es: <b>${token}</b></p>`,
+      });
+      console.log(`Token enviado a ${email}`);
     } catch (e) {
-        console.error("Fallo envío mail reset:", e);
+      console.error("Fallo envío mail reset:", e);
     }
 
     res.status(200).json({
-      message: "Si el email existe, se ha enviado un código de recuperación."
+      message: "Si el email existe, se ha enviado un código de recuperación.",
     });
-
   } catch (err) {
     console.error("Error password-reset request:", err.message);
     res.status(500).json({ message: "Error del servidor." });
@@ -565,11 +556,7 @@ app.put("/api/users/:email/playername", async (req, res) => {
       return res.status(400).json({ message: "Ese nombre de jugador ya está en uso." });
     }
 
-    const user = await User.findOneAndUpdate(
-      { email },
-      { $set: { playerName } },
-      { new: true }
-    ).select("-password");
+    const user = await User.findOneAndUpdate({ email }, { $set: { playerName } }, { new: true }).select("-password");
 
     if (!user) return res.status(404).json({ message: "Usuario no encontrado." });
 
@@ -604,7 +591,7 @@ app.post("/api/scores", async (req, res) => {
     const result = await Score.findOneAndUpdate(
       { email, decade, category },
       { $inc: { score } },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     );
     res.status(200).json({ message: "Puntuación guardada.", score: result });
   } catch (err) {
@@ -669,7 +656,6 @@ function emailRegex(email = "") {
 function normEmail(email = "") {
   return String(email).trim().toLowerCase();
 }
-
 
 // Crear partida online (código aleatorio)
 app.post("/api/online-games", async (req, res) => {
@@ -801,11 +787,7 @@ app.get("/api/online-games/player/:playerEmail", async (req, res) => {
     const r = emailRegex(playerEmailRaw);
 
     const games = await OnlineGame.find({
-      $or: [
-        { creatorEmail: r },
-        { "players.email": r },
-        { waitingFor: r, "players.email": { $not: r } },
-      ],
+      $or: [{ creatorEmail: r }, { "players.email": r }, { waitingFor: r, "players.email": { $not: r } }],
     }).sort({ createdAt: -1 });
 
     console.log("Online games cargadas para:", playerEmailRaw, "total:", games.length);
@@ -815,7 +797,6 @@ app.get("/api/online-games/player/:playerEmail", async (req, res) => {
     res.status(200).json([]);
   }
 });
-
 
 // Declinar invitación
 app.post("/api/online-games/decline", async (req, res) => {
@@ -862,13 +843,14 @@ app.delete("/api/online-games/clear-history/:playerEmail", async (req, res) => {
   }
 });
 
-
 // ==============================
 // 5) Frontend (public + data)
-app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: '1d', 
-  etag: false
-}));
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    maxAge: "1d",
+    etag: false,
+  }),
+);
 
 // 2. Audios con caché de 7 días y cabeceras correctas
 app.use(
@@ -880,9 +862,9 @@ app.use(
         res.setHeader("Content-Type", "audio/mpeg");
       }
       res.setHeader("Accept-Ranges", "bytes");
-      res.setHeader("Cache-Control", "public, max-age=604800"); 
+      res.setHeader("Cache-Control", "public, max-age=604800");
     },
-  })
+  }),
 );
 
 // 3. Archivos de datos (Songs)

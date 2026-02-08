@@ -1,4 +1,4 @@
-import { NOTIFICATIONS_STORAGE_KEY } from "../../constants/constants.js";
+import { NOTIFICATIONS_STORAGE_KEY } from "../constants/app-constants.js";
 
 export function getNotifications() {
   const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);

@@ -4,16 +4,7 @@ import {
   getDecadesForSelect,
   getCategoriesForSelect,
 } from "./files/app-info-functions.js";
-import {
-  ADMIN_EMAIL,
-  APP_VERSION,
-  CANONICAL_PROD_ORIGIN,
-  FINISHED_NOTIFICATIONS_KEY,
-  NOTIFICATIONS_PROMPTED_KEY,
-  NOTIFICATIONS_STORAGE_KEY,
-  PERMISSIONS_STORAGE_KEY,
-} from "../constants/constants.js";
-import { CATEGORY_ORDER, DECADES_ORDER } from "../constants/button-constants.js";
+
 import {
   hasCategoryAccess,
   hasPremiumAccess,
@@ -62,6 +53,8 @@ import {
 } from "./files/modal-functions.js";
 import { closeHamburgerMenu, toggleHamburgerMenu } from "./files/burger-functions.js";
 import { showScreen } from "./files/screen-functions.js";
+import { APP_VERSION } from "./constants/app-constants.js";
+import { startOnlineInvitePolling } from "./files/online-functions.js";
 
 let gameState = {};
 let audioPlaybackTimeout;
@@ -71,23 +64,24 @@ const audioPlayer = document.getElementById("audio-player");
 const sfxAcierto = document.getElementById("sfx-acierto");
 const sfxError = document.getElementById("sfx-error");
 
-const API_BASE_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? window.location.origin
-    : CANONICAL_PROD_ORIGIN;
+// const API_BASE_URL =
+//   window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+//     ? window.location.origin
+//     : CANONICAL_PROD_ORIGIN;
 
-export let currentUser = null;
-let useLocalApiFallback = false;
+// window.currentUser = null;
+// window.useLocalApiFallback = false;
+
 (() => {
   const savedUserJSON = localStorage.getItem("userData");
   if (savedUserJSON) {
     try {
-      currentUser = JSON.parse(savedUserJSON);
+      window.currentUser = JSON.parse(savedUserJSON);
       console.log("✅ Sesión persistente restaurada:", currentUser.email);
     } catch (e) {
       console.error("❌ Sesión corrupta. Limpiando localStorage.", e);
       localStorage.removeItem("userData");
-      currentUser = null;
+      window.currentUser = null;
     }
   }
 })();
@@ -325,171 +319,92 @@ async function setPlayerName() {
 // (ACTUALIZADAS para incluir 'decade')
 // =====================================================================
 
-async function loadUserScores(userEmail) {
-  if (useLocalApiFallback) {
-    const localScores = getLocalScores();
-    userAccumulatedScores[userEmail] = localScores[userEmail] || {};
-    console.log(`Puntuaciones locales de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
-    return;
-  }
+// async function loadGameHistory(userEmail) {
+//   if (useLocalApiFallback) {
+//     const localHistory = getLocalGameHistory();
+//     gameHistory = localHistory[userEmail] || [];
+//     console.log("Historial local cargado:", gameHistory);
+//     return;
+//   }
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
-    const data = await parseJsonResponse(response);
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
+//     const data = await parseJsonResponse(response);
 
-    if (response.ok) {
-      const scoresByDecade = {};
-      data.forEach((item) => {
-        if (!scoresByDecade[item.decade]) {
-          scoresByDecade[item.decade] = {};
-        }
-        scoresByDecade[item.decade][item.category] = item.score;
-      });
-      userAccumulatedScores[userEmail] = scoresByDecade;
-      console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
-    } else if (response.status === 404 || response.status >= 500) {
-      useLocalApiFallback = true;
-      const localScores = getLocalScores();
-      userAccumulatedScores[userEmail] = localScores[userEmail] || {};
-    } else {
-      console.error("Error al cargar puntuaciones:", data?.message);
-      userAccumulatedScores[userEmail] = {};
-    }
-  } catch (error) {
-    console.warn("API no disponible, usando puntuaciones locales:", error);
-    useLocalApiFallback = true;
-    const localScores = getLocalScores();
-    userAccumulatedScores[userEmail] = localScores[userEmail] || {};
-  }
-}
+//     if (response.ok) {
+//       gameHistory = data;
+//       console.log("Historial de partidas cargado:", gameHistory);
+//     } else if (response.status === 404 || response.status >= 500) {
+//       useLocalApiFallback = true;
+//       const localHistory = getLocalGameHistory();
+//       gameHistory = localHistory[userEmail] || [];
+//     } else {
+//       console.error("Error al cargar historial:", data?.message);
+//       gameHistory = [];
+//     }
+//   } catch (error) {
+//     console.warn("API no disponible, usando historial local:", error);
+//     useLocalApiFallback = true;
+//     const localHistory = getLocalGameHistory();
+//     gameHistory = localHistory[userEmail] || [];
+//   }
+// }
 
-async function saveUserScores(userEmail, decade, category, score) {
-  if (!userEmail || !decade || !category || typeof score === "undefined") {
-    console.error("Error: Datos incompletos para guardar puntuación acumulada (email, decade, category, score).");
-    return;
-  }
+// async function saveGameResult(players, winnerName, decade, category) {
+//   const today = new Date();
+//   const day = String(today.getDate()).padStart(2, "0");
+//   const month = String(today.getMonth() + 1).padStart(2, "0");
+//   const year = today.getFullYear();
+//   const formattedDate = `${day}/${month}/${year}`;
 
-  if (useLocalApiFallback) {
-    const localScores = getLocalScores();
-    localScores[userEmail] = localScores[userEmail] || {};
-    localScores[userEmail][decade] = localScores[userEmail][decade] || {};
-    localScores[userEmail][decade][category] = score;
-    saveLocalScores(localScores);
-    await loadUserScores(userEmail);
-    return;
-  }
+//   const gameResult = {
+//     date: formattedDate,
+//     players: players.map((p) => ({ name: p.name, score: p.score, email: p.email || null })),
+//     winner: winnerName,
+//     decade: decade,
+//     category: category,
+//   };
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/scores`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: userEmail, decade, category, score }),
-    });
+//   if (useLocalApiFallback) {
+//     const localHistory = getLocalGameHistory();
+//     players.forEach((player) => {
+//       if (!player.email) return;
+//       localHistory[player.email] = localHistory[player.email] || [];
+//       localHistory[player.email].push(gameResult);
+//     });
+//     saveLocalGameHistory(localHistory);
+//     if (currentUser && currentUser.email) {
+//       await loadGameHistory(currentUser.email);
+//     }
+//     return;
+//   }
 
-    const data = await parseJsonResponse(response);
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/api/gamehistory`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(gameResult),
+//     });
 
-    if (response.ok) {
-      console.log(data.message);
-      await loadUserScores(userEmail);
-    } else if (response.status === 404 || response.status >= 500) {
-      useLocalApiFallback = true;
-      await saveUserScores(userEmail, decade, category, score);
-    } else {
-      console.error("Error al guardar puntuación:", data?.message);
-    }
-  } catch (error) {
-    console.warn("API no disponible, usando puntuaciones locales:", error);
-    useLocalApiFallback = true;
-    await saveUserScores(userEmail, decade, category, score);
-  }
-}
+//     const data = await parseJsonResponse(response);
 
-async function loadGameHistory(userEmail) {
-  if (useLocalApiFallback) {
-    const localHistory = getLocalGameHistory();
-    gameHistory = localHistory[userEmail] || [];
-    console.log("Historial local cargado:", gameHistory);
-    return;
-  }
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/gamehistory/${userEmail}`);
-    const data = await parseJsonResponse(response);
-
-    if (response.ok) {
-      gameHistory = data;
-      console.log("Historial de partidas cargado:", gameHistory);
-    } else if (response.status === 404 || response.status >= 500) {
-      useLocalApiFallback = true;
-      const localHistory = getLocalGameHistory();
-      gameHistory = localHistory[userEmail] || [];
-    } else {
-      console.error("Error al cargar historial:", data?.message);
-      gameHistory = [];
-    }
-  } catch (error) {
-    console.warn("API no disponible, usando historial local:", error);
-    useLocalApiFallback = true;
-    const localHistory = getLocalGameHistory();
-    gameHistory = localHistory[userEmail] || [];
-  }
-}
-
-async function saveGameResult(players, winnerName, decade, category) {
-  const today = new Date();
-  const day = String(today.getDate()).padStart(2, "0");
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const year = today.getFullYear();
-  const formattedDate = `${day}/${month}/${year}`;
-
-  const gameResult = {
-    date: formattedDate,
-    players: players.map((p) => ({ name: p.name, score: p.score, email: p.email || null })),
-    winner: winnerName,
-    decade: decade,
-    category: category,
-  };
-
-  if (useLocalApiFallback) {
-    const localHistory = getLocalGameHistory();
-    players.forEach((player) => {
-      if (!player.email) return;
-      localHistory[player.email] = localHistory[player.email] || [];
-      localHistory[player.email].push(gameResult);
-    });
-    saveLocalGameHistory(localHistory);
-    if (currentUser && currentUser.email) {
-      await loadGameHistory(currentUser.email);
-    }
-    return;
-  }
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/gamehistory`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(gameResult),
-    });
-
-    const data = await parseJsonResponse(response);
-
-    if (response.ok) {
-      console.log(data.message);
-      if (currentUser && currentUser.email) {
-        await loadGameHistory(currentUser.email);
-      }
-    } else if (response.status === 404 || response.status >= 500) {
-      useLocalApiFallback = true;
-      await saveGameResult(players, winnerName, decade, category);
-    } else {
-      console.error("Error al guardar historial de partida:", data?.message);
-    }
-  } catch (error) {
-    console.warn("API no disponible, usando historial local:", error);
-    useLocalApiFallback = true;
-    await saveGameResult(players, winnerName, decade, category);
-  }
-}
+//     if (response.ok) {
+//       console.log(data.message);
+//       if (currentUser && currentUser.email) {
+//         await loadGameHistory(currentUser.email);
+//       }
+//     } else if (response.status === 404 || response.status >= 500) {
+//       useLocalApiFallback = true;
+//       await saveGameResult(players, winnerName, decade, category);
+//     } else {
+//       console.error("Error al guardar historial de partida:", data?.message);
+//     }
+//   } catch (error) {
+//     console.warn("API no disponible, usando historial local:", error);
+//     useLocalApiFallback = true;
+//     await saveGameResult(players, winnerName, decade, category);
+//   }
+// }
 
 function calculateDuelWins(player1Name, player2Name) {
   let wins1 = 0;
@@ -2881,86 +2796,86 @@ function sendGameFinishedNotification(opponentName) {
   };
 }
 
-function startOnlineInvitePolling() {
-  if (onlineInvitePollInterval) return;
-  onlineInvitePollInterval = setInterval(() => {
-    if (currentUser && currentUser.email) {
-      loadPlayerOnlineGames();
-    }
-  }, 15000);
-}
+// function startOnlineInvitePolling() {
+//   if (onlineInvitePollInterval) return;
+//   onlineInvitePollInterval = setInterval(() => {
+//     if (currentUser && currentUser.email) {
+//       loadPlayerOnlineGames();
+//     }
+//   }, 15000);
+// }
 
-function stopOnlineInvitePolling() {
-  if (!onlineInvitePollInterval) return;
-  clearInterval(onlineInvitePollInterval);
-  onlineInvitePollInterval = null;
-}
+// function stopOnlineInvitePolling() {
+//   if (!onlineInvitePollInterval) return;
+//   clearInterval(onlineInvitePollInterval);
+//   onlineInvitePollInterval = null;
+// }
 
-async function declineOnlineGame(code) {
-  const playerData = getCurrentUserData();
-  if (!playerData?.email) {
-    showAppAlert("Debes iniciar sesión para declinar una partida.");
-    showScreen("login-screen");
-    return;
-  }
+// async function declineOnlineGame(code) {
+//   const playerData = getCurrentUserData();
+//   if (!playerData?.email) {
+//     showAppAlert("Debes iniciar sesión para declinar una partida.");
+//     showScreen("login-screen");
+//     return;
+//   }
 
-  const confirmed = await showAppConfirm(
-    "¿Quieres declinar esta partida online? Se eliminará la invitación pendiente.",
-  );
-  if (!confirmed) return;
+//   const confirmed = await showAppConfirm(
+//     "¿Quieres declinar esta partida online? Se eliminará la invitación pendiente.",
+//   );
+//   if (!confirmed) return;
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/online-games/decline`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, email: playerData?.email }),
-    });
-    const result = await response.json();
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/api/online-games/decline`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ code, email: playerData?.email }),
+//     });
+//     const result = await response.json();
 
-    if (response.ok) {
-      await showAppAlert(result.message || "Partida declinada.");
-      await loadPlayerOnlineGames();
-    } else {
-      showAppAlert(result.message || "No se pudo declinar la partida.");
-    }
-  } catch (err) {
-    console.error("Error al declinar partida online:", err);
-    showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
-  }
-}
+//     if (response.ok) {
+//       await showAppAlert(result.message || "Partida declinada.");
+//       await loadPlayerOnlineGames();
+//     } else {
+//       showAppAlert(result.message || "No se pudo declinar la partida.");
+//     }
+//   } catch (err) {
+//     console.error("Error al declinar partida online:", err);
+//     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+//   }
+// }
 
-async function deletePendingOnlineGame(code) {
-  const playerData = getCurrentUserData();
-  if (!playerData?.email) {
-    showAppAlert("Debes iniciar sesión para eliminar una partida.");
-    showScreen("login-screen");
-    return;
-  }
+// async function deletePendingOnlineGame(code) {
+//   const playerData = getCurrentUserData();
+//   if (!playerData?.email) {
+//     showAppAlert("Debes iniciar sesión para eliminar una partida.");
+//     showScreen("login-screen");
+//     return;
+//   }
 
-  const confirmed = await showAppConfirm(
-    "¿Seguro que quieres eliminar esta partida pendiente? Esta acción es irreversible.",
-  );
-  if (!confirmed) return;
+//   const confirmed = await showAppConfirm(
+//     "¿Seguro que quieres eliminar esta partida pendiente? Esta acción es irreversible.",
+//   );
+//   if (!confirmed) return;
 
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/online-games/decline`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, email: playerData?.email }),
-    });
-    const result = await response.json();
+//   try {
+//     const response = await fetch(`${API_BASE_URL}/api/online-games/decline`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ code, email: playerData?.email }),
+//     });
+//     const result = await response.json();
 
-    if (response.ok) {
-      await showAppAlert(result.message || "Partida eliminada.");
-      await loadPlayerOnlineGames();
-    } else {
-      showAppAlert(result.message || "No se pudo eliminar la partida.");
-    }
-  } catch (err) {
-    console.error("Error al eliminar partida online:", err);
-    showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
-  }
-}
+//     if (response.ok) {
+//       await showAppAlert(result.message || "Partida eliminada.");
+//       await loadPlayerOnlineGames();
+//     } else {
+//       showAppAlert(result.message || "No se pudo eliminar la partida.");
+//     }
+//   } catch (err) {
+//     console.error("Error al eliminar partida online:", err);
+//     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+//   }
+// }
 
 // main.js - AÑADE ESTAS NUEVAS FUNCIONES
 function copyOnlineGameCode(code) {
@@ -3359,68 +3274,68 @@ function acceptCookieConsent() {
 }
 
 // Sustituye la función existente syncUserPermissions por esta:
-async function syncUserPermissions() {
-  // 1. Asegurar que tenemos usuario
-  if (!currentUser || !currentUser.email) {
-    const stored = getCurrentUserData();
-    if (stored && stored.email) {
-      currentUser = stored;
-    } else {
-      return;
-    }
-  }
+// async function syncUserPermissions() {
+//   // 1. Asegurar que tenemos usuario
+//   if (!currentUser || !currentUser.email) {
+//     const stored = getCurrentUserData();
+//     if (stored && stored.email) {
+//       currentUser = stored;
+//     } else {
+//       return;
+//     }
+//   }
 
-  const safeEmail = currentUser.email.trim();
+//   const safeEmail = currentUser.email.trim();
 
-  try {
-    // v.66: Log silenciado para producción
-    // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
+//   try {
+//     // v.66: Log silenciado para producción
+//     // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
 
-    // Fetch con Cache Busting agresivo
-    const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
-      cache: "no-store",
-      headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
-    });
+//     // Fetch con Cache Busting agresivo
+//     const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
+//       cache: "no-store",
+//       headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+//     });
 
-    if (response.ok) {
-      const data = await response.json();
+//     if (response.ok) {
+//       const data = await response.json();
 
-      if (data.user && Array.isArray(data.user.unlocked_sections)) {
-        const activeNow = getActivePermissions();
-        const serverSections = data.user.unlocked_sections;
+//       if (data.user && Array.isArray(data.user.unlocked_sections)) {
+//         const activeNow = getActivePermissions();
+//         const serverSections = data.user.unlocked_sections;
 
-        const mergedSections = [...new Set([...activeNow, ...serverSections])];
+//         const mergedSections = [...new Set([...activeNow, ...serverSections])];
 
-        if (currentUser) {
-          currentUser.unlocked_sections = mergedSections;
-          const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-          userData.unlocked_sections = mergedSections;
-          localStorage.setItem("userData", JSON.stringify(userData));
-        }
+//         if (currentUser) {
+//           currentUser.unlocked_sections = mergedSections;
+//           const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+//           userData.unlocked_sections = mergedSections;
+//           localStorage.setItem("userData", JSON.stringify(userData));
+//         }
 
-        const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || "{}");
-        allPerms[safeEmail] = {
-          email: safeEmail,
-          unlocked_sections: mergedSections,
-          is_admin: safeEmail === ADMIN_EMAIL,
-        };
-        localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
+//         const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || "{}");
+//         allPerms[safeEmail] = {
+//           email: safeEmail,
+//           unlocked_sections: mergedSections,
+//           is_admin: safeEmail === ADMIN_EMAIL,
+//         };
+//         localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-        // v.66: Log silenciado
-        // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
+//         // v.66: Log silenciado
+//         // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
 
-        const currentScreen = document.querySelector(".screen.active");
-        if (currentScreen) {
-          if (currentScreen.id === "category-screen") generateCategoryButtons();
-          if (currentScreen.id === "decade-selection-screen") updatePremiumButtonsState();
-          if (currentScreen.id === "songs-list-category-screen") showSongsListCategorySelection();
-        }
-      }
-    }
-  } catch (error) {
-    console.warn("❌ Error al sincronizar perfil:", error);
-  }
-}
+//         const currentScreen = document.querySelector(".screen.active");
+//         if (currentScreen) {
+//           if (currentScreen.id === "category-screen") generateCategoryButtons();
+//           if (currentScreen.id === "decade-selection-screen") updatePremiumButtonsState();
+//           if (currentScreen.id === "songs-list-category-screen") showSongsListCategorySelection();
+//         }
+//       }
+//     }
+//   } catch (error) {
+//     console.warn("❌ Error al sincronizar perfil:", error);
+//   }
+// }
 
 let isSyncing = false;
 

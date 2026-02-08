@@ -1,5 +1,4 @@
-import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../../constants/constants.js";
-import { currentUser } from "../main.js";
+import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../constants/app-constants.js";
 
 export function getCurrentUserData() {
   const userDataString = localStorage.getItem("userData");
@@ -33,14 +32,14 @@ export function getUserPermissions(email) {
 
 export function getActivePermissions() {
   // Si no hay usuario, no hay permisos
-  if (!currentUser || !currentUser.email) return [];
+  if (!window.currentUser || !window.currentUser.email) return [];
 
   let localSections = [];
   let memorySections = [];
 
   // 1. Memoria (RAM) - Lo más inmediato
-  if (currentUser.unlocked_sections && Array.isArray(currentUser.unlocked_sections)) {
-    memorySections = currentUser.unlocked_sections;
+  if (window.currentUser.unlocked_sections && Array.isArray(window.currentUser.unlocked_sections)) {
+    memorySections = window.currentUser.unlocked_sections;
   }
 
   // 2. Disco (LocalStorage) - La persistencia
@@ -48,8 +47,8 @@ export function getActivePermissions() {
     const storedPermsJSON = localStorage.getItem(PERMISSIONS_STORAGE_KEY);
     if (storedPermsJSON) {
       const parsed = JSON.parse(storedPermsJSON);
-      if (parsed[currentUser.email] && Array.isArray(parsed[currentUser.email].unlocked_sections)) {
-        localSections = parsed[currentUser.email].unlocked_sections;
+      if (parsed[window.currentUser.email] && Array.isArray(parsed[window.currentUser.email].unlocked_sections)) {
+        localSections = parsed[window.currentUser.email].unlocked_sections;
       }
     }
   } catch (e) {
@@ -60,7 +59,7 @@ export function getActivePermissions() {
   const combined = [...new Set([...localSections, ...memorySections])];
 
   // 4. Lógica Admin / Premium All
-  if (combined.includes("premium_all") || currentUser.email === ADMIN_EMAIL) {
+  if (combined.includes("premium_all") || window.currentUser.email === ADMIN_EMAIL) {
     return ["premium_all", ...combined];
   }
 
@@ -92,7 +91,7 @@ export function saveLocalGameHistory(history) {
 }
 
 export async function redirectToStripe(categoryKey) {
-  if (!currentUser || !currentUser.email) {
+  if (!window.currentUser || !window.currentUser.email) {
     showAppAlert("Debes iniciar sesión para realizar compras.");
     return;
   }
@@ -123,7 +122,7 @@ export async function redirectToStripe(categoryKey) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: currentUser.email,
+        email: window.currentUser.email,
         categoryKey: permissionKeyToSave,
         priceId: priceId,
         returnUrl: window.location.origin,
@@ -151,4 +150,83 @@ export async function redirectToStripe(categoryKey) {
 export function closePremiumModal() {
   const modal = document.getElementById("premium-modal");
   if (modal) modal.classList.add("hidden");
+}
+
+export async function loadUserScores(userEmail) {
+  if (useLocalApiFallback) {
+    const localScores = getLocalScores();
+    userAccumulatedScores[userEmail] = localScores[userEmail] || {};
+    console.log(`Puntuaciones locales de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
+    const data = await parseJsonResponse(response);
+
+    if (response.ok) {
+      const scoresByDecade = {};
+      data.forEach((item) => {
+        if (!scoresByDecade[item.decade]) {
+          scoresByDecade[item.decade] = {};
+        }
+        scoresByDecade[item.decade][item.category] = item.score;
+      });
+      userAccumulatedScores[userEmail] = scoresByDecade;
+      console.log(`Puntuaciones de ${userEmail} cargadas:`, userAccumulatedScores[userEmail]);
+    } else if (response.status === 404 || response.status >= 500) {
+      useLocalApiFallback = true;
+      const localScores = getLocalScores();
+      userAccumulatedScores[userEmail] = localScores[userEmail] || {};
+    } else {
+      console.error("Error al cargar puntuaciones:", data?.message);
+      userAccumulatedScores[userEmail] = {};
+    }
+  } catch (error) {
+    console.warn("API no disponible, usando puntuaciones locales:", error);
+    useLocalApiFallback = true;
+    const localScores = getLocalScores();
+    userAccumulatedScores[userEmail] = localScores[userEmail] || {};
+  }
+}
+
+export async function saveUserScores(userEmail, decade, category, score) {
+  if (!userEmail || !decade || !category || typeof score === "undefined") {
+    console.error("Error: Datos incompletos para guardar puntuación acumulada (email, decade, category, score).");
+    return;
+  }
+
+  if (useLocalApiFallback) {
+    const localScores = getLocalScores();
+    localScores[userEmail] = localScores[userEmail] || {};
+    localScores[userEmail][decade] = localScores[userEmail][decade] || {};
+    localScores[userEmail][decade][category] = score;
+    saveLocalScores(localScores);
+    await loadUserScores(userEmail);
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/scores`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: userEmail, decade, category, score }),
+    });
+
+    const data = await parseJsonResponse(response);
+
+    if (response.ok) {
+      console.log(data.message);
+      await loadUserScores(userEmail);
+    } else if (response.status === 404 || response.status >= 500) {
+      useLocalApiFallback = true;
+      await saveUserScores(userEmail, decade, category, score);
+    } else {
+      console.error("Error al guardar puntuación:", data?.message);
+    }
+  } catch (error) {
+    console.warn("API no disponible, usando puntuaciones locales:", error);
+    useLocalApiFallback = true;
+    await saveUserScores(userEmail, decade, category, score);
+  }
 }

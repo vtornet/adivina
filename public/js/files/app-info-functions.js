@@ -1,5 +1,5 @@
 import appInfo from "../../app_info/app-info.js";
-import { CATEGORY_ORDER, DECADES_ORDER } from "../../constants/button-constants.js";
+import { CATEGORY_ORDER, DECADES_ORDER } from "../constants/app-constants.js";
 
 export function getDecadeLabel(decadeId) {
   return appInfo.decadeNames[decadeId] || decadeId;

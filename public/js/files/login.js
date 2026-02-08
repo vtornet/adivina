@@ -1,10 +1,18 @@
+import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../constants/app-constants.js";
+import { parseJsonResponse } from "./helpers.js";
 import { showAppAlert } from "./modal-functions.js";
+import { startOnlineInvitePolling } from "./online-functions.js";
+import { getLocalUsers, getUserPermissions, loadUserScores } from "./user-functions.js";
 
 export async function loginUser() {
   const emailInput = document.getElementById("login-email");
   const passwordInput = document.getElementById("login-password");
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
+  const API_BASE_URL =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? window.location.origin
+      : CANONICAL_PROD_ORIGIN;
 
   if (!email || !password) {
     showAppAlert("Por favor, introduce tu email y contraseña.");
@@ -34,7 +42,7 @@ export async function loginUser() {
         return;
       }
 
-      currentUser = {
+      window.currentUser = {
         email: data.user.email,
         playerName: data.user.playerName,
         unlocked_sections: data.user.unlocked_sections || [],
@@ -55,32 +63,32 @@ export async function loginUser() {
 
       startOnlineInvitePolling();
     } else if (response.status === 404 || response.status >= 500) {
-      useLocalApiFallback = true;
+      window.useLocalApiFallback = true;
     } else {
       showAppAlert(`Error al iniciar sesión: ${data?.message || "No se pudo iniciar sesión."}`);
       return;
     }
   } catch (error) {
     console.warn("API no disponible, usando login local:", error);
-    useLocalApiFallback = true;
+    window.useLocalApiFallback = true;
   }
 
   // Fallback offline
-  if (useLocalApiFallback) {
+  if (window.useLocalApiFallback) {
     const users = getLocalUsers();
     const user = users[email];
     if (!user || user.password !== password) {
       showAppAlert("Email o contraseña incorrectos.");
       return;
     }
-    currentUser = {
+    window.currentUser = {
       email: user.email,
       playerName: user.playerName,
       unlocked_sections: [],
     };
   }
 
-  if (currentUser) {
+  if (window.currentUser) {
     // [FIX v.67] Forzamos la sincronización con la BD para recuperar compras perdidas
     // Esto arregla el problema tras reset de contraseña
     try {
@@ -89,20 +97,20 @@ export async function loginUser() {
       console.error("Error sincronizando permisos en login:", e);
     }
 
-    getUserPermissions(currentUser.email);
+    getUserPermissions(window.currentUser.email);
 
-    localStorage.setItem("loggedInUserEmail", currentUser.email);
-    localStorage.setItem("userData", JSON.stringify(currentUser));
+    localStorage.setItem("loggedInUserEmail", window.currentUser.email);
+    localStorage.setItem("userData", JSON.stringify(window.currentUser));
     localStorage.setItem("sessionActive", "true");
 
-    showAppAlert(`¡Bienvenido, ${currentUser.playerName || currentUser.email}!`);
+    showAppAlert(`¡Bienvenido, ${window.currentUser.playerName || window.currentUser.email}!`);
     emailInput.value = "";
     passwordInput.value = "";
 
-    await loadUserScores(currentUser.email);
-    await loadGameHistory(currentUser.email);
+    await loadUserScores(window.currentUser.email);
+    await loadGameHistory(window.currentUser.email);
 
-    if (currentUser.playerName) {
+    if (window.currentUser.playerName) {
       showScreen("decade-selection-screen");
       generateDecadeButtons();
       updatePremiumButtonsState();
@@ -271,19 +279,19 @@ export async function registerUser() {
     }
 
     if (response.status === 404 || response.status >= 500) {
-      useLocalApiFallback = true;
+      window.useLocalApiFallback = true;
     }
 
-    if (!useLocalApiFallback) {
+    if (!window.useLocalApiFallback) {
       showAppAlert(`Error al registrar: ${data?.message || "No se pudo completar el registro."}`);
       return;
     }
   } catch (error) {
     console.warn("API no disponible, usando registro local:", error);
-    useLocalApiFallback = true;
+    window.useLocalApiFallback = true;
   }
 
-  if (useLocalApiFallback) {
+  if (window.useLocalApiFallback) {
     const users = getLocalUsers();
     if (users[email]) {
       showAppAlert("Ese correo ya está registrado.");
@@ -366,4 +374,68 @@ export function logout() {
 
   showAppAlert("Sesión cerrada correctamente.");
   showScreen("login-screen");
+}
+
+
+async function syncUserPermissions() {
+  // 1. Asegurar que tenemos usuario
+  if (!currentUser || !currentUser.email) {
+    const stored = getCurrentUserData();
+    if (stored && stored.email) {
+      currentUser = stored;
+    } else {
+      return;
+    }
+  }
+
+  const safeEmail = currentUser.email.trim();
+
+  try {
+    // v.66: Log silenciado para producción
+    // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
+
+    // Fetch con Cache Busting agresivo
+    const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
+      cache: "no-store",
+      headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      if (data.user && Array.isArray(data.user.unlocked_sections)) {
+        const activeNow = getActivePermissions();
+        const serverSections = data.user.unlocked_sections;
+
+        const mergedSections = [...new Set([...activeNow, ...serverSections])];
+
+        if (currentUser) {
+          currentUser.unlocked_sections = mergedSections;
+          const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+          userData.unlocked_sections = mergedSections;
+          localStorage.setItem("userData", JSON.stringify(userData));
+        }
+
+        const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || "{}");
+        allPerms[safeEmail] = {
+          email: safeEmail,
+          unlocked_sections: mergedSections,
+          is_admin: safeEmail === ADMIN_EMAIL,
+        };
+        localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
+
+        // v.66: Log silenciado
+        // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
+
+        const currentScreen = document.querySelector(".screen.active");
+        if (currentScreen) {
+          if (currentScreen.id === "category-screen") generateCategoryButtons();
+          if (currentScreen.id === "decade-selection-screen") updatePremiumButtonsState();
+          if (currentScreen.id === "songs-list-category-screen") showSongsListCategorySelection();
+        }
+      }
+    }
+  } catch (error) {
+    console.warn("❌ Error al sincronizar perfil:", error);
+  }
 }
