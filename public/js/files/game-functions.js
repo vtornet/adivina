@@ -1,3 +1,6 @@
+import { parseJsonResponse } from "./helpers.js";
+import { getLocalGameHistory } from "./user-functions.js";
+
 export async function loadGameHistory(userEmail) {
   if (useLocalApiFallback) {
     const localHistory = getLocalGameHistory();

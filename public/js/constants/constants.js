@@ -8,7 +8,6 @@ window.API_BASE_URL =
 window.currentUser = null;
 window.useLocalApiFallback = false;
 
-
 window.currentOnlineGameCode = null;
 window.currentOnlineSongs = [];
 window.currentOnlineEmail = null;
@@ -18,3 +17,9 @@ window.isElderlyMode = false;
 window.isSummerSongsMode = false;
 window.onlineInvitePollInterval = null;
 window.lastInviteCodes = new Set();
+
+window.userAccumulatedScores = {};
+window.gameHistory = [];
+window.pendingPurchaseCategory = null;
+
+window.appModalResolver = null;

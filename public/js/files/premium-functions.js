@@ -2,6 +2,7 @@
 // Necesarias para validar el acceso premium gestionado por Stripe
 
 import appInfo from "../../app_info/app-info.js";
+import { getActivePermissions } from "./user-functions.js";
 
 export function isPremiumCategory(categoryId) {
   return appInfo.premium.premiumCategories.has(categoryId);

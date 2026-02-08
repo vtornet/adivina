@@ -1,4 +1,5 @@
 import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../constants/app-constants.js";
+import { parseJsonResponse } from "./helpers.js";
 
 export function getCurrentUserData() {
   const userDataString = localStorage.getItem("userData");

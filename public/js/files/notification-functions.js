@@ -106,3 +106,30 @@ export function toggleNotificationsPanel() {
     panel.classList.add("hidden");
   }
 }
+
+export async function requestInviteNotificationPermission() {
+  if (!("Notification" in window)) return;
+
+  const dismissed = localStorage.getItem("inviteNotificationsDismissed");
+  const prompted = localStorage.getItem(NOTIFICATIONS_PROMPTED_KEY);
+  if (dismissed === "true" || Notification.permission !== "default" || prompted === "true") {
+    return;
+  }
+
+  const allowed = await showAppConfirm("¿Quieres recibir notificaciones cuando tengas invitaciones online?");
+  localStorage.setItem(NOTIFICATIONS_PROMPTED_KEY, "true");
+  if (!allowed) {
+    localStorage.setItem("inviteNotificationsDismissed", "true");
+    return;
+  }
+
+  Notification.requestPermission()
+    .then((result) => {
+      if (result !== "granted") {
+        localStorage.setItem("inviteNotificationsDismissed", "true");
+      }
+    })
+    .catch((error) => {
+      console.warn("No se pudo solicitar permiso de notificaciones:", error);
+    });
+}

@@ -24,6 +24,7 @@ import {
   getLocalGameHistory,
   saveLocalGameHistory,
   closePremiumModal,
+  loadUserScores,
 } from "./files/user-functions.js";
 
 import {
@@ -55,6 +56,8 @@ import { closeHamburgerMenu, toggleHamburgerMenu } from "./files/burger-function
 import { showScreen } from "./files/screen-functions.js";
 import { APP_VERSION } from "./constants/app-constants.js";
 import { startOnlineInvitePolling } from "./files/online-functions.js";
+import { generateCategoryButtons, updatePremiumButtonsState } from "./files/ui-functions.js";
+import { loadGameHistory } from "./files/game-functions.js";
 
 let gameState = {};
 let audioPlaybackTimeout;
@@ -91,16 +94,16 @@ let pendingPurchaseCategory = null;
 
 let appModalResolver = null;
 
-function updatePremiumButtonsState() {
-  const summerButton = document.getElementById("summer-songs-btn");
-  if (!summerButton) return;
+// function updatePremiumButtonsState() {
+//   const summerButton = document.getElementById("summer-songs-btn");
+//   if (!summerButton) return;
 
-  if (hasPremiumAccess()) {
-    summerButton.classList.remove("locked");
-  } else {
-    summerButton.classList.add("locked");
-  }
-}
+//   if (hasPremiumAccess()) {
+//     summerButton.classList.remove("locked");
+//   } else {
+//     summerButton.classList.add("locked");
+//   }
+// }
 
 // main.js - Función showScreen
 
@@ -442,37 +445,37 @@ function parseDisplay(displayText) {
   return { artist: parts[0].trim(), title: parts.slice(1).join(" - ").trim() };
 }
 
-async function generateDecadeButtons() {
-  const container = document.getElementById("decade-buttons");
-  container.innerHTML = "";
+// async function generateDecadeButtons() {
+//   const container = document.getElementById("decade-buttons");
+//   container.innerHTML = "";
 
-  DECADES_ORDER.forEach((decadeId) => {
-    const button = document.createElement("button");
-    button.className = "category-btn";
+//   DECADES_ORDER.forEach((decadeId) => {
+//     const button = document.createElement("button");
+//     button.className = "category-btn";
 
-    if (decadeId === "especiales") {
-      button.className = "category-btn tertiary";
-      button.style.border = "2px solid gold";
-    }
+//     if (decadeId === "especiales") {
+//       button.className = "category-btn tertiary";
+//       button.style.border = "2px solid gold";
+//     }
 
-    button.innerText = getDecadeLabel(decadeId);
-    button.onclick = () => selectDecade(decadeId);
-    container.appendChild(button);
-  });
+//     button.innerText = getDecadeLabel(decadeId);
+//     button.onclick = () => selectDecade(decadeId);
+//     container.appendChild(button);
+//   });
 
-  const allButton = document.createElement("button");
-  allButton.className = "category-btn tertiary";
-  allButton.innerText = getDecadeLabel("Todas");
-  allButton.onclick = () => selectDecade("Todas");
+//   const allButton = document.createElement("button");
+//   allButton.className = "category-btn tertiary";
+//   allButton.innerText = getDecadeLabel("Todas");
+//   allButton.onclick = () => selectDecade("Todas");
 
-  if (hasPremiumAccess()) {
-    allButton.classList.remove("locked");
-  } else {
-    allButton.classList.add("locked");
-  }
+//   if (hasPremiumAccess()) {
+//     allButton.classList.remove("locked");
+//   } else {
+//     allButton.classList.add("locked");
+//   }
 
-  container.appendChild(allButton);
-}
+//   container.appendChild(allButton);
+// }
 
 /**
  * Maneja la selección de una década y redirige a la pantalla de categoría o de jugadores.
@@ -536,159 +539,6 @@ async function selectDecade(decade) {
     generateCategoryButtons(); // Genera los botones de categoría para la década seleccionada
     showScreen("category-screen");
   }
-}
-
-function generateCategoryButtons() {
-  const container = document.getElementById("category-buttons");
-  container.innerHTML = "";
-
-  const key = gameState.selectedDecade;
-
-  // --- 1. Título dinámico ---
-  const titleEl = document.getElementById("category-screen-title");
-  if (titleEl) {
-    titleEl.innerHTML =
-      key === "especiales"
-        ? "Selecciona una Edición Especial"
-        : `Elige una Categoría (<span id="selected-decade-display">${getDecadeLabel(key)}</span>)`;
-  }
-
-  // --- 2. CASO ESPECIAL: VERANO (Mantenido igual) ---
-  if (key === "especiales") {
-    const btnVerano = document.createElement("button");
-    btnVerano.className = "category-btn";
-    btnVerano.innerText = "☀️ Canciones del Verano";
-
-    if (!hasPremiumAccess()) {
-      btnVerano.classList.add("locked");
-      btnVerano.onclick = () => showPremiumModal("El modo Verano es contenido Premium.");
-    } else {
-      btnVerano.onclick = () => startSummerSongsGame();
-    }
-    container.appendChild(btnVerano);
-
-    const infoDiv = document.createElement("div");
-    infoDiv.style.marginTop = "30px";
-    infoDiv.style.padding = "20px";
-    infoDiv.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
-    infoDiv.style.borderRadius = "12px";
-    infoDiv.style.border = "1px dashed var(--secondary-color)";
-    infoDiv.style.textAlign = "center";
-    infoDiv.innerHTML = `
-            <p style="color: var(--light-text-color); margin-bottom: 10px; font-size: 0.95rem;">
-                🚀 <strong>Próximamente más categorías</strong>
-            </p>
-            <p style="font-size: 0.85rem; color: #ccc; line-height: 1.5;">
-                Estamos trabajando en nuevas ediciones especiales.
-            </p>
-        `;
-    container.appendChild(infoDiv);
-
-    const backBtnEsp = document.createElement("button");
-    backBtnEsp.className = "btn secondary";
-    backBtnEsp.style.marginTop = "20px";
-    backBtnEsp.innerText = "Volver";
-    backBtnEsp.onclick = () => showScreen("decade-selection-screen");
-    container.appendChild(backBtnEsp);
-    return;
-  }
-
-  // --- 3. CASO ESPECIAL: TODAS LAS DÉCADAS (Mantenido igual) ---
-  if (key === "Todas") {
-    const catsToRender =
-      typeof window.allPossibleCategories !== "undefined" ? window.allPossibleCategories : CATEGORY_ORDER;
-
-    catsToRender.forEach((categoryId) => {
-      const button = document.createElement("button");
-      button.className = "category-btn";
-
-      if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
-        button.innerText = getCategoryLabel(categoryId);
-        button.classList.add("locked");
-        button.onclick = () =>
-          showPremiumModal(`¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong>?`, categoryId);
-      } else {
-        button.innerText = getCategoryLabel(categoryId);
-        button.onclick = () => selectCategory(categoryId);
-      }
-      container.appendChild(button);
-    });
-
-    const backBtn = document.createElement("button");
-    backBtn.className = "btn secondary";
-    backBtn.style.marginTop = "20px";
-    backBtn.innerText = "Volver a Décadas";
-    backBtn.onclick = () => showScreen("decade-selection-screen");
-    container.appendChild(backBtn);
-    return;
-  }
-
-  // --- 4. DÉCADAS NORMALES (Optimizado v.60) ---
-  const internalKey = key.toLowerCase() === "actual" ? "actual" : key;
-
-  // AQUÍ ESTÁ LA MAGIA: Leemos la whitelist en lugar de hacer 'ifs' manuales
-  const allowedCategories = window.VALID_CATEGORIES_PER_DECADE ? window.VALID_CATEGORIES_PER_DECADE[internalKey] : [];
-
-  // Mapeo seguro de datos
-  if (typeof window.allSongsByDecadeAndCategory !== "undefined") {
-    let dataFound = window.allSongsByDecadeAndCategory[internalKey];
-    if (dataFound) configuracionCanciones[key] = dataFound;
-  }
-
-  const currentDecadeSongs = configuracionCanciones[key] || {};
-
-  const catsToRender =
-    typeof window.allPossibleCategories !== "undefined" ? window.allPossibleCategories : CATEGORY_ORDER;
-
-  catsToRender.forEach((categoryId) => {
-    const button = document.createElement("button");
-    button.className = "category-btn";
-
-    // VERIFICACIÓN: ¿Está permitido en la whitelist?
-    const isAvailable = allowedCategories.includes(categoryId);
-
-    if (!isAvailable) {
-      // Lógica para categorías que NO existen en esta década (ej: Series en Actual)
-      button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Próximamente)</span>`;
-      button.classList.add("secondary");
-      button.style.opacity = "0.6";
-      button.style.cursor = "not-allowed";
-      button.onclick = () => showAppAlert(`🚧 Estamos trabajando en ${getCategoryLabel(categoryId)} para esta década.`);
-    } else {
-      // Lógica para categorías que SÍ existen (Español, Inglés, etc.)
-      const songsArray = currentDecadeSongs[categoryId];
-      const hasSongs = Array.isArray(songsArray) && songsArray.length >= 4;
-
-      if (isPremiumCategory(categoryId) && !hasCategoryAccess(categoryId)) {
-        // Caso Premium Bloqueado
-        button.innerText = getCategoryLabel(categoryId);
-        button.classList.add("locked");
-        button.onclick = () =>
-          showPremiumModal(
-            `¿Quieres desbloquear <strong>${getCategoryLabel(categoryId)}</strong> en todas las décadas?`,
-            categoryId,
-          );
-      } else if (!hasSongs) {
-        // Caso Error de carga o vacío
-        button.innerHTML = `${getCategoryLabel(categoryId)} <br><span style="font-size:0.7em; opacity:0.8; font-weight:normal;">(Mantenimiento)</span>`;
-        button.classList.add("secondary");
-        button.onclick = () => showAppAlert("Estamos actualizando esta categoría. Inténtalo más tarde.");
-      } else {
-        // Caso OK
-        button.innerText = getCategoryLabel(categoryId);
-        button.onclick = () => selectCategory(categoryId);
-      }
-    }
-
-    container.appendChild(button);
-  });
-
-  const backBtn = document.createElement("button");
-  backBtn.className = "btn secondary";
-  backBtn.style.marginTop = "20px";
-  backBtn.innerText = "Volver a Décadas";
-  backBtn.onclick = () => showScreen("decade-selection-screen");
-  container.appendChild(backBtn);
 }
 
 async function loadAllDecadesForCategory(categoryId) {
@@ -915,7 +765,7 @@ async function startElderlyModeGame() {
 
 // main.js - Nueva función para el modo "Canciones del Verano"
 // main.js - Función MODIFICADA para el modo "Canciones del Verano"
-async function startSummerSongsGame() {
+export async function startSummerSongsGame() {
   if (!hasPremiumAccess()) {
     showPremiumModal("Contenido premium. Próximamente disponible mediante desbloqueo.");
     return;
@@ -2383,13 +2233,13 @@ function pollOnlineGameStatus() {
   }, 3000); // Comprueba cada 3 segundos (antes 5 segundos, 3 es más rápido)
 }
 
-function populateOnlineSelectors() {
-  const decadeSelect = document.getElementById("online-decade-select");
-  const categorySelect = document.getElementById("online-category-select");
+// function populateOnlineSelectors() {
+//   const decadeSelect = document.getElementById("online-decade-select");
+//   const categorySelect = document.getElementById("online-category-select");
 
-  popu(decadeSelect, getDe());
-  populateCategoryOptions(categorySelect, getCategoriesForSelect());
-}
+//   popu(decadeSelect, getDe());
+//   populateCategoryOptions(categorySelect, getCategoriesForSelect());
+// }
 
 async function saveOnlineGameToHistory(gameData) {
   try {
@@ -2419,13 +2269,13 @@ function getWinnerName(players) {
   return "Empate";
 }
 
-function populateInviteSelectors() {
-  const decadeSelect = document.getElementById("invite-decade-select");
-  const categorySelect = document.getElementById("invite-category-select");
+// function populateInviteSelectors() {
+//   const decadeSelect = document.getElementById("invite-decade-select");
+//   const categorySelect = document.getElementById("invite-category-select");
 
-  populateDecadeOptions(decadeSelect, getDecadesForSelect());
-  populateCategoryOptions(categorySelect, getCategoriesForSelect());
-}
+//   populateDecadeOptions(decadeSelect, getDecadesForSelect());
+//   populateCategoryOptions(categorySelect, getCategoriesForSelect());
+// }
 
 function formatOnlineGameDate(dateValue) {
   if (!dateValue) return "";
@@ -2736,32 +2586,32 @@ function showInviteToast(invites) {
   }, 6000);
 }
 
-async function requestInviteNotificationPermission() {
-  if (!("Notification" in window)) return;
+// async function requestInviteNotificationPermission() {
+//   if (!("Notification" in window)) return;
 
-  const dismissed = localStorage.getItem("inviteNotificationsDismissed");
-  const prompted = localStorage.getItem(NOTIFICATIONS_PROMPTED_KEY);
-  if (dismissed === "true" || Notification.permission !== "default" || prompted === "true") {
-    return;
-  }
+//   const dismissed = localStorage.getItem("inviteNotificationsDismissed");
+//   const prompted = localStorage.getItem(NOTIFICATIONS_PROMPTED_KEY);
+//   if (dismissed === "true" || Notification.permission !== "default" || prompted === "true") {
+//     return;
+//   }
 
-  const allowed = await showAppConfirm("¿Quieres recibir notificaciones cuando tengas invitaciones online?");
-  localStorage.setItem(NOTIFICATIONS_PROMPTED_KEY, "true");
-  if (!allowed) {
-    localStorage.setItem("inviteNotificationsDismissed", "true");
-    return;
-  }
+//   const allowed = await showAppConfirm("¿Quieres recibir notificaciones cuando tengas invitaciones online?");
+//   localStorage.setItem(NOTIFICATIONS_PROMPTED_KEY, "true");
+//   if (!allowed) {
+//     localStorage.setItem("inviteNotificationsDismissed", "true");
+//     return;
+//   }
 
-  Notification.requestPermission()
-    .then((result) => {
-      if (result !== "granted") {
-        localStorage.setItem("inviteNotificationsDismissed", "true");
-      }
-    })
-    .catch((error) => {
-      console.warn("No se pudo solicitar permiso de notificaciones:", error);
-    });
-}
+//   Notification.requestPermission()
+//     .then((result) => {
+//       if (result !== "granted") {
+//         localStorage.setItem("inviteNotificationsDismissed", "true");
+//       }
+//     })
+//     .catch((error) => {
+//       console.warn("No se pudo solicitar permiso de notificaciones:", error);
+//     });
+// }
 
 function sendInviteNotification(invitingPlayerName) {
   // Verificar soporte

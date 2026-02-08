@@ -1,3 +1,6 @@
+import { loadPlayerOnlineGames } from "./online-functions.js";
+import { updatePremiumButtonsState } from "./ui-functions.js";
+
 export function showScreen(screenId) {
   document.querySelectorAll(".screen").forEach((screen) => {
     screen.classList.remove("active");
