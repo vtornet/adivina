@@ -18,3 +18,8 @@ export const CATEGORY_ORDER = Array.isArray(window.allPossibleCategories)
   : ["espanol", "ingles", "peliculas", "series", "tv", "infantiles", "anuncios"];
 
 export const DECADES_WITH_SPECIALS = [...DECADES_ORDER, "Todas"];
+
+// Local storage keys for user data
+export const LOCAL_USERS_KEY = "localUsers";
+export const LOCAL_SCORES_KEY = "localScores";
+export const LOCAL_GAME_HISTORY_KEY = "localGameHistory";
