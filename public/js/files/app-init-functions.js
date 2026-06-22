@@ -30,7 +30,7 @@ export function setupPaymentListeners() {
   const sessionId = urlParams.get("session_id");
 
   if (sessionId) {
-    // v.66: Log silenciado
+    
     // console.log("💳 Detectado retorno de pago Stripe. Sincronizando...");
     syncUserPermissions();
     // Limpiamos la URL para no re-procesar el éxito al recargar
@@ -57,7 +57,7 @@ export async function syncUserPermissions() {
   const safeEmail = currentUser.email.trim();
 
   try {
-    // v.66: Log silenciado para producción
+    
     // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
 
     // Fetch con Cache Busting agresivo
@@ -90,7 +90,7 @@ export async function syncUserPermissions() {
         };
         localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-        // v.66: Log silenciado
+        
         // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
 
         const currentScreen = document.querySelector(".screen.active");

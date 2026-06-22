@@ -92,7 +92,7 @@ export async function loginUser() {
   }
 
   if (window.currentUser) {
-    // [FIX v.67] Forzamos la sincronización con la BD para recuperar compras perdidas
+    
     // Esto arregla el problema tras reset de contraseña
     try {
       await syncUserPermissions();
@@ -393,7 +393,7 @@ async function syncUserPermissions() {
   const safeEmail = currentUser.email.trim();
 
   try {
-    // v.66: Log silenciado para producción
+    
     // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
 
     // Fetch con Cache Busting agresivo
@@ -426,7 +426,7 @@ async function syncUserPermissions() {
         };
         localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-        // v.66: Log silenciado
+        
         // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
 
         const currentScreen = document.querySelector(".screen.active");

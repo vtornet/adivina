@@ -137,21 +137,10 @@ import {
   startSummerSongsGame,
 } from "./files/gameplay-functions.js";
 import { startApp, initializeApp, setupPaymentListeners, refreshUI } from "./files/app-init-functions.js";
-// Variables globales ahora accesibles via window (definidas en constants.js)
-// gameState, audioPlayer, sfxAcierto, sfxError están en window
-
 // Referencias a elementos DOM (necesarias en main.js)
 const audioPlayer = window.audioPlayer || document.getElementById("audio-player");
 const sfxAcierto = window.sfxAcierto || document.getElementById("sfx-acierto");
 const sfxError = window.sfxError || document.getElementById("sfx-error");
-
-// const API_BASE_URL =
-//   window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-//     ? window.location.origin
-//     : CANONICAL_PROD_ORIGIN;
-
-// window.currentUser = null;
-// window.useLocalApiFallback = false;
 
 (() => {
   const savedUserJSON = localStorage.getItem("userData");
@@ -166,21 +155,6 @@ const sfxError = window.sfxError || document.getElementById("sfx-error");
     }
   }
 })();
-// Variables ahora importadas desde constants.js
-// userAccumulatedScores, gameHistory, pendingPurchaseCategory, appModalResolver
-
-// function updatePremiumButtonsState() {
-//   const summerButton = document.getElementById("summer-songs-btn");
-//   if (!summerButton) return;
-
-//   if (hasPremiumAccess()) {
-//     summerButton.classList.remove("locked");
-//   } else {
-//     summerButton.classList.add("locked");
-//   }
-// }
-
-// main.js - Función showScreen
 
 window.showScreen = showScreen;
 
@@ -198,17 +172,10 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// =====================================================================
-// FUNCIONES DE AUTENTICACIÓN (Registro y Login)
-// =====================================================================
-
+// FUNCIONES DE AUTENTICACIÓN
 window.loginUser = loginUser;
 
-// --- NUEVAS FUNCIONES PARA VERIFICACIÓN DE EMAIL ---
-
-// ==========================================
-// WRAPPER DE SEGURIDAD (NO ROMPER HTML)
-// ==========================================
+// WRAPPER DE SEGURIDAD PARA BORRAR HISTORIAL ONLINE
 async function confirmClearOnlineGameHistory() {
   const confirmed = await showAppConfirm(
     "¿Seguro que quieres borrar TODO el historial de partidas online? Esta acción no se puede deshacer.",
@@ -274,13 +241,13 @@ function validateGlobals() {
 // Ejecutar validación después de cargar
 setTimeout(validateGlobals, 1000);
 
-// Funciones de navegación importadas desde navigation-functions.js
+// Funciones de navegación
 window.endOnlineModeAndGoHome = endOnlineModeAndGoHome;
 window.goToOnlineMenu = goToOnlineMenu;
 window.selectDecade = selectDecade;
 window.selectCategory = selectCategory;
 
-// Funciones de gameplay importadas desde gameplay-functions.js
+// Funciones de gameplay
 window.playAudioSnippet = playAudioSnippet;
 window.selectPlayers = selectPlayers;
 window.startGame = startGame;
@@ -292,7 +259,7 @@ window.continueToNextPlayerTurn = continueToNextPlayerTurn;
 window.endGame = endGame;
 window.startSummerSongsGame = startSummerSongsGame;
 
-// Funciones de songs-history importadas desde songs-history.js
+// Funciones de historial de canciones
 window.updateRecentSongsHistory = updateRecentSongsHistory;
 window.getRecentSongs = getRecentSongs;
 
@@ -357,61 +324,30 @@ async function setPlayerName() {
   }
 }
 
-// calculateDuelWins ya está importada desde statistics-functions.js
-
-// parseDisplay importada desde songs-list-functions.js
 window.parseDisplay = parseDisplay;
-
-// selectDecade importada desde navigation-functions.js
 window.selectDecade = selectDecade;
 
-// loadAllDecadesForCategory importada desde songs-list-functions.js
-
-// selectPlayers importada desde gameplay-functions.js
-
-// Funciones de elderly-mode importadas desde elderly-functions.js
+// Funciones de elderly-mode
 window.addElderlyPlayerInput = addElderlyPlayerInput;
 window.startElderlyModeGame = startElderlyModeGame;
-// elderlyPlayerCount ya está importada desde constants.js
 
-// startSummerSongsGame importada desde gameplay-functions.js
-// startGame importada desde gameplay-functions.js
-// setupQuestion importada desde gameplay-functions.js
-
-// updateAttemptsCounter importada desde gameplay-functions.js
-// checkAnswer importada desde gameplay-functions.js
-// nextPlayerOrEndGame importada desde gameplay-functions.js
-// continueToNextPlayerTurn importada desde gameplay-functions.js
-// endGame importada desde gameplay-functions.js
-
-// Funciones de navegación importadas desde navigation-functions.js
+// Funciones de navegación
 window.setOnlineMenuButtonVisibility = setOnlineMenuButtonVisibility;
 window.setEndGameNavigationButtons = setEndGameNavigationButtons;
 window.exitGame = exitGame;
 window.confirmReturnToMenu = confirmReturnToMenu;
 
-// =====================================================================
-// FUNCIONES DE PANTALLA DE ESTADÍSTICAS (ACTUALIZADAS para décadas y categorías)
-// =====================================================================
-
-// Funciones de estadísticas importadas desde statistics-functions.js
+// Funciones de estadísticas
 window.showStatisticsScreen = showStatisticsScreen;
 window.confirmResetStatistics = confirmResetStatistics;
 window.renderUserTotalScores = renderUserTotalScores;
 window.renderDuelHistory = renderDuelHistory;
-// calculateDuelWins ya está importada desde statistics-functions.js
 
-// =====================================================================
-// FUNCIONES DE PANTALLA DE LISTADO DE CANCIONES (ACTUALIZADAS para décadas y categorías)
-// =====================================================================
-
-// Funciones de listado de canciones importadas desde songs-list-functions.js
+// Funciones de listado de canciones
 window.showSongsListCategorySelection = showSongsListCategorySelection;
 window.displaySongsForCategory = displaySongsForCategory;
 
-// Variables para el modo online ahora importadas desde constants.js
-
-// Funciones online importadas desde online-functions.js
+// Funciones online
 window.createOnlineGame = createOnlineGame;
 window.joinOnlineGame = joinOnlineGame;
 window.joinOnlineGameFromPending = joinOnlineGameFromPending;
@@ -436,11 +372,11 @@ window.continueOnlineGame = continueOnlineGame;
 window.showOnlineResults = showOnlineResults;
 window.loadPlayerOnlineGames = loadPlayerOnlineGames;
 
-// Funciones de share importadas desde share-functions.js
+// Funciones de share
 window.generateShareText = generateShareText;
 window.shareGameResultHandler = shareGameResultHandler;
 
-// Funciones de navegación importadas desde navigation-functions.js
+// Funciones de navegación
 window.showStats = showStats;
 window.showAllSongs = showAllSongs;
 
@@ -462,7 +398,6 @@ Object.assign(window, {
   loginUser,
   registerUser,
   setPlayerName,
-  // Gameplay functions
   playAudioSnippet,
   selectPlayers,
   startGame,
@@ -473,7 +408,6 @@ Object.assign(window, {
   continueToNextPlayerTurn,
   endGame,
   startSummerSongsGame,
-  // Navigation functions
   confirmReturnToMenu,
   addElderlyPlayerInput,
   startElderlyModeGame,
@@ -488,88 +422,14 @@ Object.assign(window, {
   showSongsListCategorySelection,
 });
 
-// =====================================================================
 // INICIALIZACIÓN
-// =====================================================================
-
-// ... (resto del código)
-
-// Funciones de cookies importadas desde cookies-functions.js
 window.checkCookieConsent = checkCookieConsent;
 window.acceptCookieConsent = acceptCookieConsent;
 
-// Sustituye la función existente syncUserPermissions por esta:
-// async function syncUserPermissions() {
-//   // 1. Asegurar que tenemos usuario
-//   if (!currentUser || !currentUser.email) {
-//     const stored = getCurrentUserData();
-//     if (stored && stored.email) {
-//       currentUser = stored;
-//     } else {
-//       return;
-//     }
-//   }
-
-//   const safeEmail = currentUser.email.trim();
-
-//   try {
-//     // v.66: Log silenciado para producción
-//     // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
-
-//     // Fetch con Cache Busting agresivo
-//     const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
-//       cache: "no-store",
-//       headers: { Pragma: "no-cache", "Cache-Control": "no-cache" },
-//     });
-
-//     if (response.ok) {
-//       const data = await response.json();
-
-//       if (data.user && Array.isArray(data.user.unlocked_sections)) {
-//         const activeNow = getActivePermissions();
-//         const serverSections = data.user.unlocked_sections;
-
-//         const mergedSections = [...new Set([...activeNow, ...serverSections])];
-
-//         if (currentUser) {
-//           currentUser.unlocked_sections = mergedSections;
-//           const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-//           userData.unlocked_sections = mergedSections;
-//           localStorage.setItem("userData", JSON.stringify(userData));
-//         }
-
-//         const allPerms = JSON.parse(localStorage.getItem(PERMISSIONS_STORAGE_KEY) || "{}");
-//         allPerms[safeEmail] = {
-//           email: safeEmail,
-//           unlocked_sections: mergedSections,
-//           is_admin: safeEmail === ADMIN_EMAIL,
-//         };
-//         localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
-
-//         // v.66: Log silenciado
-//         // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
-
-//         const currentScreen = document.querySelector(".screen.active");
-//         if (currentScreen) {
-//           if (currentScreen.id === "category-screen") generateCategoryButtons();
-//           if (currentScreen.id === "decade-selection-screen") updatePremiumButtonsState();
-//           if (currentScreen.id === "songs-list-category-screen") showSongsListCategorySelection();
-//         }
-//       }
-//     }
-//   } catch (error) {
-//     console.warn("❌ Error al sincronizar perfil:", error);
-//   }
-// }
-
-// isSyncing ahora importada desde app-init-functions.js
-
-// Funciones de inicialización importadas desde app-init-functions.js
+// Funciones de inicialización
 window.setupPaymentListeners = setupPaymentListeners;
 window.refreshUI = refreshUI;
 window.startApp = startApp;
-
-// selectCategory importada desde navigation-functions.js
 window.selectCategory = selectCategory;
 
 // Inicialización

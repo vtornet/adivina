@@ -99,7 +99,7 @@ export function generateCategoryButtons() {
     return;
   }
 
-  // --- 4. DÉCADAS NORMALES (Optimizado v.60) ---
+  // --- 4. DÉCADAS NORMALES ---
   const internalKey = key.toLowerCase() === "actual" ? "actual" : key;
 
   // AQUÍ ESTÁ LA MAGIA: Leemos la whitelist en lugar de hacer 'ifs' manuales
@@ -203,7 +203,7 @@ export function populateOnlineSelectors() {
   const decadeSelect = document.getElementById("online-decade-select");
   const categorySelect = document.getElementById("online-category-select");
 
-  popu(decadeSelect, getDe());
+  populateDecadeOptions(decadeSelect, getDecadesForSelect());
   populateCategoryOptions(categorySelect, getCategoriesForSelect());
 }
 

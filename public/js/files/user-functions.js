@@ -133,7 +133,7 @@ export async function redirectToStripe(categoryKey) {
     const session = await response.json();
 
     if (response.ok && session.id) {
-      // v.66: Preparado para producción.
+      
       // Cuando tengas la clave REAL, cambia 'pk_test_...' por 'pk_live_...'
       const stripeKey =
         "pk_test_51StvbzAzxZ5jYRrVht2VaE3PAIbqyJSDq2Ym9XPyohsv5gKjkGRBQ5OsvRR9EE3wTNvbDVQweNfIb8Z7Bc3byFXy00QVZ0iVkD";

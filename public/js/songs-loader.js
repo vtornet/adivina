@@ -1,16 +1,10 @@
-// frontend/js/songs-loader.js
-// Este objeto contendrá la configuración de canciones cargada dinámicamente
-// Será lo que antes era 'configuracionCanciones'
-window.allSongsByDecadeAndCategory = {};
-
-// === LISTA BLANCA ESTRICTA (v.60) ===
-// Define QUÉ categorías existen realmente. Si no está aquí, se bloquea.
+// Lista blanca de categorías válidas por década
 const VALID_CATEGORIES_PER_DECADE = {
     '80s':    ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'],
     '90s':    ['espanol', 'ingles', 'peliculas', 'series', 'tv', 'infantiles', 'anuncios'],
-    '00s':    ['espanol', 'ingles', 'peliculas', 'series', 'tv'], // Sin infantiles/anuncios
-    '10s':    ['espanol', 'ingles'], // Solo música
-    'actual': ['espanol', 'ingles'], // Solo música
+    '00s':    ['espanol', 'ingles', 'peliculas', 'series', 'tv'],
+    '10s':    ['espanol', 'ingles'],
+    'actual': ['espanol', 'ingles'],
     'verano': ['consolidated'],
     'elderly': ['consolidated']
 };
@@ -25,21 +19,9 @@ window.VALID_CATEGORIES_PER_DECADE = VALID_CATEGORIES_PER_DECADE;
 
 /**
  * Carga las canciones para una década y categoría específica desde un archivo JS.
- * Si la década es 'Todas', llama a loadAllSongs().
  * @param {string} decade - La década seleccionada (ej. '80s', 'Todas').
  * @param {string} category - La categoría seleccionada (ej. 'espanol', 'consolidated').
  * @returns {Promise<void>} Una promesa que se resuelve cuando las canciones han sido cargadas.
- */
-/**
- * Carga las canciones verificando primero la Lista Blanca (v.60).
- */
-/**
- * Carga las canciones verificando primero la Lista Blanca.
- * v.61: Incluye PUENTE DE REPARACIÓN para mayúsculas/minúsculas (Actual vs actual).
- */
-/**
- * Carga las canciones.
- * v.63: Fuerza la ruta 'actual' (minúscula) para compatibilidad total Linux/Windows.
  */
 async function loadSongsForDecadeAndCategory(decade, category) {
     if (decade === 'Todas') {
@@ -58,8 +40,6 @@ async function loadSongsForDecadeAndCategory(decade, category) {
 
     window.allSongsByDecadeAndCategory[internalKey][category] = [];
 
-    // CAMBIO CRÍTICO v.63: Forzamos siempre 'actual' en minúscula.
-    // Esto coincidirá con el nombre de carpeta que vamos a fijar en el Paso 2.
     const folderName = (decade.toLowerCase() === 'actual') ? 'actual' : decade;
     
     const scriptPaths = [`/data/songs/${folderName}/${category}.js`];

@@ -29,7 +29,7 @@ export function playAudioSnippet() {
   let fileName = typeof currentQuestion.file === "string" ? currentQuestion.file.trim() : "";
   if (!fileName) return;
 
-  // [CORRECCIÓN v.76 - Case Sensitivity Fix]
+  
   // Detectamos si la ruta viene con Mayúscula (Actual) y la forzamos a minúscula (actual)
   // para coincidir con el nombre físico de la carpeta en el servidor Linux.
   if (fileName.startsWith("Actual/")) {
