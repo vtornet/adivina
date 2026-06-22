@@ -27,11 +27,8 @@ import {
 } from "./files/premium-functions.js";
 
 import {
-  getCurrentUserData,
   getUserPermissions,
   getActivePermissions,
-  getLocalUsers,
-  saveLocalUsers,
   getLocalScores,
   saveLocalScores,
   getLocalGameHistory,
@@ -39,6 +36,7 @@ import {
   closePremiumModal,
   loadUserScores,
   saveUserScores,
+  setPlayerName,
 } from "./files/user-functions.js";
 
 import {
@@ -54,10 +52,7 @@ import { addNotification, toggleNotificationsPanel } from "./files/notification-
 
 import { populateDecadeOptions, populateCategoryOptions } from "./files/populate-functions.js";
 
-import { parseJsonResponse } from "./files/helpers.js";
 import {
-  showAppAlert,
-  showAppConfirm,
   showAppModal,
   showInstructions,
   showChangePasswordModal,
@@ -68,7 +63,6 @@ import {
 } from "./files/modal-functions.js";
 import { closeHamburgerMenu, toggleHamburgerMenu } from "./files/burger-functions.js";
 import { showScreen } from "./files/screen-functions.js";
-import { APP_VERSION } from "./constants/app-constants.js";
 import {
   startOnlineInvitePolling,
   loadPlayerOnlineGames,
@@ -96,8 +90,9 @@ import {
   getWinnerName,
   formatOnlineGameDate,
   isOnlineGameFinished,
+  confirmClearOnlineGameHistory,
 } from "./files/online-functions.js";
-import { generateCategoryButtons, updatePremiumButtonsState, generateDecadeButtons } from "./files/ui-functions.js";
+import { generateCategoryButtons, updatePremiumButtonsState } from "./files/ui-functions.js";
 import { loadGameHistory } from "./files/game-functions.js";
 import { togglePasswordVisibility, showPasswordRecoveryInfo } from "./files/auth-helpers.js";
 import { updateRecentSongsHistory, getRecentSongs } from "./files/songs-history.js";
@@ -136,7 +131,7 @@ import {
   endGame,
   startSummerSongsGame,
 } from "./files/gameplay-functions.js";
-import { startApp, initializeApp, setupPaymentListeners, refreshUI } from "./files/app-init-functions.js";
+import { startApp, initializeApp, setupPaymentListeners, refreshUI, validateGlobals } from "./files/app-init-functions.js";
 // Referencias a elementos DOM (necesarias en main.js)
 const audioPlayer = window.audioPlayer || document.getElementById("audio-player");
 const sfxAcierto = window.sfxAcierto || document.getElementById("sfx-acierto");
@@ -175,69 +170,6 @@ if ("serviceWorker" in navigator) {
 // FUNCIONES DE AUTENTICACIÓN
 window.loginUser = loginUser;
 
-// WRAPPER DE SEGURIDAD PARA BORRAR HISTORIAL ONLINE
-async function confirmClearOnlineGameHistory() {
-  const confirmed = await showAppConfirm(
-    "¿Seguro que quieres borrar TODO el historial de partidas online? Esta acción no se puede deshacer.",
-  );
-
-  if (!confirmed) return;
-
-  await clearOnlineGameHistory();
-}
-
-window.confirmClearOnlineGameHistory = confirmClearOnlineGameHistory;
-
-async function clearOnlineGameHistory() {
-  const playerData = getCurrentUserData();
-  if (!playerData || !playerData.email) {
-    showAppAlert("Debes iniciar sesión para borrar tu historial.");
-    showScreen("login-screen");
-    return;
-  }
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/online-games/clear-history/${playerData.email}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      showAppAlert(result.message);
-      loadPlayerOnlineGames(); // Recargar la lista de partidas para mostrar el cambio
-    } else {
-      showAppAlert(`Error al borrar historial: ${result.message}`);
-    }
-  } catch (error) {
-    console.error("Error de red al borrar historial de partidas online:", error);
-    showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
-  }
-}
-
-// ============================================================================
-// VALIDACIÓN DE DEPENDENCIAS GLOBALES
-// ============================================================================
-function validateGlobals() {
-  const requiredGlobals = [
-    "gameState", "currentUser", "isOnlineMode", "isElderlyMode", "isSummerSongsMode",
-    "audioPlayer", "sfxAcierto", "sfxError", "activeTimeUpdateListener", "audioPlaybackTimeout",
-    "configuracionCanciones", "loadSongsForDecadeAndCategory", "allPossibleCategories",
-    "API_BASE_URL"
-  ];
-  const missing = [];
-  for (const name of requiredGlobals) {
-    if (window[name] === undefined) {
-      missing.push(name);
-    }
-  }
-  if (missing.length > 0) {
-    console.error("❌ FALTAN VARIABLES GLOBALES:", missing);
-  } else {
-    console.log("✅ Todas las variables globales están definidas");
-  }
-}
 // Ejecutar validación después de cargar
 setTimeout(validateGlobals, 1000);
 
@@ -262,67 +194,6 @@ window.startSummerSongsGame = startSummerSongsGame;
 // Funciones de historial de canciones
 window.updateRecentSongsHistory = updateRecentSongsHistory;
 window.getRecentSongs = getRecentSongs;
-
-async function setPlayerName() {
-  const playerNameInput = document.getElementById("player-name-input");
-  const newPlayerName = playerNameInput.value.trim();
-
-  if (!newPlayerName) {
-    showAppAlert("Por favor, introduce un nombre de jugador.");
-    return;
-  }
-
-  if (currentUser) {
-    try {
-      const response = await fetch(`${window.API_BASE_URL}/api/users/${currentUser.email}/playername`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playerName: newPlayerName }),
-      });
-
-      const data = await parseJsonResponse(response);
-
-      if (response.ok) {
-        currentUser.playerName = newPlayerName;
-        localStorage.setItem("userData", JSON.stringify(currentUser));
-        localStorage.setItem("sessionActive", "true");
-        showAppAlert(data?.message || "Nombre de jugador actualizado.");
-        playerNameInput.value = "";
-        showScreen("decade-selection-screen");
-        generateDecadeButtons();
-        return;
-      }
-
-      if (response.status === 404 || response.status >= 500) {
-        useLocalApiFallback = true;
-      } else {
-        showAppAlert(`Error al actualizar nombre: ${data?.message || "No se pudo actualizar el nombre."}`);
-        return;
-      }
-    } catch (error) {
-      console.warn("API no disponible, usando actualización local:", error);
-      useLocalApiFallback = true;
-    }
-
-    if (useLocalApiFallback) {
-      const users = getLocalUsers();
-      if (users[currentUser.email]) {
-        users[currentUser.email].playerName = newPlayerName;
-        saveLocalUsers(users);
-      }
-      currentUser.playerName = newPlayerName;
-      localStorage.setItem("userData", JSON.stringify(currentUser));
-      localStorage.setItem("sessionActive", "true");
-      showAppAlert("Nombre de jugador actualizado.");
-      playerNameInput.value = "";
-      showScreen("decade-selection-screen");
-      generateDecadeButtons();
-    }
-  } else {
-    showAppAlert("No hay un usuario logueado. Por favor, inicia sesión primero.");
-    showScreen("login-screen");
-  }
-}
 
 window.parseDisplay = parseDisplay;
 window.selectDecade = selectDecade;

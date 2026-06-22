@@ -1054,3 +1054,41 @@ export function sendGameFinishedNotification(opponentName) {
     notification.close();
   };
 }
+
+export async function clearOnlineGameHistory() {
+  const playerData = window.currentUser;
+  if (!playerData || !playerData.email) {
+    window.showAppAlert("Debes iniciar sesión para borrar tu historial.");
+    window.showScreen("login-screen");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${window.API_BASE_URL}/api/online-games/clear-history/${playerData.email}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      window.showAppAlert(result.message);
+      loadPlayerOnlineGames();
+    } else {
+      window.showAppAlert(`Error al borrar historial: ${result.message}`);
+    }
+  } catch (error) {
+    console.error("Error de red al borrar historial de partidas online:", error);
+    window.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+  }
+}
+
+export async function confirmClearOnlineGameHistory() {
+  const confirmed = await window.showAppConfirm(
+    "¿Seguro que quieres borrar TODO el historial de partidas online? Esta acción no se puede deshacer.",
+  );
+
+  if (!confirmed) return;
+
+  await clearOnlineGameHistory();
+}

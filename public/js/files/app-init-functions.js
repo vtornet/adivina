@@ -230,4 +230,24 @@ export async function initializeApp() {
   await startApp("boot");
 }
 
+export function validateGlobals() {
+  const requiredGlobals = [
+    "gameState", "currentUser", "isOnlineMode", "isElderlyMode", "isSummerSongsMode",
+    "audioPlayer", "sfxAcierto", "sfxError", "activeTimeUpdateListener", "audioPlaybackTimeout",
+    "configuracionCanciones", "loadSongsForDecadeAndCategory", "allPossibleCategories",
+    "API_BASE_URL"
+  ];
+  const missing = [];
+  for (const name of requiredGlobals) {
+    if (window[name] === undefined) {
+      missing.push(name);
+    }
+  }
+  if (missing.length > 0) {
+    console.error("❌ FALTAN VARIABLES GLOBALES:", missing);
+  } else {
+    console.log("✅ Todas las variables globales están definidas");
+  }
+}
+
 export { isSyncing };
