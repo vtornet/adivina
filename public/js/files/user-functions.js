@@ -1,4 +1,4 @@
-import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../constants/app-constants.js";
+import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY, LOCAL_USERS_KEY, LOCAL_SCORES_KEY, LOCAL_GAME_HISTORY_KEY } from "../constants/app-constants.js";
 import { parseJsonResponse } from "./helpers.js";
 
 export function getCurrentUserData() {

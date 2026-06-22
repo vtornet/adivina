@@ -1,5 +1,5 @@
 import { DECADES_ORDER } from "../constants/app-constants.js";
-import { startSummerSongsGame } from "../main.js";
+import { startSummerSongsGame } from "../files/gameplay-functions.js";
 import { getDecadeLabel } from "./app-info-functions.js";
 import { hasPremiumAccess, showPremiumModal } from "./premium-functions.js";
 
