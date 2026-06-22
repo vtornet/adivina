@@ -16,24 +16,6 @@ export function getWinnerName(players) {
   return winnerName;
 }
 
-export function formatOnlineGameDate(dateValue) {
-  if (!dateValue) return "";
-
-  const date = new Date(dateValue);
-  const now = new Date();
-  const diffMs = now - date;
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return "Justo ahora";
-  if (diffMins < 60) return `Hace ${diffMins} min`;
-  if (diffHours < 24) return `Hace ${diffHours} h`;
-  if (diffDays < 7) return `Hace ${diffDays} d`;
-
-  return date.toLocaleDateString("es-ES");
-}
-
 export function isOnlineGameFinished(game) {
   if (!game) return false;
   const player1Finished = game.player1?.finished || false;

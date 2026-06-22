@@ -6,6 +6,7 @@ import { loadGameHistory } from "./game-functions.js";
 import { startOnlineInvitePolling } from "./online-functions.js";
 import { checkCookieConsent } from "./cookies-functions.js";
 import { APP_VERSION } from "../constants/app-constants.js";
+import { setupPaymentListeners as setupPayment } from "./payment-functions.js";
 
 let isSyncing = false;
 
@@ -25,18 +26,7 @@ export function refreshUI() {
  * Configura los listeners para pagos y eventos.
  */
 export function setupPaymentListeners() {
-  // Verificamos si venimos de un pago exitoso de Stripe
-  const urlParams = new URLSearchParams(window.location.search);
-  const sessionId = urlParams.get("session_id");
-
-  if (sessionId) {
-    
-    // console.log("💳 Detectado retorno de pago Stripe. Sincronizando...");
-    syncUserPermissions();
-    // Limpiamos la URL para no re-procesar el éxito al recargar
-    window.history.replaceState({}, document.title, window.location.pathname);
-    showAppAlert("¡Gracias por tu compra! Tu contenido se está desbloqueando.");
-  }
+  setupPayment();
 }
 
 /**

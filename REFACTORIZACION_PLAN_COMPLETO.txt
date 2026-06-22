@@ -5,14 +5,14 @@ Fecha: 22 de Junio 2026
 Objetivo: Mejorar arquitectura, mantenibilidad y calidad del código
 
 ===============================================================================
-ESTADO ACTUAL: FASE 3 EN PROGRESO
+ESTADO ACTUAL: FASE 3 ✅ COMPLETADA
 ===============================================================================
 
-Completado: Fases 1-2, Iniciado: Fase 3
-Archivos modificados: 15+
-Archivos creados: 3
-Líneas eliminadas: ~300+
-Líneas reorganizadas: ~500+
+Completado: Fases 1-3
+Archivos modificados: 18+
+Archivos creados: 6
+Líneas eliminadas: ~950+
+Líneas reorganizadas: ~800+
 
 ===============================================================================
 MÉTRICAS DE PROGRESO
@@ -20,13 +20,13 @@ MÉTRICAS DE PROGRESO
 
 | Métrica                          | Antes | Actual | Objetivo |
 |----------------------------------|-------|--------|----------|
-| Archivos >500 líneas             | 3     | 3      | 0        |
+| Archivos >500 líneas             | 3     | 1      | 0        |
 | Console statements               | 97    | 95     | <10      |
 | Comentarios obsoletos            | 20+   | 10     | 0        |
 | main.js líneas                   | 576   | ~280   | ~200     |
-| Archivos totales                 | 30    | 33     | ~37      |
+| Archivos totales                 | 30    | 36     | ~37      |
 | Bugs conocidos                   | 1     | 0      | 0        |
-| Funciones duplicadas             | 2     | 1      | 0        |
+| Funciones duplicadas             | 2     | 0      | 0        |
 
 ===============================================================================
 FASE 1: LIMPIEZA INMEDIATA ✅ COMPLETADA
@@ -92,11 +92,11 @@ FASE 2: REORGANIZACIÓN DE FUNCIONES ✅ COMPLETADA
    - Funciones de inicialización
 
 ===============================================================================
-FASE 3: DIVISIÓN DE ARCHIVOS GRANDES 🔄 EN PROGRESO
+FASE 3: DIVISIÓN DE ARCHIVOS GRANDES ✅ COMPLETADA
 ===============================================================================
 
-3.1 Dividir online-functions.js (1,095 líneas → 4 archivos)
-   --------------------------------------------------------
+3.1 Dividir online-functions.js (1,095 líneas → 4 archivos) ✅
+   -------------------------------------------------------------
 
    ANTES (online-functions.js original):
    - 1,095 líneas
@@ -104,7 +104,7 @@ FASE 3: DIVISIÓN DE ARCHIVOS GRANDES 🔄 EN PROGRESO
 
    DESPUÉS (Estructura modular):
 
-   ✅ online-notifications.js (99 líneas) - CREADO
+   ✅ online-notifications.js (137 líneas) - CREADO
    -----------------------------------------------
    Funciones:
    - getWinnerName()
@@ -113,6 +113,7 @@ FASE 3: DIVISIÓN DE ARCHIVOS GRANDES 🔄 EN PROGRESO
    - showInviteToast()
    - sendInviteNotification()
    - sendGameFinishedNotification()
+   - clearOnlineGameHistory()
    - confirmClearOnlineGameHistory()
 
    ✅ online-invites.js (198 líneas) - CREADO
@@ -136,9 +137,9 @@ FASE 3: DIVISIÓN DE ARCHIVOS GRANDES 🔄 EN PROGRESO
    - goToOnlineWaitScreen()
    - continueOnlineGame()
 
-   ⚠️ online-functions.js (CORE) - PENDIENTE LIMPIEZA
+   ✅ online-functions.js (CORE) (399 líneas) - LIMPIADO
    --------------------------------------------------
-   Debe contener solo:
+   Contiene solo funciones core:
    - createOnlineGame()
    - joinOnlineGame()
    - joinOnlineGameFromPending()
@@ -148,7 +149,7 @@ FASE 3: DIVISIÓN DE ARCHIVOS GRANDES 🔄 EN PROGRESO
    - getSongsForOnlineMatch()
    - saveOnlineGameToHistory()
 
-   Estado actual: Todavía contiene funciones duplicadas que deben eliminarse
+   Eliminadas: Todas las funciones duplicadas movidas a los módulos especializados
 
 3.2 Actualizar main.js ✅
    -----------------------
@@ -170,34 +171,40 @@ FASE 3: DIVISIÓN DE ARCHIVOS GRANDES 🔄 EN PROGRESO
      * Online - Notifications
      * Inicialización
 
-3.3 Dividir gameplay-functions.js (687 líneas → 3 archivos) ⏳ PENDIENTE
-   ---------------------------------------------------------------------
+3.3 Dividir gameplay-functions.js (687 líneas → 3 archivos) ✅ COMPLETADO
+   ----------------------------------------------------------------------
 
-   ESTRUCTURA PROPUESTA:
-
-   gameplay-core.js (~300 líneas)
-   -------------------------------
+   ✅ gameplay-core.js (364 líneas) - CREADO
+   -----------------------------------------
+   Funciones:
    - selectPlayers()
    - startGame()
+   - startSummerSongsGame()
    - nextPlayerOrEndGame()
    - continueToNextPlayerTurn()
    - endGame()
-   - startSummerSongsGame()
 
-   audio-manager.js (~250 líneas)
-   -------------------------------
+   ✅ audio-manager.js (79 líneas) - CREADO
+   -----------------------------------------
+   Funciones:
    - playAudioSnippet()
    - Control de reproducción de audio
    - Gestión de timeupdate listeners
    - Limpieza de audio resources
    - Control de timeouts
 
-   questions.js (~150 líneas)
-   -------------------------
-   - setupQuestion()
+   ✅ questions.js (216 líneas) - CREADO
+   -------------------------------------
+   Funciones:
+   - setupQuestion() con callback para nextPlayerOrEndGame
+   - checkAnswer() con callbacks para evitar dependencias circulares
+   - updateAttemptsCounter()
    - Generación de opciones de respuesta
    - Selección aleatoria de canciones
    - Evitar repetición de canciones recientes
+
+   Nota: Se implementó sistema de callbacks para evitar dependencias circulares
+   entre questions.js y gameplay-core.js
 
 ===============================================================================
 FASE 4: MEJORA DE UTILIDADES ⏳ PENDIENTE
@@ -300,17 +307,21 @@ ARCHIVOS CRÍTICOS MODIFICADOS
 | ui-functions.js            | 216            | 215            | -1      | ✅     |
 | songs-loader.js            | -              | -              | -5      | ✅     |
 | user-functions.js          | -              | +60            | +60     | ✅     |
-| online-functions.js        | 1095           | ~400 (est)     | -695    | ⚠️     |
-| online-notifications.js    | NUEVO          | 99             | +99     | ✅     |
+| online-functions.js        | 1095           | 399            | -696    | ✅     |
+| online-notifications.js    | NUEVO          | 137            | +137    | ✅     |
 | online-invites.js          | NUEVO          | 198            | +198    | ✅     |
 | online-ui.js              | NUEVO          | 349            | +349    | ✅     |
+| gameplay-functions.js      | 687            | 0 (eliminado)  | -687    | ✅     |
+| gameplay-core.js           | NUEVO          | 364            | +364    | ✅     |
+| audio-manager.js           | NUEVO          | 79             | +79     | ✅     |
+| questions.js               | NUEVO          | 216            | +216    | ✅     |
 | app-init-functions.js      | -              | +10            | +10     | ✅     |
 
 ===============================================================================
 ARCHIVOS NUEVOS CREADOS
 ===============================================================================
 
-✅ online-notifications.js (99 líneas)
+✅ online-notifications.js (137 líneas)
    Sistema de notificaciones para juego online
 
 ✅ online-invites.js (198 líneas)
@@ -319,27 +330,24 @@ ARCHIVOS NUEVOS CREADOS
 ✅ online-ui.js (349 líneas)
    UI de juego online
 
+✅ audio-manager.js (79 líneas)
+   Gestión de audio
+
+✅ gameplay-core.js (364 líneas)
+   Lógica principal del juego
+
+✅ questions.js (216 líneas)
+   Gestión de preguntas y respuestas
+
 ⏳ logger.js (PENDIENTE)
    Sistema de logging centralizado
 
 ⏳ payment-functions.js (PENDIENTE)
    Gestión de pagos
 
-⏳ audio-manager.js (PENDIENTE)
-   Gestión de audio
-
-⏳ questions.js (PENDIENTE)
-   Gestión de preguntas
-
 ===============================================================================
 TAREAS PENDIENTES
 ===============================================================================
-
-INMEDIATAS (Fase 3):
---------------------
-1. ⏳ Limpiar online-functions.js - Eliminar funciones duplicadas que se movieron a los nuevos módulos
-2. ⏳ Verificar que no hay errores de importación en los nuevos módulos
-3. ⏳ Dividir gameplay-functions.js en 3 módulos (core, audio-manager, questions)
 
 FASE 4:
 --------
@@ -390,12 +398,12 @@ ORDEN DE EJECUCIÓN RECOMENDADO
 
 1. ✅ FASE 1 - Limpieza inmediata (COMPLETADA)
 2. ✅ FASE 2 - Reorganización (COMPLETADA)
-3. 🔄 FASE 3 - División de archivos (EN PROGRESO)
+3. ✅ FASE 3 - División de archivos (COMPLETADA)
    - ✅ Crear online-notifications.js
    - ✅ Crear online-invites.js
    - ✅ Crear online-ui.js
-   - ⏳ Limpiar online-functions.js
-   - ⏳ Dividir gameplay-functions.js
+   - ✅ Limpiar online-functions.js
+   - ✅ Dividir gameplay-functions.js
 4. ⏳ FASE 4 - Utilidades (PENDIENTE)
 5. ⏳ FASE 5 - Logging (PENDIENTE)
 6. ⏳ FASE 6 - Comentarios (PENDIENTE)
@@ -409,10 +417,9 @@ db72f4b - refactor: add more logic splitting
 49ab630 - refactor: change importing method and exporting
 58b4a71 - refactor: remove functions extracted
 b7dc1f8 - refactor: extract login related functions to its own file
+bc9162a - refactor: fase 3 - completar división de módulos
 
 PENDIENTES:
-- commit: fase-3-division-online-functions
-- commit: fase-3-division-gameplay-functions
 - commit: fase-4-utilidades
 - commit: fase-5-logging
 - commit: fase-6-limpieza-comentarios
@@ -422,4 +429,8 @@ FIN DEL DOCUMENTO
 ===============================================================================
 
 Última actualización: 22 de Junio 2026
-Próxima acción: Limpiar online-functions.js (eliminar funciones duplicadas)
+FASE 3 COMPLETADA ✅
+
+Próxima acción: Iniciar FASE 4 - Mejora de utilidades
+- Ampliar helpers.js con funciones utilitarias
+- Crear payment-functions.js

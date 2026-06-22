@@ -3,19 +3,7 @@ import { showScreen } from "./screen-functions.js";
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 import { DECADES_WITH_SPECIALS, CATEGORY_ORDER } from "../constants/app-constants.js";
 import { hasPremiumAccess, showPremiumModal, isPremiumCategory, isPremiumSelection } from "./premium-functions.js";
-
-/**
- * Parsea el texto de visualización de una canción.
- * @param {string} displayText - Texto en formato "Artista - Título".
- * @returns {Object} Objeto con artist y title.
- */
-export function parseDisplay(displayText) {
-  const parts = displayText.split(" - ");
-  if (parts.length < 2) {
-    return { artist: displayText, title: "" };
-  }
-  return { artist: parts[0].trim(), title: parts.slice(1).join(" - ").trim() };
-}
+import { parseDisplay } from "./helpers.js";
 
 /**
  * Muestra la pantalla para seleccionar una categoría y década para ver el listado de canciones.

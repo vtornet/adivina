@@ -1,7 +1,7 @@
 import { showAppAlert } from "./modal-functions.js";
 import { showScreen } from "./screen-functions.js";
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
-import { parseDisplay } from "./songs-list-functions.js";
+import { parseDisplay } from "./helpers.js";
 import { playAudioSnippet } from "./audio-manager.js";
 
 // Variables globales accedidas desde window (definidas en constants.js)

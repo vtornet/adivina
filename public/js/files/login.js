@@ -1,6 +1,6 @@
 import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../constants/app-constants.js";
 import { loadGameHistory } from "./game-functions.js";
-import { parseJsonResponse } from "./helpers.js";
+import { parseJsonResponse, isValidEmail } from "./helpers.js";
 import { showAppAlert } from "./modal-functions.js";
 import { startOnlineInvitePolling } from "./online-functions.js";
 import { showScreen } from "./screen-functions.js";
@@ -230,12 +230,6 @@ export async function changePassword() {
     console.error("Error al cambiar contraseña:", error);
     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
-}
-
-export function isValidEmail(email) {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
 }
 
 export async function registerUser() {

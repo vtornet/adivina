@@ -3,6 +3,7 @@
 
 import appInfo from "../../app_info/app-info.js";
 import { getActivePermissions } from "./user-functions.js";
+import { redirectToStripe } from "./payment-functions.js";
 
 export function isPremiumCategory(categoryId) {
   return appInfo.premium.premiumCategories.has(categoryId);
