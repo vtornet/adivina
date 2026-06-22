@@ -1,0 +1,425 @@
+===============================================================================
+PLAN DE REFACTORIZACIÓN COMPLETO - ADIVINA LA CANCIÓN
+===============================================================================
+Fecha: 22 de Junio 2026
+Objetivo: Mejorar arquitectura, mantenibilidad y calidad del código
+
+===============================================================================
+ESTADO ACTUAL: FASE 3 EN PROGRESO
+===============================================================================
+
+Completado: Fases 1-2, Iniciado: Fase 3
+Archivos modificados: 15+
+Archivos creados: 3
+Líneas eliminadas: ~300+
+Líneas reorganizadas: ~500+
+
+===============================================================================
+MÉTRICAS DE PROGRESO
+===============================================================================
+
+| Métrica                          | Antes | Actual | Objetivo |
+|----------------------------------|-------|--------|----------|
+| Archivos >500 líneas             | 3     | 3      | 0        |
+| Console statements               | 97    | 95     | <10      |
+| Comentarios obsoletos            | 20+   | 10     | 0        |
+| main.js líneas                   | 576   | ~280   | ~200     |
+| Archivos totales                 | 30    | 33     | ~37      |
+| Bugs conocidos                   | 1     | 0      | 0        |
+| Funciones duplicadas             | 2     | 1      | 0        |
+
+===============================================================================
+FASE 1: LIMPIEZA INMEDIATA ✅ COMPLETADA
+===============================================================================
+
+1.1 Corregir Bug en ui-functions.js ✅
+   --------------------------------------
+   Archivo: public/js/files/ui-functions.js
+   Línea: 206
+
+   BUG CORREGIDO:
+   - Antes: popu(decadeSelect, getDe());
+   - Después: populateDecadeOptions(decadeSelect, getDecadesForSelect());
+
+   Impacto: Previene error de runtime en producción
+
+1.2 Eliminar Código Comentado Obsoleto ✅
+   ---------------------------------------
+   Archivos afectados:
+   - public/js/main.js: ~60 líneas eliminadas (148-170, 172-181, 500-560)
+   - Comentarios de imports repetitivos eliminados
+
+   Líneas eliminadas: ~187 líneas de código comentado
+
+1.3 Eliminar Comentarios de Versión Obsoletos ✅
+   -----------------------------------------------
+   Archivos afectados:
+   - public/js/songs-loader.js: v.60, v.61, v.63 eliminados
+   - Otros archivos pendientes
+
+   Patrones eliminados:
+   - "// v.66: Log silenciado para producción"
+   - "// [CORRECCIÓN v.76 - Case Sensitivity Fix]"
+   - "// === LISTA BLANCA ESTRICTA (v.60) ==="
+
+===============================================================================
+FASE 2: REORGANIZACIÓN DE FUNCIONES ✅ COMPLETADA
+===============================================================================
+
+2.1 Mover Funciones de main.js ✅
+   -------------------------------
+   Funciones movidas desde main.js:
+
+   | Función                          | Destino                       | Estado |
+   |----------------------------------|-------------------------------|--------|
+   | setPlayerName()                  | user-functions.js             | ✅     |
+   | validateGlobals()                | app-init-functions.js         | ✅     |
+   | clearOnlineGameHistory()         | online-functions.js           | ✅     |
+   | confirmClearOnlineGameHistory()  | online-functions.js           | ✅     |
+
+2.2 Consolidar syncUserPermissions ⚠️ PARCIAL
+   ---------------------------------------------
+   Estado: Existe en 2 lugares (app-init-functions.js y login.js)
+   Pendiente: Consolidar en un solo lugar (user-functions.js)
+
+2.3 Actualizar Imports en main.js ✅
+   ----------------------------------
+   Imports organizados por tipo:
+   - Funciones de autenticación
+   - Funciones de navegación
+   - Funciones de gameplay
+   - Funciones online (core, invites, UI, notifications)
+   - Funciones de inicialización
+
+===============================================================================
+FASE 3: DIVISIÓN DE ARCHIVOS GRANDES 🔄 EN PROGRESO
+===============================================================================
+
+3.1 Dividir online-functions.js (1,095 líneas → 4 archivos)
+   --------------------------------------------------------
+
+   ANTES (online-functions.js original):
+   - 1,095 líneas
+   - Maneja: partidas, invitaciones, notificaciones, UI, polling, storage
+
+   DESPUÉS (Estructura modular):
+
+   ✅ online-notifications.js (99 líneas) - CREADO
+   -----------------------------------------------
+   Funciones:
+   - getWinnerName()
+   - formatOnlineGameDate()
+   - isOnlineGameFinished()
+   - showInviteToast()
+   - sendInviteNotification()
+   - sendGameFinishedNotification()
+   - confirmClearOnlineGameHistory()
+
+   ✅ online-invites.js (198 líneas) - CREADO
+   -------------------------------------------
+   Funciones:
+   - startOnlineInvitePolling()
+   - stopOnlineInvitePolling()
+   - invitePlayerByName()
+   - shareOnlineCode()
+   - copyOnlineGameCode()
+   - declineOnlineGame()
+   - deletePendingOnlineGame()
+   - updateOnlineInviteBadge()
+
+   ✅ online-ui.js (349 líneas) - CREADO
+   -------------------------------------
+   Funciones:
+   - loadPlayerOnlineGames()
+   - showOnlineResults()
+   - viewOnlineGameResults()
+   - goToOnlineWaitScreen()
+   - continueOnlineGame()
+
+   ⚠️ online-functions.js (CORE) - PENDIENTE LIMPIEZA
+   --------------------------------------------------
+   Debe contener solo:
+   - createOnlineGame()
+   - joinOnlineGame()
+   - joinOnlineGameFromPending()
+   - startOnlineGame()
+   - submitOnlineScore()
+   - pollOnlineGameStatus()
+   - getSongsForOnlineMatch()
+   - saveOnlineGameToHistory()
+
+   Estado actual: Todavía contiene funciones duplicadas que deben eliminarse
+
+3.2 Actualizar main.js ✅
+   -----------------------
+   - Imports actualizados para usar nuevos módulos
+   - Exportaciones a window reorganizadas por grupos
+   - Eliminadas duplicaciones (selectDecade)
+   - Estructura:
+     * Navegación
+     * Gameplay
+     * Historial de canciones
+     * Listado de canciones
+     * Modo elderly
+     * Estadísticas
+     * Share
+     * Cookies
+     * Online - Core
+     * Online - Invites
+     * Online - UI
+     * Online - Notifications
+     * Inicialización
+
+3.3 Dividir gameplay-functions.js (687 líneas → 3 archivos) ⏳ PENDIENTE
+   ---------------------------------------------------------------------
+
+   ESTRUCTURA PROPUESTA:
+
+   gameplay-core.js (~300 líneas)
+   -------------------------------
+   - selectPlayers()
+   - startGame()
+   - nextPlayerOrEndGame()
+   - continueToNextPlayerTurn()
+   - endGame()
+   - startSummerSongsGame()
+
+   audio-manager.js (~250 líneas)
+   -------------------------------
+   - playAudioSnippet()
+   - Control de reproducción de audio
+   - Gestión de timeupdate listeners
+   - Limpieza de audio resources
+   - Control de timeouts
+
+   questions.js (~150 líneas)
+   -------------------------
+   - setupQuestion()
+   - Generación de opciones de respuesta
+   - Selección aleatoria de canciones
+   - Evitar repetición de canciones recientes
+
+===============================================================================
+FASE 4: MEJORA DE UTILIDADES ⏳ PENDIENTE
+===============================================================================
+
+4.1 Ampliar helpers.js
+   --------------------
+   Archivo actual: 7 líneas (demasiado simple)
+
+   Funciones a añadir:
+   - parseDisplay() (desde songs-list-functions.js)
+   - isValidEmail() (desde login.js)
+   - formatOnlineGameDate() (desde online-functions.js)
+   - Ya existe: parseJsonResponse()
+
+4.2 Crear payment-functions.js
+   -----------------------------
+   Extraer desde:
+   - user-functions.js: redirectToStripe()
+   - app-init-functions.js: setupPaymentListeners()
+
+   Nuevo archivo (~100 líneas):
+   - setupPaymentListeners()
+   - redirectToStripe()
+   - handlePaymentReturn()
+   - validatePaymentStatus()
+
+===============================================================================
+FASE 5: NORMALIZACIÓN DE CONSOLE STATEMENTS ⏳ PENDIENTE
+===============================================================================
+
+5.1 Implementar Sistema de Logging
+   ---------------------------------
+   Problema: 97 console statements dispersos, algunos con emojis
+
+   Solución: Crear logger.js
+
+   ESTRUCTURA PROPUESTA:
+   ```javascript
+   const LOG_LEVELS = { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3 };
+
+   export const logger = {
+     error: (msg, ...args) => {
+       if (LOG_LEVEL >= LOG_LEVELS.ERROR) console.error(msg, ...args);
+     },
+     warn: (msg, ...args) => {
+       if (LOG_LEVEL >= LOG_LEVELS.WARN) console.warn(msg, ...args);
+     },
+     info: (msg, ...args) => {
+       if (LOG_LEVEL >= LOG_LEVELS.INFO) console.log(msg, ...args);
+     },
+     debug: (msg, ...args) => {
+       if (LOG_LEVEL >= LOG_LEVELS.DEBUG) console.log(msg, ...args);
+     }
+   };
+   ```
+
+5.2 Eliminar Emojis de Console
+   -----------------------------
+   Patrones a eliminar:
+   - "✅ Sesión persistente restaurada"
+   - "❌ FALTAN VARIABLES GLOBALES"
+   - "🔄 Sincronizando permisos"
+
+   Reemplazar con logger sin emojis
+
+===============================================================================
+FASE 6: LIMPIEZA DE COMENTARIOS ⏳ PENDIENTE
+===============================================================================
+
+6.1 Comentarios Decorativos a Eliminar
+   -------------------------------------
+   Archivos: Principalmente main.js
+
+   Patrones a eliminar:
+   - "// ================================================================="
+   - "// MANEJADOR DE ERRORES GLOBAL"
+   - "// FUNCIONES DE AUTENTICACIÓN"
+
+6.2 Comentarios Redundantes a Eliminar
+   -------------------------------------
+   Ejemplos:
+   - "// Variables globales ahora accesibles via window"
+   - "// gameState, audioPlayer, sfxAcierto están en window"
+   - "// Referencias a elementos DOM (necesarias en main.js)"
+
+6.3 Comentarios de Imports a Eliminar
+   ------------------------------------
+   Patrones:
+   - "// Funciones de navegación importadas desde navigation-functions.js"
+   - "// Funciones de gameplay importadas desde gameplay-functions.js"
+
+===============================================================================
+ARCHIVOS CRÍTICOS MODIFICADOS
+===============================================================================
+
+| Archivo                    | Líneas (Antes) | Líneas (Ahora) | Cambio  | Estado |
+|----------------------------|----------------|----------------|---------|--------|
+| main.js                    | 576            | ~280           | -296    | ✅     |
+| ui-functions.js            | 216            | 215            | -1      | ✅     |
+| songs-loader.js            | -              | -              | -5      | ✅     |
+| user-functions.js          | -              | +60            | +60     | ✅     |
+| online-functions.js        | 1095           | ~400 (est)     | -695    | ⚠️     |
+| online-notifications.js    | NUEVO          | 99             | +99     | ✅     |
+| online-invites.js          | NUEVO          | 198            | +198    | ✅     |
+| online-ui.js              | NUEVO          | 349            | +349    | ✅     |
+| app-init-functions.js      | -              | +10            | +10     | ✅     |
+
+===============================================================================
+ARCHIVOS NUEVOS CREADOS
+===============================================================================
+
+✅ online-notifications.js (99 líneas)
+   Sistema de notificaciones para juego online
+
+✅ online-invites.js (198 líneas)
+   Sistema de invitaciones y polling para juego online
+
+✅ online-ui.js (349 líneas)
+   UI de juego online
+
+⏳ logger.js (PENDIENTE)
+   Sistema de logging centralizado
+
+⏳ payment-functions.js (PENDIENTE)
+   Gestión de pagos
+
+⏳ audio-manager.js (PENDIENTE)
+   Gestión de audio
+
+⏳ questions.js (PENDIENTE)
+   Gestión de preguntas
+
+===============================================================================
+TAREAS PENDIENTES
+===============================================================================
+
+INMEDIATAS (Fase 3):
+--------------------
+1. ⏳ Limpiar online-functions.js - Eliminar funciones duplicadas que se movieron a los nuevos módulos
+2. ⏳ Verificar que no hay errores de importación en los nuevos módulos
+3. ⏳ Dividir gameplay-functions.js en 3 módulos (core, audio-manager, questions)
+
+FASE 4:
+--------
+4. ⏳ Ampliar helpers.js con funciones utilitarias
+5. ⏳ Crear payment-functions.js
+
+FASE 5:
+--------
+6. ⏳ Implementar sistema de logging (logger.js)
+7. ⏳ Reemplazar console statements con logger
+8. ⏳ Eliminar emojis de console statements
+
+FASE 6:
+--------
+9. ⏳ Eliminar comentarios decorativos
+10. ⏳ Eliminar comentarios redundantes
+11. ⏳ Eliminar comentarios de imports
+
+===============================================================================
+VERIFICACIÓN
+===============================================================================
+
+Tests Funcionales (Pendientes):
+---------------------------------
+□ Iniciar sesión y registrar usuario
+□ Jugar partida individual (todos los modos)
+□ Jugar partida online
+□ Ver estadísticas
+□ Ver listado de canciones
+□ Modo elderly
+
+Tests de Regresión (Pendientes):
+---------------------------------
+□ No hay errores en consola
+□ Todas las variables globales definidas
+□ Audio funciona correctamente
+□ Notificaciones funcionan
+
+Tests de Carga (Pendientes):
+-----------------------------
+□ Todos los módulos se cargan correctamente
+□ Orden de carga de scripts correcto
+□ No hay errores de importación
+
+===============================================================================
+ORDEN DE EJECUCIÓN RECOMENDADO
+===============================================================================
+
+1. ✅ FASE 1 - Limpieza inmediata (COMPLETADA)
+2. ✅ FASE 2 - Reorganización (COMPLETADA)
+3. 🔄 FASE 3 - División de archivos (EN PROGRESO)
+   - ✅ Crear online-notifications.js
+   - ✅ Crear online-invites.js
+   - ✅ Crear online-ui.js
+   - ⏳ Limpiar online-functions.js
+   - ⏳ Dividir gameplay-functions.js
+4. ⏳ FASE 4 - Utilidades (PENDIENTE)
+5. ⏳ FASE 5 - Logging (PENDIENTE)
+6. ⏳ FASE 6 - Comentarios (PENDIENTE)
+
+===============================================================================
+COMITS REALIZADOS
+===============================================================================
+
+db72f4b - refactor: add more logic splitting
+5d652a5 - refactor: successful login achieved
+49ab630 - refactor: change importing method and exporting
+58b4a71 - refactor: remove functions extracted
+b7dc1f8 - refactor: extract login related functions to its own file
+
+PENDIENTES:
+- commit: fase-3-division-online-functions
+- commit: fase-3-division-gameplay-functions
+- commit: fase-4-utilidades
+- commit: fase-5-logging
+- commit: fase-6-limpieza-comentarios
+
+===============================================================================
+FIN DEL DOCUMENTO
+===============================================================================
+
+Última actualización: 22 de Junio 2026
+Próxima acción: Limpiar online-functions.js (eliminar funciones duplicadas)
