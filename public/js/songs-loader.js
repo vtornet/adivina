@@ -168,3 +168,7 @@ function getExpectedCategoriesForDecade(decadeId) {
 
 // `configuracionCanciones` ahora es un proxy para `window.allSongsByDecadeAndCategory`
 const configuracionCanciones = window.allSongsByDecadeAndCategory;
+
+// Exportar variables y funciones necesarias para main.js
+window.configuracionCanciones = window.allSongsByDecadeAndCategory;
+window.loadSongsForDecadeAndCategory = loadSongsForDecadeAndCategory;
