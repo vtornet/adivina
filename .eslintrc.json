@@ -1,0 +1,33 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-undef": "warn",
+    "no-unused-vars": "warn",
+    "no-redeclare": "warn",
+    "no-prototype-builtins": "off"
+  },
+  "globals": {
+    "window": "readonly",
+    "document": "readonly",
+    "console": "readonly",
+    "localStorage": "readonly",
+    "setTimeout": "readonly",
+    "clearTimeout": "readonly",
+    "setInterval": "readonly",
+    "clearInterval": "readonly",
+    "fetch": "readonly",
+    "URL": "readonly",
+    "crypto": "readonly",
+    "btoa": "readonly",
+    "atob": "readonly",
+    "sessionStorage": "readonly"
+  }
+}
