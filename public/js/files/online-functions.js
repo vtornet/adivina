@@ -1,3 +1,4 @@
+import { logger } from "./logger.js";
 
 // ========== CREAR PARTIDA ONLINE ==========
 export async function createOnlineGame() {
@@ -75,7 +76,7 @@ export async function createOnlineGame() {
               text: shareText,
             });
           } catch (err) {
-            console.log("Compartir cancelado o no disponible");
+            logger.debug("Compartir cancelado o no disponible");
             copyOnlineGameCode(result.code);
           }
         } else {
@@ -89,7 +90,7 @@ export async function createOnlineGame() {
       showAppAlert(result.message || "Error al crear la partida.");
     }
   } catch (err) {
-    console.error("Error en createOnlineGame:", err);
+    logger.error("Error en createOnlineGame", err);
     showAppAlert("Error de conexión al crear la partida.");
   }
 }
