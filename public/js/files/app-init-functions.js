@@ -48,7 +48,6 @@ export async function syncUserPermissions() {
   const safeEmail = currentUser.email.trim();
 
   try {
-    
     // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
 
     // Fetch con Cache Busting agresivo
@@ -81,7 +80,6 @@ export async function syncUserPermissions() {
         };
         localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-        
         // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
 
         const currentScreen = document.querySelector(".screen.active");
@@ -102,7 +100,7 @@ export async function syncUserPermissions() {
  * @param {string} source - 'boot' para inicio normal, 'user' para inicio desde login
  */
 export async function startApp(source = "boot") {
-  window.startApp = startApp;
+  globalThis.startApp = startApp;
   const versionEl = document.getElementById("app-version");
   if (versionEl) versionEl.textContent = APP_VERSION;
   // source: 'boot' | 'user'
@@ -193,7 +191,7 @@ export async function initializeApp() {
   }
 
   // 2. RETORNO DE PAGO (Stripe)
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(globalThis.location.search);
   const sessionId = urlParams.get("session_id");
 
   if (sessionId) {
@@ -216,7 +214,7 @@ export async function initializeApp() {
     }
 
     // Limpiar URL (elimina ?session_id)
-    window.history.replaceState({}, document.title, window.location.pathname);
+    globalThis.history.replaceState({}, document.title, globalThis.location.pathname);
     return;
   }
 
@@ -226,10 +224,20 @@ export async function initializeApp() {
 
 export function validateGlobals() {
   const requiredGlobals = [
-    "gameState", "currentUser", "isOnlineMode", "isElderlyMode", "isSummerSongsMode",
-    "audioPlayer", "sfxAcierto", "sfxError", "activeTimeUpdateListener", "audioPlaybackTimeout",
-    "configuracionCanciones", "loadSongsForDecadeAndCategory", "allPossibleCategories",
-    "API_BASE_URL"
+    "gameState",
+    "currentUser",
+    "isOnlineMode",
+    "isElderlyMode",
+    "isSummerSongsMode",
+    "audioPlayer",
+    "sfxAcierto",
+    "sfxError",
+    "activeTimeUpdateListener",
+    "audioPlaybackTimeout",
+    "configuracionCanciones",
+    "loadSongsForDecadeAndCategory",
+    "allPossibleCategories",
+    "API_BASE_URL",
   ];
   const missing = [];
   for (const name of requiredGlobals) {

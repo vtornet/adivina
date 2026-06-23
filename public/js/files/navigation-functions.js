@@ -3,7 +3,13 @@ import { showScreen } from "./screen-functions.js";
 import { closeHamburgerMenu } from "./burger-functions.js";
 import { logout } from "./login.js";
 import { generateDecadeButtons, generateCategoryButtons } from "./ui-functions.js";
-import { hasPremiumAccess, isPremiumDecade, showPremiumModal, isPremiumCategory, hasCategoryAccess } from "./premium-functions.js";
+import {
+  hasPremiumAccess,
+  isPremiumDecade,
+  showPremiumModal,
+  isPremiumCategory,
+  hasCategoryAccess,
+} from "./premium-functions.js";
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 import { loadAllDecadesForCategory } from "./songs-list-functions.js";
 
@@ -13,7 +19,7 @@ import { loadAllDecadesForCategory } from "./songs-list-functions.js";
  */
 export async function selectDecade(decade) {
   // 1. Verificación de Usuario
-  if (!window.currentUser || !window.currentUser.playerName) {
+  if (!globalThis.currentUser || !globalThis.currentUser.playerName) {
     showAppAlert("Debes iniciar sesión y establecer tu nombre de jugador para continuar.");
     showScreen("login-screen");
     return;
@@ -21,7 +27,7 @@ export async function selectDecade(decade) {
 
   // 2. NUEVA LÓGICA: Sección Especiales
   if (decade === "especiales") {
-    window.gameState.selectedDecade = "especiales";
+    globalThis.gameState.selectedDecade = "especiales";
     generateCategoryButtons(); // Genera el menú especial con texto de feedback
     showScreen("category-screen");
     return;
@@ -33,11 +39,11 @@ export async function selectDecade(decade) {
     return;
   }
 
-  window.gameState.selectedDecade = decade;
+  globalThis.gameState.selectedDecade = decade;
 
   // 4. Lógica para "Todas las Décadas"
   if (decade === "Todas") {
-    window.gameState.selectedDecade = "Todas";
+    globalThis.gameState.selectedDecade = "Todas";
     generateCategoryButtons();
     showScreen("category-screen");
     return;
@@ -45,8 +51,8 @@ export async function selectDecade(decade) {
 
   // 5. Lógica para Décadas Normales
   // Antes de mostrar la pantalla de categorías, cargamos todas las categorías de la década.
-  const categoriesToLoadPromises = window.allPossibleCategories.map((cat) =>
-    window.loadSongsForDecadeAndCategory(decade, cat).catch((error) => {
+  const categoriesToLoadPromises = globalThis.allPossibleCategories.map((cat) =>
+    globalThis.loadSongsForDecadeAndCategory(decade, cat).catch((error) => {
       console.warn(
         `No se pudo cargar la categoría ${cat} para la década ${decade}. Puede que no haya canciones o un error de archivo.`,
         error,
@@ -81,28 +87,28 @@ export async function confirmReturnToMenu() {
     "¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.",
   );
   if (confirmed) {
-    if (window.isOnlineMode) {
-      window.isOnlineMode = false;
-      window.currentOnlineGameCode = null;
-      window.currentOnlineSongs = [];
-      window.currentOnlineEmail = null;
-      window.currentOnlinePlayerName = null;
+    if (globalThis.isOnlineMode) {
+      globalThis.isOnlineMode = false;
+      globalThis.currentOnlineGameCode = null;
+      globalThis.currentOnlineSongs = [];
+      globalThis.currentOnlineEmail = null;
+      globalThis.currentOnlinePlayerName = null;
       localStorage.removeItem("currentOnlineGameData");
       showScreen("online-mode-screen"); // Volver al menú online
-    } else if (window.isElderlyMode) {
-      window.isElderlyMode = false; // Resetear el estado
-      window.gameState = {}; // Limpiar gameState
+    } else if (globalThis.isElderlyMode) {
+      globalThis.isElderlyMode = false; // Resetear el estado
+      globalThis.gameState = {}; // Limpiar gameState
       document.getElementById("elderly-player-1-name").value = ""; // Limpiar input principal
       document.getElementById("elderly-other-player-names-inputs").innerHTML = ""; // Limpiar inputs extra
       showScreen("elderly-mode-intro-screen"); // Volver a la pantalla de inicio del modo fácil
-    } else if (window.isSummerSongsMode) {
+    } else if (globalThis.isSummerSongsMode) {
       // <-- NUEVA CONDICIÓN PARA MODO VERANO
-      window.isSummerSongsMode = false; // Resetear el estado
-      window.gameState = {}; // Limpiar gameState
+      globalThis.isSummerSongsMode = false; // Resetear el estado
+      globalThis.gameState = {}; // Limpiar gameState
       showScreen("decade-selection-screen"); // Volver a la selección de década
     } else {
       // Modo offline normal
-      if (window.gameState.selectedDecade === "Todas") {
+      if (globalThis.gameState.selectedDecade === "Todas") {
         showScreen("decade-selection-screen");
       } else {
         showScreen("category-screen");
@@ -117,15 +123,15 @@ export async function confirmReturnToMenu() {
 export function endOnlineModeAndGoHome() {
   closeHamburgerMenu();
   // Siempre resetear el estado de la partida online al ir al menú principal
-  window.isOnlineMode = false;
-  window.currentOnlineGameCode = null;
-  window.currentOnlineSongs = [];
-  window.currentOnlineEmail = null;
-  window.currentOnlinePlayerName = null;
+  globalThis.isOnlineMode = false;
+  globalThis.currentOnlineGameCode = null;
+  globalThis.currentOnlineSongs = [];
+  globalThis.currentOnlineEmail = null;
+  globalThis.currentOnlinePlayerName = null;
   localStorage.removeItem("currentOnlineGameData");
 
   // Resetear también el estado del juego general para evitar confusiones
-  window.gameState = {};
+  globalThis.gameState = {};
 
   // Y siempre redirigir a la pantalla de selección de década
   showScreen("decade-selection-screen");
@@ -136,11 +142,11 @@ export function endOnlineModeAndGoHome() {
  * Va al menú de juego online.
  */
 export function goToOnlineMenu() {
-  window.isOnlineMode = false;
-  window.currentOnlineGameCode = null;
-  window.currentOnlineSongs = [];
-  window.currentOnlineEmail = null;
-  window.currentOnlinePlayerName = null;
+  globalThis.isOnlineMode = false;
+  globalThis.currentOnlineGameCode = null;
+  globalThis.currentOnlineSongs = [];
+  globalThis.currentOnlineEmail = null;
+  globalThis.currentOnlinePlayerName = null;
   localStorage.removeItem("currentOnlineGameData");
   showScreen("online-mode-screen");
 }
@@ -163,13 +169,13 @@ export function setEndGameNavigationButtons() {
   const backToDecades = document.getElementById("back-to-decades-btn");
   if (!backToCategories || !backToDecades) return;
 
-  if (window.isOnlineMode) {
+  if (globalThis.isOnlineMode) {
     backToCategories.style.display = "none";
     backToDecades.style.display = "none";
     return;
   }
 
-  const selectedDecade = window.gameState?.selectedDecade;
+  const selectedDecade = globalThis.gameState?.selectedDecade;
   const showCategories = selectedDecade && selectedDecade !== "Todas";
   backToCategories.style.display = showCategories ? "inline-flex" : "none";
   backToDecades.style.display = "inline-flex";
@@ -192,7 +198,7 @@ export function setEndGameNavigationButtons() {
  */
 export async function selectCategory(category) {
   // 1. Verificación de usuario
-  if (!window.currentUser || !window.currentUser.playerName) {
+  if (!globalThis.currentUser || !globalThis.currentUser.playerName) {
     showAppAlert("Debes iniciar sesión y establecer tu nombre de jugador para continuar.");
     showScreen("login-screen");
     return;
@@ -204,25 +210,28 @@ export async function selectCategory(category) {
     return;
   }
 
-  window.gameState.category = category;
+  globalThis.gameState.category = category;
 
   try {
     // 3. Carga de canciones según el modo
-    if (window.gameState.selectedDecade === "Todas") {
-      await loadAllDecadesForCategory(window.gameState.category);
+    if (globalThis.gameState.selectedDecade === "Todas") {
+      await loadAllDecadesForCategory(globalThis.gameState.category);
     } else {
-      await window.loadSongsForDecadeAndCategory(window.gameState.selectedDecade, window.gameState.category);
+      await globalThis.loadSongsForDecadeAndCategory(
+        globalThis.gameState.selectedDecade,
+        globalThis.gameState.category,
+      );
     }
 
     // 4. Verificación de cantidad de canciones
     const pool =
-      window.gameState.selectedDecade === "Todas"
-        ? window.configuracionCanciones?.["Todas"]?.[window.gameState.category]
-        : window.configuracionCanciones?.[window.gameState.selectedDecade]?.[window.gameState.category];
+      globalThis.gameState.selectedDecade === "Todas"
+        ? globalThis.configuracionCanciones?.["Todas"]?.[globalThis.gameState.category]
+        : globalThis.configuracionCanciones?.[globalThis.gameState.selectedDecade]?.[globalThis.gameState.category];
 
     if (!Array.isArray(pool) || pool.length < 4) {
       showAppAlert(
-        `No hay suficientes canciones en '${getCategoryLabel(category)}' para ${getDecadeLabel(window.gameState.selectedDecade)}. ` +
+        `No hay suficientes canciones en '${getCategoryLabel(category)}' para ${getDecadeLabel(globalThis.gameState.selectedDecade)}. ` +
           `Necesitas al menos 4 canciones.`,
       );
       showScreen("category-screen");
@@ -243,7 +252,7 @@ export async function selectCategory(category) {
  */
 export function showStats() {
   closeHamburgerMenu();
-  window.showStatisticsScreen?.();
+  globalThis.showStatisticsScreen?.();
 }
 
 /**
@@ -251,5 +260,5 @@ export function showStats() {
  */
 export function showAllSongs() {
   closeHamburgerMenu();
-  window.showSongsListCategorySelection?.();
+  globalThis.showSongsListCategorySelection?.();
 }

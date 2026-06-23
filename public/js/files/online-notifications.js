@@ -29,7 +29,7 @@ export function showInviteToast(invites) {
   const invite = invites[0];
   const invitingPlayer = invite.invitingPlayer?.playerName || "Alguien";
 
-  if (window.Notification && Notification.permission === "granted") {
+  if (globalThis.Notification && Notification.permission === "granted") {
     new Notification("Nueva invitación", {
       body: `${invitingPlayer} te ha invitado a jugar.`,
       icon: "img/adivina.png",
@@ -40,7 +40,7 @@ export function showInviteToast(invites) {
   toast.className = "online-invite-toast";
   toast.innerHTML = `
     <span>${invitingPlayer} te ha invitado a jugar.</span>
-    <button onclick="window.location.href='#pending-games-screen'">Ver</button>
+    <button onclick="globalThis.location.href='#pending-games-screen'">Ver</button>
   `;
   document.body.appendChild(toast);
 
@@ -57,7 +57,7 @@ export function sendInviteNotification(invitingPlayerName) {
   });
 
   notification.onclick = () => {
-    window.focus();
+    globalThis.focus();
     showScreen("pending-games-screen");
     notification.close();
   };
@@ -73,22 +73,22 @@ export function sendGameFinishedNotification(opponentName) {
   });
 
   notification.onclick = () => {
-    window.focus();
-    window.showScreen("pending-games-screen");
+    globalThis.focus();
+    globalThis.showScreen("pending-games-screen");
     notification.close();
   };
 }
 
 export async function clearOnlineGameHistory() {
-  const playerData = window.currentUser;
+  const playerData = globalThis.currentUser;
   if (!playerData || !playerData.email) {
-    window.showAppAlert("Debes iniciar sesión para borrar tu historial.");
-    window.showScreen("login-screen");
+    globalThis.showAppAlert("Debes iniciar sesión para borrar tu historial.");
+    globalThis.showScreen("login-screen");
     return;
   }
 
   try {
-    const response = await fetch(`${window.API_BASE_URL}/api/online-games/clear-history/${playerData.email}`, {
+    const response = await fetch(`${globalThis.API_BASE_URL}/api/online-games/clear-history/${playerData.email}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
@@ -96,19 +96,19 @@ export async function clearOnlineGameHistory() {
     const result = await response.json();
 
     if (response.ok) {
-      window.showAppAlert(result.message);
+      globalThis.showAppAlert(result.message);
       loadPlayerOnlineGames();
     } else {
-      window.showAppAlert(`Error al borrar historial: ${result.message}`);
+      globalThis.showAppAlert(`Error al borrar historial: ${result.message}`);
     }
   } catch (error) {
     console.error("Error de red al borrar historial de partidas online:", error);
-    window.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+    globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
 
 export async function confirmClearOnlineGameHistory() {
-  const confirmed = await window.showAppConfirm(
+  const confirmed = await globalThis.showAppConfirm(
     "¿Seguro que quieres borrar TODO el historial de partidas online? Esta acción no se puede deshacer.",
   );
 

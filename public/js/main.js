@@ -1,12 +1,12 @@
 // ============================================================================
 // MANEJADOR DE ERRORES GLOBAL - Detecta errores de importación, ejecución, etc.
 // ============================================================================
-window.addEventListener("error", (event) => {
+globalThis.addEventListener("error", (event) => {
   console.error("❌ ERROR GLOBAL:", event.message, event.filename, event.lineno);
   console.error("Error object:", event.error);
 });
 
-window.addEventListener("unhandledrejection", (event) => {
+globalThis.addEventListener("unhandledrejection", (event) => {
   console.error("❌ PROMESA RECHAZADA:", event.reason);
 });
 
@@ -142,36 +142,42 @@ import {
   startSummerSongsGame,
 } from "./files/gameplay-core.js";
 import { setupQuestion, updateAttemptsCounter, checkAnswer } from "./files/questions.js";
-import { startApp, initializeApp, setupPaymentListeners, refreshUI, validateGlobals } from "./files/app-init-functions.js";
+import {
+  startApp,
+  initializeApp,
+  setupPaymentListeners,
+  refreshUI,
+  validateGlobals,
+} from "./files/app-init-functions.js";
 // Referencias a elementos DOM (necesarias en main.js)
-const audioPlayer = window.audioPlayer || document.getElementById("audio-player");
-const sfxAcierto = window.sfxAcierto || document.getElementById("sfx-acierto");
-const sfxError = window.sfxError || document.getElementById("sfx-error");
+const audioPlayer = globalThis.audioPlayer || document.getElementById("audio-player");
+const sfxAcierto = globalThis.sfxAcierto || document.getElementById("sfx-acierto");
+const sfxError = globalThis.sfxError || document.getElementById("sfx-error");
 
 (() => {
   const savedUserJSON = localStorage.getItem("userData");
   if (savedUserJSON) {
     try {
-      window.currentUser = JSON.parse(savedUserJSON);
+      globalThis.currentUser = JSON.parse(savedUserJSON);
       console.log("✅ Sesión persistente restaurada:", currentUser.email);
     } catch (e) {
       console.error("❌ Sesión corrupta. Limpiando localStorage.", e);
       localStorage.removeItem("userData");
-      window.currentUser = null;
+      globalThis.currentUser = null;
     }
   }
 })();
 
-window.showScreen = showScreen;
+globalThis.showScreen = showScreen;
 
 // Funciones de password importadas desde auth-helpers.js
-window.togglePasswordVisibility = togglePasswordVisibility;
-window.showPasswordRecoveryInfo = showPasswordRecoveryInfo;
+globalThis.togglePasswordVisibility = togglePasswordVisibility;
+globalThis.showPasswordRecoveryInfo = showPasswordRecoveryInfo;
 
-window.toggleHamburgerMenu = toggleHamburgerMenu;
+globalThis.toggleHamburgerMenu = toggleHamburgerMenu;
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+  globalThis.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch((error) => {
       console.warn("No se pudo registrar el Service Worker:", error);
     });
@@ -179,103 +185,103 @@ if ("serviceWorker" in navigator) {
 }
 
 // FUNCIONES DE AUTENTICACIÓN
-window.loginUser = loginUser;
+globalThis.loginUser = loginUser;
 
 // Ejecutar validación después de cargar
 setTimeout(validateGlobals, 1000);
 
 // Navegación
-window.selectDecade = selectDecade;
-window.selectCategory = selectCategory;
-window.exitGame = exitGame;
-window.confirmReturnToMenu = confirmReturnToMenu;
-window.goToOnlineMenu = goToOnlineMenu;
-window.endOnlineModeAndGoHome = endOnlineModeAndGoHome;
-window.setOnlineMenuButtonVisibility = setOnlineMenuButtonVisibility;
-window.setEndGameNavigationButtons = setEndGameNavigationButtons;
-window.showStats = showStats;
-window.showAllSongs = showAllSongs;
+globalThis.selectDecade = selectDecade;
+globalThis.selectCategory = selectCategory;
+globalThis.exitGame = exitGame;
+globalThis.confirmReturnToMenu = confirmReturnToMenu;
+globalThis.goToOnlineMenu = goToOnlineMenu;
+globalThis.endOnlineModeAndGoHome = endOnlineModeAndGoHome;
+globalThis.setOnlineMenuButtonVisibility = setOnlineMenuButtonVisibility;
+globalThis.setEndGameNavigationButtons = setEndGameNavigationButtons;
+globalThis.showStats = showStats;
+globalThis.showAllSongs = showAllSongs;
 
 // Gameplay
-window.selectPlayers = selectPlayers;
-window.startGame = startGame;
-window.setupQuestion = setupQuestion;
-window.updateAttemptsCounter = updateAttemptsCounter;
-window.checkAnswer = checkAnswer;
-window.nextPlayerOrEndGame = nextPlayerOrEndGame;
-window.continueToNextPlayerTurn = continueToNextPlayerTurn;
-window.endGame = endGame;
-window.startSummerSongsGame = startSummerSongsGame;
-window.playAudioSnippet = playAudioSnippet;
+globalThis.selectPlayers = selectPlayers;
+globalThis.startGame = startGame;
+globalThis.setupQuestion = setupQuestion;
+globalThis.updateAttemptsCounter = updateAttemptsCounter;
+globalThis.checkAnswer = checkAnswer;
+globalThis.nextPlayerOrEndGame = nextPlayerOrEndGame;
+globalThis.continueToNextPlayerTurn = continueToNextPlayerTurn;
+globalThis.endGame = endGame;
+globalThis.startSummerSongsGame = startSummerSongsGame;
+globalThis.playAudioSnippet = playAudioSnippet;
 
 // Historial de canciones
-window.updateRecentSongsHistory = updateRecentSongsHistory;
-window.getRecentSongs = getRecentSongs;
+globalThis.updateRecentSongsHistory = updateRecentSongsHistory;
+globalThis.getRecentSongs = getRecentSongs;
 
 // Listado de canciones
-window.showSongsListCategorySelection = showSongsListCategorySelection;
-window.displaySongsForCategory = displaySongsForCategory;
-window.parseDisplay = parseDisplay;
+globalThis.showSongsListCategorySelection = showSongsListCategorySelection;
+globalThis.displaySongsForCategory = displaySongsForCategory;
+globalThis.parseDisplay = parseDisplay;
 
 // Modo elderly
-window.addElderlyPlayerInput = addElderlyPlayerInput;
-window.startElderlyModeGame = startElderlyModeGame;
+globalThis.addElderlyPlayerInput = addElderlyPlayerInput;
+globalThis.startElderlyModeGame = startElderlyModeGame;
 
 // Estadísticas
-window.showStatisticsScreen = showStatisticsScreen;
-window.confirmResetStatistics = confirmResetStatistics;
-window.renderUserTotalScores = renderUserTotalScores;
-window.renderDuelHistory = renderDuelHistory;
+globalThis.showStatisticsScreen = showStatisticsScreen;
+globalThis.confirmResetStatistics = confirmResetStatistics;
+globalThis.renderUserTotalScores = renderUserTotalScores;
+globalThis.renderDuelHistory = renderDuelHistory;
 
 // Share
-window.generateShareText = generateShareText;
-window.shareGameResultHandler = shareGameResultHandler;
+globalThis.generateShareText = generateShareText;
+globalThis.shareGameResultHandler = shareGameResultHandler;
 
 // Cookies
-window.checkCookieConsent = checkCookieConsent;
-window.acceptCookieConsent = acceptCookieConsent;
+globalThis.checkCookieConsent = checkCookieConsent;
+globalThis.acceptCookieConsent = acceptCookieConsent;
 
 // Online - Core
-window.createOnlineGame = createOnlineGame;
-window.joinOnlineGame = joinOnlineGame;
-window.joinOnlineGameFromPending = joinOnlineGameFromPending;
-window.startOnlineGame = startOnlineGame;
-window.submitOnlineScore = submitOnlineScore;
-window.pollOnlineGameStatus = pollOnlineGameStatus;
-window.getSongsForOnlineMatch = getSongsForOnlineMatch;
-window.saveOnlineGameToHistory = saveOnlineGameToHistory;
-window.confirmClearOnlineGameHistory = confirmClearOnlineGameHistory;
+globalThis.createOnlineGame = createOnlineGame;
+globalThis.joinOnlineGame = joinOnlineGame;
+globalThis.joinOnlineGameFromPending = joinOnlineGameFromPending;
+globalThis.startOnlineGame = startOnlineGame;
+globalThis.submitOnlineScore = submitOnlineScore;
+globalThis.pollOnlineGameStatus = pollOnlineGameStatus;
+globalThis.getSongsForOnlineMatch = getSongsForOnlineMatch;
+globalThis.saveOnlineGameToHistory = saveOnlineGameToHistory;
+globalThis.confirmClearOnlineGameHistory = confirmClearOnlineGameHistory;
 
 // Online - Invites
-window.invitePlayerByName = invitePlayerByName;
-window.shareOnlineCode = shareOnlineCode;
-window.copyOnlineGameCode = copyOnlineGameCode;
-window.declineOnlineGame = declineOnlineGame;
-window.deletePendingOnlineGame = deletePendingOnlineGame;
-window.updateOnlineInviteBadge = updateOnlineInviteBadge;
-window.startOnlineInvitePolling = startOnlineInvitePolling;
+globalThis.invitePlayerByName = invitePlayerByName;
+globalThis.shareOnlineCode = shareOnlineCode;
+globalThis.copyOnlineGameCode = copyOnlineGameCode;
+globalThis.declineOnlineGame = declineOnlineGame;
+globalThis.deletePendingOnlineGame = deletePendingOnlineGame;
+globalThis.updateOnlineInviteBadge = updateOnlineInviteBadge;
+globalThis.startOnlineInvitePolling = startOnlineInvitePolling;
 
 // Online - UI
-window.loadPlayerOnlineGames = loadPlayerOnlineGames;
-window.showOnlineResults = showOnlineResults;
-window.viewOnlineGameResults = viewOnlineGameResults;
-window.goToOnlineWaitScreen = goToOnlineWaitScreen;
-window.continueOnlineGame = continueOnlineGame;
+globalThis.loadPlayerOnlineGames = loadPlayerOnlineGames;
+globalThis.showOnlineResults = showOnlineResults;
+globalThis.viewOnlineGameResults = viewOnlineGameResults;
+globalThis.goToOnlineWaitScreen = goToOnlineWaitScreen;
+globalThis.continueOnlineGame = continueOnlineGame;
 
 // Online - Notifications
-window.getWinnerName = getWinnerName;
-window.formatOnlineGameDate = formatOnlineGameDate;
-window.isOnlineGameFinished = isOnlineGameFinished;
-window.showInviteToast = showInviteToast;
-window.sendInviteNotification = sendInviteNotification;
-window.sendGameFinishedNotification = sendGameFinishedNotification;
+globalThis.getWinnerName = getWinnerName;
+globalThis.formatOnlineGameDate = formatOnlineGameDate;
+globalThis.isOnlineGameFinished = isOnlineGameFinished;
+globalThis.showInviteToast = showInviteToast;
+globalThis.sendInviteNotification = sendInviteNotification;
+globalThis.sendGameFinishedNotification = sendGameFinishedNotification;
 
 // Inicialización
-window.setupPaymentListeners = setupPaymentListeners;
-window.refreshUI = refreshUI;
-window.startApp = startApp;
+globalThis.setupPaymentListeners = setupPaymentListeners;
+globalThis.refreshUI = refreshUI;
+globalThis.startApp = startApp;
 
-Object.assign(window, {
+Object.assign(globalThis, {
   togglePasswordVisibility,
   toggleNotificationsPanel,
   toggleHamburgerMenu,
@@ -296,4 +302,4 @@ Object.assign(window, {
 });
 
 // Inicialización
-window.onload = initializeApp;
+globalThis.onload = initializeApp;

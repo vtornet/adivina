@@ -18,17 +18,17 @@ import { setupQuestion, updateAttemptsCounter, checkAnswer } from "./questions.j
  * @param {number} numPlayers - El número de jugadores seleccionado.
  */
 export function selectPlayers(numPlayers) {
-  if (!window.currentUser || !window.currentUser.playerName) {
+  if (!globalThis.currentUser || !globalThis.currentUser.playerName) {
     showAppAlert("Debes iniciar sesión y establecer tu nombre de jugador para continuar.");
     showScreen("login-screen");
     return;
   }
 
-  window.gameState.playerCount = numPlayers;
+  globalThis.gameState.playerCount = numPlayers;
   const otherPlayerNamesInputsDiv = document.getElementById("other-player-names-inputs");
   otherPlayerNamesInputsDiv.innerHTML = "";
 
-  document.getElementById("logged-in-player-name").textContent = window.currentUser.playerName;
+  document.getElementById("logged-in-player-name").textContent = globalThis.currentUser.playerName;
 
   for (let i = 1; i < numPlayers; i++) {
     const input = document.createElement("input");
@@ -55,27 +55,27 @@ export async function startSummerSongsGame() {
     showPremiumModal("Contenido premium. Próximamente disponible mediante desbloqueo.");
     return;
   }
-  if (!window.currentUser || !window.currentUser.playerName) {
+  if (!globalThis.currentUser || !globalThis.currentUser.playerName) {
     showAppAlert("Debes iniciar sesión y establecer tu nombre de jugador para continuar.");
     showScreen("login-screen");
     return;
   }
 
   // Limpiar el estado anterior del juego y establecer el modo de verano
-  window.gameState = {}; // Limpiar completamente el gameState para el nuevo modo
-  window.isOnlineMode = false;
-  window.isElderlyMode = false;
-  window.isSummerSongsMode = true; // Establecer esto a TRUE para que la lógica de retorno y fin de juego lo reconozca
+  globalThis.gameState = {}; // Limpiar completamente el gameState para el nuevo modo
+  globalThis.isOnlineMode = false;
+  globalThis.isElderlyMode = false;
+  globalThis.isSummerSongsMode = true; // Establecer esto a TRUE para que la lógica de retorno y fin de juego lo reconozca
 
-  window.gameState.selectedDecade = "verano"; // Década especial para el verano
-  window.gameState.category = "consolidated"; // Categoría 'consolidated' para el verano
+  globalThis.gameState.selectedDecade = "verano"; // Década especial para el verano
+  globalThis.gameState.category = "consolidated"; // Categoría 'consolidated' para el verano
 
   // Aquí precargamos las canciones y hacemos la validación ANTES de ir a la selección de jugadores.
   // Esto asegura que solo permitimos continuar si hay suficientes canciones para este modo.
   try {
-    await window.loadSongsForDecadeAndCategory(window.gameState.selectedDecade, window.gameState.category);
+    await globalThis.loadSongsForDecadeAndCategory(globalThis.gameState.selectedDecade, globalThis.gameState.category);
     const allSongsToChooseFrom =
-      window.configuracionCanciones[window.gameState.selectedDecade][window.gameState.category];
+      globalThis.configuracionCanciones[globalThis.gameState.selectedDecade][globalThis.gameState.category];
 
     // Para este modo, asumiremos que se necesitan al menos 10 canciones en total para poder jugar
     // con un mínimo de 1 jugador y que tenga al menos 10 preguntas.
@@ -104,31 +104,31 @@ export async function startSummerSongsGame() {
  * Inicia una nueva partida, configurando jugadores y preguntas.
  */
 export function startGame() {
-  if (!window.currentUser || !window.currentUser.playerName) {
+  if (!globalThis.currentUser || !globalThis.currentUser.playerName) {
     showAppAlert("Error: No se ha encontrado el nombre del jugador principal. Por favor, inicia sesión de nuevo.");
-    window.logout?.();
+    globalThis.logout?.();
     return;
   }
-  if (!window.gameState.selectedDecade || !window.gameState.category) {
+  if (!globalThis.gameState.selectedDecade || !globalThis.gameState.category) {
     showAppAlert("Error: No se ha seleccionado una década o categoría. Vuelve a empezar.");
     showScreen("decade-selection-screen");
     return;
   }
 
-  window.gameState.players = [];
-  window.gameState.players.push({
+  globalThis.gameState.players = [];
+  globalThis.gameState.players.push({
     id: 1,
-    name: window.currentUser.playerName,
+    name: globalThis.currentUser.playerName,
     score: 0,
     questionsAnswered: 0,
     questions: [],
-    email: window.currentUser.email,
+    email: globalThis.currentUser.email,
   });
 
-  for (let i = 1; i < window.gameState.playerCount; i++) {
+  for (let i = 1; i < globalThis.gameState.playerCount; i++) {
     const input = document.getElementById(`player-${i + 1}-name-input`);
     const name = input.value.trim() || `Jugador ${i + 1}`;
-    window.gameState.players.push({
+    globalThis.gameState.players.push({
       id: i + 1,
       name: name,
       score: 0,
@@ -138,9 +138,9 @@ export function startGame() {
   }
 
   const allSongsToChooseFrom =
-    window.gameState.selectedDecade === "Todas"
-      ? window.configuracionCanciones?.["Todas"]?.[window.gameState.category]
-      : window.configuracionCanciones?.[window.gameState.selectedDecade]?.[window.gameState.category];
+    globalThis.gameState.selectedDecade === "Todas"
+      ? globalThis.configuracionCanciones?.["Todas"]?.[globalThis.gameState.category]
+      : globalThis.configuracionCanciones?.[globalThis.gameState.selectedDecade]?.[globalThis.gameState.category];
 
   if (!Array.isArray(allSongsToChooseFrom) || allSongsToChooseFrom.length === 0) {
     showAppAlert("Error: No hay canciones disponibles para esta combinación.");
@@ -148,21 +148,21 @@ export function startGame() {
     return;
   }
 
-  const songsToExclude = window.currentUser ? window.getRecentSongs(window.currentUser.email, 10) : [];
+  const songsToExclude = globalThis.currentUser ? globalThis.getRecentSongs(globalThis.currentUser.email, 10) : [];
   let availableSongs = allSongsToChooseFrom.filter((song) => !songsToExclude.has(song.file));
 
-  if (availableSongs.length < window.gameState.totalQuestionsPerPlayer) {
+  if (availableSongs.length < globalThis.gameState.totalQuestionsPerPlayer) {
     availableSongs = allSongsToChooseFrom;
   }
 
   availableSongs.sort(() => 0.5 - Math.random());
 
-  for (const player of window.gameState.players) {
-    player.questions = availableSongs.slice(0, window.gameState.totalQuestionsPerPlayer);
-    availableSongs = availableSongs.slice(window.gameState.totalQuestionsPerPlayer);
+  for (const player of globalThis.gameState.players) {
+    player.questions = availableSongs.slice(0, globalThis.gameState.totalQuestionsPerPlayer);
+    availableSongs = availableSongs.slice(globalThis.gameState.totalQuestionsPerPlayer);
   }
 
-  window.gameState.currentPlayerIndex = 0;
+  globalThis.gameState.currentPlayerIndex = 0;
   setupQuestion(nextPlayerOrEndGame);
   showScreen("game-screen");
 }
@@ -171,10 +171,10 @@ export function startGame() {
  * Avanza al siguiente jugador o finaliza la partida si todos han jugado.
  */
 export function nextPlayerOrEndGame() {
-  const currentPlayer = window.gameState.players[window.gameState.currentPlayerIndex];
+  const currentPlayer = globalThis.gameState.players[globalThis.gameState.currentPlayerIndex];
 
-  if (window.gameState.players.length === 1) {
-    if (currentPlayer.questionsAnswered >= window.gameState.totalQuestionsPerPlayer) {
+  if (globalThis.gameState.players.length === 1) {
+    if (currentPlayer.questionsAnswered >= globalThis.gameState.totalQuestionsPerPlayer) {
       endGame();
     } else {
       setupQuestion(nextPlayerOrEndGame);
@@ -182,14 +182,14 @@ export function nextPlayerOrEndGame() {
     return;
   }
 
-  if (currentPlayer.questionsAnswered >= window.gameState.totalQuestionsPerPlayer) {
-    window.gameState.currentPlayerIndex++;
+  if (currentPlayer.questionsAnswered >= globalThis.gameState.totalQuestionsPerPlayer) {
+    globalThis.gameState.currentPlayerIndex++;
 
-    if (window.gameState.currentPlayerIndex < window.gameState.players.length) {
+    if (globalThis.gameState.currentPlayerIndex < globalThis.gameState.players.length) {
       document.getElementById("current-player-score-summary").textContent =
         `${currentPlayer.name} ha terminado su turno con ${currentPlayer.score} puntos.`;
       document.getElementById("next-player-prompt").textContent =
-        `Siguiente jugador: ${window.gameState.players[window.gameState.currentPlayerIndex].name}, ¿preparado para comenzar?`;
+        `Siguiente jugador: ${globalThis.gameState.players[globalThis.gameState.currentPlayerIndex].name}, ¿preparado para comenzar?`;
       showScreen("player-transition-screen");
     } else {
       endGame();
@@ -211,8 +211,8 @@ export function continueToNextPlayerTurn() {
  * Finaliza la partida, calcula el ganador y guarda los resultados.
  */
 export function endGame() {
-  if (window.isOnlineMode) {
-    window.submitOnlineScore?.(); // Si es online, envía la puntuación al servidor
+  if (globalThis.isOnlineMode) {
+    globalThis.submitOnlineScore?.(); // Si es online, envía la puntuación al servidor
     return;
   }
 
@@ -220,10 +220,10 @@ export function endGame() {
   finalScoresContainer.innerHTML = "<h3>Puntuaciones Finales</h3>";
   const winnerDisplay = document.getElementById("winner-display");
 
-  const sortedPlayers = [...window.gameState.players].sort((a, b) => b.score - a.score);
+  const sortedPlayers = [...globalThis.gameState.players].sort((a, b) => b.score - a.score);
 
-  if (window.gameState.players.length === 1) {
-    const player = window.gameState.players[0];
+  if (globalThis.gameState.players.length === 1) {
+    const player = globalThis.gameState.players[0];
     winnerDisplay.textContent = `${player.name} has conseguido ${player.score} puntos.`;
     winnerDisplay.style.animation = "none";
     winnerDisplay.style.textShadow = "none";
@@ -231,11 +231,16 @@ export function endGame() {
     winnerDisplay.style.border = "none";
     winnerDisplay.style.fontSize = "1.8rem";
 
-    if (window.currentUser && window.currentUser.email && !window.isElderlyMode && !window.isSummerSongsMode) {
+    if (
+      globalThis.currentUser &&
+      globalThis.currentUser.email &&
+      !globalThis.isElderlyMode &&
+      !globalThis.isSummerSongsMode
+    ) {
       saveUserScores(
-        window.currentUser.email,
-        window.gameState.selectedDecade,
-        window.gameState.category,
+        globalThis.currentUser.email,
+        globalThis.gameState.selectedDecade,
+        globalThis.gameState.category,
         player.score,
       );
     }
@@ -263,13 +268,18 @@ export function endGame() {
     winnerDisplay.style.borderTop = "2px solid var(--secondary-color)";
     winnerDisplay.style.fontSize = "2.5rem";
 
-    if (window.currentUser && window.currentUser.email && !window.isElderlyMode && !window.isSummerSongsMode) {
-      const loggedInPlayer = window.gameState.players.find((p) => p.email === window.currentUser.email);
+    if (
+      globalThis.currentUser &&
+      globalThis.currentUser.email &&
+      !globalThis.isElderlyMode &&
+      !globalThis.isSummerSongsMode
+    ) {
+      const loggedInPlayer = globalThis.gameState.players.find((p) => p.email === globalThis.currentUser.email);
       if (loggedInPlayer) {
         saveUserScores(
-          window.currentUser.email,
-          window.gameState.selectedDecade,
-          window.gameState.category,
+          globalThis.currentUser.email,
+          globalThis.gameState.selectedDecade,
+          globalThis.gameState.category,
           loggedInPlayer.score,
         );
       } else {
@@ -278,32 +288,37 @@ export function endGame() {
     }
 
     if (
-      !window.isElderlyMode &&
-      !window.isSummerSongsMode &&
-      window.gameState.players.length > 1 &&
-      !window.isOnlineMode
+      !globalThis.isElderlyMode &&
+      !globalThis.isSummerSongsMode &&
+      globalThis.gameState.players.length > 1 &&
+      !globalThis.isOnlineMode
     ) {
-      saveGameResult(window.gameState.players, winnerName, window.gameState.selectedDecade, window.gameState.category);
+      saveGameResult(
+        globalThis.gameState.players,
+        winnerName,
+        globalThis.gameState.selectedDecade,
+        globalThis.gameState.category,
+      );
     }
   }
 
   sortedPlayers.forEach((player, index) => {
-    const medal = window.gameState.players.length > 1 ? { 0: "🥇", 1: "🥈", 2: "🥉" }[index] || "" : "";
+    const medal = globalThis.gameState.players.length > 1 ? { 0: "🥇", 1: "🥈", 2: "🥉" }[index] || "" : "";
     finalScoresContainer.innerHTML += `<p>${medal} ${player.name}: <strong>${player.score} puntos</strong></p>`;
   });
 
   // Recopilar todas las canciones jugadas en esta partida
   let allPlayedSongsInThisGame = [];
-  window.gameState.players.forEach((player) => {
+  globalThis.gameState.players.forEach((player) => {
     allPlayedSongsInThisGame = allPlayedSongsInThisGame.concat(player.questions);
   });
 
   // Actualizar el historial de canciones recientes
-  if (window.currentUser && window.currentUser.email) {
+  if (globalThis.currentUser && globalThis.currentUser.email) {
     updateRecentSongsHistory(
-      window.currentUser.email,
-      window.gameState.selectedDecade,
-      window.gameState.category,
+      globalThis.currentUser.email,
+      globalThis.gameState.selectedDecade,
+      globalThis.gameState.category,
       allPlayedSongsInThisGame,
     );
   }
@@ -311,25 +326,25 @@ export function endGame() {
   // Configurar botón "Jugar Otra Vez"
   document.getElementById("play-again-btn").textContent = "Jugar Otra Vez";
   document.getElementById("play-again-btn").onclick = () => {
-    if (window.isElderlyMode) {
+    if (globalThis.isElderlyMode) {
       document.getElementById("elderly-player-1-name").value = "";
       document.getElementById("elderly-other-player-names-inputs").innerHTML = "";
-      window.elderlyPlayerCount = 1;
+      globalThis.elderlyPlayerCount = 1;
       showScreen("elderly-mode-intro-screen");
-    } else if (window.isSummerSongsMode) {
-      window.isSummerSongsMode = false;
-      window.gameState = {};
+    } else if (globalThis.isSummerSongsMode) {
+      globalThis.isSummerSongsMode = false;
+      globalThis.gameState = {};
       startSummerSongsGame();
-    } else if (window.isOnlineMode) {
-      window.isOnlineMode = false;
-      window.currentOnlineGameCode = null;
-      window.currentOnlineSongs = [];
-      window.currentOnlineEmail = null;
-      window.currentOnlinePlayerName = null;
+    } else if (globalThis.isOnlineMode) {
+      globalThis.isOnlineMode = false;
+      globalThis.currentOnlineGameCode = null;
+      globalThis.currentOnlineSongs = [];
+      globalThis.currentOnlineEmail = null;
+      globalThis.currentOnlinePlayerName = null;
       localStorage.removeItem("currentOnlineGameData");
       showScreen("online-mode-screen");
     } else {
-      window.gameState.players.forEach((player) => {
+      globalThis.gameState.players.forEach((player) => {
         player.score = 0;
         player.questionsAnswered = 0;
         player.questions = [];

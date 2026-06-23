@@ -23,7 +23,7 @@ export async function loadPlayerOnlineGames() {
 
   try {
     const emailEnc = encodeURIComponent(userEmail);
-    const response = await fetch(`${window.API_BASE_URL}/api/online-games/player/${emailEnc}`, {
+    const response = await fetch(`${globalThis.API_BASE_URL}/api/online-games/player/${emailEnc}`, {
       method: "GET",
       headers: {
         "Cache-Control": "no-cache",
@@ -92,27 +92,27 @@ export async function loadPlayerOnlineGames() {
         if (isWaitingForMe) {
           statusText = `¡Te han invitado!`;
           actionButtonsHTML = `
-            <button class="btn" onclick="window.joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${userEmail}')">Aceptar y Unirse</button>
-            <button class="btn secondary" onclick="window.declineOnlineGame('${game.code}')">Declinar</button>
+            <button class="btn" onclick="globalThis.joinOnlineGameFromPending('${game.code}', '${playerData.playerName}', '${userEmail}')">Aceptar y Unirse</button>
+            <button class="btn secondary" onclick="globalThis.declineOnlineGame('${game.code}')">Declinar</button>
           `;
         } else if (game.players.length === 1 && isCreator) {
           if (game.waitingFor) {
             statusText = `Invitación enviada.`;
             actionButtonsHTML = `
-              <button class="btn danger" onclick="window.deletePendingOnlineGame('${game.code}')">Eliminar</button>
+              <button class="btn danger" onclick="globalThis.deletePendingOnlineGame('${game.code}')">Eliminar</button>
             `;
           } else {
             statusText = "Esperando a que un rival se una...";
             actionButtonsHTML = `
-              <button class="btn secondary" onclick="window.copyOnlineGameCode('${game.code}')">Copiar Código</button>
-              <button class="btn danger" onclick="window.deletePendingOnlineGame('${game.code}')">Eliminar</button>
+              <button class="btn secondary" onclick="globalThis.copyOnlineGameCode('${game.code}')">Copiar Código</button>
+              <button class="btn danger" onclick="globalThis.deletePendingOnlineGame('${game.code}')">Eliminar</button>
             `;
           }
 
           if (currentPlayerStatus && !currentPlayerStatus.finished) {
             statusText = "No has completado tu turno.";
             actionButtonsHTML = `
-              <button class="btn" onclick="window.continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>
+              <button class="btn" onclick="globalThis.continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>
               ${actionButtonsHTML}
             `;
           }
@@ -122,13 +122,13 @@ export async function loadPlayerOnlineGames() {
 
           if (myFinished && !otherPlayerFinished) {
             statusText = `Esperando a ${otherPlayer ? otherPlayer.name : "rival"}...`;
-            actionButtonsHTML = `<button class="btn secondary" onclick="window.goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
+            actionButtonsHTML = `<button class="btn secondary" onclick="globalThis.goToOnlineWaitScreen('${game.code}')">Ver Estado</button>`;
           } else if (!myFinished && otherPlayerFinished) {
             statusText = `¡Tu turno! ${otherPlayer ? otherPlayer.name : "Rival"} ha terminado.`;
-            actionButtonsHTML = `<button class="btn" onclick="window.continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>`;
+            actionButtonsHTML = `<button class="btn" onclick="globalThis.continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Jugar</button>`;
           } else if (!myFinished && !otherPlayerFinished) {
             statusText = `Partida en curso.`;
-            actionButtonsHTML = `<button class="btn" onclick="window.continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Continuar</button>`;
+            actionButtonsHTML = `<button class="btn" onclick="globalThis.continueOnlineGame('${game.code}', '${playerData.playerName}', '${userEmail}')">Continuar</button>`;
           }
         }
 
@@ -156,7 +156,7 @@ export async function loadPlayerOnlineGames() {
           <p><strong>Partida con:</strong> ${otherPlayerName}</p>
           <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
           <p><strong>Estado:</strong> FINALIZADA</p>
-          <button class="btn" onclick="window.viewOnlineGameResults('${game.code}')">Ver Resultados</button>
+          <button class="btn" onclick="globalThis.viewOnlineGameResults('${game.code}')">Ver Resultados</button>
         `;
         finishedGamesContainer.appendChild(gameDiv);
       });
@@ -172,29 +172,29 @@ export async function loadPlayerOnlineGames() {
 
 export async function viewOnlineGameResults(code) {
   try {
-    const response = await fetch(`${window.API_BASE_URL}/api/online-games/${code}`);
+    const response = await fetch(`${globalThis.API_BASE_URL}/api/online-games/${code}`);
     const result = await response.json();
 
     if (response.ok && result.finished && result.players?.length === 2) {
-      window.currentOnlineGameCode = null;
-      window.currentOnlineSongs = [];
-      window.isOnlineMode = false;
+      globalThis.currentOnlineGameCode = null;
+      globalThis.currentOnlineSongs = [];
+      globalThis.isOnlineMode = false;
       localStorage.removeItem("currentOnlineGameData");
 
       showOnlineResults(result);
     } else {
-      window.showAppAlert(result.message || "La partida aún no ha terminado o no se encontraron resultados.");
+      globalThis.showAppAlert(result.message || "La partida aún no ha terminado o no se encontraron resultados.");
       loadPlayerOnlineGames();
     }
   } catch (err) {
     console.error("Error al ver resultados de partida online:", err);
-    window.showAppAlert("Error de conexión al cargar los resultados.");
+    globalThis.showAppAlert("Error de conexión al cargar los resultados.");
   }
 }
 
 export async function goToOnlineWaitScreen(code) {
-  window.currentOnlineGameCode = code;
-  window.showScreen("online-wait-screen");
+  globalThis.currentOnlineGameCode = code;
+  globalThis.showScreen("online-wait-screen");
 
   const { pollOnlineGameStatus } = await import("./online-functions.js");
   pollOnlineGameStatus();
@@ -202,15 +202,15 @@ export async function goToOnlineWaitScreen(code) {
 
 export async function continueOnlineGame(code, playerName, email) {
   try {
-    const response = await fetch(`${window.API_BASE_URL}/api/online-games/${code}`);
+    const response = await fetch(`${globalThis.API_BASE_URL}/api/online-games/${code}`);
     const result = await response.json();
 
     if (response.ok) {
-      window.currentOnlineGameCode = code;
-      window.currentOnlineSongs = result.songsUsed;
-      window.currentOnlineEmail = email;
-      window.currentOnlinePlayerName = playerName;
-      window.isOnlineMode = true;
+      globalThis.currentOnlineGameCode = code;
+      globalThis.currentOnlineSongs = result.songsUsed;
+      globalThis.currentOnlineEmail = email;
+      globalThis.currentOnlinePlayerName = playerName;
+      globalThis.isOnlineMode = true;
 
       localStorage.setItem(
         "currentOnlineGameData",
@@ -222,36 +222,36 @@ export async function continueOnlineGame(code, playerName, email) {
         }),
       );
 
-      window.gameState = {
+      globalThis.gameState = {
         players: [],
         totalQuestionsPerPlayer: 10,
         currentPlayerIndex: 0,
         selectedDecade: null,
         category: null,
         isOnline: true,
-        onlineGameCode: window.currentOnlineGameCode,
+        onlineGameCode: globalThis.currentOnlineGameCode,
       };
 
       const localPlayer = {
         id: 1,
-        name: window.currentOnlinePlayerName,
+        name: globalThis.currentOnlinePlayerName,
         score: 0,
         questionsAnswered: 0,
-        questions: window.currentOnlineSongs,
-        email: window.currentOnlineEmail,
+        questions: globalThis.currentOnlineSongs,
+        email: globalThis.currentOnlineEmail,
         finished_online: false,
       };
-      window.gameState.players.push(localPlayer);
+      globalThis.gameState.players.push(localPlayer);
 
-      const serverPlayer = result.players.find((p) => p.email === window.currentOnlineEmail);
+      const serverPlayer = result.players.find((p) => p.email === globalThis.currentOnlineEmail);
       if (serverPlayer) {
         localPlayer.score = serverPlayer.score;
         localPlayer.finished_online = serverPlayer.finished;
       }
 
-      const otherPlayer = result.players.find((p) => p.email !== window.currentOnlineEmail);
+      const otherPlayer = result.players.find((p) => p.email !== globalThis.currentOnlineEmail);
       if (otherPlayer) {
-        window.gameState.players.push({
+        globalThis.gameState.players.push({
           id: 2,
           name: otherPlayer.name,
           score: otherPlayer.score,
@@ -265,12 +265,12 @@ export async function continueOnlineGame(code, playerName, email) {
       const { startOnlineGame } = await import("./online-functions.js");
       await startOnlineGame();
     } else {
-      window.showAppAlert(result.message || "Error al cargar la partida para continuar.");
+      globalThis.showAppAlert(result.message || "Error al cargar la partida para continuar.");
       loadPlayerOnlineGames();
     }
   } catch (err) {
     console.error("Error de red al continuar partida online:", err);
-    window.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+    globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
 
@@ -319,17 +319,17 @@ export function showOnlineResults(gameData) {
   });
 
   document.getElementById("play-again-btn").onclick = () => {
-    window.currentOnlineGameCode = null;
-    window.currentOnlineSongs = [];
-    window.isOnlineMode = false;
+    globalThis.currentOnlineGameCode = null;
+    globalThis.currentOnlineSongs = [];
+    globalThis.isOnlineMode = false;
     localStorage.removeItem("currentOnlineGameData");
-    window.showScreen("online-mode-screen");
+    globalThis.showScreen("online-mode-screen");
   };
   document.getElementById("play-again-btn").textContent = "Jugar Otra Vez Online";
 
-  window.gameState.players = gameData.players;
-  window.gameState.selectedDecade = gameData.decade;
-  window.gameState.category = gameData.category;
+  globalThis.gameState.players = gameData.players;
+  globalThis.gameState.selectedDecade = gameData.decade;
+  globalThis.gameState.category = gameData.category;
 
   const shareBtnOnline = document.getElementById("share-result-btn");
   if (shareBtnOnline) {
@@ -344,5 +344,5 @@ export function showOnlineResults(gameData) {
   const { setOnlineMenuButtonVisibility, setEndGameNavigationButtons } = await import("./navigation-functions.js");
   setOnlineMenuButtonVisibility(true);
   setEndGameNavigationButtons();
-  window.showScreen("end-game-screen");
+  globalThis.showScreen("end-game-screen");
 }

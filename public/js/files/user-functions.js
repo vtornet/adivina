@@ -1,4 +1,11 @@
-import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY, LOCAL_USERS_KEY, LOCAL_SCORES_KEY, LOCAL_GAME_HISTORY_KEY, API_BASE_URL } from "../constants/app-constants.js";
+import {
+  ADMIN_EMAIL,
+  PERMISSIONS_STORAGE_KEY,
+  LOCAL_USERS_KEY,
+  LOCAL_SCORES_KEY,
+  LOCAL_GAME_HISTORY_KEY,
+  API_BASE_URL,
+} from "../constants/app-constants.js";
 import { parseJsonResponse } from "./helpers.js";
 import { showAppAlert } from "./modal-functions.js";
 import { showScreen } from "./screen-functions.js";
@@ -36,14 +43,14 @@ export function getUserPermissions(email) {
 
 export function getActivePermissions() {
   // Si no hay usuario, no hay permisos
-  if (!window.currentUser || !window.currentUser.email) return [];
+  if (!globalThis.currentUser || !globalThis.currentUser.email) return [];
 
   let localSections = [];
   let memorySections = [];
 
   // 1. Memoria (RAM) - Lo más inmediato
-  if (window.currentUser.unlocked_sections && Array.isArray(window.currentUser.unlocked_sections)) {
-    memorySections = window.currentUser.unlocked_sections;
+  if (globalThis.currentUser.unlocked_sections && Array.isArray(globalThis.currentUser.unlocked_sections)) {
+    memorySections = globalThis.currentUser.unlocked_sections;
   }
 
   // 2. Disco (LocalStorage) - La persistencia
@@ -51,8 +58,8 @@ export function getActivePermissions() {
     const storedPermsJSON = localStorage.getItem(PERMISSIONS_STORAGE_KEY);
     if (storedPermsJSON) {
       const parsed = JSON.parse(storedPermsJSON);
-      if (parsed[window.currentUser.email]) {
-        localSections = parsed[window.currentUser.email].unlocked_sections || [];
+      if (parsed[globalThis.currentUser.email]) {
+        localSections = parsed[globalThis.currentUser.email].unlocked_sections || [];
       }
     }
   } catch (e) {
@@ -123,7 +130,7 @@ export async function loadUserScores(userEmail) {
 }
 
 export async function saveUserScores(userEmail, decade, category, score) {
-  if (window.useLocalApiFallback) {
+  if (globalThis.useLocalApiFallback) {
     const localScores = getLocalScores();
     localScores[userEmail] = localScores[userEmail] || {};
     localScores[userEmail][decade] = localScores[userEmail][decade] || {};
@@ -146,14 +153,14 @@ export async function saveUserScores(userEmail, decade, category, score) {
       console.log(data.message);
       await loadUserScores(userEmail);
     } else if (response.status === 404 || response.status >= 500) {
-      window.useLocalApiFallback = true;
+      globalThis.useLocalApiFallback = true;
       await saveUserScores(userEmail, decade, category, score);
     } else {
       console.error("Error al guardar puntuación:", data?.message);
     }
   } catch (error) {
     console.warn("API no disponible, usando puntuaciones locales:", error);
-    window.useLocalApiFallback = true;
+    globalThis.useLocalApiFallback = true;
     await saveUserScores(userEmail, decade, category, score);
   }
 }
@@ -167,9 +174,9 @@ export async function setPlayerName() {
     return;
   }
 
-  if (window.currentUser) {
+  if (globalThis.currentUser) {
     try {
-      const response = await fetch(`${window.API_BASE_URL}/api/users/${window.currentUser.email}/playername`, {
+      const response = await fetch(`${globalThis.API_BASE_URL}/api/users/${globalThis.currentUser.email}/playername`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ playerName: newPlayerName }),
@@ -178,8 +185,8 @@ export async function setPlayerName() {
       const data = await parseJsonResponse(response);
 
       if (response.ok) {
-        window.currentUser.playerName = newPlayerName;
-        localStorage.setItem("userData", JSON.stringify(window.currentUser));
+        globalThis.currentUser.playerName = newPlayerName;
+        localStorage.setItem("userData", JSON.stringify(globalThis.currentUser));
         localStorage.setItem("sessionActive", "true");
         showAppAlert(data?.message || "Nombre de jugador actualizado.");
         playerNameInput.value = "";
@@ -189,24 +196,24 @@ export async function setPlayerName() {
       }
 
       if (response.status === 404 || response.status >= 500) {
-        window.useLocalApiFallback = true;
+        globalThis.useLocalApiFallback = true;
       } else {
         showAppAlert(`Error al actualizar nombre: ${data?.message || "No se pudo actualizar el nombre."}`);
         return;
       }
     } catch (error) {
       console.warn("API no disponible, usando actualización local:", error);
-      window.useLocalApiFallback = true;
+      globalThis.useLocalApiFallback = true;
     }
 
-    if (window.useLocalApiFallback) {
+    if (globalThis.useLocalApiFallback) {
       const users = getLocalUsers();
-      if (users[window.currentUser.email]) {
-        users[window.currentUser.email].playerName = newPlayerName;
+      if (users[globalThis.currentUser.email]) {
+        users[globalThis.currentUser.email].playerName = newPlayerName;
         saveLocalUsers(users);
       }
-      window.currentUser.playerName = newPlayerName;
-      localStorage.setItem("userData", JSON.stringify(window.currentUser));
+      globalThis.currentUser.playerName = newPlayerName;
+      localStorage.setItem("userData", JSON.stringify(globalThis.currentUser));
       localStorage.setItem("sessionActive", "true");
       showAppAlert("Nombre de jugador actualizado.");
       playerNameInput.value = "";

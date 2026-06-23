@@ -16,7 +16,7 @@ export async function showSongsListCategorySelection() {
   const decadesToLoad = DECADES_WITH_SPECIALS.filter((decadeId) => decadeId !== "Todas" && decadeId !== "verano");
   const loadPromises = decadesToLoad.flatMap((decadeId) =>
     CATEGORY_ORDER.map((categoryId) =>
-      window.loadSongsForDecadeAndCategory(decadeId, categoryId).catch((error) => {
+      globalThis.loadSongsForDecadeAndCategory(decadeId, categoryId).catch((error) => {
         console.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
         return null;
       }),
@@ -42,7 +42,7 @@ export async function showSongsListCategorySelection() {
       return;
     }
 
-    const decadeCategorySongs = window.configuracionCanciones[decadeId];
+    const decadeCategorySongs = globalThis.configuracionCanciones[decadeId];
     if (decadeCategorySongs) {
       const decadeHeader = document.createElement("h3");
       decadeHeader.textContent = getDecadeLabel(decadeId);
@@ -88,11 +88,11 @@ export async function displaySongsForCategory(decadeId, categoryId) {
       showPremiumModal("Esta categoría es Premium. Desbloquéala para ver el listado de canciones.", categoryId);
       return;
     }
-    if (window.gameState.selectedDecade === "Todas") {
-      const mergedPool = window.configuracionCanciones?.["Todas"]?.[window.gameState.category];
+    if (globalThis.gameState.selectedDecade === "Todas") {
+      const mergedPool = globalThis.configuracionCanciones?.["Todas"]?.[globalThis.gameState.category];
 
       if (!Array.isArray(mergedPool) || mergedPool.length < 4) {
-        console.error(`Error: Pool no válido para Todas - ${window.gameState.category}`);
+        console.error(`Error: Pool no válido para Todas - ${globalThis.gameState.category}`);
         showAppAlert("Error interno al preparar la pregunta. Vuelve a empezar.");
         showScreen("category-screen");
         return;
@@ -100,8 +100,8 @@ export async function displaySongsForCategory(decadeId, categoryId) {
 
       allSongsPool = mergedPool;
     } else {
-      await window.loadSongsForDecadeAndCategory(decadeId, categoryId);
-      songsToDisplay = window.configuracionCanciones[decadeId][categoryId];
+      await globalThis.loadSongsForDecadeAndCategory(decadeId, categoryId);
+      songsToDisplay = globalThis.configuracionCanciones[decadeId][categoryId];
     }
   } catch (error) {
     showAppAlert(
@@ -188,7 +188,7 @@ export async function displaySongsForCategory(decadeId, categoryId) {
         }
 
         listenBtn.innerHTML = icon;
-        listenBtn.onclick = () => window.open(song.listenUrl, "_blank");
+        listenBtn.onclick = () => globalThis.open(song.listenUrl, "_blank");
         listenBtn.style.backgroundImage = `linear-gradient(45deg, ${bgColor}, ${shadowColor})`;
         listenBtn.style.boxShadow = `0 0 5px ${shadowColor}`;
 
@@ -215,11 +215,11 @@ export async function displaySongsForCategory(decadeId, categoryId) {
 export async function loadAllDecadesForCategory(categoryId) {
   const decadesToFetch = ["80s", "90s", "00s", "10s", "actual"];
 
-  window.configuracionCanciones["Todas"] = window.configuracionCanciones["Todas"] || {};
-  window.configuracionCanciones["Todas"][categoryId] = [];
+  globalThis.configuracionCanciones["Todas"] = globalThis.configuracionCanciones["Todas"] || {};
+  globalThis.configuracionCanciones["Todas"][categoryId] = [];
 
   // Cargar en paralelo (songs-loader ya se encarga de ignorar lo que no esté en whitelist)
-  const fetchPromises = decadesToFetch.map((dec) => window.loadSongsForDecadeAndCategory(dec, categoryId));
+  const fetchPromises = decadesToFetch.map((dec) => globalThis.loadSongsForDecadeAndCategory(dec, categoryId));
   await Promise.allSettled(fetchPromises);
 
   const consolidatedPool = [];
@@ -227,10 +227,12 @@ export async function loadAllDecadesForCategory(categoryId) {
   decadesToFetch.forEach((dec) => {
     const internalKey = dec.toLowerCase() === "actual" ? "actual" : dec;
 
-    const allowedInDecade = window.VALID_CATEGORIES_PER_DECADE ? window.VALID_CATEGORIES_PER_DECADE[internalKey] : [];
+    const allowedInDecade = globalThis.VALID_CATEGORIES_PER_DECADE
+      ? globalThis.VALID_CATEGORIES_PER_DECADE[internalKey]
+      : [];
 
     if (allowedInDecade.includes(categoryId)) {
-      const songsInDecade = window.configuracionCanciones?.[internalKey]?.[categoryId];
+      const songsInDecade = globalThis.configuracionCanciones?.[internalKey]?.[categoryId];
       if (Array.isArray(songsToDecade)) {
         const safeSongs = songsInDecade.filter((song) => {
           if (song.originalCategory && song.originalCategory !== categoryId) return false;
@@ -241,5 +243,5 @@ export async function loadAllDecadesForCategory(categoryId) {
     }
   });
 
-  window.configuracionCanciones["Todas"][categoryId] = consolidatedPool;
+  globalThis.configuracionCanciones["Todas"][categoryId] = consolidatedPool;
 }

@@ -30,7 +30,13 @@ export function closeInstructions() {
 
 let appModalResolver = null;
 
-export function showAppModal({ title, message, confirmText = "Aceptar", cancelText = "Cancelar", showCancel = false } = {}) {
+export function showAppModal({
+  title,
+  message,
+  confirmText = "Aceptar",
+  cancelText = "Cancelar",
+  showCancel = false,
+} = {}) {
   const modal = document.getElementById("app-modal");
   const titleEl = document.getElementById("app-modal-title");
   const messageEl = document.getElementById("app-modal-message");
@@ -39,9 +45,9 @@ export function showAppModal({ title, message, confirmText = "Aceptar", cancelTe
 
   if (!modal || !titleEl || !messageEl || !confirmBtn || !cancelBtn) {
     if (showCancel) {
-      return Promise.resolve(window.confirm(message || ""));
+      return Promise.resolve(globalThis.confirm(message || ""));
     }
-    window.alert(message || "");
+    globalThis.alert(message || "");
     return Promise.resolve(true);
   }
 

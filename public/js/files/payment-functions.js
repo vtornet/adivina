@@ -9,13 +9,13 @@ import { syncUserPermissions } from "./app-init-functions.js";
  */
 export function setupPaymentListeners() {
   // Verificamos si venimos de un pago exitoso de Stripe
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(globalThis.location.search);
   const sessionId = urlParams.get("session_id");
 
   if (sessionId) {
     syncUserPermissions();
     // Limpiamos la URL para no re-procesar el éxito al recargar
-    window.history.replaceState({}, document.title, window.location.pathname);
+    globalThis.history.replaceState({}, document.title, globalThis.location.pathname);
     showAppAlert("¡Gracias por tu compra! Tu contenido se está desbloqueando.");
   }
 }
@@ -25,22 +25,22 @@ export function setupPaymentListeners() {
  * @param {string} product - Identificador del producto a comprar.
  */
 export async function redirectToStripe(product) {
-  if (!window.currentUser || !window.currentUser.email) {
+  if (!globalThis.currentUser || !globalThis.currentUser.email) {
     showAppAlert("Debes iniciar sesión para comprar contenido premium.");
     return;
   }
 
   try {
     const API_BASE_URL =
-      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-        ? window.location.origin
-        : window.CANONICAL_PROD_ORIGIN;
+      globalThis.location.hostname === "localhost" || globalThis.location.hostname === "127.0.0.1"
+        ? globalThis.location.origin
+        : globalThis.CANONICAL_PROD_ORIGIN;
 
     const response = await fetch(`${API_BASE_URL}/api/create-checkout-session`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: window.currentUser.email,
+        email: globalThis.currentUser.email,
         product: product,
       }),
     });
@@ -52,7 +52,7 @@ export async function redirectToStripe(product) {
     const { url } = await response.json();
 
     if (url) {
-      window.location.href = url;
+      globalThis.location.href = url;
     } else {
       throw new Error("No se recibió URL de pago");
     }
@@ -72,9 +72,9 @@ export async function validatePaymentStatus(sessionId) {
 
   try {
     const API_BASE_URL =
-      window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-        ? window.location.origin
-        : window.CANONICAL_PROD_ORIGIN;
+      globalThis.location.hostname === "localhost" || globalThis.location.hostname === "127.0.0.1"
+        ? globalThis.location.origin
+        : globalThis.CANONICAL_PROD_ORIGIN;
 
     const response = await fetch(`${API_BASE_URL}/api/validate-payment?session_id=${sessionId}`, {
       method: "GET",
@@ -114,7 +114,7 @@ export async function handlePaymentReturn(sessionId) {
   }
 
   // Limpiar URL
-  window.history.replaceState({}, document.title, window.location.pathname);
+  globalThis.history.replaceState({}, document.title, globalThis.location.pathname);
 }
 
 /**
@@ -123,11 +123,11 @@ export async function handlePaymentReturn(sessionId) {
  * @returns {boolean} True si el usuario tiene acceso.
  */
 export function hasProductAccess(product) {
-  if (!window.currentUser || !window.currentUser.permissions) {
+  if (!globalThis.currentUser || !globalThis.currentUser.permissions) {
     return false;
   }
 
-  const permissions = window.currentUser.permissions;
+  const permissions = globalThis.currentUser.permissions;
 
   // Acceso completo
   if (permissions.includes("full_access")) {

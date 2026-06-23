@@ -10,15 +10,15 @@ export function getCategoryLabel(categoryId) {
 }
 
 export function getDecadesForSelect() {
-  if (Array.isArray(window.allDecadesDefined) && window.allDecadesDefined.length > 1) {
-    return window.allDecadesDefined.filter((decade) => decade !== "verano");
+  if (Array.isArray(globalThis.allDecadesDefined) && globalThis.allDecadesDefined.length > 1) {
+    return globalThis.allDecadesDefined.filter((decade) => decade !== "verano");
   }
   return DECADES_ORDER;
 }
 
 export function getCategoriesForSelect() {
-  if (Array.isArray(window.allPossibleCategories) && window.allPossibleCategories.length > 1) {
-    return window.allPossibleCategories;
+  if (Array.isArray(globalThis.allPossibleCategories) && globalThis.allPossibleCategories.length > 1) {
+    return globalThis.allPossibleCategories;
   }
   return CATEGORY_ORDER;
 }

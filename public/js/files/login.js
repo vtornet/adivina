@@ -13,8 +13,8 @@ export async function loginUser() {
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
   const API_BASE_URL =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? window.location.origin
+    globalThis.location.hostname === "localhost" || globalThis.location.hostname === "127.0.0.1"
+      ? globalThis.location.origin
       : CANONICAL_PROD_ORIGIN;
 
   if (!email || !password) {
@@ -45,7 +45,7 @@ export async function loginUser() {
         return;
       }
 
-      window.currentUser = {
+      globalThis.currentUser = {
         email: data.user.email,
         playerName: data.user.playerName,
         unlocked_sections: data.user.unlocked_sections || [],
@@ -66,33 +66,32 @@ export async function loginUser() {
 
       startOnlineInvitePolling();
     } else if (response.status === 404 || response.status >= 500) {
-      window.useLocalApiFallback = true;
+      globalThis.useLocalApiFallback = true;
     } else {
       showAppAlert(`Error al iniciar sesión: ${data?.message || "No se pudo iniciar sesión."}`);
       return;
     }
   } catch (error) {
     console.warn("API no disponible, usando login local:", error);
-    window.useLocalApiFallback = true;
+    globalThis.useLocalApiFallback = true;
   }
 
   // Fallback offline
-  if (window.useLocalApiFallback) {
+  if (globalThis.useLocalApiFallback) {
     const users = getLocalUsers();
     const user = users[email];
     if (!user || user.password !== password) {
       showAppAlert("Email o contraseña incorrectos.");
       return;
     }
-    window.currentUser = {
+    globalThis.currentUser = {
       email: user.email,
       playerName: user.playerName,
       unlocked_sections: [],
     };
   }
 
-  if (window.currentUser) {
-    
+  if (globalThis.currentUser) {
     // Esto arregla el problema tras reset de contraseña
     try {
       await syncUserPermissions();
@@ -100,20 +99,20 @@ export async function loginUser() {
       console.error("Error sincronizando permisos en login:", e);
     }
 
-    getUserPermissions(window.currentUser.email);
+    getUserPermissions(globalThis.currentUser.email);
 
-    localStorage.setItem("loggedInUserEmail", window.currentUser.email);
-    localStorage.setItem("userData", JSON.stringify(window.currentUser));
+    localStorage.setItem("loggedInUserEmail", globalThis.currentUser.email);
+    localStorage.setItem("userData", JSON.stringify(globalThis.currentUser));
     localStorage.setItem("sessionActive", "true");
 
-    showAppAlert(`¡Bienvenido, ${window.currentUser.playerName || window.currentUser.email}!`);
+    showAppAlert(`¡Bienvenido, ${globalThis.currentUser.playerName || globalThis.currentUser.email}!`);
     emailInput.value = "";
     passwordInput.value = "";
 
-    await loadUserScores(window.currentUser.email);
-    await loadGameHistory(window.currentUser.email);
+    await loadUserScores(globalThis.currentUser.email);
+    await loadGameHistory(globalThis.currentUser.email);
 
-    if (window.currentUser.playerName) {
+    if (globalThis.currentUser.playerName) {
       showScreen("decade-selection-screen");
       generateDecadeButtons();
       updatePremiumButtonsState();
@@ -276,19 +275,19 @@ export async function registerUser() {
     }
 
     if (response.status === 404 || response.status >= 500) {
-      window.useLocalApiFallback = true;
+      globalThis.useLocalApiFallback = true;
     }
 
-    if (!window.useLocalApiFallback) {
+    if (!globalThis.useLocalApiFallback) {
       showAppAlert(`Error al registrar: ${data?.message || "No se pudo completar el registro."}`);
       return;
     }
   } catch (error) {
     console.warn("API no disponible, usando registro local:", error);
-    window.useLocalApiFallback = true;
+    globalThis.useLocalApiFallback = true;
   }
 
-  if (window.useLocalApiFallback) {
+  if (globalThis.useLocalApiFallback) {
     const users = getLocalUsers();
     if (users[email]) {
       showAppAlert("Ese correo ya está registrado.");
@@ -387,7 +386,6 @@ async function syncUserPermissions() {
   const safeEmail = currentUser.email.trim();
 
   try {
-    
     // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
 
     // Fetch con Cache Busting agresivo
@@ -420,7 +418,6 @@ async function syncUserPermissions() {
         };
         localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-        
         // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
 
         const currentScreen = document.querySelector(".screen.active");

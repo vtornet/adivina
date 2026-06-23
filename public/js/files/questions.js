@@ -12,27 +12,27 @@ import { playAudioSnippet } from "./audio-manager.js";
  * Configura la siguiente pregunta del juego.
  */
 export function setupQuestion(nextPlayerOrEndGameCallback) {
-  const currentPlayer = window.gameState.players[window.gameState.currentPlayerIndex];
+  const currentPlayer = globalThis.gameState.players[globalThis.gameState.currentPlayerIndex];
 
-  if (currentPlayer.questionsAnswered >= window.gameState.totalQuestionsPerPlayer) {
+  if (currentPlayer.questionsAnswered >= globalThis.gameState.totalQuestionsPerPlayer) {
     if (nextPlayerOrEndGameCallback) {
       nextPlayerOrEndGameCallback();
     }
     return;
   }
 
-  clearTimeout(window.audioPlaybackTimeout);
+  clearTimeout(globalThis.audioPlaybackTimeout);
 
   // Limpieza preventiva de listeners de audio
-  if (window.activeTimeUpdateListener) {
-    window.audioPlayer.removeEventListener("timeupdate", window.activeTimeUpdateListener);
-    window.activeTimeUpdateListener = null;
+  if (globalThis.activeTimeUpdateListener) {
+    globalThis.audioPlayer.removeEventListener("timeupdate", globalThis.activeTimeUpdateListener);
+    globalThis.activeTimeUpdateListener = null;
   }
 
-  window.audioPlayer.pause();
+  globalThis.audioPlayer.pause();
 
-  window.gameState.attempts = 3;
-  window.gameState.hasPlayed = false;
+  globalThis.gameState.attempts = 3;
+  globalThis.gameState.hasPlayed = false;
 
   const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
@@ -40,16 +40,16 @@ export function setupQuestion(nextPlayerOrEndGameCallback) {
 
   // Lógica de visualización de título
   const categoryDisplayEl = document.getElementById("category-display");
-  if (window.gameState.selectedDecade === "verano") {
+  if (globalThis.gameState.selectedDecade === "verano") {
     categoryDisplayEl.innerText = "Especiales - Canciones del Verano";
-  } else if (window.gameState.selectedDecade === "elderly") {
+  } else if (globalThis.gameState.selectedDecade === "elderly") {
     categoryDisplayEl.innerText = "Modo Fácil - Todas las Canciones";
   } else {
-    categoryDisplayEl.innerText = `${getDecadeLabel(window.gameState.selectedDecade)} - ${getCategoryLabel(window.gameState.category)}`;
+    categoryDisplayEl.innerText = `${getDecadeLabel(globalThis.gameState.selectedDecade)} - ${getCategoryLabel(globalThis.gameState.category)}`;
   }
 
   document.getElementById("question-counter").innerText =
-    `Pregunta ${currentPlayer.questionsAnswered + 1}/${window.gameState.totalQuestionsPerPlayer}`;
+    `Pregunta ${currentPlayer.questionsAnswered + 1}/${globalThis.gameState.totalQuestionsPerPlayer}`;
   document.getElementById("player-turn").innerText = `Turno de ${currentPlayer.name}`;
   document.getElementById("points-display").innerText = `Puntos: ${currentPlayer.score}`;
 
@@ -60,14 +60,16 @@ export function setupQuestion(nextPlayerOrEndGameCallback) {
 
   // Seleccionar el Pool correcto
   const allSongsToChooseFromForOptions =
-    window.gameState.selectedDecade === "Todas"
-      ? window.configuracionCanciones?.["Todas"]?.[window.gameState.category]
-      : window.configuracionCanciones?.[window.gameState.selectedDecade]?.[window.gameState.category];
+    globalThis.gameState.selectedDecade === "Todas"
+      ? globalThis.configuracionCanciones?.["Todas"]?.[globalThis.gameState.category]
+      : globalThis.configuracionCanciones?.[globalThis.gameState.selectedDecade]?.[globalThis.gameState.category];
 
   if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
-    console.error(`Error: Pool no válido para ${window.gameState.selectedDecade} - ${window.gameState.category}`);
+    console.error(
+      `Error: Pool no válido para ${globalThis.gameState.selectedDecade} - ${globalThis.gameState.category}`,
+    );
     showAppAlert(
-      `No hay suficientes canciones en '${getCategoryLabel(window.gameState.category)}' para ${getDecadeLabel(window.gameState.selectedDecade)}.`,
+      `No hay suficientes canciones en '${getCategoryLabel(globalThis.gameState.category)}' para ${getDecadeLabel(globalThis.gameState.selectedDecade)}.`,
     );
     showScreen("category-screen");
     return;
@@ -90,9 +92,9 @@ export function setupQuestion(nextPlayerOrEndGameCallback) {
     // 3. FILTRO ESTRICTO DE CATEGORÍA
     let isCategoryMismatch = false;
     if (
-      window.gameState.category !== "consolidated" &&
+      globalThis.gameState.category !== "consolidated" &&
       randomSong.originalCategory &&
-      randomSong.originalCategory !== window.gameState.category
+      randomSong.originalCategory !== globalThis.gameState.category
     ) {
       isCategoryMismatch = true;
     }
@@ -123,7 +125,8 @@ export function setupQuestion(nextPlayerOrEndGameCallback) {
     button.className = "btn answer-btn";
     const parsedDisplay = parseDisplay(option.display);
     button.innerHTML = `<strong>${parsedDisplay.artist}</strong>${parsedDisplay.title}`;
-    button.onclick = () => checkAnswer(option.file === currentQuestion.file, button, nextPlayerOrEndGameCallback, setupQuestionCallback);
+    button.onclick = () =>
+      checkAnswer(option.file === currentQuestion.file, button, nextPlayerOrEndGameCallback, setupQuestionCallback);
     answerButtonsContainer.appendChild(button);
   });
 
@@ -140,9 +143,9 @@ export function updateAttemptsCounter() {
   const counter = document.getElementById("attempts-counter");
   if (!counter) return;
 
-  counter.innerText = `Intentos: ${window.gameState.attempts}`;
-  if (window.gameState.attempts === 3) counter.style.backgroundColor = "var(--correct-color)";
-  else if (window.gameState.attempts === 2) counter.style.backgroundColor = "var(--warning-color)";
+  counter.innerText = `Intentos: ${globalThis.gameState.attempts}`;
+  if (globalThis.gameState.attempts === 3) counter.style.backgroundColor = "var(--correct-color)";
+  else if (globalThis.gameState.attempts === 2) counter.style.backgroundColor = "var(--warning-color)";
   else counter.style.backgroundColor = "var(--incorrect-color)";
 }
 
@@ -152,46 +155,47 @@ export function updateAttemptsCounter() {
  * @param {HTMLElement} button - El botón de respuesta que se pulsó.
  */
 export function checkAnswer(isCorrect, button, nextPlayerOrEndGameCallback, setupQuestionCallback) {
-  if (!window.gameState.hasPlayed) {
+  if (!globalThis.gameState.hasPlayed) {
     showAppAlert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
     return;
   }
 
   // LIMPIEZA DE AUDIO Y LISTENERS
-  clearTimeout(window.audioPlaybackTimeout);
+  clearTimeout(globalThis.audioPlaybackTimeout);
 
-  if (window.activeTimeUpdateListener) {
-    window.audioPlayer.removeEventListener("timeupdate", window.activeTimeUpdateListener);
-    window.activeTimeUpdateListener = null;
+  if (globalThis.activeTimeUpdateListener) {
+    globalThis.audioPlayer.removeEventListener("timeupdate", globalThis.activeTimeUpdateListener);
+    globalThis.activeTimeUpdateListener = null;
   }
 
-  window.audioPlayer.pause();
-  window.audioPlayer.currentTime = 0;
+  globalThis.audioPlayer.pause();
+  globalThis.audioPlayer.currentTime = 0;
 
   // Bloqueamos TODOS momentáneamente al pulsar
   document.querySelectorAll(".answer-btn").forEach((btn) => btn.classList.add("disabled"));
 
   if (isCorrect) {
-    window.sfxAcierto.currentTime = 0;
-    window.sfxAcierto.play();
+    globalThis.sfxAcierto.currentTime = 0;
+    globalThis.sfxAcierto.play();
     const points = { 3: 3, 2: 2, 1: 1 };
-    window.gameState.players[window.gameState.currentPlayerIndex].score += points[window.gameState.attempts];
+    globalThis.gameState.players[globalThis.gameState.currentPlayerIndex].score +=
+      points[globalThis.gameState.attempts];
     button.classList.add("correct");
-    window.gameState.players[window.gameState.currentPlayerIndex].questionsAnswered++;
+    globalThis.gameState.players[globalThis.gameState.currentPlayerIndex].questionsAnswered++;
 
     setTimeout(() => {
       if (nextPlayerOrEndGameCallback) nextPlayerOrEndGameCallback();
     }, 1500);
   } else {
-    window.sfxError.currentTime = 0;
-    window.sfxError.play();
+    globalThis.sfxError.currentTime = 0;
+    globalThis.sfxError.play();
 
     button.classList.add("incorrect");
 
-    window.gameState.attempts--;
+    globalThis.gameState.attempts--;
     updateAttemptsCounter();
 
-    if (window.gameState.attempts > 0) {
+    if (globalThis.gameState.attempts > 0) {
       setTimeout(() => {
         document.querySelectorAll(".answer-btn").forEach((btn) => {
           if (!btn.classList.contains("incorrect")) {
@@ -199,14 +203,14 @@ export function checkAnswer(isCorrect, button, nextPlayerOrEndGameCallback, setu
           }
         });
 
-        window.gameState.hasPlayed = false;
+        globalThis.gameState.hasPlayed = false;
         const playBtn = document.getElementById("play-song-btn");
         playBtn.disabled = false;
         playBtn.innerText = "▶";
         playBtn.classList.remove("is-playing");
       }, 1500);
     } else {
-      window.gameState.players[window.gameState.currentPlayerIndex].questionsAnswered++;
+      globalThis.gameState.players[globalThis.gameState.currentPlayerIndex].questionsAnswered++;
       setTimeout(() => {
         if (nextPlayerOrEndGameCallback) nextPlayerOrEndGameCallback();
       }, 1500);

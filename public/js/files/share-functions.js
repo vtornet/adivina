@@ -94,6 +94,6 @@ export async function shareGameResultHandler() {
     }
   } else {
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-    window.open(whatsappUrl, "_blank");
+    globalThis.open(whatsappUrl, "_blank");
   }
 }

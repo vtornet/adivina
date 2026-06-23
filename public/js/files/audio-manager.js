@@ -8,11 +8,11 @@ import { showAppAlert } from "./modal-functions.js";
  * La duración depende del número de intentos restantes.
  */
 export function playAudioSnippet() {
-  if (window.gameState.hasPlayed) return;
+  if (globalThis.gameState.hasPlayed) return;
 
   const durations = { 3: 4.0, 2: 6.0, 1: 10.0 };
-  const durationSecs = durations[window.gameState.attempts];
-  const currentPlayer = window.gameState.players[window.gameState.currentPlayerIndex];
+  const durationSecs = durations[globalThis.gameState.attempts];
+  const currentPlayer = globalThis.gameState.players[globalThis.gameState.currentPlayerIndex];
   const currentQuestion = currentPlayer.questions[currentPlayer.questionsAnswered];
 
   let fileName = typeof currentQuestion.file === "string" ? currentQuestion.file.trim() : "";
@@ -28,39 +28,39 @@ export function playAudioSnippet() {
   playBtn.innerText = "🎵";
   playBtn.disabled = true;
   playBtn.classList.add("is-playing");
-  window.gameState.hasPlayed = true;
+  globalThis.gameState.hasPlayed = true;
 
   let audioSrc = fileName.startsWith("/") ? fileName : `/audio/${fileName}`;
 
   // Usamos tu lógica original de comprobación para no alterar el comportamiento
-  if (!window.audioPlayer.src.endsWith(audioSrc)) {
-    window.audioPlayer.src = audioSrc;
+  if (!globalThis.audioPlayer.src.endsWith(audioSrc)) {
+    globalThis.audioPlayer.src = audioSrc;
   }
 
-  if (window.activeTimeUpdateListener)
-    window.audioPlayer.removeEventListener("timeupdate", window.activeTimeUpdateListener);
-  window.audioPlayer.currentTime = 0;
+  if (globalThis.activeTimeUpdateListener)
+    globalThis.audioPlayer.removeEventListener("timeupdate", globalThis.activeTimeUpdateListener);
+  globalThis.audioPlayer.currentTime = 0;
 
   const stopAudioListener = () => {
-    if (window.audioPlayer.currentTime >= durationSecs) {
-      window.audioPlayer.pause();
-      window.audioPlayer.currentTime = 0;
+    if (globalThis.audioPlayer.currentTime >= durationSecs) {
+      globalThis.audioPlayer.pause();
+      globalThis.audioPlayer.currentTime = 0;
       playBtn.innerText = "▶";
       playBtn.classList.remove("is-playing");
-      window.audioPlayer.removeEventListener("timeupdate", stopAudioListener);
-      window.activeTimeUpdateListener = null;
+      globalThis.audioPlayer.removeEventListener("timeupdate", stopAudioListener);
+      globalThis.activeTimeUpdateListener = null;
     }
   };
 
-  window.activeTimeUpdateListener = stopAudioListener;
-  window.audioPlayer.addEventListener("timeupdate", stopAudioListener);
+  globalThis.activeTimeUpdateListener = stopAudioListener;
+  globalThis.audioPlayer.addEventListener("timeupdate", stopAudioListener);
 
-  window.audioPlayer.play().catch((e) => {
+  globalThis.audioPlayer.play().catch((e) => {
     console.error("Fallo 404 en ruta física:", audioSrc);
     playBtn.disabled = false;
     playBtn.innerText = "▶";
     playBtn.classList.remove("is-playing");
-    window.gameState.hasPlayed = false;
+    globalThis.gameState.hasPlayed = false;
     showAppAlert("Error 404: El archivo no se encuentra en el servidor.");
   });
 }

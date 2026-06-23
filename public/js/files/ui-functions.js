@@ -72,7 +72,7 @@ export function generateCategoryButtons() {
   // --- 3. CASO ESPECIAL: TODAS LAS DÉCADAS (Mantenido igual) ---
   if (key === "Todas") {
     const catsToRender =
-      typeof window.allPossibleCategories !== "undefined" ? window.allPossibleCategories : CATEGORY_ORDER;
+      typeof globalThis.allPossibleCategories !== "undefined" ? globalThis.allPossibleCategories : CATEGORY_ORDER;
 
     catsToRender.forEach((categoryId) => {
       const button = document.createElement("button");
@@ -103,18 +103,20 @@ export function generateCategoryButtons() {
   const internalKey = key.toLowerCase() === "actual" ? "actual" : key;
 
   // AQUÍ ESTÁ LA MAGIA: Leemos la whitelist en lugar de hacer 'ifs' manuales
-  const allowedCategories = window.VALID_CATEGORIES_PER_DECADE ? window.VALID_CATEGORIES_PER_DECADE[internalKey] : [];
+  const allowedCategories = globalThis.VALID_CATEGORIES_PER_DECADE
+    ? globalThis.VALID_CATEGORIES_PER_DECADE[internalKey]
+    : [];
 
   // Mapeo seguro de datos
-  if (typeof window.allSongsByDecadeAndCategory !== "undefined") {
-    let dataFound = window.allSongsByDecadeAndCategory[internalKey];
+  if (typeof globalThis.allSongsByDecadeAndCategory !== "undefined") {
+    let dataFound = globalThis.allSongsByDecadeAndCategory[internalKey];
     if (dataFound) configuracionCanciones[key] = dataFound;
   }
 
   const currentDecadeSongs = configuracionCanciones[key] || {};
 
   const catsToRender =
-    typeof window.allPossibleCategories !== "undefined" ? window.allPossibleCategories : CATEGORY_ORDER;
+    typeof globalThis.allPossibleCategories !== "undefined" ? globalThis.allPossibleCategories : CATEGORY_ORDER;
 
   catsToRender.forEach((categoryId) => {
     const button = document.createElement("button");
