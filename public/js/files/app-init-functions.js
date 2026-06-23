@@ -7,6 +7,7 @@ import { startOnlineInvitePolling } from "./online-functions.js";
 import { checkCookieConsent } from "./cookies-functions.js";
 import { APP_VERSION } from "../constants/app-constants.js";
 import { setupPaymentListeners as setupPayment } from "./payment-functions.js";
+import { logger, configureLogger } from "./logger.js";
 
 let isSyncing = false;
 
@@ -92,7 +93,7 @@ export async function syncUserPermissions() {
       }
     }
   } catch (error) {
-    console.warn("❌ Error al sincronizar perfil:", error);
+    logger.warn("Error al sincronizar perfil", error);
   }
 }
 
@@ -114,7 +115,7 @@ export async function startApp(source = "boot") {
     const savedUserJSON = localStorage.getItem("userData");
     if (savedUserJSON) restored = JSON.parse(savedUserJSON);
   } catch (e) {
-    console.error("❌ userData corrupto. Limpiando.", e);
+    logger.error("userData corrupto. Limpiando", e);
     localStorage.removeItem("userData");
     localStorage.removeItem("loggedInUserEmail");
     localStorage.removeItem("sessionActive");
@@ -134,12 +135,12 @@ export async function startApp(source = "boot") {
     try {
       await loadUserScores(currentUser.email);
     } catch (e) {
-      console.warn("Scores no cargados:", e);
+      logger.warn("Scores no cargados", e);
     }
     try {
       await loadGameHistory(currentUser.email);
     } catch (e) {
-      console.warn("Historial no cargado:", e);
+      logger.warn("Historial no cargado", e);
     }
 
     // Enrutamiento
@@ -165,21 +166,24 @@ export async function startApp(source = "boot") {
  * Inicialización blindada (sesión + pagos).
  */
 export async function initializeApp() {
-  console.log("🚀 Iniciando aplicación (boot) - Sesión persistente.");
+  // Configurar logger (modo desarrollo por defecto)
+  configureLogger(true);
+
+  logger.info("Iniciando aplicación (boot) - Sesión persistente");
 
   // 0. Registrar Service Worker
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("sw.js")
       .then((registration) => {
-        console.log("SW registrado:", registration.scope);
+        logger.info("SW registrado", registration.scope);
         // Forzar actualización si hay uno nuevo esperando
         if (registration.waiting) {
           registration.waiting.postMessage({ type: "SKIP_WAITING" });
         }
       })
       .catch((err) => {
-        console.warn("SW fallo:", err);
+        logger.warn("SW fallo", err);
       });
   }
 
@@ -193,7 +197,7 @@ export async function initializeApp() {
   const sessionId = urlParams.get("session_id");
 
   if (sessionId) {
-    console.log("💳 Retorno de pago detectado.");
+    logger.info("Retorno de pago detectado");
 
     // Rehidratamos sesión y sincronizamos permisos si procede
     await startApp("boot");
@@ -234,9 +238,9 @@ export function validateGlobals() {
     }
   }
   if (missing.length > 0) {
-    console.error("❌ FALTAN VARIABLES GLOBALES:", missing);
+    logger.error("FALTAN VARIABLES GLOBALES", missing);
   } else {
-    console.log("✅ Todas las variables globales están definidas");
+    logger.debug("Todas las variables globales están definidas");
   }
 }
 
