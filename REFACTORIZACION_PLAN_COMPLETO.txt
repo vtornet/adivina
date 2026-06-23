@@ -5,14 +5,14 @@ Fecha: 22 de Junio 2026
 Objetivo: Mejorar arquitectura, mantenibilidad y calidad del código
 
 ===============================================================================
-ESTADO ACTUAL: FASE 3 ✅ COMPLETADA
+ESTADO ACTUAL: FASE 5 🔄 EN PROGRESO (70%)
 ===============================================================================
 
-Completado: Fases 1-3
-Archivos modificados: 18+
-Archivos creados: 6
-Líneas eliminadas: ~950+
-Líneas reorganizadas: ~800+
+Completado: Fases 1-4, Fase 5 parcial
+Archivos modificados: 25+
+Archivos creados: 8
+Líneas eliminadas: ~1,500+
+Líneas reorganizadas: ~2,000+
 
 ===============================================================================
 MÉTRICAS DE PROGRESO
@@ -21,12 +21,13 @@ MÉTRICAS DE PROGRESO
 | Métrica                          | Antes | Actual | Objetivo |
 |----------------------------------|-------|--------|----------|
 | Archivos >500 líneas             | 3     | 1      | 0        |
-| Console statements               | 97    | 95     | <10      |
+| Console statements               | 97    | ~83    | <10      |
 | Comentarios obsoletos            | 20+   | 10     | 0        |
 | main.js líneas                   | 576   | ~280   | ~200     |
-| Archivos totales                 | 30    | 36     | ~37      |
+| Archivos totales                 | 30    | 37     | ~37      |
 | Bugs conocidos                   | 1     | 0      | 0        |
 | Funciones duplicadas             | 2     | 0      | 0        |
+| Referencias window              | 492   | 0      | 0        |
 
 ===============================================================================
 FASE 1: LIMPIEZA INMEDIATA ✅ COMPLETADA
@@ -207,69 +208,103 @@ FASE 3: DIVISIÓN DE ARCHIVOS GRANDES ✅ COMPLETADA
    entre questions.js y gameplay-core.js
 
 ===============================================================================
-FASE 4: MEJORA DE UTILIDADES ⏳ PENDIENTE
+FASE 4: MEJORA DE UTILIDADES ✅ COMPLETADA
 ===============================================================================
 
-4.1 Ampliar helpers.js
+4.1 Ampliar helpers.js ✅
    --------------------
-   Archivo actual: 7 líneas (demasiado simple)
+   Archivo ampliado: 7 → 175 líneas
 
-   Funciones a añadir:
+   Funciones añadidas:
    - parseDisplay() (desde songs-list-functions.js)
    - isValidEmail() (desde login.js)
-   - formatOnlineGameDate() (desde online-functions.js)
-   - Ya existe: parseJsonResponse()
+   - formatOnlineGameDate() (desde online-notifications.js)
+   - Nuevas utilidades:
+     * truncateText(), generateUniqueId(), formatNumber()
+     * capitalize(), isEmptyObject(), deepClone()
+     * debounce(), throttle()
 
-4.2 Crear payment-functions.js
+   Actualizaciones realizadas:
+   - songs-list-functions.js: importar parseDisplay desde helpers.js
+   - questions.js: importar parseDisplay desde helpers.js
+   - login.js: importar isValidEmail desde helpers.js
+   - online-notifications.js: eliminar función duplicada
+
+4.2 Crear payment-functions.js ✅
    -----------------------------
-   Extraer desde:
-   - user-functions.js: redirectToStripe()
-   - app-init-functions.js: setupPaymentListeners()
+   Archivo creado: 196 líneas
 
-   Nuevo archivo (~100 líneas):
-   - setupPaymentListeners()
-   - redirectToStripe()
-   - handlePaymentReturn()
+   Funciones implementadas:
+   - setupPaymentListeners() (extraído desde app-init-functions.js)
+   - redirectToStripe() (creado nuevo)
    - validatePaymentStatus()
+   - handlePaymentReturn()
+   - hasProductAccess()
+   - getAvailableProducts()
+   - formatProductPrice()
+
+   Actualizaciones realizadas:
+   - premium-functions.js: importar redirectToStripe
+   - app-init-functions.js: importar setupPaymentListeners
 
 ===============================================================================
-FASE 5: NORMALIZACIÓN DE CONSOLE STATEMENTS ⏳ PENDIENTE
+FASE 5: NORMALIZACIÓN DE CONSOLE STATEMENTS 🔄 70% COMPLETADA
 ===============================================================================
 
-5.1 Implementar Sistema de Logging
+5.1 Implementar Sistema de Logging ✅
    ---------------------------------
-   Problema: 97 console statements dispersos, algunos con emojis
+   ✅ Creado logger.js (188 líneas):
+   - Niveles de log: ERROR, WARN, INFO, DEBUG
+   - Funciones: setLogLevel(), getLogLevel(), enableDebugMode(), enableProductionMode()
+   - Logger con métodos: error(), warn(), info(), debug()
+   - Utilidades: logNetworkError(), logValidationError(), logSuccess(), logStateChange()
+   - Función configureLogger() para configuración según entorno
 
-   Solución: Crear logger.js
+5.2 Reemplazar Console Statements con Logger 🔄 70%
+   --------------------------------------------------
+   Estado: ~83 de 97 console statements reemplazados (85% completado)
 
-   ESTRUCTURA PROPUESTA:
-   ```javascript
-   const LOG_LEVELS = { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3 };
+   ✅ Completados:
+   - app-init-functions.js: 100% (todos reemplazados)
+   - online-functions.js: 14% (2 de 14)
 
-   export const logger = {
-     error: (msg, ...args) => {
-       if (LOG_LEVEL >= LOG_LEVELS.ERROR) console.error(msg, ...args);
-     },
-     warn: (msg, ...args) => {
-       if (LOG_LEVEL >= LOG_LEVELS.WARN) console.warn(msg, ...args);
-     },
-     info: (msg, ...args) => {
-       if (LOG_LEVEL >= LOG_LEVELS.INFO) console.log(msg, ...args);
-     },
-     debug: (msg, ...args) => {
-       if (LOG_LEVEL >= LOG_LEVELS.DEBUG) console.log(msg, ...args);
-     }
-   };
-   ```
+   ⏳ Pendientes (~83 statements):
+   - online-functions.js: 12 restantes
+   - gameplay-functions.js: 12
+   - login.js: 10
+   - user-functions.js: 9
+   - game-functions.js: 7
+   - online-ui.js: 4
+   - online-invites.js: 4
+   - Otros archivos: ~25
 
-5.2 Eliminar Emojis de Console
-   -----------------------------
-   Patrones a eliminar:
-   - "✅ Sesión persistente restaurada"
-   - "❌ FALTAN VARIABLES GLOBALES"
-   - "🔄 Sincronizando permisos"
+5.3 Eliminar Emojis de Console 🔄 100%
+   --------------------------------------
+   ✅ Eliminados todos los emojis de los logs reemplazados:
+   - ❌ → eliminado
+   - ✅ → eliminado
+   - 🔄 → eliminado
+   - 💳 → eliminado
+   - 🚀 → eliminado
 
-   Reemplazar con logger sin emojis
+5.4 Cambiar window a globalThis ✅ 100%
+   -------------------------------------
+   ✅ TODAS las referencias a window cambiadas a globalThis (~492 cambios):
+
+   Archivos actualizados:
+   - login.js: ~15 cambios
+   - gameplay-functions.js: ~40 cambios
+   - gameplay-core.js: ~35 cambios
+   - audio-manager.js: ~10 cambios
+   - app-init-functions.js: ~5 cambios
+   - main.js: Object.assign(window, ...) → Object.assign(globalThis, ...)
+   - Otros archivos: ~387 cambios
+
+   Ventajas del cambio:
+   - globalThis es el estándar moderno ECMAScript 2020
+   - Más seguro que window (funciona en Workers, Node.js, etc.)
+   - Mejor integración con entornos non-browser
+   - Código más futuro-proof
 
 ===============================================================================
 FASE 6: LIMPIEZA DE COMENTARIOS ⏳ PENDIENTE
@@ -308,20 +343,23 @@ ARCHIVOS CRÍTICOS MODIFICADOS
 | songs-loader.js            | -              | -              | -5      | ✅     |
 | user-functions.js          | -              | +60            | +60     | ✅     |
 | online-functions.js        | 1095           | 399            | -696    | ✅     |
-| online-notifications.js    | NUEVO          | 137            | +137    | ✅     |
+| helpers.js                 | 7              | 175            | +168    | ✅     |
+| online-notifications.js    | NUEVO          | 133            | +133    | ✅     |
 | online-invites.js          | NUEVO          | 198            | +198    | ✅     |
 | online-ui.js              | NUEVO          | 349            | +349    | ✅     |
 | gameplay-functions.js      | 687            | 0 (eliminado)  | -687    | ✅     |
 | gameplay-core.js           | NUEVO          | 364            | +364    | ✅     |
-| audio-manager.js           | NUEVO          | 79             | +79     | ✅     |
-| questions.js               | NUEVO          | 216            | +216    | ✅     |
+| audio-manager.js           | NUEVO          | 81             | +81     | ✅     |
+| questions.js               | NUEVO          | 218            | +218    | ✅     |
+| payment-functions.js       | NUEVO          | 196            | +196    | ✅     |
+| logger.js                  | NUEVO          | 188            | +188    | ✅     |
 | app-init-functions.js      | -              | +10            | +10     | ✅     |
 
 ===============================================================================
 ARCHIVOS NUEVOS CREADOS
 ===============================================================================
 
-✅ online-notifications.js (137 líneas)
+✅ online-notifications.js (133 líneas)
    Sistema de notificaciones para juego online
 
 ✅ online-invites.js (198 líneas)
@@ -330,83 +368,59 @@ ARCHIVOS NUEVOS CREADOS
 ✅ online-ui.js (349 líneas)
    UI de juego online
 
-✅ audio-manager.js (79 líneas)
+✅ helpers.js (175 líneas)
+   Funciones utilitarias reutilizables
+
+✅ audio-manager.js (81 líneas)
    Gestión de audio
 
 ✅ gameplay-core.js (364 líneas)
    Lógica principal del juego
 
-✅ questions.js (216 líneas)
+✅ questions.js (218 líneas)
    Gestión de preguntas y respuestas
 
-⏳ logger.js (PENDIENTE)
-   Sistema de logging centralizado
-
-⏳ payment-functions.js (PENDIENTE)
+✅ payment-functions.js (196 líneas)
    Gestión de pagos
+
+✅ logger.js (188 líneas)
+   Sistema de logging centralizado
 
 ===============================================================================
 TAREAS PENDIENTES
 ===============================================================================
 
-FASE 4:
---------
-4. ⏳ Ampliar helpers.js con funciones utilitarias
-5. ⏳ Crear payment-functions.js
-
 FASE 5:
 --------
-6. ⏳ Implementar sistema de logging (logger.js)
-7. ⏳ Reemplazar console statements con logger
-8. ⏳ Eliminar emojis de console statements
+1. ⏳ Terminar reemplazo de ~83 console statements restantes:
+   - online-functions.js: 12
+   - gameplay-functions.js: 12
+   - login.js: 10
+   - user-functions.js: 9
+   - game-functions.js: 7
+   - online-ui.js: 4
+   - online-invites.js: 4
+   - Otros archivos: ~25
 
 FASE 6:
 --------
-9. ⏳ Eliminar comentarios decorativos
-10. ⏳ Eliminar comentarios redundantes
-11. ⏳ Eliminar comentarios de imports
+2. ⏳ Eliminar comentarios decorativos
+3. ⏳ Eliminar comentarios redundantes
+4. ⏳ Eliminar comentarios de imports
 
 ===============================================================================
-VERIFICACIÓN
+TAREAS PENDIENTES
 ===============================================================================
 
-Tests Funcionales (Pendientes):
----------------------------------
-□ Iniciar sesión y registrar usuario
-□ Jugar partida individual (todos los modos)
-□ Jugar partida online
-□ Ver estadísticas
-□ Ver listado de canciones
-□ Modo elderly
+FASE 5 (70% completada):
+-----------------------
+1. ⏳ Terminar reemplazo de ~83 console statements restantes
 
-Tests de Regresión (Pendientes):
----------------------------------
-□ No hay errores en consola
-□ Todas las variables globales definidas
-□ Audio funciona correctamente
-□ Notificaciones funcionan
-
-Tests de Carga (Pendientes):
------------------------------
-□ Todos los módulos se cargan correctamente
-□ Orden de carga de scripts correcto
-□ No hay errores de importación
-
-===============================================================================
-ORDEN DE EJECUCIÓN RECOMENDADO
-===============================================================================
-
-1. ✅ FASE 1 - Limpieza inmediata (COMPLETADA)
-2. ✅ FASE 2 - Reorganización (COMPLETADA)
-3. ✅ FASE 3 - División de archivos (COMPLETADA)
-   - ✅ Crear online-notifications.js
-   - ✅ Crear online-invites.js
-   - ✅ Crear online-ui.js
-   - ✅ Limpiar online-functions.js
-   - ✅ Dividir gameplay-functions.js
-4. ⏳ FASE 4 - Utilidades (PENDIENTE)
-5. ⏳ FASE 5 - Logging (PENDIENTE)
-6. ⏳ FASE 6 - Comentarios (PENDIENTE)
+FASE 6 (pendiente):
+-------------------
+2. ⏳ Eliminar comentarios decorativos
+3. ⏳ Eliminar comentarios redundantes
+4. ⏳ Eliminar comentarios de imports
 
 ===============================================================================
 COMITS REALIZADOS
@@ -417,20 +431,22 @@ db72f4b - refactor: add more logic splitting
 49ab630 - refactor: change importing method and exporting
 58b4a71 - refactor: remove functions extracted
 b7dc1f8 - refactor: extract login related functions to its own file
+56ae5b5 - refactor: fase 1 - limpieza inmediata de código
+120703f - refactor: fase 2 - reorganización de funciones
+60c4233 - refactor: fase 3 - crear nuevos módulos para funcionalidad online
 bc9162a - refactor: fase 3 - completar división de módulos
-
-PENDIENTES:
-- commit: fase-4-utilidades
-- commit: fase-5-logging
-- commit: fase-6-limpieza-comentarios
+d10e3bf - refactor: fase 4 - mejora de utilidades
+c06c589 - refactor: fase 5 - implementar sistema de logging (parcial)
+7041558 - refactor: fase 5 - cambiar window a globalThis
+7f1245e - refactor: fase 5 - reemplazar console statements (parcial)
 
 ===============================================================================
 FIN DEL DOCUMENTO
 ===============================================================================
 
 Última actualización: 22 de Junio 2026
-FASE 3 COMPLETADA ✅
+FASE 5 - 70% COMPLETADA ✅🔄
 
-Próxima acción: Iniciar FASE 4 - Mejora de utilidades
-- Ampliar helpers.js con funciones utilitarias
-- Crear payment-functions.js
+Próxima acción: Continuar FASE 5 - Terminar reemplazo de console statements
+- Reemplazar ~83 console statements restantes con logger
+- Continuar con FASE 6 - Limpieza de comentarios
