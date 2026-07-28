@@ -274,7 +274,7 @@ export async function continueOnlineGame(code, playerName, email) {
   }
 }
 
-export function showOnlineResults(gameData) {
+export async function showOnlineResults(gameData) {
   const finalScoresContainer = document.getElementById("final-scores");
   finalScoresContainer.innerHTML = "<h3>Resultados de la Partida Online</h3>";
 
