@@ -2,7 +2,7 @@ import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../constants/app-constants
 import { loadGameHistory } from "./game-functions.js";
 import { parseJsonResponse, isValidEmail } from "./helpers.js";
 import { showAppAlert } from "./modal-functions.js";
-import { startOnlineInvitePolling } from "./online-functions.js";
+import { startOnlineInvitePolling } from "./online-invites.js";
 import { showScreen } from "./screen-functions.js";
 import { generateDecadeButtons, updatePremiumButtonsState } from "./ui-functions.js";
 import { getActivePermissions, getLocalUsers, getUserPermissions, loadUserScores } from "./user-functions.js";

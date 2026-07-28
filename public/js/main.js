@@ -98,13 +98,13 @@ import {
 // Online notifications
 import {
   getWinnerName,
-  formatOnlineGameDate,
   isOnlineGameFinished,
   showInviteToast,
   sendInviteNotification,
   sendGameFinishedNotification,
   confirmClearOnlineGameHistory,
 } from "./files/online-notifications.js";
+import { formatOnlineGameDate, parseDisplay } from "./files/helpers.js";
 import { generateCategoryButtons, updatePremiumButtonsState } from "./files/ui-functions.js";
 import { loadGameHistory } from "./files/game-functions.js";
 import { togglePasswordVisibility, showPasswordRecoveryInfo } from "./files/auth-helpers.js";
@@ -119,7 +119,7 @@ import {
   renderDuelHistory,
   calculateDuelWins,
 } from "./files/statistics-functions.js";
-import { showSongsListCategorySelection, displaySongsForCategory, parseDisplay } from "./files/songs-list-functions.js";
+import { showSongsListCategorySelection, displaySongsForCategory } from "./files/songs-list-functions.js";
 import {
   exitGame,
   confirmReturnToMenu,

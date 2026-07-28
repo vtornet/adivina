@@ -1,4 +1,4 @@
-import { loadPlayerOnlineGames } from "./online-functions.js";
+import { loadPlayerOnlineGames } from "./online-ui.js";
 import { updatePremiumButtonsState } from "./ui-functions.js";
 
 export function showScreen(screenId) {
