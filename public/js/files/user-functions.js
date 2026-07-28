@@ -4,7 +4,6 @@ import {
   LOCAL_USERS_KEY,
   LOCAL_SCORES_KEY,
   LOCAL_GAME_HISTORY_KEY,
-  API_BASE_URL,
 } from "../constants/app-constants.js";
 import { parseJsonResponse } from "./helpers.js";
 import { showAppAlert } from "./modal-functions.js";
@@ -119,7 +118,7 @@ export function closePremiumModal() {
 
 export async function loadUserScores(userEmail) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/scores/${userEmail}`);
+    const response = await fetch(`${globalThis.API_BASE_URL}/api/scores/${userEmail}`);
     if (response.ok) {
       const scores = await response.json();
       localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(scores));
@@ -141,7 +140,7 @@ export async function saveUserScores(userEmail, decade, category, score) {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/scores`, {
+    const response = await fetch(`${globalThis.API_BASE_URL}/api/scores`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: userEmail, decade, category, score }),
