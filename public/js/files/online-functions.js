@@ -359,9 +359,13 @@ export function pollOnlineGameStatus() {
       }
 
       if (result.finished) {
-        clearInterval(interval); // Detener la consulta
-        // Aquí, ambos jugadores han terminado. Mostrar los resultados.
-        showOnlineResults(result); // result ya contiene game.players, game.decade, etc.
+        clearInterval(interval);
+        const opponent = result.players?.find(
+          (p) => p.email?.toLowerCase() !== currentOnlineEmail?.toLowerCase(),
+        );
+        const { sendGameFinishedNotification } = await import("./online-notifications.js");
+        sendGameFinishedNotification(opponent?.name || "Tu rival");
+        showOnlineResults(result);
       } else {
         // Si aún no han terminado, podríamos actualizar el estado en pantalla si quisiéramos
         // Por ahora, el mensaje "Esperando..." es suficiente.

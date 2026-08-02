@@ -44,6 +44,8 @@ export function showInviteToast(invites) {
     const invitingPlayer = creatorPlayer?.name || invite.creatorPlayerName || "Alguien";
 
     addNotification(`${invitingPlayer} te ha invitado a una partida online.`, "invite");
+    vibrate();
+    playInAppSound();
 
     if (globalThis.Notification && Notification.permission === "granted") {
       new Notification("Nueva invitación", {
@@ -89,34 +91,49 @@ export function showInviteToast(invites) {
   });
 }
 
-export function sendInviteNotification(invitingPlayerName) {
-  if (!("Notification" in window)) return;
-  if (Notification.permission !== "granted") return;
+function playInAppSound() {
+  if (globalThis.sfxAcierto) {
+    globalThis.sfxAcierto.currentTime = 0;
+    globalThis.sfxAcierto.play().catch(() => {});
+  }
+}
 
-  const notification = new Notification("Invitación online enviada", {
-    body: `Has invitado a ${invitingPlayerName} a jugar.`,
+function vibrate() {
+  navigator.vibrate?.([200, 100, 200]);
+}
+
+export function sendInviteNotification(invitingPlayerName) {
+  addNotification(`${invitingPlayerName} te ha invitado a una partida online.`, "invite");
+  vibrate();
+  playInAppSound();
+
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+  const notification = new Notification("Nueva invitación online", {
+    body: `${invitingPlayerName} te ha invitado a jugar.`,
     icon: "img/adivina.png",
   });
-
   notification.onclick = () => {
     globalThis.focus();
-    showScreen("pending-games-screen");
+    globalThis.showScreen?.("pending-games-screen");
     notification.close();
   };
 }
 
 export function sendGameFinishedNotification(opponentName) {
-  if (!("Notification" in window)) return;
-  if (Notification.permission !== "granted") return;
+  addNotification(`${opponentName} ha terminado. ¡Consulta el resultado!`, "result");
+  vibrate();
+  playInAppSound();
 
-  const notification = new Notification("Partida online finalizada", {
-    body: `${opponentName} ha terminado su partida.`,
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+  const notification = new Notification("¡Partida online finalizada!", {
+    body: `${opponentName} ha terminado. ¡Mira el resultado!`,
     icon: "img/adivina.png",
   });
-
   notification.onclick = () => {
     globalThis.focus();
-    globalThis.showScreen("pending-games-screen");
+    globalThis.showScreen?.("pending-games-screen");
     notification.close();
   };
 }
