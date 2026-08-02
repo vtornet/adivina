@@ -506,6 +506,11 @@
           <button class="btn secondary" type="button" onclick="showPasswordRecoveryInfo()">Recuperar contraseña</button>
           <button class="btn secondary" type="button" onclick="showChangePasswordModal()">Cambiar contraseña</button>
           <button class="btn secondary" type="button" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
+          <hr style="border-color:rgba(255,255,255,0.15);margin:8px 0"/>
+          <button class="btn secondary small-link" type="button" onclick="showPrivacyPolicy()">Política de Privacidad</button>
+          <button class="btn secondary small-link" type="button" onclick="showTermsOfService()">Términos y Condiciones</button>
+          <button class="btn secondary small-link" type="button" onclick="showCookiePolicy()">Política de Cookies</button>
+          <hr style="border-color:rgba(255,255,255,0.15);margin:8px 0"/>
           <button class="btn tertiary" type="button" onclick="exitGame()">Salir del Juego</button>
         </div>
         <button class="btn" type="button" onclick="closeHamburgerMenu()">Cerrar</button>
@@ -571,6 +576,135 @@
           jugando, ¡asumimos que hay trato!
         </p>
         <button class="btn small-btn" onclick="acceptCookieConsent()">¡Dale ritmo!</button>
+      </div>
+    </div>
+
+    <!-- POLÍTICA DE PRIVACIDAD -->
+    <div id="privacy-policy-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="privacy-policy-title">
+      <div class="modal-content">
+        <h3 id="privacy-policy-title">Política de Privacidad</h3>
+        <div class="modal-body">
+          <p><strong>Última actualización:</strong> agosto de 2026</p>
+
+          <p class="modal-section-title">1. Responsable del tratamiento</p>
+          <p>Appstracta, desarrollador de <strong>Adivina la Canción</strong> (www.adivinalacancion.app). Contacto: soporte@adivinalacancion.app</p>
+
+          <p class="modal-section-title">2. Datos que recopilamos</p>
+          <ul>
+            <li><strong>Correo electrónico:</strong> para crear y autenticar tu cuenta.</li>
+            <li><strong>Nombre de jugador:</strong> para identificarte en el juego y en los duelos online.</li>
+            <li><strong>Historial de partidas y puntuaciones:</strong> para mostrar tus estadísticas.</li>
+            <li><strong>Datos de pago:</strong> gestionados íntegramente por Stripe. No almacenamos datos de tarjetas.</li>
+          </ul>
+
+          <p class="modal-section-title">3. Finalidad del tratamiento</p>
+          <ul>
+            <li>Proporcionar el servicio de juego y gestionar tu cuenta.</li>
+            <li>Guardar tu progreso y estadísticas entre sesiones.</li>
+            <li>Permitir duelos online entre usuarios registrados.</li>
+            <li>Procesar pagos por contenido premium.</li>
+          </ul>
+
+          <p class="modal-section-title">4. Almacenamiento</p>
+          <p>Tus datos se almacenan de dos formas:</p>
+          <ul>
+            <li><strong>Localmente en tu dispositivo</strong> (localStorage): historial de partidas, preferencias y caché de canciones. Solo tú tienes acceso.</li>
+            <li><strong>En nuestros servidores</strong> (MongoDB): datos de cuenta y partidas online necesarios para el modo multijugador.</li>
+          </ul>
+
+          <p class="modal-section-title">5. Terceros</p>
+          <ul>
+            <li><strong>Stripe:</strong> procesamiento de pagos. Consulta su política en stripe.com/privacy.</li>
+            <li><strong>MongoDB Atlas:</strong> alojamiento seguro de datos de partidas online.</li>
+          </ul>
+
+          <p class="modal-section-title">6. Tus derechos</p>
+          <p>Tienes derecho a acceder, rectificar, cancelar u oponerte al tratamiento de tus datos. Para ejercerlos, escríbenos a soporte@adivinalacancion.app. También puedes borrar tus datos locales desde la configuración de tu navegador.</p>
+
+          <p class="modal-section-title">7. Menores</p>
+          <p>El servicio está dirigido a mayores de 14 años. No recopilamos conscientemente datos de menores de esa edad.</p>
+        </div>
+        <button class="btn secondary" type="button" onclick="closePrivacyPolicy()">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- TÉRMINOS Y CONDICIONES -->
+    <div id="terms-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="terms-title">
+      <div class="modal-content">
+        <h3 id="terms-title">Términos y Condiciones</h3>
+        <div class="modal-body">
+          <p><strong>Última actualización:</strong> agosto de 2026</p>
+
+          <p class="modal-section-title">1. Aceptación</p>
+          <p>Al registrarte y usar <strong>Adivina la Canción</strong>, aceptas estos términos. Si no los aceptas, no debes usar el servicio.</p>
+
+          <p class="modal-section-title">2. Descripción del servicio</p>
+          <p>Adivina la Canción es un juego de entretenimiento musical en el que los jugadores identifican canciones a partir de fragmentos de audio. Disponible en modo local (1-6 jugadores) y online.</p>
+
+          <p class="modal-section-title">3. Cuenta de usuario</p>
+          <ul>
+            <li>Debes ser mayor de 14 años para registrarte.</li>
+            <li>Eres responsable de mantener la confidencialidad de tu contraseña.</li>
+            <li>No puedes crear cuentas en nombre de terceros sin su consentimiento.</li>
+            <li>Nos reservamos el derecho a suspender cuentas que infrinjan estos términos.</li>
+          </ul>
+
+          <p class="modal-section-title">4. Contenido premium</p>
+          <p>Algunas categorías y modos de juego requieren un pago único para su desbloqueo. Los pagos se procesan de forma segura a través de Stripe. Los desbloqueos son permanentes para la cuenta adquirida y no son transferibles ni reembolsables salvo obligación legal.</p>
+
+          <p class="modal-section-title">5. Uso aceptable</p>
+          <p>Queda prohibido:</p>
+          <ul>
+            <li>Manipular el juego de forma fraudulenta.</li>
+            <li>Usar el servicio para actividades ilegales.</li>
+            <li>Intentar acceder a datos de otros usuarios.</li>
+            <li>Reproducir o distribuir el contenido de audio sin autorización.</li>
+          </ul>
+
+          <p class="modal-section-title">6. Propiedad intelectual</p>
+          <p>Los fragmentos de audio son propiedad de sus respectivos autores y sellos discográficos, usados con fines lúdicos y educativos. El código, diseño y marca de Adivina la Canción pertenecen a Appstracta.</p>
+
+          <p class="modal-section-title">7. Limitación de responsabilidad</p>
+          <p>El servicio se ofrece «tal como está». No garantizamos disponibilidad continua. En ningún caso Appstracta será responsable de daños indirectos derivados del uso del servicio.</p>
+
+          <p class="modal-section-title">8. Modificaciones</p>
+          <p>Podemos actualizar estos términos. Los cambios significativos se notificarán en la aplicación. El uso continuado del servicio tras la notificación implica aceptación.</p>
+
+          <p class="modal-section-title">9. Legislación aplicable</p>
+          <p>Estos términos se rigen por la legislación española. Para cualquier disputa, las partes se someten a los juzgados y tribunales del domicilio del usuario.</p>
+        </div>
+        <button class="btn secondary" type="button" onclick="closeTermsOfService()">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- POLÍTICA DE COOKIES -->
+    <div id="cookie-policy-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="cookie-policy-title">
+      <div class="modal-content">
+        <h3 id="cookie-policy-title">Política de Cookies</h3>
+        <div class="modal-body">
+          <p><strong>Última actualización:</strong> agosto de 2026</p>
+
+          <p class="modal-section-title">¿Qué tecnologías de almacenamiento usamos?</p>
+          <p>Adivina la Canción <strong>no utiliza cookies de rastreo ni publicidad</strong>. Usamos exclusivamente <strong>localStorage</strong> y <strong>sessionStorage</strong> del navegador, que son mecanismos de almacenamiento local que nunca se envían a servidores de terceros.</p>
+
+          <p class="modal-section-title">¿Para qué los usamos?</p>
+          <ul>
+            <li><strong>Sesión de usuario:</strong> mantener tu sesión iniciada entre visitas.</li>
+            <li><strong>Progreso del juego:</strong> guardar tu historial de partidas, puntuaciones y estadísticas.</li>
+            <li><strong>Preferencias:</strong> recordar si ya has aceptado este aviso y otras preferencias de la app.</li>
+            <li><strong>Caché de canciones:</strong> almacenar temporalmente los datos de canciones para mejorar la velocidad de carga.</li>
+          </ul>
+
+          <p class="modal-section-title">Pagos con Stripe</p>
+          <p>Cuando realizas un pago, Stripe puede utilizar sus propias cookies técnicas necesarias para el procesamiento seguro. Consulta la política de cookies de Stripe en stripe.com/cookie-settings.</p>
+
+          <p class="modal-section-title">¿Cómo gestionar o eliminar estos datos?</p>
+          <p>Puedes borrar en cualquier momento los datos locales desde la configuración de tu navegador (Configuración → Privacidad → Borrar datos del sitio). Ten en cuenta que esto eliminará también tu historial de partidas guardado localmente.</p>
+
+          <p class="modal-section-title">¿Necesitamos tu consentimiento?</p>
+          <p>Los almacenamientos locales que usamos son <strong>estrictamente técnicos y necesarios</strong> para el funcionamiento del juego. No requieren consentimiento según el RGPD, aunque sí te informamos de ellos de forma transparente.</p>
+        </div>
+        <button class="btn secondary" type="button" onclick="closeCookiePolicy()">Cerrar</button>
       </div>
     </div>
 

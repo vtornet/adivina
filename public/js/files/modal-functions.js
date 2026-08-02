@@ -76,6 +76,33 @@ export function showAppModal({
   });
 }
 
+export function showPrivacyPolicy() {
+  closeHamburgerMenu();
+  document.getElementById("privacy-policy-modal")?.classList.remove("hidden");
+}
+
+export function closePrivacyPolicy() {
+  document.getElementById("privacy-policy-modal")?.classList.add("hidden");
+}
+
+export function showTermsOfService() {
+  closeHamburgerMenu();
+  document.getElementById("terms-modal")?.classList.remove("hidden");
+}
+
+export function closeTermsOfService() {
+  document.getElementById("terms-modal")?.classList.add("hidden");
+}
+
+export function showCookiePolicy() {
+  closeHamburgerMenu();
+  document.getElementById("cookie-policy-modal")?.classList.remove("hidden");
+}
+
+export function closeCookiePolicy() {
+  document.getElementById("cookie-policy-modal")?.classList.add("hidden");
+}
+
 export function openPasswordResetModal() {
   closeHamburgerMenu();
   const modal = document.getElementById("password-reset-modal");

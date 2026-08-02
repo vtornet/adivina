@@ -60,6 +60,12 @@ import {
   openPasswordResetModal,
   closePasswordResetModal,
   closeInstructions,
+  showPrivacyPolicy,
+  closePrivacyPolicy,
+  showTermsOfService,
+  closeTermsOfService,
+  showCookiePolicy,
+  closeCookiePolicy,
 } from "./files/modal-functions.js";
 import { closeHamburgerMenu, toggleHamburgerMenu } from "./files/burger-functions.js";
 import { showScreen } from "./files/screen-functions.js";
@@ -301,6 +307,12 @@ Object.assign(globalThis, {
   loginUser,
   registerUser,
   setPlayerName,
+  showPrivacyPolicy,
+  closePrivacyPolicy,
+  showTermsOfService,
+  closeTermsOfService,
+  showCookiePolicy,
+  closeCookiePolicy,
 });
 
 // Inicialización
