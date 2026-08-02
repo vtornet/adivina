@@ -1,3 +1,5 @@
+import { closeHamburgerMenu } from "./burger-functions.js";
+
 export function showAppAlert(message, options = {}) {
   return showAppModal({
     title: options.title || "Aviso",

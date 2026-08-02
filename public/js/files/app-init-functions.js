@@ -1,11 +1,11 @@
 import { showScreen } from "./screen-functions.js";
 import { showAppAlert } from "./modal-functions.js";
 import { generateDecadeButtons, generateCategoryButtons, updatePremiumButtonsState } from "./ui-functions.js";
-import { loadUserScores } from "./user-functions.js";
+import { loadUserScores, getCurrentUserData, getActivePermissions } from "./user-functions.js";
 import { loadGameHistory } from "./game-functions.js";
 import { startOnlineInvitePolling } from "./online-invites.js";
 import { checkCookieConsent } from "./cookies-functions.js";
-import { APP_VERSION } from "../constants/app-constants.js";
+import { APP_VERSION, PERMISSIONS_STORAGE_KEY, ADMIN_EMAIL } from "../constants/app-constants.js";
 import { setupPaymentListeners as setupPayment } from "./payment-functions.js";
 import { logger, configureLogger } from "./logger.js";
 

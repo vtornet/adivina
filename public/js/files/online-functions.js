@@ -1,4 +1,8 @@
 import { logger } from "./logger.js";
+import { getCurrentUserData } from "./user-functions.js";
+import { showAppAlert, showAppModal } from "./modal-functions.js";
+import { isPremiumSelection, hasPremiumAccess, showPremiumModal } from "./premium-functions.js";
+import { copyOnlineGameCode } from "./online-invites.js";
 
 export async function createOnlineGame() {
   const decade = document.getElementById("online-decade-select").value;

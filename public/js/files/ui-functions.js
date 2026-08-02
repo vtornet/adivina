@@ -1,7 +1,9 @@
-import { DECADES_ORDER } from "../constants/app-constants.js";
+import { DECADES_ORDER, CATEGORY_ORDER } from "../constants/app-constants.js";
 import { startSummerSongsGame } from "../files/gameplay-functions.js";
-import { getDecadeLabel } from "./app-info-functions.js";
-import { hasPremiumAccess, showPremiumModal } from "./premium-functions.js";
+import { getDecadeLabel, getCategoryLabel, getDecadesForSelect, getCategoriesForSelect } from "./app-info-functions.js";
+import { hasPremiumAccess, showPremiumModal, isPremiumCategory, hasCategoryAccess } from "./premium-functions.js";
+import { showAppAlert } from "./modal-functions.js";
+import { populateDecadeOptions, populateCategoryOptions } from "./populate-functions.js";
 
 export function updatePremiumButtonsState() {
   const summerButton = document.getElementById("summer-songs-btn");

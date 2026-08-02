@@ -1,5 +1,6 @@
-import { NOTIFICATIONS_STORAGE_KEY } from "../constants/app-constants.js";
+import { NOTIFICATIONS_STORAGE_KEY, NOTIFICATIONS_PROMPTED_KEY, FINISHED_NOTIFICATIONS_KEY } from "../constants/app-constants.js";
 import { logger } from "./logger.js";
+import { showAppConfirm } from "./modal-functions.js";
 
 export function getNotifications() {
   const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
