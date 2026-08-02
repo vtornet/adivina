@@ -42,9 +42,8 @@ export async function selectDecade(decade) {
 
   globalThis.gameState.selectedDecade = decade;
 
-  // 4. Lógica para "Todas las Décadas"
-  if (decade === "Todas") {
-    globalThis.gameState.selectedDecade = "Todas";
+  // 4. Lógica para "Todas las Décadas" y "Especiales"
+  if (decade === "Todas" || decade === "especiales") {
     generateCategoryButtons();
     showScreen("category-screen");
     return;
