@@ -291,7 +291,7 @@ export async function startOnlineGame() {
     return;
   }
 
-  setupQuestion();
+  setupQuestion(globalThis.nextPlayerOrEndGame);
   showScreen("game-screen");
 }
 
