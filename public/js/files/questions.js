@@ -5,9 +5,6 @@ import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 import { parseDisplay } from "./helpers.js";
 import { playAudioSnippet } from "./audio-manager.js";
 
-// Variables globales accedidas desde window (definidas en constants.js)
-// audioPlayer, sfxAcierto, sfxError, gameState, activeTimeUpdateListener, audioPlaybackTimeout
-// configuracionCanciones
 
 /**
  * Configura la siguiente pregunta del juego.

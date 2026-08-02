@@ -10,9 +10,6 @@ import { shareGameResultHandler } from "./share-functions.js";
 import { playAudioSnippet } from "./audio-manager.js";
 import { setupQuestion, updateAttemptsCounter, checkAnswer } from "./questions.js";
 
-// Variables globales accedidas desde window (definidas en constants.js)
-// gameState, isOnlineMode, isElderlyMode, isSummerSongsMode, currentUser
-// configuracionCanciones, loadSongsForDecadeAndCategory
 
 /**
  * Permite al usuario seleccionar el número de jugadores y prepara los inputs para sus nombres.

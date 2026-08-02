@@ -1,6 +1,3 @@
-// ============================================================================
-// MANEJADOR DE ERRORES GLOBAL - Detecta errores de importación, ejecución, etc.
-// ============================================================================
 globalThis.addEventListener("error", (event) => {
   logger.error("ERROR GLOBAL:", event.message, event.filename, event.lineno);
   logger.error("Error object:", event.error);
@@ -153,7 +150,6 @@ import {
   refreshUI,
   validateGlobals,
 } from "./files/app-init-functions.js";
-// Referencias a elementos DOM (necesarias en main.js)
 const audioPlayer = globalThis.audioPlayer || document.getElementById("audio-player");
 const sfxAcierto = globalThis.sfxAcierto || document.getElementById("sfx-acierto");
 const sfxError = globalThis.sfxError || document.getElementById("sfx-error");
@@ -174,7 +170,6 @@ const sfxError = globalThis.sfxError || document.getElementById("sfx-error");
 
 globalThis.showScreen = showScreen;
 
-// Funciones de password importadas desde auth-helpers.js
 globalThis.togglePasswordVisibility = togglePasswordVisibility;
 globalThis.showPasswordRecoveryInfo = showPasswordRecoveryInfo;
 
@@ -188,7 +183,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// FUNCIONES DE AUTENTICACIÓN
 globalThis.loginUser = loginUser;
 
 // Ejecutar validación después de cargar

@@ -205,10 +205,6 @@ const configuracionCanciones = {
     { file: 'west-side-story - 1965.mp3', display: 'West Side Story - 1965', listenUrl: 'https://www.youtube.com/results?search_query=West+Side+Story+1965', platform: 'youtube' },
     { file: 'willow - 1988.mp3', display: 'Willow - 1988', listenUrl: 'https://www.youtube.com/results?search_query=Willow+1988', platform: 'youtube' }
   ],
-  //=====================================================================
-// CONFIGURACIÓN DE CANCIONES (Fragmento ACTUALIZADO para la categoría 'series')
-// REEMPLAZA SOLO la sección 'series' dentro de tu objeto 'configuracionCanciones'.
-//=====================================================================
 series: [
   { file: 'alf - 1986.mp3', display: 'ALF - 1986', listenUrl: 'https://www.youtube.com/results?search_query=ALF+1986+sintonia', platform: 'youtube' },
   { file: 'alice-in-borderland - 2020.mp3', display: 'Alice in Borderland - 2020', listenUrl: 'https://www.youtube.com/results?search_query=Alice+in+Borderland+2020+sintonia', platform: 'youtube' },

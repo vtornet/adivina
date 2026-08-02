@@ -10,11 +10,6 @@ import { setEndGameNavigationButtons, setOnlineMenuButtonVisibility } from "./na
 import { shareGameResultHandler } from "./share-functions.js";
 import { parseDisplay } from "./songs-list-functions.js";
 
-// Variables globales accedidas desde window (definidas en constants.js)
-// audioPlayer, sfxAcierto, sfxError, gameState, activeTimeUpdateListener, audioPlaybackTimeout
-// isOnlineMode, isElderlyMode, isSummerSongsMode, currentUser
-// configuracionCanciones, loadSongsForDecadeAndCategory
-
 /**
  * Reproduce un fragmento de audio de la canción actual.
  * La duración depende del número de intentos restantes.

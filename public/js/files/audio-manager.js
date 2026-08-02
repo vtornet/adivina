@@ -1,9 +1,6 @@
 import { showAppAlert } from "./modal-functions.js";
 import { logger } from "./logger.js";
 
-// Variables globales accedidas desde window (definidas en constants.js)
-// audioPlayer, gameState, activeTimeUpdateListener
-
 /**
  * Reproduce un fragmento de audio de la canción actual.
  * La duración depende del número de intentos restantes.

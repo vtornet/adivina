@@ -2,9 +2,6 @@ import { showAppAlert } from "./modal-functions.js";
 import { logger } from "./logger.js";
 import { syncUserPermissions } from "./app-init-functions.js";
 
-// Variables globales accedidas desde window (definidas en constants.js)
-// API_BASE_URL, CANONICAL_PROD_ORIGIN
-
 /**
  * Configura los listeners para pagos y eventos.
  */

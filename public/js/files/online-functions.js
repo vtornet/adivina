@@ -1,6 +1,5 @@
 import { logger } from "./logger.js";
 
-// ========== CREAR PARTIDA ONLINE ==========
 export async function createOnlineGame() {
   const decade = document.getElementById("online-decade-select").value;
   const category = document.getElementById("online-category-select").value;
@@ -96,7 +95,6 @@ export async function createOnlineGame() {
 }
 
 
-// ========== UNIRSE A UNA PARTIDA ONLINE ==========
 export async function joinOnlineGame() {
   const code = document.getElementById("join-code-input").value.trim().toUpperCase();
   if (!code) return showAppAlert("Introduce un código válido.");
@@ -190,10 +188,8 @@ export async function joinOnlineGameFromPending(code, playerName, email) {
   }
 }
 
-// ========== OBTENER CANCIONES PARA LA PARTIDA ONLINE ==========
 export async function getSongsForOnlineMatch(decade, category) {
   await loadSongsForDecadeAndCategory(decade, category);
-  // ====== MODO "TODAS LAS DÉCADAS" ======
   if (gameState.selectedDecade === "Todas") {
     gameState.category = category;
 
@@ -238,7 +234,6 @@ export async function getSongsForOnlineMatch(decade, category) {
   return shuffled.slice(0, 10);
 }
 
-// ========== EMPEZAR PARTIDA ONLINE ==========
 export async function startOnlineGame() {
   // Reiniciar el gameState para una partida online
   gameState = {
@@ -296,7 +291,6 @@ export async function startOnlineGame() {
   showScreen("game-screen");
 }
 
-// ========== ENVIAR RESULTADO AL TERMINAR ==========
 export async function submitOnlineScore() {
   // Asegurarse de que tenemos los datos del jugador actual
   const localPlayer = gameState.players.find((p) => p.email === currentOnlineEmail);

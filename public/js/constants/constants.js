@@ -33,7 +33,6 @@ globalThis.gameState = {};
 globalThis.audioPlaybackTimeout = null;
 globalThis.activeTimeUpdateListener = null;
 
-// Referencias a elementos DOM (compartidas entre módulos)
 globalThis.screens = document.querySelectorAll(".screen");
 globalThis.audioPlayer = document.getElementById("audio-player");
 globalThis.sfxAcierto = document.getElementById("sfx-acierto");
