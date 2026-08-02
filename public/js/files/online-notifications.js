@@ -1,6 +1,7 @@
 // online-notifications.js - Sistema de notificaciones para juego online
 import { logger } from "./logger.js";
 import { showAppAlert, showAppConfirm } from "./modal-functions.js";
+import { addNotification } from "./notification-functions.js";
 
 export function getWinnerName(players) {
   if (!players || players.length === 0) return "";
@@ -20,9 +21,10 @@ export function getWinnerName(players) {
 
 export function isOnlineGameFinished(game) {
   if (!game) return false;
-  const player1Finished = game.player1?.finished || false;
-  const player2Finished = game.player2?.finished || false;
-  return player1Finished && player2Finished;
+  if (Array.isArray(game.players) && game.players.length >= 2) {
+    return game.players.every((p) => p.finished === true);
+  }
+  return false;
 }
 
 const shownInviteCodes = new Set();
@@ -36,7 +38,12 @@ export function showInviteToast(invites) {
   newInvites.forEach((invite) => {
     shownInviteCodes.add(invite.code);
 
-    const invitingPlayer = invite.creatorPlayerName || invite.invitingPlayer?.playerName || "Alguien";
+    const creatorPlayer = invite.players?.find(
+      (p) => p.email?.toLowerCase() === invite.creatorEmail?.toLowerCase(),
+    );
+    const invitingPlayer = creatorPlayer?.name || invite.creatorPlayerName || "Alguien";
+
+    addNotification(`${invitingPlayer} te ha invitado a una partida online.`, "invite");
 
     if (globalThis.Notification && Notification.permission === "granted") {
       new Notification("Nueva invitación", {

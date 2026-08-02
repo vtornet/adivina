@@ -297,7 +297,7 @@ export async function startOnlineGame() {
 
 export async function submitOnlineScore() {
   // Asegurarse de que tenemos los datos del jugador actual
-  const localPlayer = gameState.players.find((p) => p.email === currentOnlineEmail);
+  const localPlayer = gameState.players.find((p) => p.email?.toLowerCase() === currentOnlineEmail?.toLowerCase());
   if (!localPlayer) {
     logger.error("Jugador local no encontrado en gameState para submitOnlineScore");
     showAppAlert("Error interno al enviar la puntuación.");

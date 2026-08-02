@@ -59,7 +59,9 @@ export async function loadPlayerOnlineGames() {
     const finishedGames = games.filter((game) => isOnlineGameFinished(game));
 
     const pendingInvites = activeGames.filter(
-      (game) => game.waitingFor === userEmail && game.players.every((p) => p.email !== userEmail),
+      (game) =>
+        game.waitingFor?.toLowerCase() === userEmail &&
+        game.players.every((p) => p.email?.toLowerCase() !== userEmail),
     );
     updateOnlineInviteBadge(pendingInvites.length);
     showInviteToast(pendingInvites);
@@ -71,9 +73,9 @@ export async function loadPlayerOnlineGames() {
         const gameDiv = document.createElement("div");
         gameDiv.className = "online-game-item";
 
-        const isCreator = game.creatorEmail === userEmail;
-        const currentPlayerStatus = game.players.find((p) => p.email === userEmail);
-        const otherPlayer = game.players.find((p) => p.email !== userEmail);
+        const isCreator = game.creatorEmail?.toLowerCase() === userEmail;
+        const currentPlayerStatus = game.players.find((p) => p.email?.toLowerCase() === userEmail);
+        const otherPlayer = game.players.find((p) => p.email?.toLowerCase() !== userEmail);
 
         let displayRivalName = "Desconocido";
         if (game.players.length === 2 && otherPlayer) {
@@ -89,7 +91,7 @@ export async function loadPlayerOnlineGames() {
         let statusText = "";
         let actionButtonsHTML = "";
 
-        const isWaitingForMe = game.waitingFor === userEmail && !currentPlayerStatus;
+        const isWaitingForMe = game.waitingFor?.toLowerCase() === userEmail && !currentPlayerStatus;
 
         if (isWaitingForMe) {
           statusText = `¡Te han invitado!`;
@@ -245,13 +247,17 @@ export async function continueOnlineGame(code, playerName, email) {
       };
       globalThis.gameState.players.push(localPlayer);
 
-      const serverPlayer = result.players.find((p) => p.email === globalThis.currentOnlineEmail);
+      const serverPlayer = result.players.find(
+        (p) => p.email?.toLowerCase() === globalThis.currentOnlineEmail?.toLowerCase(),
+      );
       if (serverPlayer) {
         localPlayer.score = serverPlayer.score;
         localPlayer.finished_online = serverPlayer.finished;
       }
 
-      const otherPlayer = result.players.find((p) => p.email !== globalThis.currentOnlineEmail);
+      const otherPlayer = result.players.find(
+        (p) => p.email?.toLowerCase() !== globalThis.currentOnlineEmail?.toLowerCase(),
+      );
       if (otherPlayer) {
         globalThis.gameState.players.push({
           id: 2,
