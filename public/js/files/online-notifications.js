@@ -25,28 +25,61 @@ export function isOnlineGameFinished(game) {
   return player1Finished && player2Finished;
 }
 
+const shownInviteCodes = new Set();
+
 export function showInviteToast(invites) {
   if (!invites || invites.length === 0) return;
 
-  const invite = invites[0];
-  const invitingPlayer = invite.invitingPlayer?.playerName || "Alguien";
+  const newInvites = invites.filter((inv) => !shownInviteCodes.has(inv.code));
+  if (newInvites.length === 0) return;
 
-  if (globalThis.Notification && Notification.permission === "granted") {
-    new Notification("Nueva invitación", {
-      body: `${invitingPlayer} te ha invitado a jugar.`,
-      icon: "img/adivina.png",
-    });
-  }
+  newInvites.forEach((invite) => {
+    shownInviteCodes.add(invite.code);
 
-  const toast = document.createElement("div");
-  toast.className = "online-invite-toast";
-  toast.innerHTML = `
-    <span>${invitingPlayer} te ha invitado a jugar.</span>
-    <button onclick="globalThis.location.href='#pending-games-screen'">Ver</button>
-  `;
-  document.body.appendChild(toast);
+    const invitingPlayer = invite.creatorPlayerName || invite.invitingPlayer?.playerName || "Alguien";
 
-  setTimeout(() => toast.remove(), 5000);
+    if (globalThis.Notification && Notification.permission === "granted") {
+      new Notification("Nueva invitación", {
+        body: `${invitingPlayer} te ha invitado a jugar.`,
+        icon: "img/adivina.png",
+      });
+    }
+
+    const toast = document.createElement("div");
+    toast.className = "invite-toast";
+
+    const msg = document.createElement("p");
+    msg.textContent = `${invitingPlayer} te ha invitado a jugar.`;
+
+    const actions = document.createElement("div");
+    actions.style.cssText = "display:flex;gap:8px";
+
+    const viewBtn = document.createElement("button");
+    viewBtn.className = "btn";
+    viewBtn.textContent = "Ver";
+    viewBtn.onclick = () => {
+      globalThis.showScreen("pending-games-screen");
+      dismiss();
+    };
+
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "btn secondary";
+    closeBtn.textContent = "Cerrar";
+    closeBtn.onclick = dismiss;
+
+    function dismiss() {
+      toast.classList.add("hide");
+      setTimeout(() => toast.remove(), 220);
+    }
+
+    actions.appendChild(viewBtn);
+    actions.appendChild(closeBtn);
+    toast.appendChild(msg);
+    toast.appendChild(actions);
+    document.body.appendChild(toast);
+
+    setTimeout(dismiss, 7000);
+  });
 }
 
 export function sendInviteNotification(invitingPlayerName) {
