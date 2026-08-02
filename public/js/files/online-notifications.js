@@ -1,5 +1,6 @@
 // online-notifications.js - Sistema de notificaciones para juego online
 import { logger } from "./logger.js";
+import { showAppAlert, showAppConfirm } from "./modal-functions.js";
 
 export function getWinnerName(players) {
   if (!players || players.length === 0) return "";
@@ -83,7 +84,7 @@ export function sendGameFinishedNotification(opponentName) {
 export async function clearOnlineGameHistory() {
   const playerData = globalThis.currentUser;
   if (!playerData || !playerData.email) {
-    globalThis.showAppAlert("Debes iniciar sesión para borrar tu historial.");
+    showAppAlert("Debes iniciar sesión para borrar tu historial.");
     globalThis.showScreen("login-screen");
     return;
   }
@@ -97,19 +98,19 @@ export async function clearOnlineGameHistory() {
     const result = await response.json();
 
     if (response.ok) {
-      globalThis.showAppAlert(result.message);
+      showAppAlert(result.message);
       loadPlayerOnlineGames();
     } else {
-      globalThis.showAppAlert(`Error al borrar historial: ${result.message}`);
+      showAppAlert(`Error al borrar historial: ${result.message}`);
     }
   } catch (error) {
     logger.error("Error de red al borrar historial de partidas online", error);
-    globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+    showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
 
 export async function confirmClearOnlineGameHistory() {
-  const confirmed = await globalThis.showAppConfirm(
+  const confirmed = await showAppConfirm(
     "¿Seguro que quieres borrar TODO el historial de partidas online? Esta acción no se puede deshacer.",
   );
 

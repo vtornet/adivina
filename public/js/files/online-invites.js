@@ -1,5 +1,6 @@
 // online-invites.js - Sistema de invitaciones y polling para juego online
 import { logger } from "./logger.js";
+import { showAppAlert, showAppConfirm } from "./modal-functions.js";
 
 let onlineInvitePollInterval = null;
 
@@ -22,12 +23,12 @@ export function stopOnlineInvitePolling() {
 export async function declineOnlineGame(code) {
   const playerData = globalThis.currentUser;
   if (!playerData?.email) {
-    globalThis.showAppAlert("Debes iniciar sesión para declinar una partida.");
+    showAppAlert("Debes iniciar sesión para declinar una partida.");
     globalThis.showScreen("login-screen");
     return;
   }
 
-  const confirmed = await globalThis.showAppConfirm(
+  const confirmed = await showAppConfirm(
     "¿Quieres declinar esta partida online? Se eliminará la invitación pendiente.",
   );
   if (!confirmed) return;
@@ -41,26 +42,26 @@ export async function declineOnlineGame(code) {
     const result = await response.json();
 
     if (response.ok) {
-      await globalThis.showAppAlert(result.message || "Partida declinada.");
+      await showAppAlert(result.message || "Partida declinada.");
       import("./online-ui.js").then((m) => m.loadPlayerOnlineGames());
     } else {
-      globalThis.showAppAlert(result.message || "No se pudo declinar la partida.");
+      showAppAlert(result.message || "No se pudo declinar la partida.");
     }
   } catch (err) {
     logger.error("Error al declinar partida online", err);
-    globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+    showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
 
 export async function deletePendingOnlineGame(code) {
   const playerData = globalThis.currentUser;
   if (!playerData?.email) {
-    globalThis.showAppAlert("Debes iniciar sesión para eliminar una partida.");
+    showAppAlert("Debes iniciar sesión para eliminar una partida.");
     globalThis.showScreen("login-screen");
     return;
   }
 
-  const confirmed = await globalThis.showAppConfirm(
+  const confirmed = await showAppConfirm(
     "¿Seguro que quieres eliminar esta partida pendiente? Esta acción es irreversible.",
   );
   if (!confirmed) return;
@@ -74,14 +75,14 @@ export async function deletePendingOnlineGame(code) {
     const result = await response.json();
 
     if (response.ok) {
-      await globalThis.showAppAlert(result.message || "Partida eliminada.");
+      await showAppAlert(result.message || "Partida eliminada.");
       import("./online-ui.js").then((m) => m.loadPlayerOnlineGames());
     } else {
-      globalThis.showAppAlert(result.message || "No se pudo eliminar la partida.");
+      showAppAlert(result.message || "No se pudo eliminar la partida.");
     }
   } catch (err) {
     logger.error("Error al eliminar partida online", err);
-    globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+    showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
 
@@ -89,11 +90,11 @@ export function copyOnlineGameCode(code) {
   navigator.clipboard
     .writeText(code)
     .then(() => {
-      globalThis.showAppAlert(`Código de partida copiado: ${code}`);
+      showAppAlert(`Código de partida copiado: ${code}`);
     })
     .catch((err) => {
       logger.error("Error al copiar el código", err);
-      globalThis.showAppAlert(`No se pudo copiar el código. Por favor, cópialo manualmente: ${code}`);
+      showAppAlert(`No se pudo copiar el código. Por favor, cópialo manualmente: ${code}`);
     });
 }
 
@@ -118,7 +119,7 @@ export async function invitePlayerByName() {
 
   const playerData = globalThis.currentUser;
   if (!rivalName || !playerData || !playerData.email || !playerData.playerName) {
-    globalThis.showAppAlert("Faltan datos o no estás logueado con un nombre de jugador.");
+    showAppAlert("Faltan datos o no estás logueado con un nombre de jugador.");
     globalThis.showScreen("login-screen");
     return;
   }
@@ -136,7 +137,7 @@ export async function invitePlayerByName() {
 
   const songsArray = await getSongsForOnlineMatch(decade, category);
   if (!songsArray || songsArray.length < 10) {
-    globalThis.showAppAlert("No hay suficientes canciones.");
+    showAppAlert("No hay suficientes canciones.");
     return;
   }
 
@@ -156,7 +157,7 @@ export async function invitePlayerByName() {
 
     const result = await response.json();
     if (response.ok) {
-      globalThis.showAppAlert("Invitación enviada a " + rivalName);
+      showAppAlert("Invitación enviada a " + rivalName);
       globalThis.currentOnlineGameCode = result.code;
       globalThis.currentOnlineSongs = songsArray;
       globalThis.currentOnlineEmail = playerData.email;
@@ -174,11 +175,11 @@ export async function invitePlayerByName() {
       );
       await startOnlineGame();
     } else {
-      globalThis.showAppAlert(result.message || "Error al invitar.");
+      showAppAlert(result.message || "Error al invitar.");
     }
   } catch (err) {
     logger.error("Error al enviar la invitación", err);
-    globalThis.showAppAlert("Error al enviar la invitación.");
+    showAppAlert("Error al enviar la invitación.");
   }
 }
 

@@ -1,5 +1,6 @@
 // online-ui.js - UI de juego online
 import { logger } from "./logger.js";
+import { showAppAlert } from "./modal-functions.js";
 
 export async function loadPlayerOnlineGames() {
   const rawData = localStorage.getItem("userData");
@@ -184,12 +185,12 @@ export async function viewOnlineGameResults(code) {
 
       showOnlineResults(result);
     } else {
-      globalThis.showAppAlert(result.message || "La partida aún no ha terminado o no se encontraron resultados.");
+      showAppAlert(result.message || "La partida aún no ha terminado o no se encontraron resultados.");
       loadPlayerOnlineGames();
     }
   } catch (err) {
     logger.error("Error al ver resultados de partida online", err);
-    globalThis.showAppAlert("Error de conexión al cargar los resultados.");
+    showAppAlert("Error de conexión al cargar los resultados.");
   }
 }
 
@@ -266,12 +267,12 @@ export async function continueOnlineGame(code, playerName, email) {
       const { startOnlineGame } = await import("./online-functions.js");
       await startOnlineGame();
     } else {
-      globalThis.showAppAlert(result.message || "Error al cargar la partida para continuar.");
+      showAppAlert(result.message || "Error al cargar la partida para continuar.");
       loadPlayerOnlineGames();
     }
   } catch (err) {
     logger.error("Error de red al continuar partida online", err);
-    globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
+    showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
 
