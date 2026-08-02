@@ -234,7 +234,7 @@ export async function loadAllDecadesForCategory(categoryId) {
 
     if (allowedInDecade.includes(categoryId)) {
       const songsInDecade = globalThis.configuracionCanciones?.[internalKey]?.[categoryId];
-      if (Array.isArray(songsToDecade)) {
+      if (Array.isArray(songsInDecade)) {
         const safeSongs = songsInDecade.filter((song) => {
           if (song.originalCategory && song.originalCategory !== categoryId) return false;
           return true;
