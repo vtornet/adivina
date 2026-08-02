@@ -22,9 +22,8 @@ globalThis.userAccumulatedScores = {};
 globalThis.gameHistory = [];
 globalThis.pendingPurchaseCategory = null;
 
-// Proxy para configuracionCanciones (apunta a allSongsByDecadeAndCategory)
-// Se inicializa aquí y songs-loader.js puede reasignarlo si es necesario
-globalThis.configuracionCanciones = globalThis.allSongsByDecadeAndCategory || {};
+globalThis.allSongsByDecadeAndCategory = globalThis.allSongsByDecadeAndCategory || {};
+globalThis.configuracionCanciones = globalThis.allSongsByDecadeAndCategory;
 
 globalThis.appModalResolver = null;
 

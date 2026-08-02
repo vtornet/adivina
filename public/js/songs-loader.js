@@ -153,9 +153,5 @@ function getExpectedCategoriesForDecade(decadeId) {
   return allPossibleCategories;
 }
 
-// `configuracionCanciones` ahora es un proxy para `globalThis.allSongsByDecadeAndCategory`
-const configuracionCanciones = globalThis.allSongsByDecadeAndCategory;
-
-// Exportar variables y funciones necesarias para main.js
-globalThis.configuracionCanciones = globalThis.allSongsByDecadeAndCategory;
+// Exportar funciones necesarias para main.js
 globalThis.loadSongsForDecadeAndCategory = loadSongsForDecadeAndCategory;
