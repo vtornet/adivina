@@ -1,5 +1,6 @@
 import { showAppAlert } from "./modal-functions.js";
 import { showScreen } from "./screen-functions.js";
+import { logger } from "./logger.js";
 
 // main.js - Funciones para el modo "elderly"
 let elderlyPlayerCount = 1; // Por defecto 1 jugador para el input inicial
@@ -95,7 +96,7 @@ export async function startElderlyModeGame() {
     setupQuestion();
     showScreen("game-screen");
   } catch (error) {
-    console.error("Error al iniciar el modo fácil:", error);
+    logger.error("Error al iniciar el modo fácil", error);
     showAppAlert("Error al cargar las canciones para el modo fácil. Intenta de nuevo más tarde.");
     showScreen("elderly-mode-intro-screen"); // Volver a la pantalla de inicio del modo fácil
   }

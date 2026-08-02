@@ -1,4 +1,5 @@
 // online-invites.js - Sistema de invitaciones y polling para juego online
+import { logger } from "./logger.js";
 
 let onlineInvitePollInterval = null;
 
@@ -46,7 +47,7 @@ export async function declineOnlineGame(code) {
       globalThis.showAppAlert(result.message || "No se pudo declinar la partida.");
     }
   } catch (err) {
-    console.error("Error al declinar partida online:", err);
+    logger.error("Error al declinar partida online", err);
     globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
@@ -79,7 +80,7 @@ export async function deletePendingOnlineGame(code) {
       globalThis.showAppAlert(result.message || "No se pudo eliminar la partida.");
     }
   } catch (err) {
-    console.error("Error al eliminar partida online:", err);
+    logger.error("Error al eliminar partida online", err);
     globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
@@ -91,7 +92,7 @@ export function copyOnlineGameCode(code) {
       globalThis.showAppAlert(`Código de partida copiado: ${code}`);
     })
     .catch((err) => {
-      console.error("Error al copiar el código:", err);
+      logger.error("Error al copiar el código", err);
       globalThis.showAppAlert(`No se pudo copiar el código. Por favor, cópialo manualmente: ${code}`);
     });
 }
@@ -176,7 +177,7 @@ export async function invitePlayerByName() {
       globalThis.showAppAlert(result.message || "Error al invitar.");
     }
   } catch (err) {
-    console.error(err);
+    logger.error("Error al enviar la invitación", err);
     globalThis.showAppAlert("Error al enviar la invitación.");
   }
 }

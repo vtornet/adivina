@@ -1,4 +1,5 @@
 import { showAppAlert } from "./modal-functions.js";
+import { logger } from "./logger.js";
 import { showScreen } from "./screen-functions.js";
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 import { parseDisplay } from "./helpers.js";
@@ -65,8 +66,8 @@ export function setupQuestion(nextPlayerOrEndGameCallback) {
       : globalThis.configuracionCanciones?.[globalThis.gameState.selectedDecade]?.[globalThis.gameState.category];
 
   if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
-    console.error(
-      `Error: Pool no válido para ${globalThis.gameState.selectedDecade} - ${globalThis.gameState.category}`,
+    logger.error(
+      `Pool no válido para ${globalThis.gameState.selectedDecade} - ${globalThis.gameState.category}`,
     );
     showAppAlert(
       `No hay suficientes canciones en '${getCategoryLabel(globalThis.gameState.category)}' para ${getDecadeLabel(globalThis.gameState.selectedDecade)}.`,
@@ -106,7 +107,7 @@ export function setupQuestion(nextPlayerOrEndGameCallback) {
 
   // Fallback de seguridad
   if (options.length < 4) {
-    console.warn("Advertencia: No se encontraron suficientes distractores estrictos. Rellenando con pool disponible.");
+    logger.warn("No se encontraron suficientes distractores estrictos. Rellenando con pool disponible.");
     let fallbackSafety = 0;
     while (options.length < 4 && fallbackSafety < 100) {
       fallbackSafety++;

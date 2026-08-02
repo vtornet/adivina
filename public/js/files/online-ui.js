@@ -1,4 +1,5 @@
 // online-ui.js - UI de juego online
+import { logger } from "./logger.js";
 
 export async function loadPlayerOnlineGames() {
   const rawData = localStorage.getItem("userData");
@@ -14,7 +15,7 @@ export async function loadPlayerOnlineGames() {
   try {
     playerData = JSON.parse(rawData);
   } catch (e) {
-    console.error("Error al parsear userData");
+    logger.error("Error al parsear userData");
     return;
   }
 
@@ -164,7 +165,7 @@ export async function loadPlayerOnlineGames() {
       finishedGamesContainer.innerHTML = "<p>No tienes partidas finalizadas.</p>";
     }
   } catch (err) {
-    console.error("Error en el historial:", err);
+    logger.error("Error en el historial", err);
     const ac = document.getElementById("active-games-list");
     if (ac) ac.innerHTML = "<p>Error de conexión al cargar partidas.</p>";
   }
@@ -187,7 +188,7 @@ export async function viewOnlineGameResults(code) {
       loadPlayerOnlineGames();
     }
   } catch (err) {
-    console.error("Error al ver resultados de partida online:", err);
+    logger.error("Error al ver resultados de partida online", err);
     globalThis.showAppAlert("Error de conexión al cargar los resultados.");
   }
 }
@@ -269,7 +270,7 @@ export async function continueOnlineGame(code, playerName, email) {
       loadPlayerOnlineGames();
     }
   } catch (err) {
-    console.error("Error de red al continuar partida online:", err);
+    logger.error("Error de red al continuar partida online", err);
     globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }

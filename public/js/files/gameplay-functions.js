@@ -1,4 +1,5 @@
 import { showAppAlert } from "./modal-functions.js";
+import { logger } from "./logger.js";
 import { showScreen } from "./screen-functions.js";
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 import { hasPremiumAccess, showPremiumModal } from "./premium-functions.js";
@@ -68,7 +69,7 @@ export function playAudioSnippet() {
   globalThis.audioPlayer.addEventListener("timeupdate", stopAudioListener);
 
   globalThis.audioPlayer.play().catch((e) => {
-    console.error("Fallo 404 en ruta física:", audioSrc);
+    logger.error("Fallo 404 en ruta física", audioSrc);
     playBtn.disabled = false;
     playBtn.innerText = "▶";
     playBtn.classList.remove("is-playing");
@@ -153,12 +154,12 @@ export async function startSummerSongsGame() {
       return;
     }
 
-    console.log(`Canciones de verano precargadas: ${allSongsToChooseFrom.length} canciones disponibles.`);
+    logger.debug(`Canciones de verano precargadas: ${allSongsToChooseFrom.length} canciones disponibles.`);
 
     // Si hay suficientes canciones, pasamos a la pantalla de selección de jugadores.
     showScreen("player-selection-screen");
   } catch (error) {
-    console.error('Error al precargar canciones para el modo "Canciones del Verano":', error);
+    logger.error('Error al precargar canciones para el modo "Canciones del Verano"', error);
     showAppAlert('Error al cargar las canciones para el modo "Canciones del Verano". Intenta de nuevo más tarde.');
     showScreen("decade-selection-screen"); // Volver a la selección de década
   }
@@ -237,8 +238,8 @@ export function startGame() {
   const requiredSongs = globalThis.gameState.totalQuestionsPerPlayer * globalThis.gameState.playerCount;
 
   if (allSongsToChooseFrom.length < requiredSongs) {
-    console.warn(
-      `Advertencia: No hay suficientes canciones en ${getDecadeLabel(globalThis.gameState.selectedDecade)} - ${getCategoryLabel(globalThis.gameState.category)}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`,
+    logger.warn(
+      `No hay suficientes canciones en ${getDecadeLabel(globalThis.gameState.selectedDecade)} - ${getCategoryLabel(globalThis.gameState.category)}. Se necesitan ${requiredSongs} y solo hay ${allSongsToChooseFrom.length}. Ajustando el número de preguntas por jugador.`,
     );
     globalThis.gameState.totalQuestionsPerPlayer = Math.floor(
       allSongsToChooseFrom.length / globalThis.gameState.playerCount,
@@ -258,14 +259,14 @@ export function startGame() {
     globalThis.gameState.selectedDecade,
     globalThis.gameState.category,
   );
-  console.log("Canciones recientes a evitar:", recentSongFiles);
+  logger.debug("Canciones recientes a evitar", recentSongFiles);
 
   // Separar canciones en "no recientes" y "recientes"
   let nonRecentSongs = allSongsToChooseFrom.filter((song) => !recentSongFiles.has(song.file));
   let recentSongs = allSongsToChooseFrom.filter((song) => recentSongFiles.has(song.file));
 
-  console.log("Canciones no recientes:", nonRecentSongs.length);
-  console.log("Canciones recientes (para usar si es necesario):", recentSongs.length);
+  logger.debug("Canciones no recientes", nonRecentSongs.length);
+  logger.debug("Canciones recientes (para usar si es necesario)", recentSongs.length);
 
   // Priorizar canciones no recientes, luego añadir de las recientes si no hay suficientes
   let songsForThisGame = nonRecentSongs.sort(() => 0.5 - Math.random()); // Baraja las no recientes
@@ -277,8 +278,8 @@ export function startGame() {
     const needed = totalRequiredSongs - songsForThisGame.length;
     const additionalSongs = recentSongs.sort(() => 0.5 - Math.random()).slice(0, needed);
     songsForThisGame = songsForThisGame.concat(additionalSongs);
-    console.warn(
-      `Advertencia: No hay suficientes canciones no recientes. Se han añadido ${additionalSongs.length} canciones recientes.`,
+    logger.warn(
+      `No hay suficientes canciones no recientes. Se han añadido ${additionalSongs.length} canciones recientes.`,
     );
   }
 
@@ -294,7 +295,7 @@ export function startGame() {
       );
     } else {
       globalThis.gameState.players[i].questions = [...songsForThisGame];
-      console.warn(
+      logger.warn(
         `No se pudieron asignar ${globalThis.gameState.totalQuestionsPerPlayer} preguntas al jugador ${globalThis.gameState.players[i].name}. Solo se asignaron ${songsForThisGame.length} preguntas.`,
       );
       songsForThisGame = [];
@@ -362,8 +363,8 @@ export function setupQuestion() {
       : globalThis.configuracionCanciones?.[globalThis.gameState.selectedDecade]?.[globalThis.gameState.category];
 
   if (!Array.isArray(allSongsToChooseFromForOptions) || allSongsToChooseFromForOptions.length < 4) {
-    console.error(
-      `Error: Pool no válido para ${globalThis.gameState.selectedDecade} - ${globalThis.gameState.category}`,
+    logger.error(
+      `Pool no válido para ${globalThis.gameState.selectedDecade} - ${globalThis.gameState.category}`,
     );
     showAppAlert(
       `No hay suficientes canciones en '${getCategoryLabel(globalThis.gameState.category)}' para ${getDecadeLabel(globalThis.gameState.selectedDecade)}.`,
@@ -403,7 +404,7 @@ export function setupQuestion() {
 
   // Fallback de seguridad
   if (options.length < 4) {
-    console.warn("Advertencia: No se encontraron suficientes distractores estrictos. Rellenando con pool disponible.");
+    logger.warn("No se encontraron suficientes distractores estrictos. Rellenando con pool disponible.");
     let fallbackSafety = 0;
     while (options.length < 4 && fallbackSafety < 100) {
       fallbackSafety++;
@@ -626,7 +627,7 @@ export function endGame() {
           loggedInPlayer.score,
         );
       } else {
-        console.warn("Usuario logueado no encontrado en la lista de jugadores de la partida.");
+        logger.warn("Usuario logueado no encontrado en la lista de jugadores de la partida.");
       }
     }
 

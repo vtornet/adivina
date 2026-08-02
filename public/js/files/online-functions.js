@@ -141,7 +141,7 @@ export async function joinOnlineGame() {
       showAppAlert(result.message || "Error al unirse a la partida.");
     }
   } catch (err) {
-    console.error(err);
+    logger.error("Error al unirse a la partida", err);
     showAppAlert("Error al unirse a la partida.");
   }
 }
@@ -185,7 +185,7 @@ export async function joinOnlineGameFromPending(code, playerName, email) {
       loadPlayerOnlineGames(); // Recarga la lista por si el estado cambió
     }
   } catch (err) {
-    console.error("Error de red al unirse a la partida pendiente:", err);
+    logger.error("Error de red al unirse a la partida pendiente", err);
     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
@@ -213,7 +213,7 @@ export async function getSongsForOnlineMatch(decade, category) {
           mergedSongs = mergedSongs.concat(configuracionCanciones[dec][category]);
         }
       } catch (e) {
-        console.warn(`No se pudieron cargar canciones de ${dec} - ${category}`, e);
+        logger.warn(`No se pudieron cargar canciones de ${dec} - ${category}`, e);
       }
     }
 
@@ -278,7 +278,7 @@ export async function startOnlineGame() {
     gameState.selectedDecade = gameData.decade;
     gameState.category = gameData.category;
   } else {
-    console.error("No se encontraron datos de la partida online en localStorage.");
+    logger.error("No se encontraron datos de la partida online en localStorage");
     showAppAlert("Error: No se pudo cargar la información de la década/categoría para la partida online.");
     showScreen("online-mode-screen");
     return;
@@ -286,7 +286,7 @@ export async function startOnlineGame() {
   try {
     await loadSongsForDecadeAndCategory(gameState.selectedDecade, gameState.category);
   } catch (error) {
-    console.error("Error al cargar las canciones para la partida online:", error);
+    logger.error("Error al cargar las canciones para la partida online", error);
     showAppAlert("Error al cargar las canciones para la partida online. Intenta de nuevo más tarde.");
     showScreen("online-mode-screen");
     return;
@@ -301,7 +301,7 @@ export async function submitOnlineScore() {
   // Asegurarse de que tenemos los datos del jugador actual
   const localPlayer = gameState.players.find((p) => p.email === currentOnlineEmail);
   if (!localPlayer) {
-    console.error("Error: Jugador local no encontrado en gameState para submitOnlineScore.");
+    logger.error("Jugador local no encontrado en gameState para submitOnlineScore");
     showAppAlert("Error interno al enviar la puntuación.");
     return;
   }
@@ -334,7 +334,7 @@ export async function submitOnlineScore() {
       showAppAlert(result.message || "Error al enviar resultado.");
     }
   } catch (err) {
-    console.error(err);
+    logger.error("Error al guardar la puntuación online", err);
     showAppAlert("Error al guardar la puntuación online.");
   }
 }
@@ -345,7 +345,7 @@ export function pollOnlineGameStatus() {
       // currentOnlineGameCode debe estar disponible globalmente
       if (!currentOnlineGameCode) {
         clearInterval(interval);
-        console.error("No hay código de partida online para consultar.");
+        logger.error("No hay código de partida online para consultar");
         // Podríamos redirigir a una pantalla de error o menú principal aquí
         showScreen("online-mode-screen");
         return;
@@ -355,7 +355,7 @@ export function pollOnlineGameStatus() {
       const result = await response.json();
 
       if (!response.ok) {
-        console.error("Error al consultar estado de partida:", result.message);
+        logger.error("Error al consultar estado de partida", result.message);
         // Podrías mostrar una alerta o simplemente dejar que siga intentando
         return;
       }
@@ -367,10 +367,10 @@ export function pollOnlineGameStatus() {
       } else {
         // Si aún no han terminado, podríamos actualizar el estado en pantalla si quisiéramos
         // Por ahora, el mensaje "Esperando..." es suficiente.
-        console.log("Esperando al otro jugador...");
+        logger.debug("Esperando al otro jugador...");
       }
     } catch (err) {
-      console.error("Error de red al comprobar estado online:", err);
+      logger.error("Error de red al comprobar estado online", err);
       // Si hay un error de red persistente, podríamos ofrecer una opción al usuario.
       // clearInterval(interval); // No limpiar el intervalo en errores de red temporales.
     }
@@ -393,7 +393,7 @@ export async function saveOnlineGameToHistory(gameData) {
       body: JSON.stringify(payload),
     });
   } catch (err) {
-    console.error("Error al guardar historial online:", err);
+    logger.error("Error al guardar historial online", err);
   }
 }
 

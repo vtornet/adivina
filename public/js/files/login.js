@@ -1,4 +1,5 @@
 import { ADMIN_EMAIL, PERMISSIONS_STORAGE_KEY } from "../constants/app-constants.js";
+import { logger } from "./logger.js";
 import { loadGameHistory } from "./game-functions.js";
 import { parseJsonResponse, isValidEmail } from "./helpers.js";
 import { showAppAlert } from "./modal-functions.js";
@@ -72,7 +73,7 @@ export async function loginUser() {
       return;
     }
   } catch (error) {
-    console.warn("API no disponible, usando login local:", error);
+    logger.warn("API no disponible, usando login local", error);
     globalThis.useLocalApiFallback = true;
   }
 
@@ -96,7 +97,7 @@ export async function loginUser() {
     try {
       await syncUserPermissions();
     } catch (e) {
-      console.error("Error sincronizando permisos en login:", e);
+      logger.error("Error sincronizando permisos en login", e);
     }
 
     getUserPermissions(globalThis.currentUser.email);
@@ -151,7 +152,7 @@ export async function requestPasswordReset() {
       showAppAlert(result.message || "No se pudo solicitar el token.");
     }
   } catch (error) {
-    console.error("Error al solicitar token:", error);
+    logger.error("Error al solicitar token", error);
     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
@@ -186,7 +187,7 @@ export async function confirmPasswordReset() {
       showAppAlert(result.message || "No se pudo cambiar la contraseña.");
     }
   } catch (error) {
-    console.error("Error al confirmar reset:", error);
+    logger.error("Error al confirmar reset", error);
     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
@@ -226,7 +227,7 @@ export async function changePassword() {
       showAppAlert(result.message || "No se pudo cambiar la contraseña.");
     }
   } catch (error) {
-    console.error("Error al cambiar contraseña:", error);
+    logger.error("Error al cambiar contraseña", error);
     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }
@@ -283,7 +284,7 @@ export async function registerUser() {
       return;
     }
   } catch (error) {
-    console.warn("API no disponible, usando registro local:", error);
+    logger.warn("API no disponible, usando registro local", error);
     globalThis.useLocalApiFallback = true;
   }
 
@@ -331,7 +332,7 @@ export async function verifyEmailAction() {
       showAppAlert(result.message || "Código incorrecto.");
     }
   } catch (err) {
-    console.error(err);
+    logger.error("Error de conexión al verificar", err);
     showAppAlert("Error de conexión al verificar.");
   }
 }
@@ -386,8 +387,6 @@ async function syncUserPermissions() {
   const safeEmail = currentUser.email.trim();
 
   try {
-    // console.log(`🔄 Sincronizando permisos para ${safeEmail}...`);
-
     // Fetch con Cache Busting agresivo
     const response = await fetch(`${API_BASE_URL}/api/users/${safeEmail}?t=${Date.now()}`, {
       cache: "no-store",
@@ -418,8 +417,6 @@ async function syncUserPermissions() {
         };
         localStorage.setItem(PERMISSIONS_STORAGE_KEY, JSON.stringify(allPerms));
 
-        // console.log("✅ Permisos sincronizados (Fusión):", mergedSections);
-
         const currentScreen = document.querySelector(".screen.active");
         if (currentScreen) {
           if (currentScreen.id === "category-screen") generateCategoryButtons();
@@ -429,6 +426,6 @@ async function syncUserPermissions() {
       }
     }
   } catch (error) {
-    console.warn("❌ Error al sincronizar perfil:", error);
+    logger.warn("Error al sincronizar perfil", error);
   }
 }

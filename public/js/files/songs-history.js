@@ -1,3 +1,4 @@
+import { logger } from "./logger.js";
 const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
 
 /**
@@ -28,7 +29,7 @@ export function updateRecentSongsHistory(userEmail, decade, category, playedSong
   }
 
   localStorage.setItem(storageKey, JSON.stringify(history));
-  console.log(`Historial de canciones recientes actualizado para ${decade}-${category}.`);
+  logger.debug(`Historial de canciones recientes actualizado para ${decade}-${category}.`);
 }
 
 /**

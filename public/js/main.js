@@ -2,14 +2,15 @@
 // MANEJADOR DE ERRORES GLOBAL - Detecta errores de importación, ejecución, etc.
 // ============================================================================
 globalThis.addEventListener("error", (event) => {
-  console.error("❌ ERROR GLOBAL:", event.message, event.filename, event.lineno);
-  console.error("Error object:", event.error);
+  logger.error("ERROR GLOBAL:", event.message, event.filename, event.lineno);
+  logger.error("Error object:", event.error);
 });
 
 globalThis.addEventListener("unhandledrejection", (event) => {
-  console.error("❌ PROMESA RECHAZADA:", event.reason);
+  logger.error("PROMESA RECHAZADA:", event.reason);
 });
 
+import { logger } from "./files/logger.js";
 import {
   getDecadeLabel,
   getCategoryLabel,
@@ -162,9 +163,9 @@ const sfxError = globalThis.sfxError || document.getElementById("sfx-error");
   if (savedUserJSON) {
     try {
       globalThis.currentUser = JSON.parse(savedUserJSON);
-      console.log("✅ Sesión persistente restaurada:", currentUser.email);
+      logger.debug("Sesión persistente restaurada:", currentUser.email);
     } catch (e) {
-      console.error("❌ Sesión corrupta. Limpiando localStorage.", e);
+      logger.error("Sesión corrupta. Limpiando localStorage.", e);
       localStorage.removeItem("userData");
       globalThis.currentUser = null;
     }
@@ -182,7 +183,7 @@ globalThis.toggleHamburgerMenu = toggleHamburgerMenu;
 if ("serviceWorker" in navigator) {
   globalThis.addEventListener("load", () => {
     navigator.serviceWorker.register("sw.js").catch((error) => {
-      console.warn("No se pudo registrar el Service Worker:", error);
+      logger.warn("No se pudo registrar el Service Worker:", error);
     });
   });
 }

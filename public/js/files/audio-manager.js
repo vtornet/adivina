@@ -1,4 +1,5 @@
 import { showAppAlert } from "./modal-functions.js";
+import { logger } from "./logger.js";
 
 // Variables globales accedidas desde window (definidas en constants.js)
 // audioPlayer, gameState, activeTimeUpdateListener
@@ -56,7 +57,7 @@ export function playAudioSnippet() {
   globalThis.audioPlayer.addEventListener("timeupdate", stopAudioListener);
 
   globalThis.audioPlayer.play().catch((e) => {
-    console.error("Fallo 404 en ruta física:", audioSrc);
+    logger.error("Fallo 404 en ruta física", audioSrc);
     playBtn.disabled = false;
     playBtn.innerText = "▶";
     playBtn.classList.remove("is-playing");

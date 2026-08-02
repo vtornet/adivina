@@ -1,4 +1,5 @@
 import { showAppAlert } from "./modal-functions.js";
+import { logger } from "./logger.js";
 import { showScreen } from "./screen-functions.js";
 import { hasPremiumAccess, showPremiumModal } from "./premium-functions.js";
 import { saveUserScores } from "./user-functions.js";
@@ -89,12 +90,12 @@ export async function startSummerSongsGame() {
       return;
     }
 
-    console.log(`Canciones de verano precargadas: ${allSongsToChooseFrom.length} canciones disponibles.`);
+    logger.debug(`Canciones de verano precargadas: ${allSongsToChooseFrom.length} canciones disponibles.`);
 
     // Si hay suficientes canciones, pasamos a la pantalla de selección de jugadores.
     showScreen("player-selection-screen");
   } catch (error) {
-    console.error('Error al precargar canciones para el modo "Canciones del Verano":', error);
+    logger.error('Error al precargar canciones para el modo "Canciones del Verano"', error);
     showAppAlert('Error al cargar las canciones para el modo "Canciones del Verano". Intenta de nuevo más tarde.');
     showScreen("decade-selection-screen"); // Volver a la selección de década
   }
@@ -283,7 +284,7 @@ export function endGame() {
           loggedInPlayer.score,
         );
       } else {
-        console.warn("Usuario logueado no encontrado en la lista de jugadores de la partida.");
+        logger.warn("Usuario logueado no encontrado en la lista de jugadores de la partida");
       }
     }
 

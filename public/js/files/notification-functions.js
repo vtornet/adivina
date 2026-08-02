@@ -1,4 +1,5 @@
 import { NOTIFICATIONS_STORAGE_KEY } from "../constants/app-constants.js";
+import { logger } from "./logger.js";
 
 export function getNotifications() {
   const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
@@ -130,6 +131,6 @@ export async function requestInviteNotificationPermission() {
       }
     })
     .catch((error) => {
-      console.warn("No se pudo solicitar permiso de notificaciones:", error);
+      logger.warn("No se pudo solicitar permiso de notificaciones", error);
     });
 }

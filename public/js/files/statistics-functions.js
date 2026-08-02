@@ -1,4 +1,5 @@
 import { showAppAlert, showAppConfirm } from "./modal-functions.js";
+import { logger } from "./logger.js";
 import { showScreen } from "./screen-functions.js";
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 import { DECADES_WITH_SPECIALS } from "../constants/app-constants.js";
@@ -86,7 +87,7 @@ export async function resetUserStatistics() {
       showAppAlert(result.message || "No se pudieron borrar las estadísticas.");
     }
   } catch (error) {
-    console.error("Error de red al borrar estadísticas:", error);
+    logger.error("Error de red al borrar estadísticas", error);
     showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }

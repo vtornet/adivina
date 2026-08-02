@@ -1,4 +1,5 @@
 import { showAppConfirm, showAppAlert } from "./modal-functions.js";
+import { logger } from "./logger.js";
 import { showScreen } from "./screen-functions.js";
 import { closeHamburgerMenu } from "./burger-functions.js";
 import { logout } from "./login.js";
@@ -53,7 +54,7 @@ export async function selectDecade(decade) {
   // Antes de mostrar la pantalla de categorías, cargamos todas las categorías de la década.
   const categoriesToLoadPromises = globalThis.allPossibleCategories.map((cat) =>
     globalThis.loadSongsForDecadeAndCategory(decade, cat).catch((error) => {
-      console.warn(
+      logger.warn(
         `No se pudo cargar la categoría ${cat} para la década ${decade}. Puede que no haya canciones o un error de archivo.`,
         error,
       );
@@ -242,7 +243,7 @@ export async function selectCategory(category) {
     showScreen("player-selection-screen");
   } catch (error) {
     showAppAlert(`No se pudieron cargar las canciones para '${getCategoryLabel(category)}'. Intenta con otra.`);
-    console.error(error);
+    logger.error("Error al cargar canciones para la categoría", error);
     showScreen("category-screen");
   }
 }

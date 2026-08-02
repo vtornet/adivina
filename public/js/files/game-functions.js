@@ -1,11 +1,12 @@
 import { parseJsonResponse } from "./helpers.js";
+import { logger } from "./logger.js";
 import { getLocalGameHistory } from "./user-functions.js";
 
 export async function loadGameHistory(userEmail) {
   if (useLocalApiFallback) {
     const localHistory = getLocalGameHistory();
     gameHistory = localHistory[userEmail] || [];
-    console.log("Historial local cargado:", gameHistory);
+    logger.debug("Historial local cargado", gameHistory);
     return;
   }
 
@@ -15,17 +16,17 @@ export async function loadGameHistory(userEmail) {
 
     if (response.ok) {
       gameHistory = data;
-      console.log("Historial de partidas cargado:", gameHistory);
+      logger.debug("Historial de partidas cargado", gameHistory);
     } else if (response.status === 404 || response.status >= 500) {
       useLocalApiFallback = true;
       const localHistory = getLocalGameHistory();
       gameHistory = localHistory[userEmail] || [];
     } else {
-      console.error("Error al cargar historial:", data?.message);
+      logger.error("Error al cargar historial", data?.message);
       gameHistory = [];
     }
   } catch (error) {
-    console.warn("API no disponible, usando historial local:", error);
+    logger.warn("API no disponible, usando historial local", error);
     useLocalApiFallback = true;
     const localHistory = getLocalGameHistory();
     gameHistory = localHistory[userEmail] || [];
@@ -71,7 +72,7 @@ export async function saveGameResult(players, winnerName, decade, category) {
     const data = await parseJsonResponse(response);
 
     if (response.ok) {
-      console.log(data.message);
+      logger.debug(data.message);
       if (currentUser && currentUser.email) {
         await loadGameHistory(currentUser.email);
       }
@@ -79,10 +80,10 @@ export async function saveGameResult(players, winnerName, decade, category) {
       useLocalApiFallback = true;
       await saveGameResult(players, winnerName, decade, category);
     } else {
-      console.error("Error al guardar historial de partida:", data?.message);
+      logger.error("Error al guardar historial de partida", data?.message);
     }
   } catch (error) {
-    console.warn("API no disponible, usando historial local:", error);
+    logger.warn("API no disponible, usando historial local", error);
     useLocalApiFallback = true;
     await saveGameResult(players, winnerName, decade, category);
   }

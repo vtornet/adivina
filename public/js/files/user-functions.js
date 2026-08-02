@@ -6,6 +6,7 @@ import {
   LOCAL_GAME_HISTORY_KEY,
 } from "../constants/app-constants.js";
 import { parseJsonResponse } from "./helpers.js";
+import { logger } from "./logger.js";
 import { showAppAlert } from "./modal-functions.js";
 import { showScreen } from "./screen-functions.js";
 import { generateDecadeButtons } from "./ui-functions.js";
@@ -62,7 +63,7 @@ export function getActivePermissions() {
       }
     }
   } catch (e) {
-    console.warn("Error al leer permisos del localStorage:", e);
+    logger.warn("Error al leer permisos del localStorage", e);
   }
 
   // Fusión: combinamos memorySections + localSections
@@ -74,7 +75,7 @@ export function getLocalUsers() {
   try {
     return JSON.parse(localStorage.getItem(LOCAL_USERS_KEY) || "{}");
   } catch (e) {
-    console.error("Error al leer usuarios locales:", e);
+    logger.error("Error al leer usuarios locales", e);
     return {};
   }
 }
@@ -87,7 +88,7 @@ export function getLocalScores() {
   try {
     return JSON.parse(localStorage.getItem(LOCAL_SCORES_KEY) || "{}");
   } catch (e) {
-    console.error("Error al leer puntuaciones locales:", e);
+    logger.error("Error al leer puntuaciones locales", e);
     return {};
   }
 }
@@ -100,7 +101,7 @@ export function getLocalGameHistory() {
   try {
     return JSON.parse(localStorage.getItem(LOCAL_GAME_HISTORY_KEY) || "[]");
   } catch (e) {
-    console.error("Error al leer historial de juegos:", e);
+    logger.error("Error al leer historial de juegos", e);
     return [];
   }
 }
@@ -124,7 +125,7 @@ export async function loadUserScores(userEmail) {
       localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(scores));
     }
   } catch (error) {
-    console.warn("API no disponible, usando puntuaciones locales:", error);
+    logger.warn("API no disponible, usando puntuaciones locales", error);
   }
 }
 
@@ -149,16 +150,16 @@ export async function saveUserScores(userEmail, decade, category, score) {
     const data = await parseJsonResponse(response);
 
     if (response.ok) {
-      console.log(data.message);
+      logger.debug(data.message);
       await loadUserScores(userEmail);
     } else if (response.status === 404 || response.status >= 500) {
       globalThis.useLocalApiFallback = true;
       await saveUserScores(userEmail, decade, category, score);
     } else {
-      console.error("Error al guardar puntuación:", data?.message);
+      logger.error("Error al guardar puntuación", data?.message);
     }
   } catch (error) {
-    console.warn("API no disponible, usando puntuaciones locales:", error);
+    logger.warn("API no disponible, usando puntuaciones locales", error);
     globalThis.useLocalApiFallback = true;
     await saveUserScores(userEmail, decade, category, score);
   }
@@ -201,7 +202,7 @@ export async function setPlayerName() {
         return;
       }
     } catch (error) {
-      console.warn("API no disponible, usando actualización local:", error);
+      logger.warn("API no disponible, usando actualización local", error);
       globalThis.useLocalApiFallback = true;
     }
 

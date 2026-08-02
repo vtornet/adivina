@@ -1,4 +1,5 @@
 import { showAppAlert } from "./modal-functions.js";
+import { logger } from "./logger.js";
 import { showScreen } from "./screen-functions.js";
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
 import { DECADES_WITH_SPECIALS, CATEGORY_ORDER } from "../constants/app-constants.js";
@@ -17,7 +18,7 @@ export async function showSongsListCategorySelection() {
   const loadPromises = decadesToLoad.flatMap((decadeId) =>
     CATEGORY_ORDER.map((categoryId) =>
       globalThis.loadSongsForDecadeAndCategory(decadeId, categoryId).catch((error) => {
-        console.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
+        logger.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
         return null;
       }),
     ),
@@ -92,7 +93,7 @@ export async function displaySongsForCategory(decadeId, categoryId) {
       const mergedPool = globalThis.configuracionCanciones?.["Todas"]?.[globalThis.gameState.category];
 
       if (!Array.isArray(mergedPool) || mergedPool.length < 4) {
-        console.error(`Error: Pool no válido para Todas - ${globalThis.gameState.category}`);
+        logger.error(`Pool no válido para Todas - ${globalThis.gameState.category}`);
         showAppAlert("Error interno al preparar la pregunta. Vuelve a empezar.");
         showScreen("category-screen");
         return;
@@ -107,7 +108,7 @@ export async function displaySongsForCategory(decadeId, categoryId) {
     showAppAlert(
       `No se pudo cargar la lista de canciones para ${getDecadeLabel(decadeId)} - ${getCategoryLabel(categoryId)}.`,
     );
-    console.error(error);
+    logger.error("Error al cargar lista de canciones", error);
     showScreen("songs-list-category-screen");
     return;
   }

@@ -1,4 +1,5 @@
 // online-notifications.js - Sistema de notificaciones para juego online
+import { logger } from "./logger.js";
 
 export function getWinnerName(players) {
   if (!players || players.length === 0) return "";
@@ -102,7 +103,7 @@ export async function clearOnlineGameHistory() {
       globalThis.showAppAlert(`Error al borrar historial: ${result.message}`);
     }
   } catch (error) {
-    console.error("Error de red al borrar historial de partidas online:", error);
+    logger.error("Error de red al borrar historial de partidas online", error);
     globalThis.showAppAlert("Error de conexión. Intenta de nuevo más tarde.");
   }
 }

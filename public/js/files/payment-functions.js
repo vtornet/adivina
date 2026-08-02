@@ -1,4 +1,5 @@
 import { showAppAlert } from "./modal-functions.js";
+import { logger } from "./logger.js";
 import { syncUserPermissions } from "./app-init-functions.js";
 
 // Variables globales accedidas desde window (definidas en constants.js)
@@ -57,7 +58,7 @@ export async function redirectToStripe(product) {
       throw new Error("No se recibió URL de pago");
     }
   } catch (error) {
-    console.error("Error al redirigir a Stripe:", error);
+    logger.error("Error al redirigir a Stripe", error);
     showAppAlert("Error al iniciar el proceso de pago. Por favor, intenta de nuevo.");
   }
 }
@@ -87,7 +88,7 @@ export async function validatePaymentStatus(sessionId) {
 
     return await response.json();
   } catch (error) {
-    console.error("Error al validar estado del pago:", error);
+    logger.error("Error al validar estado del pago", error);
     return null;
   }
 }
@@ -109,7 +110,7 @@ export async function handlePaymentReturn(sessionId) {
       showAppAlert("Hay un problema con tu pago. Contacta con soporte.");
     }
   } catch (error) {
-    console.error("Error al manejar retorno de pago:", error);
+    logger.error("Error al manejar retorno de pago", error);
     showAppAlert("Error al procesar tu pago. Por favor, contacta con soporte.");
   }
 

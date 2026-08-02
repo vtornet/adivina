@@ -1,4 +1,5 @@
 import { getDecadeLabel, getCategoryLabel } from "./app-info-functions.js";
+import { logger } from "./logger.js";
 import { showAppAlert } from "./modal-functions.js";
 
 /**
@@ -67,7 +68,7 @@ export async function shareGameResultHandler() {
       decadeToShare = savedData.decade;
       categoryToShare = savedData.category;
     } catch (e) {
-      console.error("Error leyendo datos online para compartir", e);
+      logger.error("Error leyendo datos online para compartir", e);
       return;
     }
   } else {
@@ -90,7 +91,7 @@ export async function shareGameResultHandler() {
         text: text,
       });
     } catch (err) {
-      console.log("Compartir cancelado:", err);
+      logger.debug("Compartir cancelado", err);
     }
   } else {
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
