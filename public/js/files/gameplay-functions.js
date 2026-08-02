@@ -8,7 +8,7 @@ import { saveGameResult } from "./game-functions.js";
 import { getRecentSongs, updateRecentSongsHistory } from "./songs-history.js";
 import { setEndGameNavigationButtons, setOnlineMenuButtonVisibility } from "./navigation-functions.js";
 import { shareGameResultHandler } from "./share-functions.js";
-import { parseDisplay } from "./songs-list-functions.js";
+import { parseDisplay } from "./helpers.js";
 
 /**
  * Reproduce un fragmento de audio de la canción actual.
