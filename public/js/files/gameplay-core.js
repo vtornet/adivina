@@ -113,6 +113,7 @@ export function startGame() {
     return;
   }
 
+  globalThis.gameState.totalQuestionsPerPlayer = 10;
   globalThis.gameState.players = [];
   globalThis.gameState.players.push({
     id: 1,
