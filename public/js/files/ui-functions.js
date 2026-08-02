@@ -1,5 +1,5 @@
 import { DECADES_ORDER, CATEGORY_ORDER } from "../constants/app-constants.js";
-import { startSummerSongsGame } from "../files/gameplay-functions.js";
+import { startSummerSongsGame } from "./gameplay-core.js";
 import { getDecadeLabel, getCategoryLabel, getDecadesForSelect, getCategoriesForSelect } from "./app-info-functions.js";
 import { hasPremiumAccess, showPremiumModal, isPremiumCategory, hasCategoryAccess } from "./premium-functions.js";
 import { showAppAlert } from "./modal-functions.js";

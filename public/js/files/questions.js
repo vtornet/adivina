@@ -124,7 +124,7 @@ export function setupQuestion(nextPlayerOrEndGameCallback) {
     const parsedDisplay = parseDisplay(option.display);
     button.innerHTML = `<strong>${parsedDisplay.artist}</strong>${parsedDisplay.title}`;
     button.onclick = () =>
-      checkAnswer(option.file === currentQuestion.file, button, nextPlayerOrEndGameCallback, setupQuestionCallback);
+      checkAnswer(option.file === currentQuestion.file, button, nextPlayerOrEndGameCallback);
     answerButtonsContainer.appendChild(button);
   });
 
@@ -152,7 +152,7 @@ export function updateAttemptsCounter() {
  * @param {boolean} isCorrect - True si la respuesta es correcta, false si es incorrecta.
  * @param {HTMLElement} button - El botón de respuesta que se pulsó.
  */
-export function checkAnswer(isCorrect, button, nextPlayerOrEndGameCallback, setupQuestionCallback) {
+export function checkAnswer(isCorrect, button, nextPlayerOrEndGameCallback) {
   if (!globalThis.gameState.hasPlayed) {
     showAppAlert("¡Primero tienes que pulsar el botón ▶ para escuchar la canción!");
     return;
