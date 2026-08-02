@@ -262,3 +262,8 @@ export function showAllSongs() {
   closeHamburgerMenu();
   globalThis.showSongsListCategorySelection?.();
 }
+
+export function showOnlineMenu() {
+  closeHamburgerMenu();
+  showScreen("online-mode-screen");
+}

@@ -46,6 +46,8 @@ import {
   changePassword,
   registerUser,
   logout,
+  verifyEmailAction,
+  resendVerificationCode,
 } from "./files/login.js";
 
 import { addNotification, toggleNotificationsPanel } from "./files/notification-functions.js";
@@ -131,6 +133,7 @@ import {
   selectCategory,
   showStats,
   showAllSongs,
+  showOnlineMenu,
 } from "./files/navigation-functions.js";
 import { playAudioSnippet } from "./files/audio-manager.js";
 import {
@@ -201,6 +204,9 @@ globalThis.setOnlineMenuButtonVisibility = setOnlineMenuButtonVisibility;
 globalThis.setEndGameNavigationButtons = setEndGameNavigationButtons;
 globalThis.showStats = showStats;
 globalThis.showAllSongs = showAllSongs;
+globalThis.showOnlineMenu = showOnlineMenu;
+globalThis.verifyEmailAction = verifyEmailAction;
+globalThis.resendVerificationCode = resendVerificationCode;
 
 // Gameplay
 globalThis.selectPlayers = selectPlayers;
