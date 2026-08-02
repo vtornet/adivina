@@ -1,52 +1,31 @@
 import { logger } from "./logger.js";
-const RECENT_SONGS_HISTORY_LENGTH = 8; // Número de partidas hacia atrás para evitar repeticiones
 
-/**
- * Actualiza el historial de canciones recientes para un usuario.
- * @param {string} userEmail - El email del usuario.
- * @param {string} decade - La década de la partida.
- * @param {string} category - La categoría de la partida.
- * @param {Array} playedSongs - Las canciones jugadas en la partida.
- */
-export function updateRecentSongsHistory(userEmail, decade, category, playedSongs) {
-  if (!userEmail) return;
+const PLAYED_KEY_PREFIX = "songsPlayed";
 
-  const storageKey = `recentSongs_${userEmail}`;
-  let history = JSON.parse(localStorage.getItem(storageKey)) || {};
-
-  // Asegurarse de que la estructura para la década y categoría exista
-  history[decade] = history[decade] || {};
-  history[decade][category] = history[decade][category] || [];
-
-  // Añadir las nuevas canciones jugadas al historial de esta categoría
-  const newSongFiles = playedSongs.map((song) => song.file);
-  history[decade][category] = history[decade][category].concat(newSongFiles);
-
-  // Limitar el historial a la longitud deseada (evita que crezca indefinidamente)
-  const maxSongsInHistory = RECENT_SONGS_HISTORY_LENGTH * gameState.totalQuestionsPerPlayer;
-  if (history[decade][category].length > maxSongsInHistory) {
-    history[decade][category] = history[decade][category].slice(-maxSongsInHistory);
-  }
-
-  localStorage.setItem(storageKey, JSON.stringify(history));
-  logger.debug(`Historial de canciones recientes actualizado para ${decade}-${category}.`);
+function storageKey(userEmail, decade, category) {
+  return `${PLAYED_KEY_PREFIX}_${userEmail}_${decade}_${category}`;
 }
 
-/**
- * Obtiene las canciones jugadas recientemente para un usuario, década y categoría.
- * @param {string} userEmail - El email del usuario.
- * @param {string} decade - La década de la partida.
- * @param {string} category - La categoría de la partida.
- * @returns {Set<string>} Un Set de nombres de archivo de canciones jugadas recientemente.
- */
+function loadPlayedSet(userEmail, decade, category) {
+  const stored = localStorage.getItem(storageKey(userEmail, decade, category));
+  return stored ? new Set(JSON.parse(stored)) : new Set();
+}
+
 export function getRecentSongs(userEmail, decade, category) {
   if (!userEmail) return new Set();
+  return loadPlayedSet(userEmail, decade, category);
+}
 
-  const storageKey = `recentSongs_${userEmail}`;
-  const history = JSON.parse(localStorage.getItem(storageKey)) || {};
+export function updateRecentSongsHistory(userEmail, decade, category, playedSongs) {
+  if (!userEmail) return;
+  const played = loadPlayedSet(userEmail, decade, category);
+  playedSongs.forEach((song) => played.add(song.file));
+  localStorage.setItem(storageKey(userEmail, decade, category), JSON.stringify([...played]));
+  logger.debug(`Historial actualizado: ${played.size} canciones jugadas en ${decade}-${category}.`);
+}
 
-  if (history[decade] && history[decade][category]) {
-    return new Set(history[decade][category]);
-  }
-  return new Set();
+export function resetSongHistory(userEmail, decade, category) {
+  if (!userEmail) return;
+  localStorage.removeItem(storageKey(userEmail, decade, category));
+  logger.debug(`Historial reiniciado para ${decade}-${category}.`);
 }

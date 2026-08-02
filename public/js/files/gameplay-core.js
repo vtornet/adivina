@@ -4,7 +4,7 @@ import { showScreen } from "./screen-functions.js";
 import { hasPremiumAccess, showPremiumModal } from "./premium-functions.js";
 import { saveUserScores } from "./user-functions.js";
 import { saveGameResult } from "./game-functions.js";
-import { updateRecentSongsHistory } from "./songs-history.js";
+import { updateRecentSongsHistory, getRecentSongs, resetSongHistory } from "./songs-history.js";
 import { setEndGameNavigationButtons, setOnlineMenuButtonVisibility } from "./navigation-functions.js";
 import { shareGameResultHandler } from "./share-functions.js";
 import { playAudioSnippet } from "./audio-manager.js";
@@ -147,11 +147,16 @@ export function startGame() {
     return;
   }
 
-  const songsToExclude = globalThis.currentUser ? globalThis.getRecentSongs(globalThis.currentUser.email, 10) : [];
-  let availableSongs = allSongsToChooseFrom.filter((song) => !songsToExclude.has(song.file));
+  const userEmail = globalThis.currentUser?.email;
+  const decade = globalThis.gameState.selectedDecade;
+  const category = globalThis.gameState.category;
+
+  let played = userEmail ? getRecentSongs(userEmail, decade, category) : new Set();
+  let availableSongs = allSongsToChooseFrom.filter((song) => !played.has(song.file));
 
   if (availableSongs.length < globalThis.gameState.totalQuestionsPerPlayer) {
-    availableSongs = allSongsToChooseFrom;
+    if (userEmail) resetSongHistory(userEmail, decade, category);
+    availableSongs = [...allSongsToChooseFrom];
   }
 
   availableSongs.sort(() => 0.5 - Math.random());

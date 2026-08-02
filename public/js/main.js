@@ -108,7 +108,7 @@ import { formatOnlineGameDate, parseDisplay } from "./files/helpers.js";
 import { generateCategoryButtons, updatePremiumButtonsState } from "./files/ui-functions.js";
 import { loadGameHistory } from "./files/game-functions.js";
 import { togglePasswordVisibility, showPasswordRecoveryInfo } from "./files/auth-helpers.js";
-import { updateRecentSongsHistory, getRecentSongs } from "./files/songs-history.js";
+import { updateRecentSongsHistory, getRecentSongs, resetSongHistory } from "./files/songs-history.js";
 import { addElderlyPlayerInput, startElderlyModeGame, elderlyPlayerCount } from "./files/elderly-functions.js";
 import { generateShareText, shareGameResultHandler } from "./files/share-functions.js";
 import { checkCookieConsent, acceptCookieConsent } from "./files/cookies-functions.js";
@@ -218,6 +218,7 @@ globalThis.playAudioSnippet = playAudioSnippet;
 // Historial de canciones
 globalThis.updateRecentSongsHistory = updateRecentSongsHistory;
 globalThis.getRecentSongs = getRecentSongs;
+globalThis.resetSongHistory = resetSongHistory;
 
 // Listado de canciones
 globalThis.showSongsListCategorySelection = showSongsListCategorySelection;
