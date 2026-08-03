@@ -58,7 +58,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
 
 Special cases:
 - `verano/consolidated.js` and `elderly/consolidated.js` use `"consolidated"` as the category key.
-- `data/songs/[decade]/espanol.js` and `ingles.js` contain the Spotify `listenUrl`; other categories still have placeholder strings.
+- `espanol.js` and `ingles.js` for `80s`, `90s`, `00s` have real Spotify URLs. The same files for `10s` and `actual` still have placeholder strings (`URL_PENDIENTE_...`) — pending a Spotify API rate-limit reset before the script can finish.
 
 ### Decades and Categories
 
@@ -97,7 +97,8 @@ Native `<select>` elements are replaced with `<button>` + `<input type="hidden">
 1. Creator: calls `createOnlineGame()` → POST `/api/online-games` → gets a 6-char code.
 2. Invitee: joins via code (`joinOnlineGame`) or username invite (`invitePlayerByName`).
 3. Both sides: `startOnlineGame()` → calls `setupQuestion(globalThis.nextPlayerOrEndGame)` in a loop.
-4. On finish: `submitOnlineScore()` → POST `/api/online-games/submit`. The poller (`pollOnlineGameStatus`) checks `GET /api/online-games/:code` every 5 s; when `finished === true`, calls `sendGameFinishedNotification` then `showOnlineResults`.
+4. On finish: `submitOnlineScore()` sets the player's score on `#wait-your-score`, then POST `/api/online-games/submit`. If the opponent hasn't finished yet, shows `online-wait-screen` and starts `pollOnlineGameStatus`.
+5. `pollOnlineGameStatus` checks `GET /api/online-games/:code` every 3 s. On each tick it calls `updateWaitScreen(players)` to update the opponent's name and status badge (yellow "jugando..." → green "¡Ha terminado!"). When `finished === true`, calls `sendGameFinishedNotification` then `showOnlineResults`.
 
 Email comparisons in online code must always use `.toLowerCase()` on both sides to avoid Android vs desktop case mismatches.
 
