@@ -1,4 +1,5 @@
 import { showAppConfirm, showAppAlert } from "./modal-functions.js";
+import { stopAudio } from "./audio-manager.js";
 import { logger } from "./logger.js";
 import { showScreen } from "./screen-functions.js";
 import { closeHamburgerMenu } from "./burger-functions.js";
@@ -74,6 +75,7 @@ export async function exitGame() {
   closeHamburgerMenu();
   const confirmed = await showAppConfirm("¿Seguro que quieres salir del juego? Se cerrará la sesión actual.");
   if (confirmed) {
+    stopAudio();
     logout();
   }
 }
@@ -87,6 +89,7 @@ export async function confirmReturnToMenu() {
     "¿Estás seguro de que quieres volver al menú principal? Perderás el progreso de esta partida.",
   );
   if (confirmed) {
+    stopAudio();
     if (globalThis.isOnlineMode) {
       globalThis.isOnlineMode = false;
       globalThis.currentOnlineGameCode = null;

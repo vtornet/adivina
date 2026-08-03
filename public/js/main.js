@@ -139,7 +139,7 @@ import {
   showAllSongs,
   showOnlineMenu,
 } from "./files/navigation-functions.js";
-import { playAudioSnippet } from "./files/audio-manager.js";
+import { playAudioSnippet, stopAudio } from "./files/audio-manager.js";
 import {
   selectPlayers,
   startGame,
@@ -317,3 +317,7 @@ Object.assign(globalThis, {
 
 // Inicialización
 globalThis.onload = initializeApp;
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) stopAudio();
+});

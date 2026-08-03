@@ -5,6 +5,18 @@ import { logger } from "./logger.js";
  * Reproduce un fragmento de audio de la canción actual.
  * La duración depende del número de intentos restantes.
  */
+export function stopAudio() {
+  clearTimeout(globalThis.audioPlaybackTimeout);
+  if (globalThis.activeTimeUpdateListener) {
+    globalThis.audioPlayer?.removeEventListener("timeupdate", globalThis.activeTimeUpdateListener);
+    globalThis.activeTimeUpdateListener = null;
+  }
+  if (globalThis.audioPlayer) {
+    globalThis.audioPlayer.pause();
+    globalThis.audioPlayer.currentTime = 0;
+  }
+}
+
 export function playAudioSnippet() {
   if (globalThis.gameState.hasPlayed) return;
 
