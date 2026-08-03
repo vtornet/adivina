@@ -228,8 +228,8 @@ globalThis.allSongsByDecadeAndCategory["verano"].consolidated = [
   },
   {
     file: "verano/consolidated/georgie-dann - el-chiringuito.mp3",
-    display: "Georgie Dann - El Hiringuito",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ELHIRINGUITO_GEORGIEDANN",
+    display: "Georgie Dann - El Chiringuito",
+    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ELCHIRINGUITO_GEORGIEDANN",
     platform: "spotify",
     originalDecade: "verano",
     originalCategory: "consolidated",
