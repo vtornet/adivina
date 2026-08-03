@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/aleks-syntek-y-ana-torroja - duele-el-amor.mp3",
     display: "Aleks Syntek Y Ana Torroja - Duele El Amor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DUELE_EL_AMOR",
+    listenUrl: "https://open.spotify.com/track/0oXLSuno5adlHcPzlzs8l6",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/alex-ubago - a-gritos-de-esperanza.mp3",
     display: "Alex Ubago - A Gritos De Esperanza",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_A_GRITOS_DE_ESPERANZA",
+    listenUrl: "https://open.spotify.com/track/5eYrtywOl1T58VgNTU5aX0",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -21,7 +21,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/alex-ubago - sin-miedo-a-nada.mp3",
     display: "Alex Ubago - Sin Miedo A Nada",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SIN_MIEDO_A_NADA",
+    listenUrl: "https://open.spotify.com/track/0EA40dd5ghMqemzoqWvo3E",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/amaia-montero - quiero-ser.mp3",
     display: "Amaia Montero - Quiero Ser",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUIERO_SER",
+    listenUrl: "https://open.spotify.com/track/2SxtZcr9RPVvKnVPqUmiPe",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/amaral - como-hablar.mp3",
     display: "Amaral - Como Hablar",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COMO_HABLAR",
+    listenUrl: "https://open.spotify.com/track/3DYm7Lp7Fc3xf6WSCq5ntE",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/amaral - el-universo-sobre-mi.mp3",
     display: "Amaral - El Universo Sobre Mi",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_UNIVERSO_SOBRE_MI",
+    listenUrl: "https://open.spotify.com/track/1jJn6iK6o2Vg7iUKHztRTk",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/amaral - moriria-por-vos.mp3",
     display: "Amaral - Moriria Por Vos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MORIRIA_POR_VOS",
+    listenUrl: "https://open.spotify.com/track/2Ec0VmnItt52GPU6A9Vya3",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/amaral - sin-ti-no-soy-nada.mp3",
     display: "Amaral - Sin Ti No Soy Nada",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SIN_TI_NO_SOY_NADA",
+    listenUrl: "https://open.spotify.com/track/7cQ7axcCXsa963OluHTWlS",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/andy-y-lucas - son-de-amores.mp3",
     display: "Andy Y Lucas - Son De Amores",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SON_DE_AMORES",
+    listenUrl: "https://open.spotify.com/track/7BCer0V0I1CZDI6S6kYD44",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -77,7 +77,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/andy-y-lucas - tanto-la-queria.mp3",
     display: "Andy Y Lucas - Tanto La Queria",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TANTO_LA_QUERIA",
+    listenUrl: "https://open.spotify.com/track/2VSGzQqy9nqJefcYGJNWst",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/antes-muerta-que-sencilla - maria-isabel.mp3",
     display: "Antes Muerta Que Sencilla - Maria Isabel",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MARIA_ISABEL",
+    listenUrl: "https://open.spotify.com/track/3QncI2MDoSto39bT8SJtKK",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/aventura-y-judy-santos - obsesion.mp3",
     display: "Aventura Y Judy Santos - Obsesion",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OBSESION",
+    listenUrl: "https://open.spotify.com/track/66grJSnNQplFGXEpV5CKKK",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/axe-bahia - beso-en-la-boca.mp3",
     display: "Axe Bahia - Beso En La Boca",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BESO_EN_LA_BOCA",
+    listenUrl: "https://open.spotify.com/track/65Sg81KPnIf03pjhEWez97",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/bebe - ella.mp3",
     display: "Bebe - Ella",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ELLA",
+    listenUrl: "https://open.spotify.com/track/5XxcwLvZXDLGbwBK4G0ovH",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/bustamante - el-aire-que-me-das.mp3",
     display: "Bustamante - El Aire Que Me Das",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_AIRE_QUE_ME_DAS",
+    listenUrl: "https://open.spotify.com/track/3sJHZ59YUGNxICTqstvyEV",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/carlos-baute-y-marta-sanchez - colgando-en-tus-manos.mp3",
     display: "Carlos Baute Y Marta Sanchez - Colgando En Tus Manos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COLGANDO_EN_TUS_MANOS",
+    listenUrl: "https://open.spotify.com/track/3UI9I3e1g1y5T3SMfdgfGO",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/causa-y-efecto - paulina-rubio.mp3",
     display: "Causa Y Efecto - Paulina Rubio",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PAULINA_RUBIO",
+    listenUrl: "https://open.spotify.com/track/0gdt218D74akk9AqMlbc45",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/chayanne - torero.mp3",
     display: "Chayanne - Torero",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TORERO",
+    listenUrl: "https://open.spotify.com/track/709CndJJB3GTUhQD0LLFse",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/chenoa - cuando-tu-vas.mp3",
     display: "Chenoa - Cuando Tu Vas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CUANDO_TU_VAS",
+    listenUrl: "https://open.spotify.com/track/2bPH3Ph0RHQuugStXcpyRP",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/coti - antes-que-ver-el-sol.mp3",
     display: "Coti - Antes Que Ver El Sol",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANTES_QUE_VER_EL_SOL",
+    listenUrl: "https://open.spotify.com/track/2xqNBP7kAqeZi96QISEGx4",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/coti - nada-fue-un-error.mp3",
     display: "Coti - Nada Fue Un Error",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NADA_FUE_UN_ERROR",
+    listenUrl: "https://open.spotify.com/track/1Ev18ptTlc3CBQMmKsIfjY",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/cristian-castro - azul.mp3",
     display: "Cristian Castro - Azul",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AZUL",
+    listenUrl: "https://open.spotify.com/track/6pHCJmx9FXnMwEqB0LWUEH",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/daddy-yankee - gasolina.mp3",
     display: "Daddy Yankee - Gasolina",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GASOLINA",
+    listenUrl: "https://open.spotify.com/track/5YoITs1m0q8UOQ4AW7N5ga",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/david-bisbal - ave-maria.mp3",
     display: "David Bisbal - Ave Maria",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AVE_MARIA",
+    listenUrl: "https://open.spotify.com/track/5U4pDBaeq2Jl2dKuWWUSsh",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/david-bisbal - buleria.mp3",
     display: "David Bisbal - Buleria",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BULERIA",
+    listenUrl: "https://open.spotify.com/track/2s7WJ9IRON5zalNbfFY1xa",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/david-bisbal - mi-princesa.mp3",
     display: "David Bisbal - Mi Princesa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MI_PRINCESA",
+    listenUrl: "https://open.spotify.com/track/16kJ8NqNdHbwJe9kf1TJLe",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/david-civera - que-la-detegan.mp3",
     display: "David Civera - Que La Detegan",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUE_LA_DETEGAN",
+    listenUrl: "https://open.spotify.com/track/4777sGsOdoM89vPH3CVoLe",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/diego-torres - color-esperanza.mp3",
     display: "Diego Torres - Color Esperanza",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COLOR_ESPERANZA",
+    listenUrl: "https://open.spotify.com/track/3T07pNAEVr9adeIG9i1ex4",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/el-canto-del-loco - besos.mp3",
     display: "El Canto Del Loco - Besos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BESOS",
+    listenUrl: "https://open.spotify.com/track/7MKO7rUZzjw8p87zdZDgqa",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/el-canto-del-loco - la-madre-de-mi-amigo-jose.mp3",
     display: "El Canto Del Loco - La Madre De Mi Amigo Jose",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_MADRE_DE_MI_AMIGO_JOSE",
+    listenUrl: "https://open.spotify.com/track/3l8Ennt1PqShViwh0tkWuc",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/el-canto-del-loco - por-ti.mp3",
     display: "El Canto Del Loco - Por Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_POR_TI",
+    listenUrl: "https://open.spotify.com/track/6mZLg14FVI4REkd1G4eS8f",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/el-canto-del-loco - zapatillas.mp3",
     display: "El Canto Del Loco - Zapatillas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ZAPATILLAS",
+    listenUrl: "https://open.spotify.com/track/42VgiRyg0YjtRVLiPFNxPJ",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/el-canto-del-loco-y-amaia-montero - puede-ser.mp3",
     display: "El Canto Del Loco Y Amaia Montero - Puede Ser",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PUEDE_SER",
+    listenUrl: "https://open.spotify.com/track/3GazPkKkfpgoHk4VgRbUY0",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/elefantes - que-yo-no-lo-sabia.mp3",
     display: "Elefantes - Que Yo No Lo Sabia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUE_YO_NO_LO_SABIA",
+    listenUrl: "https://open.spotify.com/track/0XlybA6F3v5XcHl6rqmNRw",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/el-sueño-de-morfeo - esta-soy-yo.mp3",
     display: "El Sueño De Morfeo - Esta Soy Yo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESTA_SOY_YO",
+    listenUrl: "https://open.spotify.com/track/2kaHorrtVLo9brE37NQvGa",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/enrique-iglesias-y-juan-luis-guerra - cuando-me-enamoro.mp3",
     display: "Enrique Iglesias Y Juan Luis Guerra - Cuando Me Enamoro",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CUANDO_ME_ENAMORO",
+    listenUrl: "https://open.spotify.com/track/4PHX6bpHDxiR9RGzAKWcyk",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/estopa-y-rosario - el-run-run.mp3",
     display: "Estopa Y Rosario - El Run Run",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_RUN_RUN",
+    listenUrl: "https://open.spotify.com/track/1ZNpyDElyWxXA2wIjGQp35",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/estrella-morente - volver.mp3",
     display: "Estrella Morente - Volver",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VOLVER",
+    listenUrl: "https://open.spotify.com/track/1uhQ3H3TSDX9Bq9Oz6uHWV",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/europes-living-a-celebration - rosa-lopez.mp3",
     display: "Rosa López - Europes Living A Celebration",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROSA_LOPEZ",
+    listenUrl: "https://open.spotify.com/track/0wMCwhZ5feLebVj8hTEkhL",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/gloria-estefan - hoy.mp3",
     display: "Gloria Estefan - Hoy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HOY",
+    listenUrl: "https://open.spotify.com/track/2rC1TQ26lYD1PouF63cePN",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/hector-tito-y-don-omar - baila-morena.mp3",
     display: "Hector Tito Y Don Omar - Baila Morena",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BAILA_MORENA",
+    listenUrl: "https://open.spotify.com/track/6tNDaOud3ydSXFnYXgJL5J",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/iguana-tango - te-perdi.mp3",
     display: "Iguana Tango - Te Perdi",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TE_PERDI",
+    listenUrl: "https://open.spotify.com/track/3UehWBdHZeysxDLaA1dqvy",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes - a-dios-le-pido.mp3",
     display: "Juanes - A Dios Le Pido",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_A_DIOS_LE_PIDO",
+    listenUrl: "https://open.spotify.com/track/129lYDVKnWtlJc2PZJviuA",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes - es-por-ti.mp3",
     display: "Juanes - Es Por Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ES_POR_TI",
+    listenUrl: "https://open.spotify.com/track/3b1IQflSLrgzYQPGFzI9cl",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes - la-camisa-negra.mp3",
     display: "Juanes - La Camisa Negra",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_CAMISA_NEGRA",
+    listenUrl: "https://open.spotify.com/track/2EM9zpAc7PVeoAydmbfVIL",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes - la-vida-es-un-ratico.mp3",
     display: "Juanes - La Vida Es Un Ratico",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_VIDA_ES_UN_RATICO",
+    listenUrl: "https://open.spotify.com/track/4hBTXkQKZd5hq8Z9ZBaUOV",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes - lo-que-me-gusta-a-mi.mp3",
     display: "Juanes - Lo Que Me Gusta A Mi",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LO_QUE_ME_GUSTA_A_MI",
+    listenUrl: "https://open.spotify.com/track/722QPOI0pGJJ0Y0P6ETzgE",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes - me-enamora.mp3",
     display: "Juanes - Me Enamora",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_ENAMORA",
+    listenUrl: "https://open.spotify.com/track/5BY0p2EH4EznNZ0MFD9mjt",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes - volverte-a-ver.mp3",
     display: "Juanes - Volverte A Ver",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VOLVERTE_A_VER",
+    listenUrl: "https://open.spotify.com/track/2ZqFfDwNjKvPu3USx3onhO",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/juanes-y-nelly-furtado - fotografias.mp3",
     display: "Juanes Y Nelly Furtado - Fotografias",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FOTOGRAFIAS",
+    listenUrl: "https://open.spotify.com/track/5EwcKpcvOqr2jWQ6V43uxE",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/julieta-venegas - limon-y-sal.mp3",
     display: "Julieta Venegas - Limon Y Sal",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LIMON_Y_SAL",
+    listenUrl: "https://open.spotify.com/track/7dITAq1YP5e0kTcaDq4YWI",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/julieta-venegas - me-voy.mp3",
     display: "Julieta Venegas - Me Voy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_VOY",
+    listenUrl: "https://open.spotify.com/track/100Tm6z29RfHTdUQ6NIs0s",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/king-agrica - bomba.mp3",
     display: "King Agrica - Bomba",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BOMBA",
+    listenUrl: "https://open.spotify.com/track/2Dy8UvEAQSzHUivMvPR7hx",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-oreja-de-van-gogh - 20-de-enero.mp3",
     display: "La Oreja De Van Gogh - 20 De Enero",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_20_DE_ENERO",
+    listenUrl: "https://open.spotify.com/track/4XdePl1vOF1cYjTBYeYU9j",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-oreja-de-van-gogh - la-playa.mp3",
     display: "La Oreja De Van Gogh - La Playa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_PLAYA",
+    listenUrl: "https://open.spotify.com/track/2DNyZP4Py6f4zMASLBnIu6",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-oreja-de-van-gogh - muneca-de-trapo.mp3",
     display: "La Oreja De Van Gogh - Muneca De Trapo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MUNECA_DE_TRAPO",
+    listenUrl: "https://open.spotify.com/track/1YtZ6sHC4TalQbK4c37bqJ",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-oreja-de-van-gogh - puedes-contar-conmigo.mp3",
     display: "La Oreja De Van Gogh - Puedes Contar Conmigo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PUEDES_CONTAR_CONMIGO",
+    listenUrl: "https://open.spotify.com/track/1hbWtHgRDG25DkmxE4I28V",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-oreja-de-van-gogh - rosas.mp3",
     display: "La Oreja De Van Gogh - Rosas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROSAS",
+    listenUrl: "https://open.spotify.com/track/4waqcUQWdj0yH26STWl2Rq",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-quinta-estacio - sueños-rotos.mp3",
     display: "La Quinta Estacio - Sueños Rotos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUEÑOS_ROTOS",
+    listenUrl: "https://open.spotify.com/track/1oojyg04FDAI0WIZbEwGYw",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-quinta-estacion - el-sol-no-regresa.mp3",
     display: "La Quinta Estacion - El Sol No Regresa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_SOL_NO_REGRESA",
+    listenUrl: "https://open.spotify.com/track/2awKQgW88iq9jFM54VaCAp",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/la-quinta-estacion - tu-peor-error.mp3",
     display: "La Quinta Estacion - Tu Peor Error",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TU_PEOR_ERROR",
+    listenUrl: "https://open.spotify.com/track/7d150WRJT9MyoscfcG0SjX",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/las-ketchup - asereje.mp3",
     display: "Las Ketchup - Asereje",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ASEREJE",
+    listenUrl: "https://open.spotify.com/track/6NG2IIXZfC5Notpz0GIODU",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/los-delincuentes - la-primavera-trompetera.mp3",
     display: "Los Delincuentes - La Primavera Trompetera",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_PRIMAVERA_TROMPETERA",
+    listenUrl: "https://open.spotify.com/track/0CpOanyNd3l3X1Nqkyd6TB",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/los-ronaldos - no-puedo-vivir-sin-ti.mp3",
     display: "Los Ronaldos - No Puedo Vivir Sin Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NO_PUEDO_VIVIR_SIN_TI",
+    listenUrl: "https://open.spotify.com/track/2LUP49H9wb6nw2Y5oQzUpZ",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/mago-de-oz - fiesta-pagana.mp3",
     display: "Mago De Oz - Fiesta Pagana",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FIESTA_PAGANA",
+    listenUrl: "https://open.spotify.com/track/02dphTJYUQ9pmdNC52iyOz",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/manolo-garcia - nunca-el-tiempo-es-perdido.mp3",
     display: "Manolo Garcia - Nunca El Tiempo Es Perdido",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NUNCA_EL_TIEMPO_ES_PERDIDO",
+    listenUrl: "https://open.spotify.com/track/6jsV9z9GK2CPMByiLVMWXi",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/manu-chau - me-gustas-tu.mp3",
     display: "Manu Chau - Me Gustas Tu",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_GUSTAS_TU",
+    listenUrl: "https://open.spotify.com/track/6b37xrsNCWYIUphFBazqD6",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/manuel-carrasco-y-malu - que-nadie.mp3",
     display: "Manuel Carrasco Y Malu - Que Nadie",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUE_NADIE",
+    listenUrl: "https://open.spotify.com/track/4DjYndH5ocPGgM9GYTcY1a",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -549,7 +549,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/marc-anthony - y-ahora-quien.mp3",
     display: "Marc Anthony - Y Ahora Quien",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_Y_AHORA_QUIEN",
+    listenUrl: "https://open.spotify.com/track/1riK0w5nJ6r2qsdzNsMQJK",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -557,7 +557,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/marea - a-la-mierda-primavera.mp3",
     display: "Marea - A La Mierda Primavera",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_A_LA_MIERDA_PRIMAVERA",
+    listenUrl: "https://open.spotify.com/track/3rzgnT7YO1gT6YClEBx0DX",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -565,7 +565,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/maria-isabel - antes-muerta-que-sencilla.mp3",
     display: "Maria Isabel - Antes Muerta Que Sencilla",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANTES_MUERTA_QUE_SENCILLA",
+    listenUrl: "https://open.spotify.com/track/3QncI2MDoSto39bT8SJtKK",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -573,7 +573,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/melendi - caminando-por-la-vida.mp3",
     display: "Melendi - Caminando Por La Vida",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CAMINANDO_POR_LA_VIDA",
+    listenUrl: "https://open.spotify.com/track/3v1dCP3hk2djfWryqfp7sx",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -581,7 +581,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/melocos-y-natalia - cuando-me-vaya.mp3",
     display: "Melocos Y Natalia - Cuando Me Vaya",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CUANDO_ME_VAYA",
+    listenUrl: "https://open.spotify.com/track/43fiejCsepaN0Zqd3Md3sa",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -589,7 +589,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/melody - el-baile-del-gorila.mp3",
     display: "Melody - El Baile Del Gorila",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_BAILE_DEL_GORILA",
+    listenUrl: "https://open.spotify.com/track/4HjzdN3HFW2p52Eey2MumB",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -597,7 +597,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/miguel-bose-y-julieta-venegas - morena-mia.mp3",
     display: "Miguel Bose Y Julieta Venegas - Morena Mia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MORENA_MIA",
+    listenUrl: "https://open.spotify.com/track/2pJQNjK0uYUgPRo6fpIOEC",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -605,7 +605,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/monica-naranjo - sobrevivire.mp3",
     display: "Monica Naranjo - Sobrevivire",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOBREVIVIRE",
+    listenUrl: "https://open.spotify.com/track/3xGon93gcCARQ4VgYgoirk",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -613,7 +613,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/natalia-oreiro - tu-veneno.mp3",
     display: "Natalia Oreiro - Tu Veneno",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TU_VENENO",
+    listenUrl: "https://open.spotify.com/track/24czs6mGC8QSzaUVvM4nRM",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -621,7 +621,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/natalie - me-muero.mp3",
     display: "Natalie - Me Muero",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_MUERO",
+    listenUrl: "https://open.spotify.com/track/2DAULesb1U4Qz4FSTZpEUJ",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -629,7 +629,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/nena-daconte - tenia-tanto-que-darte.mp3",
     display: "Nena Daconte - Tenia Tanto Que Darte",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TENIA_TANTO_QUE_DARTE",
+    listenUrl: "https://open.spotify.com/track/3Th2of8xIYyImVLXUbzaTp",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -637,7 +637,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/nicky-jam-y-daddy-yankee - donde-estan-las-gatas.mp3",
     display: "Nicky Jam Y Daddy Yankee - Donde Estan Las Gatas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONDE_ESTAN_LAS_GATAS",
+    listenUrl: "https://open.spotify.com/track/0tIpUUbOYIWqvI50Ksf7D5",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -645,7 +645,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/niña-pastori - cai.mp3",
     display: "Niña Pastori - Cai",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CAI",
+    listenUrl: "https://open.spotify.com/track/7KtFeanepT9gGXU1zsgQn0",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -653,7 +653,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/operacion-triunfo - mi-musica-es-tu-voz.mp3",
     display: "Operacion Triunfo - Mi Musica Es Tu Voz",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MI_MUSICA_ES_TU_VOZ",
+    listenUrl: "https://open.spotify.com/track/4XesCmllc53qnCKsywwZ7Y",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -661,7 +661,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/orishas - 537-cuba.mp3",
     display: "Orishas - 537 Cuba",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_537_CUBA",
+    listenUrl: "https://open.spotify.com/track/4iImxqMlF3CeNRwKKua9jn",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -669,7 +669,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/pablo-alboran - solamente-tu.mp3",
     display: "Pablo Alboran - Solamente Tu",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOLAMENTE_TU",
+    listenUrl: "https://open.spotify.com/track/7sRXhReWmJF5pqyg3uUTES",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -677,7 +677,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/pablo-alboran - te-he-echado-de-menos.mp3",
     display: "Pablo Alboran - Te He Echado De Menos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TE_HE_ECHADO_DE_MENOS",
+    listenUrl: "https://open.spotify.com/track/59bqZ237MW9CvFRLqu6Dgg",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -685,7 +685,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/papa-levante - ya-habiby.mp3",
     display: "Papa Levante - Ya Habiby",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YA_HABIBY",
+    listenUrl: "https://open.spotify.com/track/6UmyC5o0v66Gx7QpaykYuy",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -693,7 +693,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/patricia-manterola - que-el-ritmo-no-pare.mp3",
     display: "Patricia Manterola - Que El Ritmo No Pare",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUE_EL_RITMO_NO_PARE",
+    listenUrl: "https://open.spotify.com/track/3UaQ7rPrZt60bUyegxsedg",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -701,7 +701,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/paulina-rubio - causa-y-efecto.mp3",
     display: "Paulina Rubio - Causa Y Efecto",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CAUSA_Y_EFECTO",
+    listenUrl: "https://open.spotify.com/track/0gdt218D74akk9AqMlbc45",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -709,7 +709,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/paulina-rubio - y-yo-sigo-aqui.mp3",
     display: "Paulina Rubio - Y Yo Sigo Aqui",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_Y_YO_SIGO_AQUI",
+    listenUrl: "https://open.spotify.com/track/2Ma2f8jV8VKMJoAcnCvZ8h",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -717,7 +717,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/pereza - princesas.mp3",
     display: "Pereza - Princesas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PRINCESAS",
+    listenUrl: "https://open.spotify.com/track/3hlWUNjAlbZ6nOjAbrivBv",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -725,7 +725,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/rosa-lopez - europes-living-a-celebration.mp3",
     display: "Rosa Lopez - Europes Living A Celebration",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EUROPES_LIVING_A_CELEBRATION",
+    listenUrl: "https://open.spotify.com/track/0wMCwhZ5feLebVj8hTEkhL",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -733,7 +733,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/rosana - a-fuego-lento.mp3",
     display: "Rosana - A Fuego Lento",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_A_FUEGO_LENTO",
+    listenUrl: "https://open.spotify.com/track/7nK3q1GgJDxlWfCwtiLV5a",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -741,7 +741,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/seguridad-social - quiero-tener-tu-presencia.mp3",
     display: "Seguridad Social - Quiero Tener Tu Presencia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUIERO_TENER_TU_PRESENCIA",
+    listenUrl: "https://open.spotify.com/track/3f2k0XTc2ZXG17jEMDu8pp",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -749,7 +749,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/shakira - suerte.mp3",
     display: "Shakira - Suerte",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUERTE",
+    listenUrl: "https://open.spotify.com/track/3TY1PFZXmYeiLcXygB74My",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -757,7 +757,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/shakira - te-aviso-te-anucio.mp3",
     display: "Shakira - Te Aviso Te Anucio",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TE_AVISO_TE_ANUCIO",
+    listenUrl: "https://open.spotify.com/track/1w5nWhUzrQqj0WnDXrgsnC",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -765,7 +765,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/shakira-y-alejandro-sanz - la-tortura.mp3",
     display: "Shakira Y Alejandro Sanz - La Tortura",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_TORTURA",
+    listenUrl: "https://open.spotify.com/track/1pRyCNAbTE4HhwSyb8AB6R",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -773,7 +773,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/son-by-four - a-puro-dolor.mp3",
     display: "Son By Four - A Puro Dolor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_A_PURO_DOLOR",
+    listenUrl: "https://open.spotify.com/track/0XGr8vRBk9lIKZIbXZZs2N",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -781,7 +781,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/sonia-y-selena - yo-quiero-bailar.mp3",
     display: "Sonia Y Selena - Yo Quiero Bailar",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YO_QUIERO_BAILAR",
+    listenUrl: "https://open.spotify.com/track/4rFCPjKfgbEeNvs1Ku4nbd",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -789,7 +789,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/queco - tengo.mp3",
     display: "Queco - tengo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUECO_TENGO",
+    listenUrl: "https://open.spotify.com/track/3yPKvKPHsGDrlOe2MqRC89",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "espanol",
@@ -797,7 +797,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   {
     file: "00s/espanol/zucchero - baila-morena.mp3",
     display: "Zucchero - Baila Morena",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ZUCCHERO___BAILA_MORENA",
+    listenUrl: "https://open.spotify.com/track/0M2YkvoDWKgEvLaCmdH3Gv",
     platform: "youtube",
     originalDecade: "00s",
     originalCategory: "espanol",

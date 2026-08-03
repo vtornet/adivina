@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/menudo - subete-a-mi-moto.mp3",
     display: "Menudo - Súbete A Mi Moto",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUBETE_A_MI_MOTO",
+    listenUrl: "https://open.spotify.com/track/1zHmnDfyTpYvu7KkCeqntZ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/daniela-romo - yo-no-te-pido-la-luna.mp3",
     display: "Daniela Romo - Yo No Te Pido La Luna",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YO_NO_TE_PIDO_LA_LUNA",
+    listenUrl: "https://open.spotify.com/track/09uE7kHv2ESkvtInKugpGM",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -21,7 +21,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/luis-miguel - isabel.mp3",
     display: "Luis Miguel - Isabel",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ISABEL_LUIS_MIGUEL",
+    listenUrl: "https://open.spotify.com/track/4cDNMGoDFdjXgxpZEyP6wH",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/timbiriche - soy-un-desastre.mp3",
     display: "Timbiriche - Soy Un Desastre",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOY_UN_DESASTRE",
+    listenUrl: "https://open.spotify.com/track/6lXj74D4Xvh9oy5xNI0Xtm",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/hombres-g - devuelveme-a-mi-chica.mp3",
     display: "Hombres G - Devuélveme A Mi Chica",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DEVOLVEME_A_MI_CHICA",
+    listenUrl: "https://open.spotify.com/track/1Wrzhfa5bNlqvsnCztz190",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/alaska-y-dinarama - a-quien-le-importa.mp3",
     display: "Alaska y Dinarama - A Quién Le Importa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_A_QUIEN_LE_IMPORTA",
+    listenUrl: "https://open.spotify.com/track/7Eb5AYiiGWItBNddlmxvnh",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - me-cole-en-una-fiesta.mp3",
     display: "Mecano - Me Colé En Una Fiesta",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_COLE_EN_UNA_FIESTA",
+    listenUrl: "https://open.spotify.com/track/7b55CJjPfvHBkNCqEv52lT",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/luis-miguel - la-incondicional.mp3",
     display: "Luis Miguel - La Incondicional",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_INCONDICIONAL",
+    listenUrl: "https://open.spotify.com/track/6F9yAYUaNbUhdlQyt5uZ3b",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/ole-ole - no-controles.mp3",
     display: "Olé Olé - No Controles",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NO_CONTROLES",
+    listenUrl: "https://open.spotify.com/track/1suKCYjsR9rZKnFYM5uK1k",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/alaska-y-los-pegamoides - bailando.mp3",
     display: "Alaska y Los Pegamoides - Bailando",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BAILANDO",
+    listenUrl: "https://open.spotify.com/track/0OteyYh6inrfcil1XGwC3r",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/seguridad-social - chiquilla.mp3",
     display: "Seguridad Social - Chiquilla",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CHIQUILLA",
+    listenUrl: "https://open.spotify.com/track/4eJikwHYHJ3yMg1tvS1Mom",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/miguel-rios - bienvenidos.mp3",
     display: "Miguel Ríos - Bienvenidos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BIENVENIDOS",
+    listenUrl: "https://open.spotify.com/track/4ckZyAOFKfMti3H8aI60f5",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/duncan-dhu - cien-gaviotas.mp3",
     display: "Duncan Dhu - Cien Gaviotas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CIEN_GAVIOTAS",
+    listenUrl: "https://open.spotify.com/track/020Gj87SqDRvzGHELzcCEc",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/danza-invisible - sabor-de-amor.mp3",
     display: "Danza Invisible - Sabor De Amor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SABOR_DE_AMOR",
+    listenUrl: "https://open.spotify.com/track/6zdXA5yUvKnoTJwyZCnYOM",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/tequila - salta.mp3",
     display: "Tequila - Salta",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SALTA",
+    listenUrl: "https://open.spotify.com/track/0M2tanh26PWePnaGVV3h3y",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/tino-casal - eloise.mp3",
     display: "Tino Casal - Eloise",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ELOISE",
+    listenUrl: "https://open.spotify.com/track/16k0xwujtU1eoSLEfofWQ8",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/hombres-g - venecia.mp3",
     display: "Hombres G - Venecia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TEMBLANDO",
+    listenUrl: "https://open.spotify.com/track/5Ge2G8iEydeuQ1wfjZWGOH",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/nacha-pop - la-chica-de-ayer.mp3",
     display: "Nacha Pop - La Chica De Ayer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_CHICA_DE_AYER",
+    listenUrl: "https://open.spotify.com/track/32rs9sJ9YwIJN20BJbuCZH",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/radio-futura - escuela-de-calor.mp3",
     display: "Radio Futura - Escuela De Calor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESCUELA_DE_CALOR",
+    listenUrl: "https://open.spotify.com/track/7J0niAY0FLzGiCVJUREl88",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/radio-futura - veneno-en-la-piel.mp3",
     display: "Radio Futura - Veneno En La Piel",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VENENO_EN_LA_PIEL",
+    listenUrl: "https://open.spotify.com/track/3RDMd9JiKdVik8zjGhZ0wJ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/joan-manuel-serrat - mediterraneo.mp3",
     display: "Joan Manuel Serrat - Mediterráneo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MEDITERRANEO",
+    listenUrl: "https://open.spotify.com/track/7Bewui7KtaMzROeteRitRz",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/el-ultimo-de-la-fila - insurreccion.mp3",
     display: "El Último De La Fila - Insurrección",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_RESURRECCION",
+    listenUrl: "https://open.spotify.com/track/7803rmspVDTFR78bj5KLPk",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/alaska-y-dinarama - ni-tu-ni-nadie.mp3",
     display: "Alaska y Dinarama - Ni Tú Ni Nadie",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NI_TU_NI_NADIR",
+    listenUrl: "https://open.spotify.com/track/7LpS82vPDLgZAHWRtWBBRj",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - perdido-en-mi-habitacion.mp3",
     display: "Mecano - Perdido En Mi Habitación",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PERDIDO_EN_MI_HABITACION",
+    listenUrl: "https://open.spotify.com/track/65DRIbNG5B5aBBNGit8KIn",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - barco-a-venus.mp3",
     display: "Mecano - Barco a Venus",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BARCO_A_VENUS",
+    listenUrl: "https://open.spotify.com/track/11glwadtd8zwDamSDOX5cJ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - me-cuesta-tanto-olvidarte.mp3",
     display: "Mecano - Me Cuesta Tanto Olvidarte",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_CUESTA_TANTO_OLVIDARTE_2",
+    listenUrl: "https://open.spotify.com/track/5xsY1Bm1FItKFFoJ3b964t",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - mujer-contra-mujer.mp3",
     display: "Mecano - Mujer Contra Mujer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MUJER_CONTRA_MUJER",
+    listenUrl: "https://open.spotify.com/track/3JdRjSY0KcTbFD6fHIu0Qc",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - cruz-de-navajas.mp3",
     display: "Mecano - Cruz de Navajas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CRUZ_DE_NAVAJAS",
+    listenUrl: "https://open.spotify.com/track/5laT2a6iEq4IxgEDV9dSCr",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - no-hay-marcha-en-nueva-york.mp3",
     display: "Mecano - No Hay Marcha En Nueva York",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NO_HAY_MARCHA",
+    listenUrl: "https://open.spotify.com/track/6Ag1M5wZUBP6bEV9iE19I8",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - aire.mp3",
     display: "Mecano - Aire",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AIRE",
+    listenUrl: "https://open.spotify.com/track/4ubA5KivYERC8UXR6n0gFT",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - maquillaje.mp3",
     display: "Mecano - Maquillaje",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MAQUILLAJE",
+    listenUrl: "https://open.spotify.com/track/5ns7In0bSVjFwcaFDPx8xh",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - el-cine.mp3",
     display: "Mecano - El Cine",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_CINE",
+    listenUrl: "https://open.spotify.com/track/6ClMTInaaTpJvGUU9hBNDM",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-toreros-muertos - mi-aguita-amarilla.mp3",
     display: "Los Toreros Muertos - Mi Agüita Amarilla",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HIJO_DE_LA_LUNA",
+    listenUrl: "https://open.spotify.com/track/2fYRXoal0ysbJJBUddCGDb",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/gabinete-caligari - camino-soria.mp3",
     display: "Gabinete Caligari - Camino Soria",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CAMINO_SORIA",
+    listenUrl: "https://open.spotify.com/track/2FvPv24lY3WamOKeGM6jEQ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/gabinete-caligari - cuatro-rosas.mp3",
     display: "Gabinete Caligari - Cuatro Rosas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CUATRO_ROSAS",
+    listenUrl: "https://open.spotify.com/track/6oKFZQqYHYO1GSWzb1EDfP",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/loquillo-y-los-trogloditas - la-matare.mp3",
     display: "Loquillo y Los Trogloditas - La Mataré",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_MATARE",
+    listenUrl: "https://open.spotify.com/track/0kGEwM9SuACvojllsFMpAR",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/loquillo-y-los-trogloditas - cadillac-solitario.mp3",
     display: "Loquillo y Los Trogloditas - Cadillac Solitario",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CADILLAC_SOLITARIO",
+    listenUrl: "https://open.spotify.com/track/3GHgLIY5drnms1MPKcMlmi",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/miguel-rios - santa-lucia.mp3",
     display: "Miguel Ríos - Santa Lucía",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SANTA_LUCIA_2",
+    listenUrl: "https://open.spotify.com/track/5bycn7SuJzYnxte0W54mNX",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/juan-pardo - bravo-por-la-musica.mp3",
     display: "Juan Pardo - Bravo Por La Música",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BRAVO_POR_LA_MUSICA",
+    listenUrl: "https://open.spotify.com/track/6KOhx2zuLqpGkofYjDuGDb",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/victor-manuel - solo-pienso-en-ti.mp3",
     display: "Víctor Manuel - Solo Pienso En Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOLO_PIENSO_EN_TI",
+    listenUrl: "https://open.spotify.com/track/1m0YSeQlKmkyN9oKZDLIdv",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/isabel-pantoja - marinero-de-luces.mp3",
     display: "Isabel Pantoja - Marinero De Luces",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MARINERO_DE_LUCES",
+    listenUrl: "https://open.spotify.com/track/0vDOOVdPzmDRMgXj2SKsNS",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/isabel-pantoja - asi-fue.mp3",
     display: "Isabel Pantoja - Así Fue",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ASI_FUE",
+    listenUrl: "https://open.spotify.com/track/419FFiitGchOUaIMEY7Dqi",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mocedades - amor-de-hombre.mp3",
     display: "Mocedades - Amor De Hombre",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AMOR_DE_HOMBRE",
+    listenUrl: "https://open.spotify.com/track/1JEnxYEvJCkcLTGqyGudvR",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/jose-luis-perales - no-te-olvidare.mp3",
     display: "José Luis Perales - No Te Olvidaré",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NO_TE_OLVIDARE",
+    listenUrl: "https://open.spotify.com/track/6fOEb9Mumm65zq8dg0A6Lk",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/jose-luis-perales - y-como-es-el.mp3",
     display: "José Luis Perales - Y Cómo Es Él",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_Y_COMO_ES_EL",
+    listenUrl: "https://open.spotify.com/track/7aSxNjoVoAwNL7HDAKwGtC",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/pablo-abraira - gavilan-o-paloma.mp3",
     display: "Pablo Abraira - Gavilán O Paloma",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GAVILAN_O_PALOMA",
+    listenUrl: "https://open.spotify.com/track/1cZojvvKcil9SzpSeI7XsM",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-secretos - a-tu-lado.mp3",
     display: "Los Secretos - A Tu Lado",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_A_TU_LADO_2",
+    listenUrl: "https://open.spotify.com/track/3JOXwHPhtdRU3kYKcf64Gj",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-secretos - dejame.mp3",
     display: "Los Secretos - Déjame",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DEJAME",
+    listenUrl: "https://open.spotify.com/track/74anwTmdyvA3f8RUtCQqKD",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-secretos - sobre-un-vidrio-mojado.mp3",
     display: "Los Secretos - Sobre Un Vidrio Mojado",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOBRE_UN_VIDRIO_MOJADO",
+    listenUrl: "https://open.spotify.com/track/5pMiAg5EAflsdJ6P9yLaCh",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/antonio-flores - no-dudaria.mp3",
     display: "Antonio Flores - No Dudaría",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OJOS_DE_GATA",
+    listenUrl: "https://open.spotify.com/track/7gD2QkknRa4ZvlRVyU6ZO0",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/complices-es-por-ti.mp3",
     display: "Cómplices - Es Por Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COMPLICES_ES_POR_TI",
+    listenUrl: "https://open.spotify.com/track/3NP8zp1RvnblXNsYiZrjd9",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/dinamita-pa-los-pollos - pandilleros.mp3",
     display: "Dinamita pa' los Pollos - Pandilleros",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DINAMITA_PANDILLEROS",
+    listenUrl: "https://open.spotify.com/track/1dfyGDe87lHmmN8OMASyVa",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/heroes-del-silencio - heroe-de-leyenda.mp3",
     display: "Héroes del Silencio - Héroe de Leyenda",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HEROE_DE_LEYENDA",
+    listenUrl: "https://open.spotify.com/track/6pAvXn45z0sktftypuEEzt",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/juan-luis-guerra - ojala-que-llueva-cafe.mp3",
     display: "Juan Luis Guerra - Ojalá Que Llueva Café",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OJALA_QUE_LLUEVA_CAFE",
+    listenUrl: "https://open.spotify.com/track/2HQqhVP8NOaoIhPTQ8I5bm",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/la-guardia - mil-calles-llevan-hacia-ti.mp3",
     display: "La Guardia - Mil Calles Llevan Hacia Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MIL_CALLES_LLEVAN_HACIA_TI",
+    listenUrl: "https://open.spotify.com/track/2c4lkvFscid22nr32FByC4",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/la-union - lobo-hombre-en-paris.mp3",
     display: "La Unión - Lobo Hombre En París",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOBO_HOMBRE_EN_PARIS",
+    listenUrl: "https://open.spotify.com/track/2hConpLOB6gmyM8vDkVOof",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/locomia - locomia.mp3",
     display: "Locomía - Locomía",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOCOMIA",
+    listenUrl: "https://open.spotify.com/track/6Zbjrk9aDDAaHoPNaFAhN1",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/no-me-pises-que-llevo-chanclas - bolillon.mp3",
     display: "No Me Pises Que Llevo Chanclas - Bolillón",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BOLILLON",
+    listenUrl: "https://open.spotify.com/track/3xi7tKuBss25X34eNwWac7",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/triana - una-noche-de-amor-desesperada.mp3",
     display: "Triana - Una Noche De Amor Desesperada",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_UNA_NOCHE_DE_AMOR_DESESPERADA",
+    listenUrl: "https://open.spotify.com/track/685pSRiL9NEQYt0gRZ46L9",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/angela-carrasco - querete-a-ti.mp3",
     display: "Angela Carrasco - Quérete A Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUERETE_A_TI",
+    listenUrl: "https://open.spotify.com/track/1Bjv2n3Ig5rzYT178YS7eb",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/ivan - fotonovela.mp3",
     display: "Iván - Fotonovela",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FOTONOVELA",
+    listenUrl: "https://open.spotify.com/track/437MUs4kWnpM79CIwCHiRP",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/la-guardia - el-mundo-tras-el-cristal.mp3",
     display: "La Guardia - El Mundo Tras El Cristal",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_MUNDO_TRAS_EL_CRISTAL",
+    listenUrl: "https://open.spotify.com/track/21gEdIRnNJ6fdrAPbMglTx",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-chichos - bailaras-con-alegria.mp3",
     display: "Los Chichos - Bailarás Con Alegría",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BAILARAS_CON_ALEGRIA",
+    listenUrl: "https://open.spotify.com/track/6JluHeW26QJEjXtpl7GCqi",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/pecos - esperanzas.mp3",
     display: "Pecos - Esperanzas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESPERANZAS_PECOS",
+    listenUrl: "https://open.spotify.com/track/31dGdIOTnRAmK2lRwHD2iU",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/pecos - hablame-de-ti.mp3",
     display: "Pecos - Háblame De Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HABLAME_DE_TI",
+    listenUrl: "https://open.spotify.com/track/4DpvGOXDfjPqRkPbH8xdg6",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/pedro-marin - aire.mp3",
     display: "Pedro Marín - Aire",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AIRE_PEDRO_MARIN",
+    listenUrl: "https://open.spotify.com/track/3QiRtWfWlZtLz43VbJRiEm",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/radio-futura - la-estatua-del-jardin-botanico.mp3",
     display: "Radio Futura - La Estatua Del Jardín Botánico",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESTATUA_JARDIN",
+    listenUrl: "https://open.spotify.com/track/0WfA99QTuvAJOCgAyqwYsf",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -549,7 +549,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/ricchi-e-poveri - sera-porque-te-amo.mp3",
     display: "Ricchi E Poveri - Sará Porque Te Amo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SERA_PORQUE_TE_AMO",
+    listenUrl: "https://open.spotify.com/track/7D5F5BzIon5zhzQrOU2pdN",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -557,7 +557,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/rocio-jurado - se-nos-rompio-el-amor.mp3",
     display: "Rocío Jurado - Se Nos Rompió El Amor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SE_NOS_ROMPIO_EL_AMOR",
+    listenUrl: "https://open.spotify.com/track/5V8MiatwmSYw80Teq4d3li",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -565,7 +565,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/tennessee - te-vi-correr.mp3",
     display: "Tennessee - Te Ví Correr",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TE_VI_CORRER",
+    listenUrl: "https://open.spotify.com/track/0ro22vd79Gj7N2WJrmqz8X",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -573,7 +573,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/video - la-noche-no-es-para-mi.mp3",
     display: "Vídeo - La Noche No Es Para Mí",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_NOCHE_NO_ES_PARA_MI",
+    listenUrl: "https://open.spotify.com/track/7KTDSXZGdlsbUsdPnZsJMr",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -581,7 +581,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/yuri - este-amor-no-se-toca.mp3",
     display: "Yuri - Este Amor No Se Toca",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESTE_AMOR_NO_SE_TOCA",
+    listenUrl: "https://open.spotify.com/track/2v6CEhx4RpMSr8EXZYro7M",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -589,7 +589,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/zombies - groenlandia.mp3",
     display: "Zombies - Groenlandia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GROENLANDIA",
+    listenUrl: "https://open.spotify.com/track/4fecwWpiLBXPEt4h5g0M0n",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -605,7 +605,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/alex-y-christina - hago-chas-y-aparezo-a-tu-lado.mp3",
     display: "Álex y Christina - Hago Chas Y Aparezco a Tu Lado",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HAGO_CHAS",
+    listenUrl: "https://open.spotify.com/track/1eRgClFGphd2MgpyIBsbfS",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -613,7 +613,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/ana-belen-y-victor-manuel - la-puerta-de-alcala.mp3",
     display: "Ana Belén y Víctor Manuel - La Puerta de Alcalá",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PUERTA_ALCALA",
+    listenUrl: "https://open.spotify.com/track/6M7dGTUF47RRGGPqHBTn6P",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -621,7 +621,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/angel - dancing-in-paris.mp3",
     display: "Ángel - Dancing In Paris",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DANCING_IN_PARIS",
+    listenUrl: "https://open.spotify.com/track/1VgPoqMV0J0d6XvK5UORuh",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -629,7 +629,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/battiato - nomadas.mp3",
     display: "Battiato - Nómadas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NOMADAS",
+    listenUrl: "https://open.spotify.com/track/10lHFnUtd5lyLgEZs5fK43",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -637,7 +637,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/battiato - yo-quiero-verte-danzar.mp3",
     display: "Battiato - Yo Quiero Verte Danzar",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YO_QUIERO_VERTE_DANZAR",
+    listenUrl: "https://open.spotify.com/track/2419a6m54eCGO8rZUpLHtL",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -645,7 +645,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/burning - una-noche-sin-ti.mp3",
     display: "Burning - Una Noche Sin Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_UNA_NOCHE_SIN_TI",
+    listenUrl: "https://open.spotify.com/track/7fMpvSEAmK88W6CjbgP09p",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -653,7 +653,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/chiquetete - esta-cobardia.mp3",
     display: "Chiquetete - Esta Cobardía",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESTA_COBARDIA",
+    listenUrl: "https://open.spotify.com/track/2qlmlFRhYMgaekmCuxxK0o",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -661,7 +661,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/coz - las-chicas-son-guerreras.mp3",
     display: "Coz - Las Chicas Son Guerreras",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CHICAS_SON_GUERRERAS",
+    listenUrl: "https://open.spotify.com/track/7l99nQ2BERsSvHD1q5TEzV",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -669,7 +669,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/dinamita-pa-los-pollos - bourbon.mp3",
     display: "Dinamita Pa' Los Pollos - Bourbon",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BOURBON_POLLOS",
+    listenUrl: "https://open.spotify.com/track/2954edpplwlieVsvYayZZh",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -677,7 +677,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/el-norte - entre-tu-y-yo.mp3",
     display: "El Norte - Entre Tú y Yo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ENTRE_TU_Y_YO",
+    listenUrl: "https://open.spotify.com/track/3zYohktAenCUDxxdPtFU6M",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -685,7 +685,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/glutamato-ye-ye - todos-los-negritos-tienen-hambre.mp3",
     display: "Glutamato Ye-Ye - Todos Los Negritos Tienen Hambre",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NEGITOS_HAMBRE",
+    listenUrl: "https://open.spotify.com/track/2K4vTN9jlDeEbyhAKoIB2v",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -693,7 +693,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/golpes-bajos - malos-tiempos-para-la-lirica.mp3",
     display: "Golpes Bajos - Malos Tiempos Para La Lírica",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MALOS_TIEMPOS_LIRICA",
+    listenUrl: "https://open.spotify.com/track/30e3XyWpvUbKmHbLcRlsMt",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -701,7 +701,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/golpes-bajos - no-mires-a-los-ojos-de-la-gente.mp3",
     display: "Golpes Bajos - No Mires A Los Ojos De La Gente",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NO_MIRES_OJOS",
+    listenUrl: "https://open.spotify.com/track/1KH2PcBCAaHRL6F5ZZgY1S",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -709,7 +709,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/hombres-g - marta-tiene-un-marcapasos.mp3",
     display: "Hombres G - Marta Tiene Un Marcapasos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MARTA_MARCAPASOS",
+    listenUrl: "https://open.spotify.com/track/1XvfncS1t4BNkh37klHeqj",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -717,7 +717,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/la-frontera - el-limite.mp3",
     display: "La Frontera - El Límite",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_LIMITE",
+    listenUrl: "https://open.spotify.com/track/0NFcUhw2uKzX0zqH81tWOu",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -725,7 +725,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/la-frontera - judas-el-miserable.mp3",
     display: "La Frontera - Judas El Miserable",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_JUDAS_MISERABLE",
+    listenUrl: "https://open.spotify.com/track/4B26yDnZ6BC8XpCvp9usmH",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -733,7 +733,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/la-mode - aquella-cancion-de-roxy.mp3",
     display: "La Mode - Aquella Canción De Roxy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AQUELLA_CANCION_ROXY",
+    listenUrl: "https://open.spotify.com/track/0KG5jn8H8cf8pzcHYUoAnr",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -741,7 +741,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-inhumanos - manue.mp3",
     display: "Los Inhumanos - Manué",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MANUE_INHUMANOS",
+    listenUrl: "https://open.spotify.com/track/2MgQjrUaYSPikmcb4vdnsC",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -749,7 +749,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-lobos - la-bamba.mp3",
     display: "Los Lobos - La Bamba",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_BAMBA",
+    listenUrl: "https://open.spotify.com/track/0uMMLry3hzWGn3q3loqMkm",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -757,7 +757,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-rebeldes - bajo-la-luz-de-la-luna.mp3",
     display: "Los Rebeldes - Bajo La Luz De La Luna",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BAJO_LA_LUZ_LUNA",
+    listenUrl: "https://open.spotify.com/track/2hfv8QRES8BwT49kO0Hhmd",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -765,7 +765,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-rebeldes - mediterraneo.mp3",
     display: "Los Rebeldes - Mediterráneo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MEDITERRANEO_REBELDES",
+    listenUrl: "https://open.spotify.com/track/6QBLmxP1tU6lw1dhKQulau",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -773,7 +773,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-ronaldos - adios-papa.mp3",
     display: "Los Ronaldos - Adiós Papá",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ADIOS_PAPA",
+    listenUrl: "https://open.spotify.com/track/29OKK8URiORBpRsimvzsmm",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -781,7 +781,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-toreros-muertos - yo-no-me-llamo-javier.mp3",
     display: "Los Toreros Muertos - Yo No Me Llamo Javier",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YO_NO_ME_LLAMO_JAVIER",
+    listenUrl: "https://open.spotify.com/track/4bus2q9CQeh0c4qboNWJTz",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -789,7 +789,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mango - flor-de-verano.mp3",
     display: "Mango - Flor De Verano",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FLOR_DE_VERANO",
+    listenUrl: "https://open.spotify.com/track/71X7Opkjw5kXfjqsy383vQ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -797,7 +797,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/miguel-bose - amante-bandido.mp3",
     display: "Miguel Bosé - Amante Bandido",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AMANTE_BANDIDO",
+    listenUrl: "https://open.spotify.com/track/1hj6nYHeGclSY0VNTHMi27",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -805,7 +805,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/pimpinela - olvidame-y-pega-la-vuelta.mp3",
     display: "Pimpinela - Olvídame y Pega La Vuelta",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OLVIDAME_PEGA_LA_VUELTA",
+    listenUrl: "https://open.spotify.com/track/4FdwRmlzP5KGM7OewGBYiu",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -813,7 +813,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/polansky-y-el-ardor - ataque-preventivo-de-la-urss.mp3",
     display: "Polansky y El Ardor - Ataque Preventivo De La URSS",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ATAQUE_PREVENTIVO",
+    listenUrl: "https://open.spotify.com/track/6Tf2l6nUZp2EcAcO5IMeFK",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -821,7 +821,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/radio-futura - enamorado-de-la-moda-juvenil.mp3",
     display: "Radio Futura - Enamorado De La Moda Juvenil",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ENAMORADO_MODA",
+    listenUrl: "https://open.spotify.com/track/6dC0U0ZJrmSw05sdnjDpGJ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -829,7 +829,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/ramoncin - hormigon-mujeres-y-alcohol.mp3",
     display: "Ramóncin - Hormigón, Mujeres y Alcohol",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HORMIGON_MUJERES",
+    listenUrl: "https://open.spotify.com/track/2kdcgSLw6FzxdL0gkhAT16",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -837,7 +837,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/septimo-sello - todos-los-paletos-fuera-de-madrid.mp3",
     display: "Séptimo Sello - Todos Los Paletos Fuera De Madrid",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PALETOS_FUERA",
+    listenUrl: "https://open.spotify.com/track/2MLLke7LecQW1ic8r2oD0P",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -845,7 +845,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/siniestro-total - bailare-sobre-tu-tumba.mp3",
     display: "Siniestro Total - Bailaré Sobre Tu Tumba",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BAILARE_SOBRE_TU_TUMBA",
+    listenUrl: "https://open.spotify.com/track/36PL1fiYUnX7pJQRY1qwVw",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -853,7 +853,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/tam-tam-go - manuel-raquel.mp3",
     display: "Tam Tam Go - Manuel Raquel",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MANUEL_RAQUEL",
+    listenUrl: "https://open.spotify.com/track/3eQwjuu5yQ0Alg2aLhrxMW",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -861,7 +861,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/the-refrescos - aqui-no-hay-playa.mp3",
     display: "The Refrescos - Aquí No Hay Playa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AQUI_NO_HAY_PLAYA",
+    listenUrl: "https://open.spotify.com/track/4PRJD9T23GQKQYKhJQcGGY",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -869,7 +869,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/camaron - como-el-agua.mp3",
     display: "Camarón - Como el Agua",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CAMARON_COMO_EL_AGUA",
+    listenUrl: "https://open.spotify.com/track/5m5mcEXkAJUC7a8QEPxtNT",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -877,7 +877,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/los-secretos - ojos-de-gata.mp3",
     display: "Los Secretos - Ojos de Gata",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOS_SECRETOS___OJOS_DE_GATA",
+    listenUrl: "https://open.spotify.com/track/3AWefROgvMxXeT7nS1g94l",
     platform: "youtube",
     originalDecade: "80s",
     originalCategory: "espanol",
@@ -885,7 +885,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   {
     file: "80s/espanol/mecano - hijo-de-la-luna.mp3",
     display: "Mecano - Hijo de la Luna",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MECANO___HIJO_DE_LA_LUNA",
+    listenUrl: "https://open.spotify.com/track/7g3g2sqevicvurLTZ75JTA",
     platform: "youtube",
     originalDecade: "80s",
     originalCategory: "espanol",

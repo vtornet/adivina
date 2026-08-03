@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/alejandro-sanz - amiga-mia.mp3",
     display: "Alejandro Sanz - Amiga Mía",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AMIGA_MIA",
+    listenUrl: "https://open.spotify.com/track/6kQYMqjobmB8MkWwa9OUyA",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/alejandro-sanz - corazon-partio.mp3",
     display: "Alejandro Sanz - Corazón Partío",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CORAZON_PARTIO",
+    listenUrl: "https://open.spotify.com/track/0wQCKR9OFjYu5Kzrk7WivJ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -21,7 +21,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/alejandro-sanz - y-si-fuera-ella.mp3",
     display: "Alejandro Sanz - Y Si Fuera Ella",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_Y_SI_FUERA_ELLA",
+    listenUrl: "https://open.spotify.com/track/1DmlUpnkg4N1VWquSoffF1",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/alex-ubago - sin-miedo-a-nada.mp3",
     display: "Alex Ubago - Sin Miedo A Nada",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SIN_MIEDO_A_NADA",
+    listenUrl: "https://open.spotify.com/track/0EA40dd5ghMqemzoqWvo3E",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/amistades-peligrosas - me-haces-tanto-bien.mp3",
     display: "Amistades Peligrosas - Me Haces Tanto Bien",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_HACES_TANTO_BIEN",
+    listenUrl: "https://open.spotify.com/track/5PM8SxOW02F9ChM0BLjALX",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/amistades-peligrosas - me-quedare-solo.mp3",
     display: "Amistades Peligrosas - Me Quedaré Solo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_QUEDARE_SOLO",
+    listenUrl: "https://open.spotify.com/track/4I3rLiNr4xgRT5dRpFOltS",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/buena-vista-social-club - chan-chan.mp3",
     display: "Buena Vista Social Club - Chan Chan",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CHAN_CHAN",
+    listenUrl: "https://open.spotify.com/track/3bxZhauuIU4ubctdRZwPYW",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/cafe-quijano - la-lola.mp3",
     display: "Café Quijano - La Lola",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_LOLA",
+    listenUrl: "https://open.spotify.com/track/5hyq5k3Do9gW3HGvDg5ZEJ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/carlos-vives - fruta-fresca.mp3",
     display: "Carlos Vives - Fruta Fresca",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FRUTA_FRESCA",
+    listenUrl: "https://open.spotify.com/track/1lcaG7worZLgdGuniOfGje",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -77,7 +77,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/carlos-vives - la-gota-fria.mp3",
     display: "Carlos Vives - La Gota Fría",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_GOTA_FRIA",
+    listenUrl: "https://open.spotify.com/track/4tXR895KKljrC2VptgyEhJ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/celia-cruz - la-vida-es-un-carnaval.mp3",
     display: "Celia Cruz - La Vida Es Un Carnaval",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_VIDA_ES_UN_CARNAVAL",
+    listenUrl: "https://open.spotify.com/track/7rWOuBzhjHdiR7RPz9YH7L",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/celtas-cortos - 20-de-abril.mp3",
     display: "Celtas Cortos - 20 de Abril",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_20_DE_ABRIL",
+    listenUrl: "https://open.spotify.com/track/7ifOnwJC0oH7cfbJQbUye1",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/chimo-bayo - asi-me-gusta-a-mi.mp3",
     display: "Chimo Bayo - Así Me Gusta A Mi",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ASI_ME_GUSTA_A_MI",
+    listenUrl: "https://open.spotify.com/track/0UkXFKXVHe5YG7lke77CI1",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/danza-invisible - catalina.mp3",
     display: "Danza Invisible - Catalina",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CATALINA",
+    listenUrl: "https://open.spotify.com/track/1RRnucGL9yccndW0dnz4Hn",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/ella-baila-sola - cuando-los-sapos-bailen-flamenco.mp3",
     display: "Ella Baila Sola - Cuando Los Sapos Bailen Flamenco",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CUANDO_LOS_SAPOS_BAILEN_FLAMENCO",
+    listenUrl: "https://open.spotify.com/track/6L9NMwK94nyeFFJnpHAsqC",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/elvis-crespo - suavemente.mp3",
     display: "Elvis Crespo - Suavemente",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUAVEMENTE",
+    listenUrl: "https://open.spotify.com/track/7JIjUx3GsL0upxmNJacmtz",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/eros-ramazzotti - otra-como-tu.mp3",
     display: "Eros Ramazzotti - Otra Como Tú",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OTRA_COMO_TU",
+    listenUrl: "https://open.spotify.com/track/2cSXotAohYx0EWCNljCzs7",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/estopa - como-camaron.mp3",
     display: "Estopa - Como Camarón",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COMO_CAMARON",
+    listenUrl: "https://open.spotify.com/track/1VB4sadHjFcFklHcZuoROi",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/estopa - la-raja-de-tu-falda.mp3",
     display: "Estopa - La Raja De Tu Falda",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_RAJA_DE_TU_FALDA",
+    listenUrl: "https://open.spotify.com/track/5OaqffbeQyVVqtnA71Ci7K",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/estopa - tu-calorro.mp3",
     display: "Estopa - Tu Calorro",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TU_CALORRO",
+    listenUrl: "https://open.spotify.com/track/0DXI6c9tNWsI4tvUftkQN8",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/fito-paez - 11-y-6.mp3",
     display: "Fito Páez - 11 y 6",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_11_Y_6",
+    listenUrl: "https://open.spotify.com/track/2PkTjm1QAJCZbJ9MqC4RqA",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/fito-paez - mariposa-tecknicolor.mp3",
     display: "Fito Páez - Mariposa Tecknicolor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MARIPOSA_TECKNICOLOR",
+    listenUrl: "https://open.spotify.com/track/2RognU2ViRdA6HxnpAITJl",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/fito-y-fitipaldis - sara.mp3",
     display: "Fito y Fitipaldis - Sara",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SARA",
+    listenUrl: "https://open.spotify.com/track/08ScfHtD62YeLQZUPZcWzj",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/fito-y-fitipaldis - soldadito-marinero.mp3",
     display: "Fito y Fitipaldis - Soldadito Marinero",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOLDADITO_MARINERO",
+    listenUrl: "https://open.spotify.com/track/0eVborSuxUeSg0meWYd9dZ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/gloria-estefan - mi-tierra.mp3",
     display: "Gloria Estefan - Mi Tierra",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MI_TIERRA",
+    listenUrl: "https://open.spotify.com/track/41LiGcvaTkXHyPjfsxKvWv",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/greta-y-los-garbo - pienso-tanto-en-ti.mp3",
     display: "Greta y Los Garbo - Pienso Tanto En Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PIENSO_TANTO_EN_TI",
+    listenUrl: "https://open.spotify.com/track/46ov0YM44T1VgJZ71OomiP",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/joaquin-sabina - 19-dias-y-500-noches.mp3",
     display: "Joaquín Sabina - 19 Días y 500 Noches",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_19_DIAS_Y_500_NOCHES",
+    listenUrl: "https://open.spotify.com/track/6V78ktWCGcJIIB5DPJBoPn",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/joaquin-sabina - mi-primo-el-nano.mp3",
     display: "Joaquín Sabina - Mi Primo El Nano",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MI_PRIMO_EL_NANO",
+    listenUrl: "https://open.spotify.com/track/76xQL13XSvb8lRJP2K0tQA",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/joaquin-sabina - peor-para-el-sol.mp3",
     display: "Joaquín Sabina - Peor Para El Sol",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PEOR_PARA_EL_SOL",
+    listenUrl: "https://open.spotify.com/track/5ifVQVLUnIk46RRZ90WH7S",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/joaquin-sabina - y-nos-dieron-las-diez.mp3",
     display: "Joaquín Sabina - Y Nos Dieron Las Diez",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_Y_NOS_DIERON_LAS_DIEZ",
+    listenUrl: "https://open.spotify.com/track/1eCie6lwjb4crxeAvkRaSi",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/joaquin-sabina - y-sin-embargo.mp3",
     display: "Joaquín Sabina - Y Sin Embargo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_Y_SIN_EMBARGO",
+    listenUrl: "https://open.spotify.com/track/7v2xvireH6Ba3FREa5wsRP",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/jon-secada - otro-dia-mas-sin-verte.mp3",
     display: "Jon Secada - Otro Día Más Sin Verte",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OTRO_DIA_MAS_SIN_VERTE",
+    listenUrl: "https://open.spotify.com/track/7i38EXhbFJjF5tGvTsJMmx",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/juan-grabriel - asi-fue.mp3",
     display: "Juan Gabriel - Así Fue",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ASI_FUE",
+    listenUrl: "https://open.spotify.com/track/6nOJ1EJYDa5QCI6RGBuozw",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/juan-luis-guerra - bachata-rosa.mp3",
     display: "Juan Luis Guerra - Bachata Rosa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BACHATA_ROSA",
+    listenUrl: "https://open.spotify.com/track/3H9GcHKKJyZ9TEOLKlJ1U5",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/juan-luis-guerra - burbujas-de-amor.mp3",
     display: "Juan Luis Guerra y 4.40 - Burbujas De Amor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BURBUJAS_DE_AMOR_440",
+    listenUrl: "https://open.spotify.com/track/0UoAcG1vxtFjes7rZz8Js0",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/julieta-venegas - andar-conmigo.mp3",
     display: "Julieta Venegas - Andar Conmigo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANDAR_CONMIGO",
+    listenUrl: "https://open.spotify.com/track/05iMQqncVBIm4AE26EvaTL",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/julieta-venegas - lento.mp3",
     display: "Julieta Venegas - Lento",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LENTO",
+    listenUrl: "https://open.spotify.com/track/2NsMwNWumJXCdTg2IZCLZ5",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/la-mosca-tse-tse - para-no-verte-mas.mp3",
     display: "La Mosca Tsé-Tsé - Para No Verte Más",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PARA_NO_VERTE_MAS",
+    listenUrl: "https://open.spotify.com/track/19CmuECYssqkPWANF4nLWM",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/la-oreja-de-van-gogh - cuidate.mp3",
     display: "La Oreja de Van Gogh - Cuídate",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CUIDATE",
+    listenUrl: "https://open.spotify.com/track/7gqIqyeCaV2xNtfZWxEphD",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/la-oreja-de-van-gogh - paris.mp3",
     display: "La Oreja de Van Gogh - París",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PARIS",
+    listenUrl: "https://open.spotify.com/track/5ByvJeBlrYISiwy7AVEAmP",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/la-oreja-de-van-gogh - rosas.mp3",
     display: "La Oreja de Van Gogh - Rosas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROSAS",
+    listenUrl: "https://open.spotify.com/track/4waqcUQWdj0yH26STWl2Rq",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/laura-pausini - la-soledad.mp3",
     display: "Laura Pausini - La Soledad",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_SOLEDAD",
+    listenUrl: "https://open.spotify.com/track/1F31sM4SCBmPlg1H3r7wGH",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/los-rodriguez - sin-documentos.mp3",
     display: "Los Rodríguez - Sin Documentos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SIN_DOCUMENTOS",
+    listenUrl: "https://open.spotify.com/track/6eOT73H5zfEwTCe1Y0FDCc",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/los-romeos - mi-vida-en-rosa.mp3",
     display: "Los Romeos - Mi Vida En Rosa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MI_VIDA_EN_ROSA",
+    listenUrl: "https://open.spotify.com/track/62AmtUxf7aTKLKR4Jsfg8n",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/los-secretos - ojos-de-gata.mp3",
     display: "Los Secretos - Ojos De Gata",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OJOS_DE_GATA",
+    listenUrl: "https://open.spotify.com/track/3AWefROgvMxXeT7nS1g94l",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/m-clan - carolina.mp3",
     display: "M Clan - Carolina",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CAROLINA",
+    listenUrl: "https://open.spotify.com/track/4UtREbGYnd1nZLckEb5y8J",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/m-clan - llamando-a-la-tierra.mp3",
     display: "M Clan - Llamando A La Tierra",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LLAMANDO_A_LA_TIERRA",
+    listenUrl: "https://open.spotify.com/track/7M65iLprqQ9UJNqer4g6AM",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/magneto - vuela-vuela.mp3",
     display: "Magneto - Vuela Vuela",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VUELA_VUELA",
+    listenUrl: "https://open.spotify.com/track/6nz1ojKuYx5HO7Vh0wmuWp",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/mana - el-muelle-de-san-blas.mp3",
     display: "Maná - El Muelle De San Blas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_MUELLE_DE_SAN_BLAS",
+    listenUrl: "https://open.spotify.com/track/0mvocLIWUnT10znvIXwHGr",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/mana - oye-mi-amor.mp3",
     display: "Maná - Oye Mi Amor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OYE_MI_AMOR",
+    listenUrl: "https://open.spotify.com/track/5EJ2THuhAapEIeQOtXUQ0x",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/mana - rayando-el-sol.mp3",
     display: "Maná - Rayando El Sol",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_RAYANDO_EL_SOL",
+    listenUrl: "https://open.spotify.com/track/4Ofg5uuH7qqDIXpAJMpXZV",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/mana - vivir-sin-aire.mp3",
     display: "Maná - Vivir Sin Aire",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VIVIR_SIN_AIRE",
+    listenUrl: "https://open.spotify.com/track/3G9RQLOSjsXVUDyQSv2PQR",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/marta-sanchez - desesperada.mp3",
     display: "Marta Sánchez - Desesperada",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DESESPERADA",
+    listenUrl: "https://open.spotify.com/track/5XRV6ZW1D8SpdXMXmuuhQi",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/modestia-aparte - son-cosas-de-la-edad.mp3",
     display: "Modestia Aparte - Son Cosas De La Edad",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SON_COSAS_DE_LA_EDAD",
+    listenUrl: "https://open.spotify.com/track/0wkQHjULGZeZC15hOl9jl4",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/molotov - gimme-tha-power.mp3",
     display: "Molotov - Gimme Tha Power",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GIMME_THA_POWER",
+    listenUrl: "https://open.spotify.com/track/6FY8Imjs6YSglIAqnbU9mM",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/navajita-platea - frio-sin-ti.mp3",
     display: "Navajita Plateá - Frío Sin Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FRIO_SIN_TI",
+    listenUrl: "https://open.spotify.com/track/3RQEK9l8Fy6c4yChccLi3D",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/navajita-platea - noches-de-bohemia.mp3",
     display: "Navajita Plateá - Noches De Bohemia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NOCHES_DE_BOHEMIA",
+    listenUrl: "https://open.spotify.com/track/1JpZMDDAkfhnrO6nXIQZ2g",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/nek - laura-no-esta.mp3",
     display: "Nek - Laura No Está",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LAURA_NO_ESTA",
+    listenUrl: "https://open.spotify.com/track/10tzk7ZRjwnLKd3gjKLtTA",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/pata-negra - todo-lo-que-me-gusta-es-ilegal.mp3",
     display: "Pata Negra - Todo Lo Que Me Gusta Es Ilegal",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TODO_LO_QUE_ME_GUSTA_ES_ILEGAL",
+    listenUrl: "https://open.spotify.com/track/49ks7Kh5TeybzZnagOBHVu",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/revolver - el-roce-de-tu-piel.mp3",
     display: "Revolver - El Roce De Tu Piel",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_ROCE_DE_TU_PIEL",
+    listenUrl: "https://open.spotify.com/track/5SqRXRIG9xgixPAkqBgGs0",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/ricky-martin - livin-la-vida-loca.mp3",
     display: "Ricky Martin - Livin' La Vida Loca",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LIVIN_LA_VIDA_LOCA",
+    listenUrl: "https://open.spotify.com/track/0Ph6L4l8dYUuXFmb71Ajnd",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/rosana - si-tu-no-estas.mp3",
     display: "Rosana - Si Tú No Estás",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SI_TU_NO_ESTAS",
+    listenUrl: "https://open.spotify.com/track/7CX6W4Mf98wMgX0izqRpAl",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/santana-y-mana - corazon-espinado.mp3",
     display: "Santana y Maná - Corazón Espinado",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CORAZON_ESPINADO",
+    listenUrl: "https://open.spotify.com/track/2WoqgtWEBbbBKMDN6Becs7",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/shakira - ciega-sordomuda.mp3",
     display: "Shakira - Ciega, Sordomuda",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CIEGA_SORDOMUDA",
+    listenUrl: "https://open.spotify.com/track/7jxHeJLVpnP7S08JFF4GBi",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/tam-tam-go - espaldas-mojadas.mp3",
     display: "Tam Tam Go! - Espaldas Mojadas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESPALDAS_MOJADAS",
+    listenUrl: "https://open.spotify.com/track/5iy9gDeRoFcVENkX56xoHJ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/thalia - amor-a-la-mexicana.mp3",
     display: "Thalía - Amor A La Mexicana",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AMOR_A_LA_MEXICANA",
+    listenUrl: "https://open.spotify.com/track/1LxoxVuG3T5Ji0eCua8N30",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/viceversa - ella.mp3",
     display: "Viceversa - Ella",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ELLA",
+    listenUrl: "https://open.spotify.com/track/2DAeRk6J5C1Zu8iy32sUPf",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/alejandro-sanz - pisando-fuerte.mp3",
     display: "Alejandro Sanz - Pisando Fuerte",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PISANDO_FUERTE",
+    listenUrl: "https://open.spotify.com/track/0VqXrOSgbq1ukARLV4uGU0",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -549,7 +549,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/alex-de-la-nuez - dame-mas.mp3",
     display: "Alex de la Nuez - Dame Más",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DAME_MAS",
+    listenUrl: "https://open.spotify.com/track/6MAoi4yTrzB1tZXjYbBpVR",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -557,7 +557,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/alex-y-ychristina - el-souvenir.mp3",
     display: "Álex y Christina - El Souvenir",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_SOUVENIR",
+    listenUrl: "https://open.spotify.com/track/2Zznbf4hCPAZT0J3bxw0i4",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -565,7 +565,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/antonio-vega - el-sitio-de-mi-recreo.mp3",
     display: "Antonio Vega - El Sitio De Mi Recreo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_SITIO_DE_MI_RECREO",
+    listenUrl: "https://open.spotify.com/track/0uWLyUK9WECq0nKz0DiA4A",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -573,7 +573,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/camela - lloraras.mp3",
     display: "Camela - Llorarás",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LLORARAS",
+    listenUrl: "https://open.spotify.com/track/1czl3MGzN5Ph0gcswFTj8b",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -581,7 +581,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/carlos-vives - fruta-fresca.mp3",
     display: "Carlos Vives - Fruta Fresca",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FRUTA_FRESCA",
+    listenUrl: "https://open.spotify.com/track/1lcaG7worZLgdGuniOfGje",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -589,7 +589,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/chayanne - salome.mp3",
     display: "Chayanne - Salomé",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SALOME",
+    listenUrl: "https://open.spotify.com/track/4dtlsMh8wam865qaU4WEnM",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -597,7 +597,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/dorantes - orobroy.mp3",
     display: "Dorantes - Orobroy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OROBROY",
+    listenUrl: "https://open.spotify.com/track/4Re9ss7a60eXUDiSyUMQIn",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -605,7 +605,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/el-chaval-de-la-peca - libre.mp3",
     display: "El Chaval De La Peca - Libre",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LIBRE_CHAVAL",
+    listenUrl: "https://open.spotify.com/track/1zQOsOu34E3BeQoHxMCwlX",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -613,7 +613,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/el-ultimo-de-la-fila - cuando-el-mar-te-tenga.mp3",
     display: "El Último de la Fila - Cuando El Mar Te Tenga",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CUANDO_EL_MAR",
+    listenUrl: "https://open.spotify.com/track/3S8HVzpSPqUxSJCf8vqKNU",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -621,7 +621,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/estopa - me-falta-el-aliento.mp3",
     display: "Estopa - Me Falta El Aliento",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_FALTA_ALIENTO",
+    listenUrl: "https://open.spotify.com/track/7Lgarpf1OqaXsUTjKZ34mK",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -629,7 +629,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/estopa - partiendo-la-pana.mp3",
     display: "Estopa - Partiendo La Pana",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PARTIENDO_LA_PANA",
+    listenUrl: "https://open.spotify.com/track/4BtggpHp17Ak3RP0LITrue",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -637,7 +637,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/fito-y-fitipaldis - la-casa-por-el-tejado.mp3",
     display: "Fito y Fitipaldis - La Casa Por El Tejado",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_CASA_POR_EL_TEJADO",
+    listenUrl: "https://open.spotify.com/track/428cFrawSqeLoyooQjAW9d",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -645,7 +645,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/francisco-cespedes - esta-vida-loca.mp3",
     display: "Francisco Céspedes - Esta Vida Loca",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESTA_VIDA_LOCA",
+    listenUrl: "https://open.spotify.com/track/4w9o81y0dXFKgraEwfEgTz",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -653,7 +653,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/jarabe-de-palo - bonito.mp3",
     display: "Jarabe de Palo - Bonito",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BONITO",
+    listenUrl: "https://open.spotify.com/track/5FiB1uNoGZE4PenzZd7Imu",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -661,7 +661,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/jarabe-de-palo - depende.mp3",
     display: "Jarabe de Palo - Depende",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DEPENDE",
+    listenUrl: "https://open.spotify.com/track/6aaPUBUFw9KEW1p1inVQv9",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -669,7 +669,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/los-lunes - los-años-que-nos-quedan-por-vivir.mp3",
     display: "Los Lunes - Los Años Que Nos Quedan Por Vivir",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOS_AÑOS_QUE_NOS_QUEDAN",
+    listenUrl: "https://open.spotify.com/track/5tHfFOq15ZS2KvPinK5pMK",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -677,7 +677,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/los-sencillos - bonito-es.mp3",
     display: "Los Sencillos - Bonito Es",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BONITO_ES",
+    listenUrl: "https://open.spotify.com/track/3F7LwUGXeXIm7Br3QCxvd5",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -685,7 +685,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/manolo-garcia - pajaros-de-barro.mp3",
     display: "Manolo García - Pájaros De Barro",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PAJAROS_DE_BARRO",
+    listenUrl: "https://open.spotify.com/track/4B6ko7lt1sUtyFzBDF4yfK",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -693,7 +693,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/marco-masini - te-enamoraras.mp3",
     display: "Marco Masini - Te Enamorarás",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TE_ENAMORAS",
+    listenUrl: "https://open.spotify.com/track/2TAYO6eR1ewuT49aLmEUuC",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -701,7 +701,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/mojinos-escozios - chow-chow.mp3",
     display: "Mojinos Escozíos - Chow Chow",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CHOW_CHOW",
+    listenUrl: "https://open.spotify.com/track/14BBsKLRwC0HvhLiy1zr58",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -709,7 +709,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/monica-naranjo - el-amor-coloca.mp3",
     display: "Mónica Naranjo - El Amor Coloca",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_AMOR_COLOCA",
+    listenUrl: "https://open.spotify.com/track/3QRTdOa9TWLuaPrCa2OLXj",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -717,7 +717,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/niños-del-brasil - sed-de-venganza.mp3",
     display: "Niños Del Brasil - Sed De Venganza",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SED_DE_VENGANZA",
+    listenUrl: "https://open.spotify.com/track/2PKVJfxSwGP0fsNeKGFcdf",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -725,7 +725,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/obk - historias-de-amor.mp3",
     display: "OBK - Historias De Amor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HISTORIAS_DE_AMOR",
+    listenUrl: "https://open.spotify.com/track/0dIj0bpkfkKpcYYa5ehaRS",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -733,7 +733,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/platon - mia.mp3",
     display: "Platón - Mía",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MIA_PLATON",
+    listenUrl: "https://open.spotify.com/track/1XtHXmA6nSFly3f6Migiml",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -741,7 +741,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/tahures-zurdos - tocare.mp3",
     display: "Tahúres Zurdos - Tocaré",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TOCARE",
+    listenUrl: "https://open.spotify.com/track/5LbvrdmU9ivLVjz1dwiYSy",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -749,7 +749,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/luis-miguel - sera-que-no-me-amas.mp3",
     display: "Luis Miguel - Será Que No Me Amas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SERA_QUE_NO_ME_AMAS",
+    listenUrl: "https://open.spotify.com/track/0ULXIAoxSZBcOwygC3PA0i",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",
@@ -757,7 +757,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].espanol = [
   {
     file: "90s/espanol/chayanne - dejaria-todo.mp3",
     display: "Chayanne - Dejaría Todo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DEJARIA_TODO",
+    listenUrl: "https://open.spotify.com/track/1UzChRXWdrbeNngBQ7o0oS",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "espanol",

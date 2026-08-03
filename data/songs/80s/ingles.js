@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/aha - take-on-me.mp3",
     display: "Aha - Take On Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TAKE_ON_ME",
+    listenUrl: "https://open.spotify.com/track/2WfaOiMkCvy7F5fcp2zZ8L",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/alphaville - forever-young.mp3",
     display: "Alphaville - Forever Young",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FOREVER_YOUNG",
+    listenUrl: "https://open.spotify.com/track/4S1VYqwfkLit9mKVY3MXoo",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -21,7 +21,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/asia - heat-of-the-moment.mp3",
     display: "Asia - Heat Of The Moment",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HEAT_OF_THE_MOMENT",
+    listenUrl: "https://open.spotify.com/track/1nmZ8yqKkfooOuYvtFctDp",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/baltimora - tarzan-boy.mp3",
     display: "Baltimora - Tarzan Boy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TARZAN_BOY",
+    listenUrl: "https://open.spotify.com/track/273uCXd7NPrInaiNqtkOrA",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/bangles - walk-like-an-egyptian.mp3",
     display: "Bangles - Walk Like An Egyptian",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WALK_LIKE_AN_EGYPTIAN",
+    listenUrl: "https://open.spotify.com/track/1Jwc3ODLQxtbnS8M9TflSP",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/berlin - take-my-breath-away.mp3",
     display: "Berlin - Take My Breath Away",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TAKE_MY_BREATH_AWAY",
+    listenUrl: "https://open.spotify.com/track/77Oww6V7jooOd7aNEMnFJ3",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/bill-medley-y-jennifer-warnes - time-of-my-life.mp3",
     display: "Bill Medley Y Jennifer Warnes - Time Of My Life",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TIME_OF_MY_LIFE",
+    listenUrl: "https://open.spotify.com/track/1YveMR3v25Pyh9PTGkve6F",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/billy-idol - eyes-without-a-face.mp3",
     display: "Billy Idol - Eyes Without A Face",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EYES_WITHOUT_A_FACE",
+    listenUrl: "https://open.spotify.com/track/0pUVeEgZuNyFzIMKp67RbS",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/blondie - call-me.mp3",
     display: "Blondie - Call Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CALL_ME",
+    listenUrl: "https://open.spotify.com/track/0vLwL4xuJ3s7SeaCdvMqkY",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -77,7 +77,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/bon-jovi - livin-on-a-prayer.mp3",
     display: "Bon Jovi - Livin On A Prayer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LIVIN_ON_A_PRAYER",
+    listenUrl: "https://open.spotify.com/track/37ZJ0p5Jm13JPevGcx4SkF",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/bonnie-tyler - total-eclipse-of-the-heart.mp3",
     display: "Bonnie Tyler - Total Eclipse Of The Heart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TOTAL_ECLIPSE_OF_THE_HEART",
+    listenUrl: "https://open.spotify.com/track/7wuJGgpTNzbUyn26IOY6rj",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/bruce-pringsteen - born-in-the-usa.mp3",
     display: "Bruce Pringsteen - Born In The Usa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BORN_IN_THE_USA",
+    listenUrl: "https://open.spotify.com/track/0dOg1ySSI7NkpAe89Zo0b9",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/bryan-adams - heaven.mp3",
     display: "Bryan Adams - Heaven",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HEAVEN",
+    listenUrl: "https://open.spotify.com/track/7Ewz6bJ97vUqk5HdkvguFQ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/crowded-house - dont-dream-its-ove.mp3",
     display: "Crowded House - Dont Dream Its Ove",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_DREAM_ITS_OVE",
+    listenUrl: "https://open.spotify.com/track/56GbZVwxMdf1DENCluYS8A",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/culture-club - karma-chameleon.mp3",
     display: "Culture Club - Karma Chameleon",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_KARMA_CHAMELEON",
+    listenUrl: "https://open.spotify.com/track/2wSAWEYUHkt92X4SBAPqZE",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/cyndi-lauper - girls-just-wanna-have-fun.mp3",
     display: "Cyndi Lauper - Girls Just Wanna Have Fun",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GIRLS_JUST_WANNA_HAVE_FUN",
+    listenUrl: "https://open.spotify.com/track/0xs0ewnEb6c2DlY7LjOD7t",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/cyndi-lauper - time-after-time.mp3",
     display: "Cyndi Lauper - Time After Time",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TIME_AFTER_TIME",
+    listenUrl: "https://open.spotify.com/track/7o9uu2GDtVDr9nsR7ZRN73",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/david-bowie - letss-dance.mp3",
     display: "David Bowie - Letss Dance",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LETSS_DANCE",
+    listenUrl: "https://open.spotify.com/track/44T13PWJ87jb3lFElhVIHx",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/def-leppard - pour-some-sugar-on-me.mp3",
     display: "Def Leppard - Pour Some Sugar On Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_POUR_SOME_SUGAR_ON_ME",
+    listenUrl: "https://open.spotify.com/track/0PdM2a6oIjqepoEfcJo0RO",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/depeche-mode - just-cant-get-enough.mp3",
     display: "Depeche Mode - Just Cant Get Enough",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_JUST_CANT_GET_ENOUGH",
+    listenUrl: "https://open.spotify.com/track/0qi4b1l0eT3jpzeNHeFXDT",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/dexys-midnight-runners - come-on-eileen.mp3",
     display: "Dexys Midnight Runners - Come On Eileen",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COME_ON_EILEEN",
+    listenUrl: "https://open.spotify.com/track/3MrWxJaD2AT0W9DjWF64Vm",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/dire-straits - walk-of-life.mp3",
     display: "Dire Straits - Walk Of Life",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WALK_OF_LIFE",
+    listenUrl: "https://open.spotify.com/track/5Hk4Mpex0s2ndUpDQ5v2rU",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/eagles - heartache-tonight.mp3",
     display: "Eagles - Heartache Tonight",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HEARTACHE_TONIGHT",
+    listenUrl: "https://open.spotify.com/track/2bzgKuK3pVez40qUvo8sYr",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/eagles - the-long-run.mp3",
     display: "Eagles - The Long Run",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THE_LONG_RUN",
+    listenUrl: "https://open.spotify.com/track/2YOwVfcUTRjNpcLny4UC4r",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/earth-wind-and-fire - lets-groove.mp3",
     display: "Earth Wind And Fire - Lets Groove",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LETS_GROOVE",
+    listenUrl: "https://open.spotify.com/track/3koCCeSaVUyrRo3N2gHrd8",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/earth-wind-fire - september.mp3",
     display: "Earth Wind Fire - September",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SEPTEMBER",
+    listenUrl: "https://open.spotify.com/track/3kXoKlD84c6OmIcOLfrfEs",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/europe - the-final-countdown.mp3",
     display: "Europe - The Final Countdown",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THE_FINAL_COUNTDOWN",
+    listenUrl: "https://open.spotify.com/track/3MrRksHupTVEQ7YbA0FsZK",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/eurythmics - sweet-dreams.mp3",
     display: "Eurythmics - Sweet Dreams",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SWEET_DREAMS",
+    listenUrl: "https://open.spotify.com/track/1TfqLAPs4K3s2rJMoCokcS",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/f-r-david - words.mp3",
     display: "F R David - Words",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WORDS",
+    listenUrl: "https://open.spotify.com/track/1HPJOoIVdUPuaebxzMrVaD",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/fleetwood-mac - everywhere.mp3",
     display: "Fleetwood Mac - Everywhere",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EVERYWHERE",
+    listenUrl: "https://open.spotify.com/track/254bXAqt3zP6P50BdQvEsq",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/foreigner - i-want-to-know-what-love-is.mp3",
     display: "Foreigner - I Want To Know What Love Is",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_I_WANT_TO_KNOW_WHAT_LOVE_IS",
+    listenUrl: "https://open.spotify.com/track/1JLn8RhQzHz3qDqsChcmBl",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/genesis - invisible-touch.mp3",
     display: "Genesis - Invisible Touch",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_INVISIBLE_TOUCH",
+    listenUrl: "https://open.spotify.com/track/0xpBr84T3FTm9j4D1MdPtk",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/george-michael - careless-whisper.mp3",
     display: "George Michael - Careless Whisper",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CARELESS_WHISPER",
+    listenUrl: "https://open.spotify.com/track/5ac3D4hNLW7NFhYFCThXgh",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/george-michael - faith.mp3",
     display: "George Michael - Faith",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FAITH",
+    listenUrl: "https://open.spotify.com/track/0HEmnAUT8PHznIAAmVXqFJ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/guns-n-roses - november-rain.mp3",
     display: "Guns N Roses - November Rain",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NOVEMBER_RAIN",
+    listenUrl: "https://open.spotify.com/track/3YRCqOhFifThpSRFJ1VWFM",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/guns-n-roses - sweet-child-o-mine.mp3",
     display: "Guns N Roses - Sweet Child O Mine",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SWEET_CHILD_O_MINE",
+    listenUrl: "https://open.spotify.com/track/7snQQk1zcKl8gZ92AnueZW",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/human-league - dont-you-want-me.mp3",
     display: "Human League - Dont You Want Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_YOU_WANT_ME",
+    listenUrl: "https://open.spotify.com/track/3AIEEEIDJFnqv8rozNVCRZ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/inxs - never-tear-us-apart.mp3",
     display: "Inxs - Never Tear Us Apart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NEVER_TEAR_US_APART",
+    listenUrl: "https://open.spotify.com/track/1GjbTNFImFrjFsNdleDe78",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/irene-cara - what-a-feeling.mp3",
     display: "Irene Cara - What A Feeling",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WHAT_A_FEELING",
+    listenUrl: "https://open.spotify.com/track/0aAR5HogGoT68EWFbyRFqx",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/janet-jackson - miss-you-much.mp3",
     display: "Janet Jackson - Miss You Much",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MISS_YOU_MUCH",
+    listenUrl: "https://open.spotify.com/track/062mh4qAZyDV9dIQK70iu0",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/journey - dont-stop-believin.mp3",
     display: "Journey - Dont Stop Believin",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_STOP_BELIEVIN",
+    listenUrl: "https://open.spotify.com/track/5RKQ5NdjSh2QzD4MaunT91",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/joy-division - love-will-tear-us-apart.mp3",
     display: "Joy Division - Love Will Tear Us Apart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOVE_WILL_TEAR_US_APART",
+    listenUrl: "https://open.spotify.com/track/34iOH7LY3vme5rQxsVILZ4",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/judas-priest - breaking-the-law.mp3",
     display: "Judas Priest - Breaking The Law",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BREAKING_THE_LAW",
+    listenUrl: "https://open.spotify.com/track/2RaA6kIcvomt77qlIgGhCT",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/katrina-and-the-waves - walking-on-sunshine.mp3",
     display: "Katrina And The Waves - Walking On Sunshine",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WALKING_ON_SUNSHINE",
+    listenUrl: "https://open.spotify.com/track/05wIrZSwuaVWhcv5FfqeH0",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/kim-carnes - bette-davis-eyes.mp3",
     display: "Kim Carnes - Bette Davis Eyes",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BETTE_DAVIS_EYES",
+    listenUrl: "https://open.spotify.com/track/0odIT9B9BvOCnXfS0e4lB5",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/kool-and-the-gang - celebration.mp3",
     display: "Kool And The Gang - Celebration",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CELEBRATION",
+    listenUrl: "https://open.spotify.com/track/3K7Q9PHUWPTaknlbFPThn2",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/laura-branigan - gloria.mp3",
     display: "Laura Branigan - Gloria",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GLORIA",
+    listenUrl: "https://open.spotify.com/track/1mskmld5ZKEhRaNvYVPoqZ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/laura-branigan - self-control.mp3",
     display: "Laura Branigan - Self Control",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SELF_CONTROL",
+    listenUrl: "https://open.spotify.com/track/6JNJERZGJwDVgkmbohBw7u",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/limahl - never-ending-story.mp3",
     display: "Limahl - Never Ending Story",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NEVER_ENDING_STORY",
+    listenUrl: "https://open.spotify.com/track/1F43XlPBiwAUUIhrUGzylO",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/linda-ronstadt - how-do-i-make-you.mp3",
     display: "Linda Ronstadt - How Do I Make You",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HOW_DO_I_MAKE_YOU",
+    listenUrl: "https://open.spotify.com/track/2WX2HSBKkcKVvqTukHZS22",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/lipps-inc - funkytown.mp3",
     display: "Lipps Inc - Funkytown",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FUNKYTOWN",
+    listenUrl: "https://open.spotify.com/track/3JU7GqkbT5S51rgCbYJ20t",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/lynyrd-skynyrd - sweet-home-alabama.mp3",
     display: "Lynyrd Skynyrd - Sweet Home Alabama",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SWEET_HOME_ALABAMA",
+    listenUrl: "https://open.spotify.com/track/7e89621JPkKaeDSTQ3avtg",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/m-c-hammer - U-cant-touch-this.mp3",
     display: "M C Hammer - U Cant Touch This",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_U_CANT_TOUCH_THIS",
+    listenUrl: "https://open.spotify.com/track/1B75hgRqe7A4fwee3g3Wmu",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/madness - our-house.mp3",
     display: "Madness - Our House",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OUR_HOUSE",
+    listenUrl: "https://open.spotify.com/track/5HrtZ0YLAcKIRx4tdQoHWc",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/madonna - la-isla-bonita.mp3",
     display: "Madonna - La Isla Bonita",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_ISLA_BONITA",
+    listenUrl: "https://open.spotify.com/track/0NJdtoQ3RX5ckBjJlNXhlP",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/madonna - like-a-prayer.mp3",
     display: "Madonna - Like A Prayer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LIKE_A_PRAYER",
+    listenUrl: "https://open.spotify.com/track/2v7ywbUzCgcVohHaKUcacV",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/madonna - like-a-virgin.mp3",
     display: "Madonna - Like A Virgin",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LIKE_A_VIRGIN",
+    listenUrl: "https://open.spotify.com/track/1ZPlNanZsJSPK5h9YZZFbZ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/madonna - papa-dont-preach.mp3",
     display: "Madonna - Papa Dont Preach",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PAPA_DONT_PREACH",
+    listenUrl: "https://open.spotify.com/track/6A8OnjnpShshNpcqWtZRjr",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/men-at-work - who-can-it-be-now.mp3",
     display: "Men At Work - Who Can It Be Now",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WHO_CAN_IT_BE_NOW",
+    listenUrl: "https://open.spotify.com/track/5rfJ2Bq2PEL8yBjZLzouEu",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/michael-jackson - beat-it.mp3",
     display: "Michael Jackson - Beat It",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BEAT_IT",
+    listenUrl: "https://open.spotify.com/track/3BovdzfaX4jb5KFQwoPfAw",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/michael-jackson - billie-jean.mp3",
     display: "Michael Jackson - Billie Jean",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BILLIE_JEAN",
+    listenUrl: "https://open.spotify.com/track/7J1uxwnxfQLu4APicE5Rnj",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/michael-jackson - smooth-criminal.mp3",
     display: "Michael Jackson - Smooth Criminal",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SMOOTH_CRIMINAL",
+    listenUrl: "https://open.spotify.com/track/5T7ywazdGIydr6JCW6t02j",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/michael-jackson - thriller.mp3",
     display: "Michael Jackson - Thriller",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THRILLER",
+    listenUrl: "https://open.spotify.com/track/2LlQb7Uoj1kKyGhlkBf9aC",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/mike-oldfield - moonlight-shadow-ft-maggie-reilly.mp3",
     display: "Mike Oldfield - Moonlight Shadow Ft Maggie Reilly",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MOONLIGHT_SHADOW_FT_MAGGIE_REILLY",
+    listenUrl: "https://open.spotify.com/track/2UDX2E40Mkq0A9Lb20GX63",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/modern-talking - brother louie.mp3",
     display: "Modern Talking - Brother Louie",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BROTHER LOUIE",
+    listenUrl: "https://open.spotify.com/track/5zWZ9iNevP0397xB3jWV2z",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/murray-head - one-night-in-bangkok.mp3",
     display: "Murray Head - One Night In Bangkok",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ONE_NIGHT_IN_BANGKOK",
+    listenUrl: "https://open.spotify.com/track/6erBowZaW6Ur3vNOWhS2zM",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/new-order - blue-monday.mp3",
     display: "New Order - Blue Monday",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BLUE_MONDAY",
+    listenUrl: "https://open.spotify.com/track/6hHc7Pks7wtBIW8Z6A0iFq",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/olivia-newton-john - magic.mp3",
     display: "Olivia Newton John - Magic",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MAGIC",
+    listenUrl: "https://open.spotify.com/track/4i06mRZuqg31xNuDvs4Lsd",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -549,7 +549,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/paul-an-ka - she-s-having-my-baby.mp3",
     display: "Paul An Ka - She S Having My Baby",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SHE_S_HAVING_MY_BABY",
+    listenUrl: "https://open.spotify.com/track/0FmCLEHfINGqwlyzvklNqy",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -557,7 +557,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/pet-shop-boys - its-a-sin.mp3",
     display: "Pet Shop Boys - Its A Sin",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ITS_A_SIN",
+    listenUrl: "https://open.spotify.com/track/5fy4vfEtv6lzqLx2Mt7stF",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -565,7 +565,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/phil-collins - another-day-in-paradise.mp3",
     display: "Phil Collins - Another Day In Paradise",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANOTHER_DAY_IN_PARADISE",
+    listenUrl: "https://open.spotify.com/track/1NCuYqMc8hKMb4cpNTcJbD",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -573,7 +573,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/pink-floyd - another-brick-in-the-wall-part-ii.mp3",
     display: "Pink Floyd - Another Brick In The Wall Part Ii",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANOTHER_BRICK_IN_THE_WALL_PART_II",
+    listenUrl: "https://open.spotify.com/track/4gMgiXfqyzZLMhsksGmbQV",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -581,7 +581,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/prince - purple-rain.mp3",
     display: "Prince - Purple Rain",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PURPLE_RAIN",
+    listenUrl: "https://open.spotify.com/track/1uvyZBs4IZYRebHIB1747m",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -589,7 +589,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/queen - another-one-bites-the-dust.mp3",
     display: "Queen - Another One Bites The Dust",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANOTHER_ONE_BITES_THE_DUST",
+    listenUrl: "https://open.spotify.com/track/1KPuohcXPmJYQfdyg9zKmR",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -597,7 +597,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/queen - i-want-to-break-free.mp3",
     display: "Queen - I Want To Break Free",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_I_WANT_TO_BREAK_FREE",
+    listenUrl: "https://open.spotify.com/track/6FDs6KxDX1uFDWvQGeZLCp",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -605,7 +605,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/queen - radio-ga-ga.mp3",
     display: "Queen - Radio Ga Ga",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_RADIO_GA_GA",
+    listenUrl: "https://open.spotify.com/track/6N717o83wbmahFGUqkjQj7",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -613,7 +613,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/rick-james - super-freak.mp3",
     display: "Rick James - Super Freak",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUPER_FREAK",
+    listenUrl: "https://open.spotify.com/track/2dCmGcEOQrMQhMMS8Vj7Ca",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -621,7 +621,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/rick-astley - never-gonna-give-you-up.mp3",
     display: "Rick Astley - Never Gonna Give You Up",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NEVER_GONNA_GIVE_YOU_UP",
+    listenUrl: "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -629,7 +629,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/right-said-fred - i-m-too-sexy.mp3",
     display: "Right Said Fred - I M Too Sexy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_I_M_TOO_SEXY",
+    listenUrl: "https://open.spotify.com/track/1MQrMQwfqjgOjXEUaN9AMd",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -637,7 +637,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/robert-palmer - simply-irresistible.mp3",
     display: "Robert Palmer - Simply Irresistible",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SIMPLY_IRRESISTIBLE",
+    listenUrl: "https://open.spotify.com/track/7mmhMfqs3knRMMlvnMPTHn",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -645,7 +645,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/rolling-stones - start-me-up.mp3",
     display: "Rolling Stones - Start Me Up",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_START_ME_UP",
+    listenUrl: "https://open.spotify.com/track/7HKez549fwJQDzx3zLjHKC",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -653,7 +653,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/roxette - it-must-have-been-love.mp3",
     display: "Roxette - It Must Have Been Love",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_IT_MUST_HAVE_BEEN_LOVE",
+    listenUrl: "https://open.spotify.com/track/6kvoHl80mfCVTv7XnZkjQn",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -661,7 +661,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/roxette - the-look.mp3",
     display: "Roxette - The Look",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THE_LOOK",
+    listenUrl: "https://open.spotify.com/track/1aYkkrAbPmMuorVz5HWIqE",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -669,7 +669,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/roxy-music - more-than-this.mp3",
     display: "Roxy Music - More Than This",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MORE_THAN_THIS",
+    listenUrl: "https://open.spotify.com/track/6N7gPTru90HYLRUIVDQ185",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -677,7 +677,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/run-dmc - walk-this-way.mp3",
     display: "Run Dmc - Walk This Way",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WALK_THIS_WAY",
+    listenUrl: "https://open.spotify.com/track/6qUEOWqOzu1rLPUPQ1ECpx",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -685,7 +685,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/rupert-holmes - escape-the-pina-colada-song.mp3",
     display: "Rupert Holmes - Escape The Pina Colada Song",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESCAPE_THE_PINA_COLADA_SONG",
+    listenUrl: "https://open.spotify.com/track/5I9zIwGB6f0edpjO5oX2b9",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -693,7 +693,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/salt-n-pepa - push-it.mp3",
     display: "Salt N Pepa - Push It",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PUSH_IT",
+    listenUrl: "https://open.spotify.com/track/6sT9MWlJManry3EQwf4V80",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -701,7 +701,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/simple-minds - dont-you-forget-about-me.mp3",
     display: "Simple Minds - Dont You Forget About Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_YOU_FORGET_ABOUT_ME",
+    listenUrl: "https://open.spotify.com/track/5Y8Rj0s6wuM5DlQdllYiWl",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -709,7 +709,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/soul-ii-soul - back-to-life.mp3",
     display: "Soul Ii Soul - Back To Life",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BACK_TO_LIFE",
+    listenUrl: "https://open.spotify.com/track/7vvRkLPIvfjjmCIqNxBuEZ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -717,7 +717,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/spandau-ballet - gold.mp3",
     display: "Spandau Ballet - Gold",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GOLD",
+    listenUrl: "https://open.spotify.com/track/0Z9UkcT1pnrmLciUJPcMMS",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -725,7 +725,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/survivor - eye-of-the-tiger.mp3",
     display: "Survivor - Eye Of The Tiger",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EYE_OF_THE_TIGER",
+    listenUrl: "https://open.spotify.com/track/2HHtWyy5CgaQbC7XSoOb0e",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -733,7 +733,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/tears-for-fears - everybody-wants-to-rule-the-world.mp3",
     display: "Tears For Fears - Everybody Wants To Rule The World",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EVERYBODY_WANTS_TO_RULE_THE_WORLD",
+    listenUrl: "https://open.spotify.com/track/4RvWPyQ5RL0ao9LPZeSouE",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -741,7 +741,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/the clash - roc-the-casbah.mp3",
     display: "The Clash - Roc The Casbah",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROC_THE_CASBAH",
+    listenUrl: "https://open.spotify.com/track/56KqaFSGTb7ifpt16t5Y1N",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -749,7 +749,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/the-brothers-johnson - stomp.mp3",
     display: "The Brothers Johnson - Stomp",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STOMP",
+    listenUrl: "https://open.spotify.com/track/3EG65y2LtxWjfydabHdItb",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -757,7 +757,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/the-buggles - video-killed-the-radio-star.mp3",
     display: "The Buggles - Video Killed The Radio Star",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VIDEO_KILLED_THE_RADIO_STAR",
+    listenUrl: "https://open.spotify.com/track/6t1FIJlZWTQfIZhsGjaulM",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -765,7 +765,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/the-communards - dontt-leave-me-this-way.mp3",
     display: "The Communards - Dontt Leave Me This Way",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONTT_LEAVE_ME_THIS_WAY",
+    listenUrl: "https://open.spotify.com/track/0ire4j2mcGovF5JA1D2cTp",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -773,7 +773,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/the-human-league - dont-you-want-me.mp3",
     display: "The Human League - Dont You Want Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_YOU_WANT_ME",
+    listenUrl: "https://open.spotify.com/track/3AIEEEIDJFnqv8rozNVCRZ",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -781,7 +781,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/the-police - every-breath-you-take.mp3",
     display: "The Police - Every Breath You Take",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EVERY_BREATH_YOU_TAKE",
+    listenUrl: "https://open.spotify.com/track/1JSTJqkT5qHq8MDJnJbRE1",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -789,7 +789,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/the-proclaimers - i m-gonna-be-500-miles.mp3",
     display: "The Proclaimers - I M Gonna Be 500 Miles",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_I M_GONNA_BE_500_MILES",
+    listenUrl: "https://open.spotify.com/track/67iAlVNDDdddxqSD2EZhFs",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -797,7 +797,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/tina-turner - what-s-love-got-to-do-with-it.mp3",
     display: "Tina Turner - What S Love Got To Do With It",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WHAT_S_LOVE_GOT_TO_DO_WITH_IT",
+    listenUrl: "https://open.spotify.com/track/3ErsOxqe2RmXkR65wkygDz",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -805,7 +805,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/toto - africa.mp3",
     display: "Toto - Africa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AFRICA",
+    listenUrl: "https://open.spotify.com/track/2374M0fQpWi3dLnB54qaLX",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -813,7 +813,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/u2 - with-or-without-you.mp3",
     display: "U2 - With Or Without You",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WITH_OR_WITHOUT_YOU",
+    listenUrl: "https://open.spotify.com/track/5JGEAz15LkPoOtFHttDtVs",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -821,7 +821,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/ub40 - red-red-wine.mp3",
     display: "Ub40 - Red Red Wine",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_RED_RED_WINE",
+    listenUrl: "https://open.spotify.com/track/4uOKFydzAejjSFqYbv1XPt",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -829,7 +829,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/van-halen - jump.mp3",
     display: "Van Halen - Jump",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_JUMP",
+    listenUrl: "https://open.spotify.com/track/7N3PAbqfTjSEU1edb2tY8j",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -837,7 +837,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/wham - wake-me-up-before-you-go-go.mp3",
     display: "Wham - Wake Me Up Before You Go Go",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WAKE_ME_UP_BEFORE_YOU_GO_GO",
+    listenUrl: "https://open.spotify.com/track/0ikz6tENMONtK6qGkOrU3c",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -845,7 +845,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/whitney-houston - i-wanna-dance-with-somebody.mp3",
     display: "Whitney Houston - I Wanna Dance With Somebody",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_I_WANNA_DANCE_WITH_SOMEBODY",
+    listenUrl: "https://open.spotify.com/track/2tUBqZG2AbRi7Q0BIrVrEj",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -853,7 +853,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/whitney-houston - im-your-baby-tonight.mp3",
     display: "Whitney Houston - Im Your Baby Tonight",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_IM_YOUR_BABY_TONIGHT",
+    listenUrl: "https://open.spotify.com/track/3SmPl0CGxvvkQCrTv7edEE",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -861,7 +861,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/yes - owner-of-a-lonely-heart.mp3",
     display: "Yes - Owner Of A Lonely Heart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OWNER_OF_A_LONELY_HEART",
+    listenUrl: "https://open.spotify.com/track/0GTK6TesV108Jj5D3MHsYb",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",
@@ -869,7 +869,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   {
     file: "80s/ingles/zz-top - sharp-dressed-man.mp3",
     display: "Zz Top - Sharp Dressed Man",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SHARP_DRESSED_MAN",
+    listenUrl: "https://open.spotify.com/track/0bRNszTbTFLNlunAeh7eom",
     platform: "spotify",
     originalDecade: "80s",
     originalCategory: "ingles",

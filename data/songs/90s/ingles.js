@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/4-non-blondes - whats-up.mp3",
     display: "4 Non Blondes - Whats Up",
-    listenUrl: "URL_PENDIENTE_4_NON_BLONDES",
+    listenUrl: "https://open.spotify.com/track/0jWgAnTrNZmOGmqgvHhZEm",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/ac-dc - thunderstruck.mp3",
     display: "Ac Dc - Thunderstruck",
-    listenUrl: "URL_PENDIENTE_AC_DC",
+    listenUrl: "https://open.spotify.com/track/57bgtoPSgt236HzfBOd8kj",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -21,7 +21,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/ace-of-base - all-that-she-wants.mp3",
     display: "Ace Of Base - All That She Wants",
-    listenUrl: "URL_PENDIENTE_ACE_OF_BASE",
+    listenUrl: "https://open.spotify.com/track/6kWJvPfC4DgUpRsXKNa9z9",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/ace-of-base - happy-nation.mp3",
     display: "Ace Of Base - Happy Nation",
-    listenUrl: "URL_PENDIENTE_ACE_OF_BASE",
+    listenUrl: "https://open.spotify.com/track/7yCF65vpc7sUwPjftI0iFb",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/aerosmith - i-dont-want-to-miss-a-thing.mp3",
     display: "Aerosmith - I Dont Want To Miss A Thing",
-    listenUrl: "URL_PENDIENTE_AEROSMITH",
+    listenUrl: "https://open.spotify.com/track/5qlJg0Wbj3sslxfwiaRNpq",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/alanis-morissette - ironic.mp3",
     display: "Alanis Morissette - Ironic",
-    listenUrl: "URL_PENDIENTE_ALANIS_MORISSETTE",
+    listenUrl: "https://open.spotify.com/track/1d6KS9GH06JAd19uiBy9IE",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/alanis-morissette - you-oughta-know.mp3",
     display: "Alanis Morissette - You Oughta Know",
-    listenUrl: "URL_PENDIENTE_ALANIS_MORISSETTE",
+    listenUrl: "https://open.spotify.com/track/3jS7bB0oXVOwGFZn3aE5NV",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/aqua - barbie-girl.mp3",
     display: "Aqua - Barbie Girl",
-    listenUrl: "URL_PENDIENTE_AQUA",
+    listenUrl: "https://open.spotify.com/track/5ZrDlcxIDZyjOzHdYW1ydr",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/backstreet-boys - everybody.mp3",
     display: "Backstreet Boys - Everybody",
-    listenUrl: "URL_PENDIENTE_BACKSTREET_BOYS",
+    listenUrl: "https://open.spotify.com/track/1di1BEgJYzPvXUuinsYJGP",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -77,7 +77,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/backstreet-boys - i-want-it-that-way.mp3",
     display: "Backstreet Boys - I Want It That Way",
-    listenUrl: "URL_PENDIENTE_BACKSTREET_BOYS",
+    listenUrl: "https://open.spotify.com/track/47BBI51FKFwOMlIiX6m8ya",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/blur - song-2.mp3",
     display: "Blur - Song 2",
-    listenUrl: "URL_PENDIENTE_BLUR",
+    listenUrl: "https://open.spotify.com/track/1FTSo4v6BOZH9QxKc3MbVM",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/bon-jovi - always.mp3",
     display: "Bon Jovi - Always",
-    listenUrl: "URL_PENDIENTE_BON_JOVI",
+    listenUrl: "https://open.spotify.com/track/2RChe0r2cMoyOvuKobZy44",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/britney-spears - baby-one-more-time.mp3",
     display: "Britney Spears - ...Baby One More Time",
-    listenUrl: "URL_PENDIENTE_BRITNEY_SPEARS",
+    listenUrl: "https://open.spotify.com/track/3MjUtNVVq3C8Fn0MP3zhXa",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/bryan-adams - please-forgive-me.mp3",
     display: "Bryan Adams - Please Forgive Me",
-    listenUrl: "URL_PENDIENTE_BRYAN_ADAMS",
+    listenUrl: "https://open.spotify.com/track/0POfS30Fom0Tu9hbEWZXVg",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/cher - believe.mp3",
     display: "Cher - Believe",
-    listenUrl: "URL_PENDIENTE_CHER",
+    listenUrl: "https://open.spotify.com/track/2goLsvvODILDzeeiT4dAoR",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/christina-aguilera - genie-in-a-bottle.mp3",
     display: "Christina Aguilera - Genie In A Bottle",
-    listenUrl: "URL_PENDIENTE_CHRISTINA_AGUILERA",
+    listenUrl: "https://open.spotify.com/track/11mwFrKvLXCbcVGNxffGyP",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/chumbawamba - tubthumping.mp3",
     display: "Chumbawamba - Tubthumping",
-    listenUrl: "URL_PENDIENTE_CHUMBAWAMBA",
+    listenUrl: "https://open.spotify.com/track/5YScXJKtefsgdskIy60N7A",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/coolio - gangstas-paradise.mp3",
     display: "Coolio - Gangstas Paradise",
-    listenUrl: "URL_PENDIENTE_COOLIO",
+    listenUrl: "https://open.spotify.com/track/1DIXPcTDzTj8ZMHt3PDt8p",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/corona - the-rhythm-of-the-night.mp3",
     display: "Corona - The Rhythm Of The Night",
-    listenUrl: "URL_PENDIENTE_CORONA",
+    listenUrl: "https://open.spotify.com/track/5UCPOJs8VJARoIX6acKRuJ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/counting-crows - mr-jones.mp3",
     display: "Counting Crows - Mr. Jones",
-    listenUrl: "URL_PENDIENTE_COUNTING_CROWS",
+    listenUrl: "https://open.spotify.com/track/5DiXcVovI0FcY2s0icWWUu",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/crystal-waters - gypsy-woman.mp3",
     display: "Crystal Waters - Gypsy Woman",
-    listenUrl: "URL_PENDIENTE_CRYSTAL_WATERS",
+    listenUrl: "https://open.spotify.com/track/1SShxVVBeZBCY7WddnksPz",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/celine-dion - my-heart-will-go-on.mp3",
     display: "Céline Dion - My Heart Will Go On",
-    listenUrl: "URL_PENDIENTE_CELINE_DION",
+    listenUrl: "https://open.spotify.com/track/33LC84JgLvK2KuW43MfaNq",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/deee-lite - groove-is-in-the-heart.mp3",
     display: "Deee-Lite - Groove Is In The Heart",
-    listenUrl: "URL_PENDIENTE_DEEE_LITE",
+    listenUrl: "https://open.spotify.com/track/2He3NOyqtLNE3RQPpeDdSb",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/depeche-mode - enjoy-the-silence.mp3",
     display: "Depeche Mode - Enjoy The Silence",
-    listenUrl: "URL_PENDIENTE_DEPECHE_MODE",
+    listenUrl: "https://open.spotify.com/track/0yp3TvJNlG50Q4tAHWNCRm",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/destinys-child - say-my-name.mp3",
     display: "Destinys Child - Say My Name",
-    listenUrl: "URL_PENDIENTE_DESTINYS CHILD",
+    listenUrl: "https://open.spotify.com/track/7H6ev70Weq6DdpZyyTmUXk",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/eagle-eye-cherry - save-tonight.mp3",
     display: "Eagle Eye Cherry - Save Tonight",
-    listenUrl: "URL_PENDIENTE_EAGLE_EYE CHERRY",
+    listenUrl: "https://open.spotify.com/track/0smyCrJiibi2uwCiq5R1vj",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/emf - unbelievable.mp3",
     display: "Emf - Unbelievable",
-    listenUrl: "URL_PENDIENTE_EMF",
+    listenUrl: "https://open.spotify.com/track/5VYTKiOnHw4iTrB9pG3yum",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/eminem - my-name-is.mp3",
     display: "Eminem - My Name Is",
-    listenUrl: "URL_PENDIENTE_EMINEM",
+    listenUrl: "https://open.spotify.com/track/75IN3CtuZwTHTnZvYM4qnJ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/en-vogue - whatta-man.mp3",
     display: "En Vogue - Whatta Man",
-    listenUrl: "URL_PENDIENTE_EN VOGUE",
+    listenUrl: "https://open.spotify.com/track/7sJN693sYKEIEMu7fc5VnJ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/enigma - return-to-innocence.mp3",
     display: "Enigma - Return To Innocence",
-    listenUrl: "URL_PENDIENTE_ENIGMA",
+    listenUrl: "https://open.spotify.com/track/2UKkLqST2xWpK8n1b0Xr5Z",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/extreme - more-than-words.mp3",
     display: "Extreme - More Than Words",
-    listenUrl: "URL_PENDIENTE_EXTREME",
+    listenUrl: "https://open.spotify.com/track/1gVgkQFOKa8Wc1HYsJtPdH",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/fatboy-slim - the-rockafeller-skank.mp3",
     display: "Fatboy Slim - The Rockafeller Skank",
-    listenUrl: "URL_PENDIENTE_FATBOY SLIM",
+    listenUrl: "https://open.spotify.com/track/5AgCO3dc2kuSicCsw09YCA",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/george-michael - freedom-90.mp3",
     display: "George Michael - Freedom 90",
-    listenUrl: "URL_PENDIENTE_GEORGE MICHAEL",
+    listenUrl: "https://open.spotify.com/track/1wZ7o1mZysv1l26ZWawVfW",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/green-day - basket-case.mp3",
     display: "Green Day - Basket Case",
-    listenUrl: "URL_PENDIENTE_GREEN DAY",
+    listenUrl: "https://open.spotify.com/track/6L89mwZXSOwYl76YXfX13s",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/hanson - mmmbop.mp3",
     display: "Hanson - Mmmbop",
-    listenUrl: "URL_PENDIENTE_HANSON",
+    listenUrl: "https://open.spotify.com/track/0lnxrQAd9ZxbhBBe7d8FO8",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/hole - celebrity-skin.mp3",
     display: "Hole - Celebrity Skin",
-    listenUrl: "URL_PENDIENTE_HOLE",
+    listenUrl: "https://open.spotify.com/track/2V4Bc2I962j7acQj1N0PiQ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/house-of-pain - jump-around.mp3",
     display: "House Of Pain - Jump Around",
-    listenUrl: "URL_PENDIENTE_HOUSE OF PAIN",
+    listenUrl: "https://open.spotify.com/track/7L93GESzq43UkKUt5FsOCq",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/jamiroquai - virtual-insanity.mp3",
     display: "Jamiroquai - Virtual Insanity",
-    listenUrl: "URL_PENDIENTE_JAMIROQUAI",
+    listenUrl: "https://open.spotify.com/track/4UQDZlZhGUDoYMohwrY28v",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/lauryn-hill - doo-wop.mp3",
     display: "Lauryn Hill - Doo Wop (That Thing)",
-    listenUrl: "URL_PENDIENTE_LAURYN HILL",
+    listenUrl: "https://open.spotify.com/track/0uEp9E98JB5awlA084uaIg",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/lenny-kravitz - fly-away.mp3",
     display: "Lenny Kravitz - Fly Away",
-    listenUrl: "URL_PENDIENTE_LENNY KRAVITZ",
+    listenUrl: "https://open.spotify.com/track/1OxcIUqVmVYxT6427tbhDW",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/m-c-hammer - u-cant-touch-this.mp3",
     display: "M.C. Hammer - U Cant Touch This",
-    listenUrl: "URL_PENDIENTE_M.C. HAMMER",
+    listenUrl: "https://open.spotify.com/track/1B75hgRqe7A4fwee3g3Wmu",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/madonna - vogue.mp3",
     display: "Madonna - Vogue",
-    listenUrl: "URL_PENDIENTE_MADONNA",
+    listenUrl: "https://open.spotify.com/track/7j5TIXPi0cCbSSqItmbyZy",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/martika - toy-soldiers.mp3",
     display: "Martika - Toy Soldiers",
-    listenUrl: "URL_PENDIENTE_MARTIKA",
+    listenUrl: "https://open.spotify.com/track/4jh9olf0OKCokpzxSyLeJx",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/meredith-brooks - bitch.mp3",
     display: "Meredith Brooks - Bitch",
-    listenUrl: "URL_PENDIENTE_MEREDITH BROOKS",
+    listenUrl: "https://open.spotify.com/track/3i6qNxyVgIdUZTTi5m25EM",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/metallica - enter-sandman.mp3",
     display: "Metallica - Enter Sandman",
-    listenUrl: "URL_PENDIENTE_METALLICA",
+    listenUrl: "https://open.spotify.com/track/3DwQ7AH3xGD9h65ezslm6q",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/michael-jackson - black-or-white.mp3",
     display: "Michael Jackson - Black Or White",
-    listenUrl: "URL_PENDIENTE_MICHAEL JACKSON",
+    listenUrl: "https://open.spotify.com/track/7EsjkelQuoUlJXEw7SeVV4",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/natalie-imbruglia - torn.mp3",
     display: "Natalie Imbruglia - Torn",
-    listenUrl: "URL_PENDIENTE_NATALIE IMBRUGLIA",
+    listenUrl: "https://open.spotify.com/track/1Jaah2tmN9Hv81A87KZ1MU",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/nirvana - smells-like-teen-spirit.mp3",
     display: "Nirvana - Smells Like Teen Spirit",
-    listenUrl: "URL_PENDIENTE_NIRVANA",
+    listenUrl: "https://open.spotify.com/track/4CeeEOM32jQcH3eN9Q2dGj",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/no-doubt - dont-speak.mp3",
     display: "No Doubt - Dont Speak",
-    listenUrl: "URL_PENDIENTE_NO DOUBT",
+    listenUrl: "https://open.spotify.com/track/6urCAbunOQI4bLhmGpX7iS",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/nsync - bye-bye-bye.mp3",
     display: "Nsync - Bye Bye Bye",
-    listenUrl: "URL_PENDIENTE_NSYNC",
+    listenUrl: "https://open.spotify.com/track/62bOmKYxYg7dhrC6gH9vFn",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/nsync - i-want-you-back.mp3",
     display: "Nsync - I Want you Back",
-    listenUrl: "URL_PENDIENTE_NSYNC",
+    listenUrl: "https://open.spotify.com/track/221LRlPHPuevgE1tuUlof9",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/oasis - wonderwall.mp3",
     display: "Oasis - Wonderwall",
-    listenUrl: "URL_PENDIENTE_OASIS",
+    listenUrl: "https://open.spotify.com/track/7ygpwy2qP3NbrxVkHvUhXY",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/phil-collins - another-day-in-paradise.mp3",
     display: "Phil Collins - Another Day In Paradise",
-    listenUrl: "URL_PENDIENTE_PHIL_COLLINS",
+    listenUrl: "https://open.spotify.com/track/1NCuYqMc8hKMb4cpNTcJbD",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/R-E-M - everybody-hurts.mp3",
     display: "R E M - Everybody Hurts",
-    listenUrl: "URL_PENDIENTE_R_E_M",
+    listenUrl: "https://open.spotify.com/track/6PypGyiu0Y2lCDBN1XZEnP",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/r-e-m - losing-my-religion.mp3",
     display: "R.E.M. - Losing My Religion",
-    listenUrl: "URL_PENDIENTE_R.E.M.",
+    listenUrl: "https://open.spotify.com/track/31AOj9sFz2gM0O3hMARRBx",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/radiohead - creep.mp3",
     display: "Radiohead - Creep",
-    listenUrl: "URL_PENDIENTE_RADIOHEAD",
+    listenUrl: "https://open.spotify.com/track/70LcF31zb1H0PyJoS1Sx1r",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/rage-against-the-machine - killing-in-the-name.mp3",
     display: "Rage Against The Machine - Killing In The Name",
-    listenUrl: "URL_PENDIENTE_RAGE AGAINST THE MACHINE",
+    listenUrl: "https://open.spotify.com/track/59WN2psjkt1tyaxjspN8fp",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/red-hot-chili-peppers - under-the-bridge.mp3",
     display: "Red Hot Chili Peppers - Under The Bridge",
-    listenUrl: "URL_PENDIENTE_RED HOT CHILI PEPPERS",
+    listenUrl: "https://open.spotify.com/track/3d9DChrdc6BOeFsbrZ3Is0",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/ricky-martin - livin-la-vida-loca.mp3",
     display: "Ricky Martin - Livin La Vida Loca",
-    listenUrl: "URL_PENDIENTE_RICKY MARTIN",
+    listenUrl: "https://open.spotify.com/track/0Ph6L4l8dYUuXFmb71Ajnd",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/right-said-fred - im-too-sexy.mp3",
     display: "Right Said Fred - Im Too Sexy",
-    listenUrl: "URL_PENDIENTE_RIGHT SAID FRED",
+    listenUrl: "https://open.spotify.com/track/1MQrMQwfqjgOjXEUaN9AMd",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/sade - smooth-operator.mp3",
     display: "Sade - Smooth Operator",
-    listenUrl: "URL_PENDIENTE_SADE",
+    listenUrl: "https://open.spotify.com/track/1Hv1VTm8zeOeybub15mA2R",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/santana - smooth.mp3",
     display: "Santana - Smooth",
-    listenUrl: "URL_PENDIENTE_SANTANA",
+    listenUrl: "https://open.spotify.com/track/2pX4FpOgwItRVPPUFdRcxA",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/seal - crazy.mp3",
     display: "Seal - Crazy",
-    listenUrl: "URL_PENDIENTE_SEAL",
+    listenUrl: "https://open.spotify.com/track/2KP6bTmxOSEVMXAnbapkpa",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/seal - kiss-from-a-rose.mp3",
     display: "Seal - Kiss From A Rose",
-    listenUrl: "URL_PENDIENTE_SEAL",
+    listenUrl: "https://open.spotify.com/track/3YKptz29AsOlm7WAVnztBh",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/shaggy - boombastic.mp3",
     display: "Shaggy - Boombastic",
-    listenUrl: "URL_PENDIENTE_SHAGGY",
+    listenUrl: "https://open.spotify.com/track/4fxF8ljwryMZX5c9EKrLFE",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/sheryl-crow - all-i-wanna-do.mp3",
     display: "Sheryl Crow - All I Wanna Do",
-    listenUrl: "URL_PENDIENTE_SHERYL CROW",
+    listenUrl: "https://open.spotify.com/track/3ZpQiJ78LKINrW9SQTgbXd",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/simply-red - if-you-dont-know-me-by-now.mp3",
     display: "Simply Red - If you Dont Know Me By Now",
-    listenUrl: "URL_PENDIENTE_SIMPLY_RED",
+    listenUrl: "https://open.spotify.com/track/7DFawVSjI88xR9mjnWwURg",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/sinéad-oconnor - nothing-compares-2-u.mp3",
     display: "Sinéad Oconnor - Nothing Compares 2 U",
-    listenUrl: "URL_PENDIENTE_SINÉAD OCONNOR",
+    listenUrl: "https://open.spotify.com/track/5GHY1DFWKz3Prg2V0Iodqo",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -549,7 +549,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/smash-mouth - all-star.mp3",
     display: "Smash Mouth - All Star",
-    listenUrl: "URL_PENDIENTE_SMASH MOUTH",
+    listenUrl: "https://open.spotify.com/track/3cfOd4CMv2snFaKAnMdnvK",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -557,7 +557,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/soul-ii-soul - back-to-life.mp3",
     display: "Soul II Soul - Back To Life",
-    listenUrl: "URL_PENDIENTE_SOUL_II_SOUL",
+    listenUrl: "https://open.spotify.com/track/7vvRkLPIvfjjmCIqNxBuEZ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -565,7 +565,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/soundgarden - black-hole-sun.mp3",
     display: "Soundgarden - Black Hole Sun",
-    listenUrl: "URL_PENDIENTE_SOUNDGARDEN",
+    listenUrl: "https://open.spotify.com/track/2EoOZnxNgtmZaD8uUmz2nD",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -573,7 +573,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/spice-girls - wannabe.mp3",
     display: "Spice Girls - Wannabe",
-    listenUrl: "URL_PENDIENTE_SPICE_GIRLS",
+    listenUrl: "https://open.spotify.com/track/1Je1IMUlBXcx1Fz0WE7oPT",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -581,7 +581,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/spin-doctors - two-princes.mp3",
     display: "Spin Doctors - Two Princes",
-    listenUrl: "URL_PENDIENTE_SPIN_DOCTORS",
+    listenUrl: "https://open.spotify.com/track/0cuq829zRNq4AEdmDJA4aw",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -589,7 +589,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/take-that - back-for-good.mp3",
     display: "Take That - Back For Good",
-    listenUrl: "URL_PENDIENTE_TAKE_THAT_BACK_FOR_GOOD",
+    listenUrl: "https://open.spotify.com/track/6vcdzohhBSbNdsZBh5IRpQ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -597,7 +597,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-cardigans - lovefool.mp3",
     display: "The Cardigans - Lovefool",
-    listenUrl: "URL_PENDIENTE_THE CARDIGANS",
+    listenUrl: "https://open.spotify.com/track/7aQjPecQdIuNd1sz3KCDhD",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -605,7 +605,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-cranberries - linger.mp3",
     display: "The Cranberries - Linger",
-    listenUrl: "URL_PENDIENTE_THE CRANBERRIES",
+    listenUrl: "https://open.spotify.com/track/1WYrTfvKjQYaYfVziGG1ET",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -613,7 +613,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-fugees - killing-me-softly.mp3",
     display: "The Fugees - Killing Me Softly",
-    listenUrl: "URL_PENDIENTE_THE FUGEES",
+    listenUrl: "https://open.spotify.com/track/6ubbZQkJD8xHQRu16nnbMb",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -621,7 +621,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-prodigy - firestarter.mp3",
     display: "The Prodigy - Firestarter",
-    listenUrl: "URL_PENDIENTE_THE PRODIGY",
+    listenUrl: "https://open.spotify.com/track/79CUrU5o2KAVDTNm4x3eGU",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -629,7 +629,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-verve - bitter-sweet-symphony.mp3",
     display: "The Verve - Bitter Sweet Symphony",
-    listenUrl: "URL_PENDIENTE_THE VERVE",
+    listenUrl: "https://open.spotify.com/track/57iDDD9N9tTWe75x6qhStw",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -637,7 +637,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-cranberries - zombie.mp3",
     display: "The Cranberries - Zombie",
-    listenUrl: "URL_PENDIENTE_THE_CRANBERRIES",
+    listenUrl: "https://open.spotify.com/track/3gjHnylel3PTRpjS44ocqr",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -645,7 +645,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/tlc - no-scrubs.mp3",
     display: "Tlc - No Scrubs",
-    listenUrl: "URL_PENDIENTE_TLC",
+    listenUrl: "https://open.spotify.com/track/1KGi9sZVMeszgZOWivFpxs",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -653,7 +653,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/tlc - waterfalls.mp3",
     display: "Tlc - Waterfalls",
-    listenUrl: "URL_PENDIENTE_TLC",
+    listenUrl: "https://open.spotify.com/track/6qspW4YKycviDFjHBOaqUY",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -661,7 +661,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/toni-braxton - un-break-my-heart.mp3",
     display: "Toni Braxton - Un Break My Heart",
-    listenUrl: "URL_PENDIENTE_TONI BRAXTON",
+    listenUrl: "https://open.spotify.com/track/5Ihd9HrPvOADyVoonH9ZjB",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -669,7 +669,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/u2 - one.mp3",
     display: "U2 - One",
-    listenUrl: "URL_PENDIENTE_U2",
+    listenUrl: "https://open.spotify.com/track/3G69vJMWsX6ZohTykad2AU",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -677,7 +677,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/vanilla-ice - ice-ice-baby.mp3",
     display: "Vanilla Ice - Ice Ice Baby",
-    listenUrl: "URL_PENDIENTE_VANILLA ICE",
+    listenUrl: "https://open.spotify.com/track/3XVozq1aeqsJwpXrEZrDJ9",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -685,7 +685,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/whitney-houston - i-will-always-love-you.mp3",
     display: "Whitney Houston - I Will Always Love you",
-    listenUrl: "URL_PENDIENTE_WHITNEY HOUSTON",
+    listenUrl: "https://open.spotify.com/track/4eHbdreAnSOrDDsFfc4Fpm",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -693,7 +693,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/will-smith - gettin-jiggy-wit-it.mp3",
     display: "Will Smith - Gettin Jiggy Wit It",
-    listenUrl: "URL_PENDIENTE_WILL SMITH",
+    listenUrl: "https://open.spotify.com/track/0weAUscowxeqDtpCgtbpgp",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -701,7 +701,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/apollo-440 - stop-the-rock.mp3",
     display: "Apollo 440 - 7 Stopo The Rock",
-    listenUrl: "URL_PENDIENTE_APOLLO_440",
+    listenUrl: "https://open.spotify.com/track/7wEqDbpAoBo0xVdlmb2LAa",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -709,7 +709,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/fatboy-slim - rockafeller-skank.mp3",
     display: "Fatboy Slim - Rockafeller Skank",
-    listenUrl: "URL_PENDIENTE_FATBOY_SLIM",
+    listenUrl: "https://open.spotify.com/track/5AgCO3dc2kuSicCsw09YCA",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -717,7 +717,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-prodigy - breathe.mp3",
     display: "The Prodigy - Breathe",
-    listenUrl: "URL_PENDIENTE_THE PRODIGY",
+    listenUrl: "https://open.spotify.com/track/0Ja4hLKiUSw01E01pJ1yGr",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -725,7 +725,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/the-wiseguys - ooh-la-la.mp3",
     display: "The Wiseguys - Ooh La La",
-    listenUrl: "URL_PENDIENTE_THE_WISEGUYS",
+    listenUrl: "https://open.spotify.com/track/3IBDXz8f3k78Tb46ipwQau",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -733,7 +733,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/willy-deville - hey-joe.mp3",
     display: "Willy Deville - Hey Joe",
-    listenUrl: "URL_PENDIENTE_WILLY_DEVILLE",
+    listenUrl: "https://open.spotify.com/track/5LXPhjTLuWxvMINC3W2LFL",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -741,7 +741,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   {
     file: "90s/ingles/youssou-n-dour-y-neneh-cherry - 7-seconds.mp3",
     display: "Youssou N Dour Y Neneh Cherry - 7 Seconds",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YOUSSOU_N_DOUR_Y_NENEH_CHERRY___7_SECONDS",
+    listenUrl: "https://open.spotify.com/track/4sv1iemiMkkZVTUbV16C8L",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
