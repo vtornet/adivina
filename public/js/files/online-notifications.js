@@ -4,7 +4,7 @@ import { showAppAlert, showAppConfirm } from "./modal-functions.js";
 import { addNotification } from "./notification-functions.js";
 
 export function getWinnerName(players) {
-  if (!players || players.length === 0) return "";
+  if (!players || players.length === 0) return "Nadie";
 
   let maxScore = -Infinity;
   let winnerName = "";
@@ -12,11 +12,11 @@ export function getWinnerName(players) {
   for (const player of players) {
     if (player.score > maxScore) {
       maxScore = player.score;
-      winnerName = player.playerName;
+      winnerName = player.name;
     }
   }
 
-  return winnerName;
+  return winnerName || "Nadie";
 }
 
 export function isOnlineGameFinished(game) {
