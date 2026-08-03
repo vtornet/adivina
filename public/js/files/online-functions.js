@@ -340,14 +340,21 @@ export async function submitOnlineScore() {
   }
 }
 
+let _pollInterval = null;
+
 export function pollOnlineGameStatus() {
-  const interval = setInterval(async () => {
+  // Cancelar cualquier poll anterior antes de crear uno nuevo
+  if (_pollInterval) {
+    clearInterval(_pollInterval);
+    _pollInterval = null;
+  }
+
+  _pollInterval = setInterval(async () => {
     try {
-      // currentOnlineGameCode debe estar disponible globalmente
       if (!currentOnlineGameCode) {
-        clearInterval(interval);
+        clearInterval(_pollInterval);
+        _pollInterval = null;
         logger.error("No hay código de partida online para consultar");
-        // Podríamos redirigir a una pantalla de error o menú principal aquí
         showScreen("online-mode-screen");
         return;
       }
@@ -357,12 +364,12 @@ export function pollOnlineGameStatus() {
 
       if (!response.ok) {
         logger.error("Error al consultar estado de partida", result.message);
-        // Podrías mostrar una alerta o simplemente dejar que siga intentando
         return;
       }
 
       if (result.finished) {
-        clearInterval(interval);
+        clearInterval(_pollInterval);
+        _pollInterval = null;
         const opponent = result.players?.find(
           (p) => p.email?.toLowerCase() !== currentOnlineEmail?.toLowerCase(),
         );
@@ -374,23 +381,29 @@ export function pollOnlineGameStatus() {
       }
     } catch (err) {
       logger.error("Error de red al comprobar estado online", err);
-      // Si hay un error de red persistente, podríamos ofrecer una opción al usuario.
-      // clearInterval(interval); // No limpiar el intervalo en errores de red temporales.
     }
-  }, 3000); // Comprueba cada 3 segundos (antes 5 segundos, 3 es más rápido)
+  }, 3000);
 }
 
 function updateWaitScreen(players) {
   if (!players) return;
-  const opponent = players.find((p) => p.email?.toLowerCase() !== currentOnlineEmail?.toLowerCase());
-  if (!opponent) return;
+  const myEmail = currentOnlineEmail?.toLowerCase();
+  const me = myEmail ? players.find((p) => p.email?.toLowerCase() === myEmail) : null;
+  const opponent = myEmail
+    ? players.find((p) => p.email?.toLowerCase() !== myEmail)
+    : players[0];
 
+  if (me) {
+    const scoreEl = document.getElementById("wait-your-score");
+    if (scoreEl && me.score !== undefined) scoreEl.textContent = me.score;
+  }
+
+  if (!opponent) return;
   const nameEl = document.getElementById("wait-opponent-name");
   const statusEl = document.getElementById("wait-opponent-status");
   if (!nameEl || !statusEl) return;
 
   nameEl.textContent = opponent.name || "Tu rival";
-
   if (opponent.finished) {
     statusEl.textContent = "¡Ha terminado!";
     statusEl.className = "wait-opponent-badge wait-finished";

@@ -197,7 +197,13 @@ export async function viewOnlineGameResults(code) {
 }
 
 export async function goToOnlineWaitScreen(code) {
+  const rawData = localStorage.getItem("userData");
+  const playerData = rawData ? JSON.parse(rawData) : null;
+
   globalThis.currentOnlineGameCode = code;
+  if (playerData?.email) {
+    globalThis.currentOnlineEmail = playerData.email.trim().toLowerCase();
+  }
   globalThis.showScreen("online-wait-screen");
 
   const { pollOnlineGameStatus } = await import("./online-functions.js");
