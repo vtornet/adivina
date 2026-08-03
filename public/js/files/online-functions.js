@@ -307,6 +307,9 @@ export async function submitOnlineScore() {
   try {
     const storedGame = JSON.parse(localStorage.getItem("currentOnlineGameData") || "{}");
 
+    const scoreEl = document.getElementById("wait-your-score");
+    if (scoreEl) scoreEl.textContent = localPlayer.score ?? "—";
+
     const response = await fetch(`${API_BASE_URL}/api/online-games/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -367,9 +370,7 @@ export function pollOnlineGameStatus() {
         sendGameFinishedNotification(opponent?.name || "Tu rival");
         showOnlineResults(result);
       } else {
-        // Si aún no han terminado, podríamos actualizar el estado en pantalla si quisiéramos
-        // Por ahora, el mensaje "Esperando..." es suficiente.
-        logger.debug("Esperando al otro jugador...");
+        updateWaitScreen(result.players);
       }
     } catch (err) {
       logger.error("Error de red al comprobar estado online", err);
@@ -377,6 +378,26 @@ export function pollOnlineGameStatus() {
       // clearInterval(interval); // No limpiar el intervalo en errores de red temporales.
     }
   }, 3000); // Comprueba cada 3 segundos (antes 5 segundos, 3 es más rápido)
+}
+
+function updateWaitScreen(players) {
+  if (!players) return;
+  const opponent = players.find((p) => p.email?.toLowerCase() !== currentOnlineEmail?.toLowerCase());
+  if (!opponent) return;
+
+  const nameEl = document.getElementById("wait-opponent-name");
+  const statusEl = document.getElementById("wait-opponent-status");
+  if (!nameEl || !statusEl) return;
+
+  nameEl.textContent = opponent.name || "Tu rival";
+
+  if (opponent.finished) {
+    statusEl.textContent = "¡Ha terminado!";
+    statusEl.className = "wait-opponent-badge wait-finished";
+  } else {
+    statusEl.textContent = "jugando...";
+    statusEl.className = "wait-opponent-badge wait-playing";
+  }
 }
 
 export async function saveOnlineGameToHistory(gameData) {

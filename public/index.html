@@ -173,8 +173,25 @@
     </div>
 
     <div id="online-wait-screen" class="screen">
-      <h2>Esperando al Otro Jugador...</h2>
-      <p id="online-status-text">Una vez ambos hayan terminado, verás el resultado.</p>
+      <h2>Partida Online</h2>
+
+      <div class="wait-score-card">
+        <div class="wait-score-row">
+          <span class="wait-label">Tu puntuación</span>
+          <span id="wait-your-score" class="wait-score-value">—</span>
+        </div>
+        <div class="wait-divider"></div>
+        <div class="wait-score-row">
+          <span id="wait-opponent-name" class="wait-label">Tu rival</span>
+          <span id="wait-opponent-status" class="wait-opponent-badge wait-playing">jugando...</span>
+        </div>
+      </div>
+
+      <div class="wait-dots" aria-label="Esperando">
+        <span></span><span></span><span></span>
+      </div>
+      <p id="online-status-text" class="wait-hint">Cuando tu rival termine verás el resultado aquí.</p>
+
       <button class="btn secondary" onclick="goToOnlineMenu()">Volver al Menú Online</button>
       <button class="btn tertiary" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
     </div>
