@@ -123,8 +123,10 @@
     <div id="create-online-screen" class="screen">
       <h2>Crear Partida Online</h2>
       <p>Selecciona década y categoría:</p>
-      <select id="online-decade-select" class="text-input"></select>
-      <select id="online-category-select" class="text-input"></select>
+      <button type="button" id="online-decade-btn" class="text-input select-btn">Selecciona Década ▾</button>
+      <input type="hidden" id="online-decade-select" value="">
+      <button type="button" id="online-category-btn" class="text-input select-btn">Selecciona Categoría ▾</button>
+      <input type="hidden" id="online-category-select" value="">
       <button class="btn" onclick="createOnlineGame()">Crear y Compartir Código</button>
       <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
     </div>
@@ -139,8 +141,10 @@
     <div id="invite-online-screen" class="screen">
       <h2>Invitar a Jugador</h2>
       <input type="text" id="rival-name-input" class="text-input" placeholder="Nombre del rival" />
-      <select id="invite-decade-select" class="text-input"></select>
-      <select id="invite-category-select" class="text-input"></select>
+      <button type="button" id="invite-decade-btn" class="text-input select-btn">Selecciona Década ▾</button>
+      <input type="hidden" id="invite-decade-select" value="">
+      <button type="button" id="invite-category-btn" class="text-input select-btn">Selecciona Categoría ▾</button>
+      <input type="hidden" id="invite-category-select" value="">
       <button class="btn" onclick="invitePlayerByName()">Invitar</button>
       <button class="btn secondary" onclick="showScreen('online-mode-screen')">Volver</button>
     </div>
@@ -580,6 +584,15 @@
     </div>
 
     <!-- POLÍTICA DE PRIVACIDAD -->
+    <!-- SELECTOR DE OPCIONES PERSONALIZADO -->
+    <div id="select-picker-modal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <h3 id="select-picker-title"></h3>
+        <div id="select-picker-options" class="select-picker-list"></div>
+        <button class="btn secondary" type="button" onclick="closeSelectPicker()">Cancelar</button>
+      </div>
+    </div>
+
     <div id="privacy-policy-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="privacy-policy-title">
       <div class="modal-content">
         <h3 id="privacy-policy-title">Política de Privacidad</h3>

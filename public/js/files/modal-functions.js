@@ -1,5 +1,39 @@
 import { closeHamburgerMenu } from "./burger-functions.js";
 
+let _pickerFieldId = null;
+let _pickerBtnId = null;
+
+export function openSelectPicker(fieldId, btnId, title, options) {
+  _pickerFieldId = fieldId;
+  _pickerBtnId = btnId;
+
+  document.getElementById("select-picker-title").textContent = title;
+  const container = document.getElementById("select-picker-options");
+  container.innerHTML = "";
+
+  const currentValue = document.getElementById(fieldId)?.value;
+
+  options.forEach(({ value, label }) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "select-picker-option" + (value === currentValue ? " active" : "");
+    btn.textContent = label;
+    btn.onclick = () => {
+      document.getElementById(_pickerFieldId).value = value;
+      const displayBtn = document.getElementById(_pickerBtnId);
+      if (displayBtn) displayBtn.textContent = label + " ▾";
+      closeSelectPicker();
+    };
+    container.appendChild(btn);
+  });
+
+  document.getElementById("select-picker-modal").classList.remove("hidden");
+}
+
+export function closeSelectPicker() {
+  document.getElementById("select-picker-modal")?.classList.add("hidden");
+}
+
 export function showAppAlert(message, options = {}) {
   return showAppModal({
     title: options.title || "Aviso",

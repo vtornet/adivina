@@ -204,17 +204,11 @@ export async function generateDecadeButtons() {
 }
 
 export function populateOnlineSelectors() {
-  const decadeSelect = document.getElementById("online-decade-select");
-  const categorySelect = document.getElementById("online-category-select");
-
-  populateDecadeOptions(decadeSelect, getDecadesForSelect());
-  populateCategoryOptions(categorySelect, getCategoriesForSelect());
+  populateDecadeOptions("online-decade-btn", "online-decade-select", getDecadesForSelect());
+  populateCategoryOptions("online-category-btn", "online-category-select", getCategoriesForSelect());
 }
 
 export function populateInviteSelectors() {
-  const decadeSelect = document.getElementById("invite-decade-select");
-  const categorySelect = document.getElementById("invite-category-select");
-
-  populateDecadeOptions(decadeSelect, getDecadesForSelect());
-  populateCategoryOptions(categorySelect, getCategoriesForSelect());
+  populateDecadeOptions("invite-decade-btn", "invite-decade-select", getDecadesForSelect());
+  populateCategoryOptions("invite-category-btn", "invite-category-select", getCategoriesForSelect());
 }

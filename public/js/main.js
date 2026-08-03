@@ -66,6 +66,8 @@ import {
   closeTermsOfService,
   showCookiePolicy,
   closeCookiePolicy,
+  openSelectPicker,
+  closeSelectPicker,
 } from "./files/modal-functions.js";
 import { closeHamburgerMenu, toggleHamburgerMenu } from "./files/burger-functions.js";
 import { showScreen } from "./files/screen-functions.js";
@@ -313,6 +315,8 @@ Object.assign(globalThis, {
   closeTermsOfService,
   showCookiePolicy,
   closeCookiePolicy,
+  openSelectPicker,
+  closeSelectPicker,
 });
 
 // Inicialización
