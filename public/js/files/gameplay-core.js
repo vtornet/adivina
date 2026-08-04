@@ -327,6 +327,10 @@ export function endGame() {
     );
   }
 
+  // Capturar década y categoría ahora, antes de que nada pueda modificarlas
+  const replayDecade = globalThis.gameState.selectedDecade;
+  const replayCategory = globalThis.gameState.category;
+
   // Configurar botón "Jugar Otra Vez"
   document.getElementById("play-again-btn").textContent = "Jugar Otra Vez";
   document.getElementById("play-again-btn").onclick = () => {
@@ -348,6 +352,9 @@ export function endGame() {
       localStorage.removeItem("currentOnlineGameData");
       showScreen("online-mode-screen");
     } else {
+      // Restaurar la combinación exacta jugada, por si algo la modificó entre medias
+      globalThis.gameState.selectedDecade = replayDecade;
+      globalThis.gameState.category = replayCategory;
       globalThis.gameState.players.forEach((player) => {
         player.score = 0;
         player.questionsAnswered = 0;
