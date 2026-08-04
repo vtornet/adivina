@@ -43,7 +43,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
     originalCategory: "ingles",
   },
   {
-    file: "Actual/ingles/bts -dynamite.mp3",
+    file: "Actual/ingles/bts - dynamite.mp3",
     display: "Bts - Dynamite",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DYNAMITE_BTS",
     platform: "spotify",
@@ -163,7 +163,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
     originalCategory: "ingles",
   },
   {
-    file: "Actual/ingles/doechii-anxiety.mp3",
+    file: "Actual/ingles/doechii - anxiety.mp3",
     display: "Doechii - Anxiety",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANXIETY_DOECHII",
     platform: "spotify",
@@ -203,7 +203,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
     originalCategory: "ingles",
   },
   {
-    file: "Actual/ingles/ed-sheeran - bad-habits.mp3",
+    file: "Actual/ingles/ed-sheeran-bad - habits.mp3",
     display: "Ed Sheeran - Bad Habits",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ED_SHEERAN_BAD_HABITS_",
     platform: "spotify",

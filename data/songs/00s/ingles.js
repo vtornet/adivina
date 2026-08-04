@@ -3,7 +3,7 @@ globalThis.allSongsByDecadeAndCategory = globalThis.allSongsByDecadeAndCategory 
 globalThis.allSongsByDecadeAndCategory["00s"] = globalThis.allSongsByDecadeAndCategory["00s"] || {};
 globalThis.allSongsByDecadeAndCategory["00s"].ingles = [
   {
-    file: "00s/ingles/50-cent - in-da-club.mp3",
+    file: "00s/ingles/50-Cent - in-da-club.mp3",
     display: "50 Cent - In Da Club",
     listenUrl: "https://open.spotify.com/track/7iL6o9tox1zgHpKUfh9vuC",
     platform: "spotify",
@@ -518,14 +518,6 @@ globalThis.allSongsByDecadeAndCategory["00s"].ingles = [
     file: "00s/ingles/madcon - beggin.mp3",
     display: "Madcon - Beggin'",
     listenUrl: "https://open.spotify.com/track/1XyL3J7eTTKnxRZAM3LqIT",
-    platform: "spotify",
-    originalDecade: "00s",
-    originalCategory: "ingles",
-  },
-  {
-    file: "80s/ingles/maddonna - music.mp3",
-    display: "Maddonna - Music",
-    listenUrl: "https://open.spotify.com/track/0efHNLW15aV2w0Z36pbZyw",
     platform: "spotify",
     originalDecade: "00s",
     originalCategory: "ingles",
