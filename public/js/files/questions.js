@@ -10,6 +10,7 @@ import { playAudioSnippet } from "./audio-manager.js";
  * Configura la siguiente pregunta del juego.
  */
 export function setupQuestion(nextPlayerOrEndGameCallback) {
+  globalThis.gameState.nextCallback = nextPlayerOrEndGameCallback;
   const currentPlayer = globalThis.gameState.players[globalThis.gameState.currentPlayerIndex];
 
   if (currentPlayer.questionsAnswered >= globalThis.gameState.totalQuestionsPerPlayer) {

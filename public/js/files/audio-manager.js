@@ -1,4 +1,3 @@
-import { showAppAlert } from "./modal-functions.js";
 import { logger } from "./logger.js";
 
 /**
@@ -66,11 +65,33 @@ export function playAudioSnippet() {
   globalThis.audioPlayer.addEventListener("timeupdate", stopAudioListener);
 
   globalThis.audioPlayer.play().catch((e) => {
-    logger.error("Fallo 404 en ruta física", audioSrc);
+    if (e.name === "AbortError") return;
+
+    logger.warn("Audio no disponible, saltando canción:", audioSrc);
     playBtn.disabled = false;
     playBtn.innerText = "▶";
     playBtn.classList.remove("is-playing");
     globalThis.gameState.hasPlayed = false;
-    showAppAlert("Error 404: El archivo no se encuentra en el servidor.");
+
+    const gs = globalThis.gameState;
+    const currentPlayer = gs.players[gs.currentPlayerIndex];
+    const brokenFile = currentPlayer.questions[currentPlayer.questionsAnswered]?.file;
+
+    const pool = globalThis.configuracionCanciones?.[gs.selectedDecade]?.[gs.category];
+    if (pool && brokenFile) {
+      const brokenIdx = pool.findIndex((s) => s.file === brokenFile);
+      if (brokenIdx !== -1) pool.splice(brokenIdx, 1);
+
+      const usedFiles = new Set(currentPlayer.questions.map((q) => q.file));
+      const replacement = pool.find((s) => !usedFiles.has(s.file));
+      if (replacement) {
+        currentPlayer.questions[currentPlayer.questionsAnswered] = replacement;
+        globalThis.setupQuestion?.(gs.nextCallback);
+        return;
+      }
+    }
+
+    currentPlayer.questionsAnswered++;
+    globalThis.setupQuestion?.(gs.nextCallback);
   });
 }
