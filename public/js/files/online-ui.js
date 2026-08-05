@@ -156,10 +156,14 @@ export async function loadPlayerOnlineGames() {
         const otherPlayer = game.players.find((p) => p.email !== userEmail);
         const otherPlayerName = otherPlayer ? otherPlayer.name : "Rival";
 
+        const finishedAtStr = game.finishedAt
+          ? new Date(game.finishedAt).toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" })
+          : "";
+
         gameDiv.innerHTML = `
           <p><strong>Partida con:</strong> ${otherPlayerName}</p>
           <p><strong>Categoría:</strong> ${getDecadeLabel(game.decade)} - ${getCategoryLabel(game.category)}</p>
-          <p><strong>Estado:</strong> FINALIZADA</p>
+          <p><strong>Estado:</strong> FINALIZADA${finishedAtStr ? ` — ${finishedAtStr}` : ""}</p>
           <button class="btn" onclick="globalThis.viewOnlineGameResults('${game.code}')">Ver Resultados</button>
         `;
         finishedGamesContainer.appendChild(gameDiv);

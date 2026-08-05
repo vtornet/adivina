@@ -18,28 +18,19 @@ export function setupPaymentListeners() {
   }
 }
 
-/**
- * Redirige al usuario a Stripe para el proceso de pago.
- * @param {string} product - Identificador del producto a comprar.
- */
-export async function redirectToStripe(product) {
+export async function redirectToStripe() {
   if (!globalThis.currentUser || !globalThis.currentUser.email) {
     showAppAlert("Debes iniciar sesión para comprar contenido premium.");
     return;
   }
 
   try {
-    const API_BASE_URL =
-      globalThis.location.hostname === "localhost" || globalThis.location.hostname === "127.0.0.1"
-        ? globalThis.location.origin
-        : globalThis.CANONICAL_PROD_ORIGIN;
-
-    const response = await fetch(`${API_BASE_URL}/api/create-checkout-session`, {
+    const response = await fetch("/api/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: globalThis.currentUser.email,
-        product: product,
+        returnUrl: globalThis.location.origin,
       }),
     });
 
@@ -69,12 +60,7 @@ export async function validatePaymentStatus(sessionId) {
   if (!sessionId) return null;
 
   try {
-    const API_BASE_URL =
-      globalThis.location.hostname === "localhost" || globalThis.location.hostname === "127.0.0.1"
-        ? globalThis.location.origin
-        : globalThis.CANONICAL_PROD_ORIGIN;
-
-    const response = await fetch(`${API_BASE_URL}/api/validate-payment?session_id=${sessionId}`, {
+    const response = await fetch(`/api/validate-payment?session_id=${sessionId}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

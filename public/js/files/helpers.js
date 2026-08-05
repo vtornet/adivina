@@ -144,6 +144,22 @@ export function deepClone(obj) {
  * @param {number} wait - Tiempo de espera en ms.
  * @returns {Function} Función con debounce.
  */
+export function showHeadphonesTip() {
+  if (localStorage.getItem("headphonesTipShown")) return;
+  localStorage.setItem("headphonesTipShown", "true");
+
+  const tip = document.createElement("div");
+  tip.className = "tip-toast";
+  tip.textContent = "🎧 Para mejor experiencia, usa auriculares";
+  document.body.appendChild(tip);
+
+  const dismiss = () => {
+    tip.classList.add("hide");
+    setTimeout(() => tip.remove(), 400);
+  };
+  setTimeout(dismiss, 4000);
+}
+
 export function debounce(func, wait = 300) {
   let timeout;
   return function executedFunction(...args) {

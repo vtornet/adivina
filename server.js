@@ -270,30 +270,26 @@ async function connectToMongo() {
 // 4) API
 // ==============================
 
+const PREMIUM_PRICE_ID = "price_1U18xPBesxEarqE5eMvhTLin";
+
 app.post("/api/create-checkout-session", async (req, res) => {
-  const { email, categoryKey, priceId, returnUrl } = req.body;
+  const { email, returnUrl } = req.body;
   const baseUrl = returnUrl || "https://adivinalacancion.app";
+
+  if (!email) return res.status(400).json({ error: "Falta el email." });
 
   try {
     const session = await stripe.checkout.sessions.create({
       customer_email: email,
       payment_method_types: ["card"],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: PREMIUM_PRICE_ID, quantity: 1 }],
       mode: "payment",
-      metadata: {
-        user_email: email,
-        category_key: categoryKey,
-      },
+      metadata: { user_email: email, category_key: "premium_all" },
       success_url: `${baseUrl}/?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/`,
     });
 
-    res.json({ id: session.id });
+    res.json({ url: session.url });
   } catch (err) {
     console.error("Error Stripe Session:", err.message);
     res.status(500).json({ error: err.message });

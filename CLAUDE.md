@@ -130,16 +130,14 @@ Native `<select>` elements are replaced with `<button>` + `<input type="hidden">
 
 Email comparisons in online code must always use `.toLowerCase()` on both sides to avoid Android vs desktop case mismatches.
 
-### Payment System (Stripe) — Incomplete
+### Payment System (Stripe)
 
-The payment flow has known bugs that have not yet been fixed:
+Single product: **€2.99 — desbloquea todo** (`price_1U18xPBesxEarqE5eMvhTLin`, Stripe test mode).
 
-1. **Wrong API URL**: `payment-functions.js` builds the URL using `globalThis.CANONICAL_PROD_ORIGIN` (`https://adivinalacancion.app`) instead of a relative path. If that domain doesn't point to the Railway app, all payment calls fail before reaching the server.
-2. **Parameter mismatch**: frontend sends `{ email, product }` but server expects `{ email, categoryKey, priceId }`.
-3. **Missing Stripe Price IDs**: no `price_xxx` IDs are defined anywhere in the codebase. The server receives `priceId: undefined` and Stripe rejects the call.
-4. **Wrong response field**: server returns `{ id: session.id }` but frontend reads `url` from the response (Stripe sessions have a `url` field that should be forwarded).
-
-To fix: define a `categoryKey → price_xxx` map on the server using the real Stripe Price IDs, fix the API URL to use a relative path, align the request/response fields.
+- `PREMIUM_PRICE_ID` is hardcoded in `server.js` just above the `/api/create-checkout-session` route. The frontend sends only `{ email, returnUrl }` — the server always charges the same price, which is safer than trusting a price ID from the client.
+- On payment, webhook saves `"premium_all"` to `user.unlocked_sections`. `hasCategoryAccess()` and `hasPremiumAccess()` in `premium-functions.js` both check for `"premium_all"`.
+- All API calls in `payment-functions.js` use relative paths (`/api/...`) — no `CANONICAL_PROD_ORIGIN` dependency.
+- When going live: create a new product in Stripe **live mode** and update `PREMIUM_PRICE_ID` in `server.js`.
 
 ### Service Worker
 

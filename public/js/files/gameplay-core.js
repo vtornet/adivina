@@ -9,6 +9,7 @@ import { setEndGameNavigationButtons, setOnlineMenuButtonVisibility } from "./na
 import { shareGameResultHandler } from "./share-functions.js";
 import { playAudioSnippet } from "./audio-manager.js";
 import { setupQuestion, updateAttemptsCounter, checkAnswer } from "./questions.js";
+import { showHeadphonesTip } from "./helpers.js";
 
 
 /**
@@ -168,6 +169,7 @@ export function startGame() {
 
   globalThis.gameState.currentPlayerIndex = 0;
   setupQuestion(nextPlayerOrEndGame);
+  showHeadphonesTip();
   showScreen("game-screen");
 }
 

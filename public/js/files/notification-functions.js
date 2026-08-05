@@ -69,9 +69,9 @@ export function addNotification(message, type = "info") {
   notifications.unshift({
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     message,
-    date: new Date().toLocaleDateString(),
+    date: new Date().toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" }),
     type,
-    read: false, // <--- NUEVO: Marcamos como NO leída
+    read: false,
   });
   localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
 

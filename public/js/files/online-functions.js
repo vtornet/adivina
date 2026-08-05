@@ -3,6 +3,7 @@ import { getCurrentUserData } from "./user-functions.js";
 import { showAppAlert, showAppModal } from "./modal-functions.js";
 import { isPremiumSelection, hasPremiumAccess, showPremiumModal } from "./premium-functions.js";
 import { copyOnlineGameCode } from "./online-invites.js";
+import { showHeadphonesTip } from "./helpers.js";
 
 export async function createOnlineGame() {
   const decade = document.getElementById("online-decade-select").value;
@@ -292,6 +293,7 @@ export async function startOnlineGame() {
   }
 
   setupQuestion(globalThis.nextPlayerOrEndGame);
+  showHeadphonesTip();
   showScreen("game-screen");
 }
 
