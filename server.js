@@ -270,7 +270,7 @@ async function connectToMongo() {
 // 4) API
 // ==============================
 
-const PREMIUM_PRICE_ID = "price_1U18xPBesxEarqE5eMvhTLin";
+const PREMIUM_PRICE_ID = "price_1SuACIAzxZ5jYRrVNKmtD0KN";
 
 app.post("/api/create-checkout-session", async (req, res) => {
   const { email, returnUrl } = req.body;
