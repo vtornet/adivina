@@ -343,13 +343,14 @@ export async function submitOnlineScore() {
 }
 
 let _pollInterval = null;
+let _notificationSent = false;
 
 export function pollOnlineGameStatus() {
-  // Cancelar cualquier poll anterior antes de crear uno nuevo
   if (_pollInterval) {
     clearInterval(_pollInterval);
     _pollInterval = null;
   }
+  _notificationSent = false;
 
   _pollInterval = setInterval(async () => {
     try {
@@ -372,6 +373,8 @@ export function pollOnlineGameStatus() {
       if (result.finished) {
         clearInterval(_pollInterval);
         _pollInterval = null;
+        if (_notificationSent) return;
+        _notificationSent = true;
         const opponent = result.players?.find(
           (p) => p.email?.toLowerCase() !== currentOnlineEmail?.toLowerCase(),
         );
