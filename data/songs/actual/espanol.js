@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/abraham-mateo-y-ana-mena - quiero-decirte.mp3",
     display: "Abraham Mateo y Ana Mena - Quiero Decirte",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUIERO_DECIRTE_ABRAHAM_MATEO_Y_ANA_MENA",
+    listenUrl: "https://open.spotify.com/track/3CmSv76KDKsvtiyrdgHZHH",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/abraham-mateo-y-becky-g - tiempo-pa-olvidar.mp3",
     display: "Abraham Mateo y Becky G - Tiempo Pa Olvidar",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TIEMPO_PA_OLVIDAR_ABRAHAM_MATEO_Y_BECKY_G",
+    listenUrl: "https://open.spotify.com/track/69dNigIQhkCnL6pr7iRJPA",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/aitana - berlin-u5.mp3",
     display: "Aitana - Berlin U5",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BERLIN_U5_AITANA",
+    listenUrl: "https://open.spotify.com/track/1IMa0Il4w988MwZCUcISix",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/aitana - las-babys.mp3",
     display: "Aitana - Las Babys",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LAS_BABYS_AITANA",
+    listenUrl: "https://open.spotify.com/track/1FhRIZtz1d4qLVe4928exT",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/aitana - los-angeles.mp3",
     display: "Aitana - Los Angeles",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOS_ANGELES_AITANA",
+    listenUrl: "https://open.spotify.com/track/0knbcslkZje0qdsqbd8jwj",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/aitana-y-nicki-nicole - formentera.mp3",
     display: "Aitana y Nicki Nicole - Formentera",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FORMENTERA_AITANA_Y_NICKI_NICOLE",
+    listenUrl: "https://open.spotify.com/track/5sJipPDSq5YD4UkmGq6d1N",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/aitana-y-rels-b - miamor.mp3",
     display: "Aitana y Rels B - Miamor",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MIAMOR_AITANA_Y_RELS_B",
+    listenUrl: "https://open.spotify.com/track/4W7HTXquxvPZzw0Q68ELE2",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/ana-mena - 2007.mp3",
     display: "Ana Mena - 2007",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_2007_ANA_MENA",
+    listenUrl: "https://open.spotify.com/track/0sdF23PVfCRYDqS1Uhatx1",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -77,7 +77,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/ana-mena - musica-ligera.mp3",
     display: "Ana Mena - Musica Ligera",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MUSICA_LIGERA_ANA_MENA",
+    listenUrl: "https://open.spotify.com/track/1lMuQJHBznRfq7GdQrIQN4",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/ana-mena - promesa.mp3",
     display: "Ana Mena - Promesa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PROMESA_ANA_MENA",
+    listenUrl: "https://open.spotify.com/track/54NQtnCL950bGIHlZUMMDH",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/ana-mena-y-belinda - las-12.mp3",
     display: "Ana Mena y Belinda - Las 12",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LAS_12_ANA_MENA_Y_BELINDA",
+    listenUrl: "https://open.spotify.com/track/0EpdLuptraYGFZ6J7HNSLc",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/ana-mena-y-rocco-hunt - un-beso-en-madrid.mp3",
     display: "Ana Mena y Rocco Hunt - Un Beso En Madrid",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_UN_BESO_EN_MADRID_ANA_MENA_Y_ROCCO_HUNT",
+    listenUrl: "https://open.spotify.com/track/351dqwRVsCDniedG9soXSf",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/anuel-aa - dictadura.mp3",
     display: "Anuel Aa - Dictadura",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DICTADURA_ANUEL_AA",
+    listenUrl: "https://open.spotify.com/track/16RRpUyUDjkIept8AymRiL",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/anuel-aa - leyenda.mp3",
     display: "Anuel Aa - Leyenda",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LEYENDA_ANUEL_AA",
+    listenUrl: "https://open.spotify.com/track/3BIOxohEjTEcRRg0VVlNI6",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-bunny - monaco.mp3",
     display: "Bad Bunny - Monaco",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MONACO_BAD_BUNNY",
+    listenUrl: "https://open.spotify.com/track/4MjDJD8cW7iVeWInc2Bdyj",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-bunny - neverita.mp3",
     display: "Bad Bunny - Neverita",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NEVERITA_BAD_BUNNY",
+    listenUrl: "https://open.spotify.com/track/31i56LZnwE6uSu3exoHjtB",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-bunny - titi-me-pregunto.mp3",
     display: "Bad Bunny - Titi Me Pregunto",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TITI_ME_PREGUNTO_BAD_BUNNY",
+    listenUrl: "https://open.spotify.com/track/1IHWl5LamUGEuP4ozKQSXZ",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-bunny - yo-perreo-sola.mp3",
     display: "Bad Bunny - Yo Perreo Sola",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YO_PERREO_SOLA_BAD_BUNNY",
+    listenUrl: "https://open.spotify.com/track/0SqqAgdovOE24BzxIClpjw",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-bunny - un-verano-sin-ti.mp3",
     display: "Bad Bunny - Un Verano Sin Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_UN_VERANO_SIN_TI_BAD_BUNNY",
+    listenUrl: "https://open.spotify.com/track/18HOjcvTVV7W8YzBuOsAPS",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-bunny-y-bomba-estereo - ojitos-lindos.mp3",
     display: "Bad Bunny y Bomba Estereo - Ojitos Lindos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_OJITOS_LINDOS_BAD_BUNNY_Y_BOMBA_ESTEREO",
+    listenUrl: "https://open.spotify.com/track/28T1ADWdfjYRvVe1pZUP1n",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-bunny-y-chencho-corleone - me-porto-bonito.mp3",
     display: "Bad Bunny y Chencho Corleone - Me Porto Bonito",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ME_PORTO_BONITO_BAD_BUNNY_Y_CHENCHO_CORLEONE",
+    listenUrl: "https://open.spotify.com/track/600Aoatd1rT5bZYZtrguNz",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bad-gyal - chulo.mp3",
     display: "Bad Gyal - Chulo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CHULO_BAD_GYAL",
+    listenUrl: "https://open.spotify.com/track/1NCF4UUsuT6Xzw2Zxd43PJ",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/beret - el-dia-menos-pensado.mp3",
     display: "Beret - El Dia Menos Pensado",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_DIA_MENOS_PENSADO_BERET",
+    listenUrl: "https://open.spotify.com/track/5tQ0WNliZPouHDIzP66l9I",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/beret - te-estas-olvidando-de-mi.mp3",
     display: "Beret - Te Estas Olvidando De Mi",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TE_ESTAS_OLVIDANDO_DE_MI_BERET",
+    listenUrl: "https://open.spotify.com/track/5iXv40wYoiN97Rehpad2rb",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bizarrap-y-nicki-nicole - bzrp-session-vol-13.mp3",
     display: "Bizarrap y Nicki Nicole - Bzrp Session Vol 13",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BZRP_SESSION_VOL_13_BIZARRAP_Y_NICKI_NICOLE",
+    listenUrl: "https://open.spotify.com/track/2S93hylQBYLndMnaJuso8S",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/bizarrap-y-ysya - bzrp-session-vol-56.mp3",
     display: "Bizarrap y Ysya - Bzrp Session Vol 56",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BZRP_SESSION_VOL_56_BIZARRAP_Y_YSYA",
+    listenUrl: "https://open.spotify.com/track/2tTmW7RDtMQtBk7m2rYeSw",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/c-tangana - demasiadas-mujeres.mp3",
     display: "C Tangana - Demasiadas Mujeres",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DEMASIADAS_MUJERES_C_TANGANA",
+    listenUrl: "https://open.spotify.com/track/3GaGWoU1KfVqgl7vnRHP55",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/c-tangana - ingobernable.mp3",
     display: "C Tangana - Ingobernable",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_INGOBERNABLE_C_TANGANA",
+    listenUrl: "https://open.spotify.com/track/3SK45LddxlEkzI8OWO9Eyo",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/c-tangana - tu-me-dejaste-de-querer.mp3",
     display: "C Tangana - Tu Me Dejaste de Querer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TU_ME_DEJASTE_DE_QUERER_C_TANGANA",
+    listenUrl: "https://open.spotify.com/track/5ddFjrPG8NgQQ6xlOQIVd2",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/c-tangana - yate.mp3",
     display: "C Tangana - Yate",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_YATE_C_TANGANA",
+    listenUrl: "https://open.spotify.com/track/0q7psxaixBQ8FkqyVpbfky",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/c-tangana-y-nathy-peluso - ateo.mp3",
     display: "C Tangana y Nathy Peluso - Ateo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ATEO_C_TANGANA_Y_NATHY_PELUSO",
+    listenUrl: "https://open.spotify.com/track/2YSfxfteu87hPkR50yoUbu",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/camilo - pegao.mp3",
     display: "Camilo - Pegao",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PEGAO_CAMILO",
+    listenUrl: "https://open.spotify.com/track/7Dk8r4VR5NoveUvTiCKEXC",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/camilo - ropa-cara.mp3",
     display: "Camilo - Ropa Cara",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROPA_CARA_CAMILO",
+    listenUrl: "https://open.spotify.com/track/7BIy3EGQhg98CsRdKYHnJC",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/camilo-y-alejandro-sanz - nasa.mp3",
     display: "Camilo y Alejandro Sanz - Nasa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NASA_CAMILO_Y_ALEJANDRO_SANZ",
+    listenUrl: "https://open.spotify.com/track/5fSDXbY8o9pA3TKwAbfwML",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/camilo-y-evaluna-montaner - indigo.mp3",
     display: "Camilo y Evaluna Montaner - Indigo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_INDIGO_CAMILO_Y_EVALUNA_MONTANER",
+    listenUrl: "https://open.spotify.com/track/1f9j6LO5166GQoE0CMA5tq",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/cepeda-y-conchita - simplemente-dilo.mp3",
     display: "Cepeda y Conchita - Simplemente Dilo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SIMPLEMENTE_DILO_CEPEDA_Y_CONCHITA",
+    listenUrl: "https://open.spotify.com/track/4Feoi4DZlAiyEd29SYPYcF",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/chanel - perdoname.mp3",
     display: "Chanel - Perdoname",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PERDONAME_CHANEL",
+    listenUrl: "https://open.spotify.com/track/4thdWnDuZ8qyWlIvUCga9N",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/chanel - slowmo.mp3",
     display: "Chanel - Slowmo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SLOWMO_CHANEL",
+    listenUrl: "https://open.spotify.com/track/0T71AvVXY4RB65tvdIyzdO",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/chanel-y-ptazeta - ping-pong.mp3",
     display: "Chanel y Ptazeta - Ping Pong",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PING_PONG_CHANEL_Y_PTAZETA",
+    listenUrl: "https://open.spotify.com/track/5Eb7IOb6vFrSpFijpTr61B",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/dani-fernandez - clima-tropical.mp3",
     display: "Dani Fernandez - Clima Tropical",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CLIMA_TROPICAL_DANI_FERNANDEZ",
+    listenUrl: "https://open.spotify.com/track/7JFa80j5Cw6DMf8RISgd0t",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/dani-fernandez - dile-a-los-demas.mp3",
     display: "Dani Fernandez - Dile A Los Demas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DILE_A_LOS_DEMAS_DANI_FERNANDEZ",
+    listenUrl: "https://open.spotify.com/track/71J4vM6OnOl9Bs99CaS2dq",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/dani-fernandez - plan-fatal.mp3",
     display: "Dani Fernandez - Plan Fatal",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PLAN_FATAL_DANI_FERNANDEZ",
+    listenUrl: "https://open.spotify.com/track/1rvIc6gmb6PBaEf2cET16n",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/dani-martin - la-mentira.mp3",
     display: "Dani Martin - La Mentira",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_MENTIRA_DANI_MARTIN",
+    listenUrl: "https://open.spotify.com/track/6b230QKlluW1wgkexEAjBa",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/dani-martin - que-caro-es-el-tiempo.mp3",
     display: "Dani Martin - Que Caro Es El Tiempo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUE_CARO_ES_EL_TIEMPO_DANI_MARTIN",
+    listenUrl: "https://open.spotify.com/track/3lC6t3xEq9xu0U9fXaXaxc",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/danna-paola - xt4s1s.mp3",
     display: "Danna Paola - Xt4s1s",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_XT4S1S_DANNA_PAOLA",
+    listenUrl: "https://open.spotify.com/track/7dMTCS9BLzBqYTlAuHP8TM",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/farruko - pepas.mp3",
     display: "Farruko - Pepas",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PEPAS",
+    listenUrl: "https://open.spotify.com/track/2B4GHvToeLTOBB4QLzW3Ni",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/feid - feliz-cumpleanos-ferxxo.mp3",
     display: "Feid - Feliz Cumpleanos Ferxxo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FELIZ_CUMPLEANOS_FERXXO_FEID",
+    listenUrl: "https://open.spotify.com/track/2CeKVsFFXG4QzA415QygGb",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/feid - normal.mp3",
     display: "Feid - Normal",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NORMAL_FEID",
+    listenUrl: "https://open.spotify.com/track/0T2pB7P1VdXPhLdQZ488uH",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/fred-de-palma-y-ana-mena - se-iluminaba.mp3",
     display: "Fred De Palma y Ana Mena - Se Iluminaba",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SE_ILUMINABA_FRED_DE_PALMA_Y_ANA_MENA",
+    listenUrl: "https://open.spotify.com/track/5IbiQAbMBe5T2K67mCAIx3",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/grupo-frontera-y-bad-bunny - un-x100to.mp3",
     display: "Grupo Frontera y Bad Bunny - Un X100to",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_UN_X100TO_GRUPO_FRONTERA_Y_BAD_BUNNY",
+    listenUrl: "https://open.spotify.com/track/51Awtxah1bdEZCnUP3i70E",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/isabel.aaiun - potra-salvaje-oficial-remix.mp3",
     display: "Isabel.aaiun - Potra Salvaje Oficial Remix",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_POTRA_SALVAJE_OFICIAL_REMIX_ISABEL_AAIUN",
+    listenUrl: "https://open.spotify.com/track/6KbPnhLCdUGYij2P730EnP",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/karol-g - amargura.mp3",
     display: "Karol G - Amargura",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AMARGURA_KAROL_G",
+    listenUrl: "https://open.spotify.com/track/505v13epFXodT9fVAJ6h8k",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/karol-g - cairo.mp3",
     display: "Karol G - Cairo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CAIRO_KAROL_G",
+    listenUrl: "https://open.spotify.com/track/16dUQ4quIHDe4ZZ0wF1EMN",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/karol-g - provenza.mp3",
     display: "Karol G - Provenza",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PROVENZA_KAROL_G",
+    listenUrl: "https://open.spotify.com/track/3HqcNJdZ2seoGxhn0wVNDK",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/karol-g - si-antes-te-hubiera-conocido.mp3",
     display: "Karol G - Si Antes Te Hubiera Conocido",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SI_ANTES_TE_HUBIERA_CONOCIDO_KAROL_G",
+    listenUrl: "https://open.spotify.com/track/6WatFBLVB0x077xWeoVc2k",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/karol-g-y-mariah-angeliq - el-makinon.mp3",
     display: "Karol G y Mariah Angeliq - El Makinon",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_MAKINON_KAROL_G_Y_MARIAH_ANGELIQ",
+    listenUrl: "https://open.spotify.com/track/2eRvNdKma3ONWyyjGGMLgn",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/karol-g-y-shakira - tqg.mp3",
     display: "Karol G y Shakira - Tqg",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TQG_KAROL_G_Y_SHAKIRA",
+    listenUrl: "https://open.spotify.com/track/1VyoUKGlVrGE9QvCT0Cw0b",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/lola-indigo - an1mal.mp3",
     display: "Lola Indigo - An1mal",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AN1MAL_LOLA_INDIGO",
+    listenUrl: "https://open.spotify.com/track/5KA3dYKykvZW5KBEpSTmOL",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/lola-indigo - reina.mp3",
     display: "Lola Indigo - Reina",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_REINA_LOLA_INDIGO",
+    listenUrl: "https://open.spotify.com/track/06JM1fuKPQOrSL6s9mzDvV",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/lola-indigo - toy-story.mp3",
     display: "Lola Indigo - Toy Story",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TOY_STORY_LOLA_INDIGO",
+    listenUrl: "https://open.spotify.com/track/2Y9W6qcN9COH0XyeYApQOE",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/lola-indigo-tini-belinda - la-nina-de-la-escuela.mp3",
     display: "Lola Indigo Tini Belinda - La Nina De La Escuela",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_NINA_DE_LA_ESCUELA_LOLA_INDIGO_TINI_BELINDA",
+    listenUrl: "https://open.spotify.com/track/1g4cZvi0nLeeIycd0Rkljj",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/lola-indigo-y-luis-fonsi - corazones-rotos.mp3",
     display: "Lola Indigo y Luis Fonsi - Corazones Rotos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CORAZONES_ROTOS_LOLA_INDIGO_Y_LUIS_FONSI",
+    listenUrl: "https://open.spotify.com/track/0ixzdbapD7FVzxZ7IF3mUH",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/lola-indigo-y-quevedo - el-tonto.mp3",
     display: "Lola Indigo y Quevedo - El Tonto",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_TONTO_LOLA_INDIGO_Y_QUEVEDO",
+    listenUrl: "https://open.spotify.com/track/2G8Y2gvHWg9XpbFdTRixvp",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/manuel-carrasco - pueblo-salvaje.mp3",
     display: "Manuel Carrasco - Pueblo Salvaje",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PUEBLO_SALVAJE_MANUEL_CARRASCO",
+    listenUrl: "https://open.spotify.com/track/7Cmje2XicTmBP4rDxuyomu",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/mau-y-ricky-camilo-y-manuel-turizo - pesadilla.mp3",
     display: "Mau y Ricky Camilo y Manuel Turizo - Pesadilla",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PESADILLA_MAU_Y_RICKY_CAMILO_Y_MANUEL_TURIZO",
+    listenUrl: "https://open.spotify.com/track/56f5qnyAlZdlz8wrUDA50h",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/melody - esa-diva.mp3",
     display: "Melody - Esa Diva",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ESA_DIVA_MELODY",
+    listenUrl: "https://open.spotify.com/track/0Qp0umXWB3c5nfnNRuSF5s",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/natalia-lacunza - quiero-dormir-contigo.mp3",
     display: "Natalia Lacunza - Quiero Dormir Contigo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUIERO_DORMIR_CONTIGO_NATALIA_LACUNZA",
+    listenUrl: "https://open.spotify.com/track/4k3CnQLRPAsSsWn8T0yEAB",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -549,7 +549,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/natalia-lacunza - todo-lamento.mp3",
     display: "Natalia Lacunza - Todo Lamento",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TODO_LAMENTO_NATALIA_LACUNZA",
+    listenUrl: "https://open.spotify.com/track/575TV9YEnYo7bVLa0sveRn",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -557,7 +557,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/nebulosa - zorra.mp3",
     display: "Nebulosa - Zorra",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ZORRA_NEBULOSA",
+    listenUrl: "https://open.spotify.com/track/0x9o0lDQCRpSEQ5bwhqNjK",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -565,7 +565,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/nil-moliner - libertad.mp3",
     display: "Nil Moliner - Libertad",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LIBERTAD_NIL_MOLINER",
+    listenUrl: "https://open.spotify.com/track/1kG7gfH4HDUlDht0VZYkiP",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -573,7 +573,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/nil-moliner - luces-de-ciudad.mp3",
     display: "Nil Moliner - Luces De Ciudad",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LUCES_DE_CIUDAD_NIL_MOLINER",
+    listenUrl: "https://open.spotify.com/track/7aXb7v2GueOaYa0n4IbLnM",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -581,7 +581,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/nil-moliner - mi-religion.mp3",
     display: "Nil Moliner - Mi Religion",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MI_RELIGION_NIL_MOLINER",
+    listenUrl: "https://open.spotify.com/track/5zNlrLpJFZt3RvRe9A0Hed",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -589,7 +589,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/nil-moliner - soldadito-de-hierro.mp3",
     display: "Nil Moliner - Soldadito De Hierro",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOLDADITO_DE_HIERRO_NIL_MOLINER",
+    listenUrl: "https://open.spotify.com/track/1wWSi1N5mBif8926JR78Ju",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -597,7 +597,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/omar-montes-lola-indigo-y-las-chuches - el-pantalon.mp3",
     display: "Omar Montes Lola Indigo y Las Chuches - El Pantalon",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EL_PANTALON_OMAR_MONTES_LOLA_INDIGO_Y_LAS_CHUCHES",
+    listenUrl: "https://open.spotify.com/track/3VArTR8VPyOEiITj8SJMLv",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -605,7 +605,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/ptazeta - batmami.mp3",
     display: "Ptazeta - Batmami",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BATMAMI_PTAZETA",
+    listenUrl: "https://open.spotify.com/track/0azybKTeKVV2UNeof409O8",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -613,7 +613,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/quevedo - columbia.mp3",
     display: "Quevedo - Columbia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COLUMBIA_QUEVEDO",
+    listenUrl: "https://open.spotify.com/track/6XbtvPmIpyCbjuT0e8cQtp",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -621,7 +621,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/quevedo-y-bizarrap - quedate.mp3",
     display: "Quevedo y Bizarrap - Quedate",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUEDATE_QUEVEDO_Y_BIZARRAP",
+    listenUrl: "https://open.spotify.com/track/7lKEEchVEUdxZUJrqNbnUN",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -629,7 +629,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/quevedo-y-myke-towers - playa-del-ingles.mp3",
     display: "Quevedo y Myke Towers - Playa del Ingles",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PLAYA_DEL_INGLES_QUEVEDO_Y_MYKE_TOWERS",
+    listenUrl: "https://open.spotify.com/track/1zKhO9AqzLuBQRHQS2jm7s",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -637,7 +637,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rauw-alejandro - todo-de-ti.mp3",
     display: "Rauw Alejandro - Todo de Ti",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TODO_DE_TI_RAUW_ALEJANDRO",
+    listenUrl: "https://open.spotify.com/track/3rdAz1fbUfZxYgaCviYhRo",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -645,7 +645,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rigoberta-bandini - ay-mama.mp3",
     display: "Rigoberta Bandini - Ay Mama",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AY_MAMA_RIGOBERTA_BANDINI",
+    listenUrl: "https://open.spotify.com/track/0khVEzctbwmqLvOpg1ecbg",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -653,7 +653,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rosalia - bizcochito.mp3",
     display: "Rosalia - Bizcochito",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BIZCOCHITO_ROSALIA",
+    listenUrl: "https://open.spotify.com/track/4kXxEhuatrvwrTQycA7s9B",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -661,7 +661,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rosalia - despecha.mp3",
     display: "Rosalia - Despecha",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DESPECHA_ROSALIA",
+    listenUrl: "https://open.spotify.com/track/53tfEupEzQRtVFOeZvk7xq",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -669,7 +669,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rosalia - motomami.mp3",
     display: "Rosalia - Motomami",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MOTOMAMI_ROSALIA",
+    listenUrl: "https://open.spotify.com/track/6ygEPi8EtVkUO0Xarcgs63",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -677,7 +677,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rosalia - saoko.mp3",
     display: "Rosalia - Saoko",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SAOKO_ROSALIA",
+    listenUrl: "https://open.spotify.com/track/2FYGZDfsAnNsrm1gVbyKnG",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -685,7 +685,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rosalia - tuya.mp3",
     display: "Rosalia - Tuya",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TUYA_ROSALIA",
+    listenUrl: "https://open.spotify.com/track/1HII0EIufOG0nGpWCQixbO",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -693,7 +693,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rosalia-ft-the-weeknd - la-fama.mp3",
     display: "Rosalia ft The Weeknd - La Fama",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA_FAMA_ROSALIA_FT_THE_WEEKND",
+    listenUrl: "https://open.spotify.com/track/3whoNOYqaUJeDNfisAIojI",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -701,7 +701,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/rosalia-y-rauw-alejandro - beso.mp3",
     display: "Rosalia y Rauw Alejandro - Beso",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BESO_ROSALIA_Y_RAUW_ALEJANDRO",
+    listenUrl: "https://open.spotify.com/track/5mnQXt6xpzGsv2r1ak54b8",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -709,7 +709,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/sebastian-yatra - amor-pasajero.mp3",
     display: "Sebastian Yatra - Amor Pasajero",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AMOR_PASAJERO_SEBASTIAN_YATRA",
+    listenUrl: "https://open.spotify.com/track/2AQrDkF3XiC3xCkAM4OkJx",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -717,7 +717,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/sebastian-yatra - tacones-rojos.mp3",
     display: "Sebastian Yatra - Tacones Rojos",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TACONES_ROJOS_SEBASTIAN_YATRA",
+    listenUrl: "https://open.spotify.com/track/0Be7sopyKMv8Y8npsUkax2",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -725,7 +725,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/sebastian-yatra-manuel-turizo-beele - vagabundo.mp3",
     display: "Sebastian Yatra Manuel Turizo Beele - Vagabundo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VAGABUNDO_SEBASTIAN_YATRA_MANUEL_TURIZO_BEELE",
+    listenUrl: "https://open.spotify.com/track/1MB8kTH7VKvAMfL9SHgJmG",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -733,7 +733,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/sebastian-yatra-myke-towers - pareja-del-ano.mp3",
     display: "Sebastian Yatra Myke Towers - Pareja del Ano",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PAREJA_DEL_ANO_SEBASTIAN_YATRA_MYKE_TOWERS",
+    listenUrl: "https://open.spotify.com/track/655JkvIwu2rDCaD1hPf04g",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -741,7 +741,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/shakira - acrostico.mp3",
     display: "Shakira - Acrostico",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ACROSTICO_SHAKIRA",
+    listenUrl: "https://open.spotify.com/track/7txjUEY6McJDJKqIo1Rxjp",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -749,7 +749,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/shakira-y-manuel-turizo - copa-vacia.mp3",
     display: "Shakira y Manuel Turizo - Copa Vacia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COPA_VACIA_SHAKIRA_Y_MANUEL_TURIZO",
+    listenUrl: "https://open.spotify.com/track/3KV9n8QMepWCXI3TkWKeZy",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -757,7 +757,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/shakira-y-ozuna - monotonia.mp3",
     display: "Shakira y Ozuna - Monotonia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MONOTONIA_SHAKIRA_Y_OZUNA",
+    listenUrl: "https://open.spotify.com/track/2dfH1gA3FZDv9L69Dqy9RY",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -765,7 +765,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/shakira-y-rauw-alejandro - te-felicito.mp3",
     display: "Shakira y Rauw Alejandro - Te Felicito",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TE_FELICITO_SHAKIRA_Y_RAUW_ALEJANDRO",
+    listenUrl: "https://open.spotify.com/track/64zcAZeIWHszCGKOSqAogH",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -773,7 +773,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/susana-cala-y-anotnio-jose - no-fue-tu-culpa.mp3",
     display: "Susana Cala y Anotnio Jose - No Fue Tu Culpa",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NO_FUE_TU_CULPA_SUSANA_CALA_Y_ANOTNIO_JOSE",
+    listenUrl: "https://open.spotify.com/track/0sfk352FO8bJUjWjIsyzSR",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -781,7 +781,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/vetusta-morla - finisterre.mp3",
     display: "Vetusta Morla - Finisterre",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FINISTERRE_VETUSTA_MORLA",
+    listenUrl: "https://open.spotify.com/track/5FhTo7yj2umChnDdqch8oG",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -789,7 +789,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/vicco - nochentera.mp3",
     display: "Vicco - Nochentera",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_NOCHENTERA_VICCO",
+    listenUrl: "https://open.spotify.com/track/20CozgjF6bshBw8cLhN23B",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -797,7 +797,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/victor-j-tornet - la-flor-ante-el-fuego.mp3",
     display: "Víctor J. Tornet - La Flor Ante el Fuego",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LA-FLOR_ANTE_EL_FUEGO",
+    listenUrl: "https://open.spotify.com/track/7pEWzmBpm5haubgbCVwgsz",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -805,7 +805,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/yahritza-y-su-esencia-y-grupo-frontera - fragil.mp3",
     display: "Yahritza y Su Esencia y Grupo Frontera - Fragil",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FRAGIL_YAHRITZA_Y_SU_ESENCIA_Y_GRUPO_FRONTERA",
+    listenUrl: "https://open.spotify.com/track/4JdSXF2p71cr8uCY3UiJM0",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -813,7 +813,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/yuridia-y-angela-aguilar - que-agonia.mp3",
     display: "Yuridia y Angela Aguilar - Que Agonia",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_QUE_AGONIA_YURIDIA_Y_ANGELA_AGUILAR",
+    listenUrl: "https://open.spotify.com/track/4H6o1bxKRGzmsE0vzo968m",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -821,7 +821,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/zahara - al-final.mp3",
     display: "Zahara - Al Final",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AL_FINAL_ZAHARA",
+    listenUrl: "https://open.spotify.com/track/4NH7KpFmBfE5yskuVRDqce",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -829,7 +829,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/zahara - punalada-trapera.mp3",
     display: "Zahara - Punalada Trapera",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PUNALADA_TRAPERA_ZAHARA",
+    listenUrl: "https://open.spotify.com/track/2DwTME1HMySsnglHE1T0zZ",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",
@@ -837,7 +837,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   {
     file: "Actual/espanol/zzoilo-y-aitana - mon-amour-remix.mp3",
     display: "Zzoilo y Aitana - Mon Amour Remix",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MON_AMOUR_REMIX_ZZOILO_Y_AITANA",
+    listenUrl: "https://open.spotify.com/track/2IHUlFCKialxxmHz1JOMdp",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "espanol",

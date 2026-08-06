@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/alex-warren - ordinary.mp3",
     display: "Alex Warren - Ordinary",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ORDINARY_ALEX_WARREN",
+    listenUrl: "https://open.spotify.com/track/2RkZ5LkEzeHGRsmDqKwmaJ",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/artemas - i-like-the-way-you-kiss-me.mp3",
     display: "Artemas - I Like The Way You Kiss Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_I_LIKE_THE_WAY_YOU_KISS_ME_ARTEMAS",
+    listenUrl: "https://open.spotify.com/track/2GxrNKugF82CnoRFbQfzPf",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -21,7 +21,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/ava-max - kings-and-queens.mp3",
     display: "Ava Max - Kings And Queens",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_KINGS_AND_QUEENS_AVA_MAX",
+    listenUrl: "https://open.spotify.com/track/7a53HqqArd4b9NF4XAmlbI",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/ava-max - my-head-my-heart.mp3",
     display: "Ava Max - My Head My Heart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MY_HEAD_MY_HEART_AVA_MAX",
+    listenUrl: "https://open.spotify.com/track/1KixkQVDUHggZMU9dUobgm",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/benson-boone - beautiful-things.mp3",
     display: "Benson Boone - Beautiful Things",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BEAUTIFUL_THINGS_BENSON_BOONE",
+    listenUrl: "https://open.spotify.com/track/3xkHsmpQCBMytMJNiDf3Ii",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/bts - dynamite.mp3",
     display: "Bts - Dynamite",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DYNAMITE_BTS",
+    listenUrl: "https://open.spotify.com/track/5QDLhrAOJJdNAmCTJ8xMyW",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/camila-cabello - bam-bam-ft-ed-sheeran.mp3",
     display: "Camila Cabello - Bam Bam Ft Ed Sheeran",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BAM_BAM_FT_ED_SHEERAN_CAMILA_CABELLO",
+    listenUrl: "https://open.spotify.com/track/1F8fq4tj6T8NUXFsbr1maJ",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/camila-cabello - dont-go-yet.mp3",
     display: "Camila Cabello - Dont Go Yet",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_GO_YET_CAMILA_CABELLO",
+    listenUrl: "https://open.spotify.com/track/1058fW9H3fZA6QjYCdOBad",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/cardi-b - wap-feat-megan-thee-stallion.mp3",
     display: "Cardi B - Wap Feat Megan Thee Stallion",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WAP_FEAT_MEGAN_THEE_STALLION_CARDI_B",
+    listenUrl: "https://open.spotify.com/track/4Oun2ylbjFKMPTiaSbbCih",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -77,7 +77,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/coi-leray - players.mp3",
     display: "Coi Leray - Players",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PLAYERS_COI_LERAY",
+    listenUrl: "https://open.spotify.com/track/6UN73IYd0hZxLi8wFPMQij",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/coldplay - feels-like-im-falling-in-love.mp3",
     display: "Coldplay - Feels Like Im Falling In Love",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FEELS_LIKE_IM_FALLING_IN_LOVE_COLDPLAY",
+    listenUrl: "https://open.spotify.com/track/5VSqvL5NLxBr7uMNfjwLt8",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/coldplay - we-pray-tini-version.mp3",
     display: "Coldplay - We Pray (Tini Version)",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WE_PRAY_TINI_VERSION_COLDPLAY",
+    listenUrl: "https://open.spotify.com/track/6OICQoNsUIcYsirqoDo08Y",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/cyril - stumblin-in.mp3",
     display: "Cyril - Stumblin In",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STUMBLIN_IN_CYRIL",
+    listenUrl: "https://open.spotify.com/track/0h3Xy4V4apMraB5NuM8U7Z",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/damiano-david - born-with-a-broken-heart.mp3",
     display: "Damiano David - Born With A Broken Heart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BORN_WITH_A_BROKEN_HEART_DAMIANO_DAVID",
+    listenUrl: "https://open.spotify.com/track/7B9zspndqbrSXXUwVNeTCe",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/david-guetta-anne-marie-coi-leray - baby-dont-hurt-me.mp3",
     display: "David Guetta, Anne Marie Y Coi Leray - Baby Dont Hurt Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BABY_DONT_HURT_ME_DAVID_GUETTA_ANNE_MARIE_COI_LERAY",
+    listenUrl: "https://open.spotify.com/track/3BKD1PwArikchz2Zrlp1qi",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/david-guetta-y-bebe-rexha - im-good.mp3",
     display: "David Guetta Y Bebe Rexha - Im Good",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_IM_GOOD_DAVID_GUETTA_Y_BEBE_REXHA",
+    listenUrl: "https://open.spotify.com/track/24upiTBkjKsDuBFBrSfKcr",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/david-guetta-y-onerepublic - i-dont-wanna-wait.mp3",
     display: "David Guetta Y Onerepublic - I Dont Wanna Wait",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_I_DONT_WANNA_WAIT_DAVID_GUETTA_Y_ONEREPUBLIC",
+    listenUrl: "https://open.spotify.com/track/7fBXlNy1bFLbNXOjcCOI8i",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/david-guetta-y-sia - beautiful-people.mp3",
     display: "David Guetta Y Sia - Beautiful People",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BEAUTIFUL_PEOPLE_DAVID_GUETTA_Y_SIA",
+    listenUrl: "https://open.spotify.com/track/3xbfUIoGXTxSU0lo2arwci",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/dj tiesto-y-karol-g - dont-be-shy.mp3",
     display: "Dj Tiesto Y Karol G - Dont Be Shy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_BE_SHY_DJ_TIESTO_Y_KAROL_G",
+    listenUrl: "https://open.spotify.com/track/5vvNtG1wm62fx2t3HV7bCi",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/dj-tiesto - the-business.mp3",
     display: "Dj Tiesto - The Business",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THE_BUSINESS_DJ_TIESTO",
+    listenUrl: "https://open.spotify.com/track/6f3Slt0GbA2bPZlz0aIFXN",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/doechii - anxiety.mp3",
     display: "Doechii - Anxiety",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANXIETY_DOECHII",
+    listenUrl: "https://open.spotify.com/track/1musbempyJAw5gfSKZHXP9",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/dua-lipa - break-my-heart.mp3",
     display: "Dua Lipa - Break My Heart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BREAK_MY_HEART_DUA_LIPA",
+    listenUrl: "https://open.spotify.com/track/017PF4Q3l4DBUiWoXk4OWT",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/dua-lipa - dance-the-night.mp3",
     display: "Dua Lipa - Dance The Night",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DANCE_THE_NIGHT_DUA_LIPA",
+    listenUrl: "https://open.spotify.com/track/1vYXt7VSjH9JIM5oRRo7vA",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/dua-lipa - levitating-feat-dababy.mp3",
     display: "Dua Lipa - Levitating Feat Dababy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LEVITATING_FEAT_DABABY_DUA_LIPA",
+    listenUrl: "https://open.spotify.com/track/5nujrmhLynf4yMoMtj8AQF",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/dua-lipa - physical.mp3",
     display: "Dua Lipa - Physical",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PHYSICAL_DUA_LIPA",
+    listenUrl: "https://open.spotify.com/track/3AzjcOeAmA57TIOr9zF1ZW",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/ed-sheeran-bad - habits.mp3",
     display: "Ed Sheeran - Bad Habits",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ED_SHEERAN_BAD_HABITS_",
+    listenUrl: "https://open.spotify.com/track/3rmo8F54jFF8OgYsqTxm5d",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/elle-king - exs-ohs.mp3",
     display: "Elle King - Exs Ohs",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EXS_OHS_ELLE_KING",
+    listenUrl: "https://open.spotify.com/track/70eDxAyAraNTiD6lx2ZEnH",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/elton-john-y-dua-lipa - cold-heart.mp3",
     display: "Elton John Y Dua Lipa - Cold Heart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COLD_HEART_ELTON_JOHN_Y_DUA_LIPA",
+    listenUrl: "https://open.spotify.com/track/3rWF7KZetZb4ajWWWSPiKz",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/gayle - abcdefu.mp3",
     display: "Gayle - Abcdefu",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ABCDEFU_GAYLE",
+    listenUrl: "https://open.spotify.com/track/4fouWK6XVHhzl78KzQ1UjL",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/gracie-abrams - thatss-so-true.mp3",
     display: "Gracie Abrams - Thatss So True",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THATSS_SO_TRUE_GRACIE_ABRAMS",
+    listenUrl: "https://open.spotify.com/track/24YFy7GrcbYFe6bk60uJTK",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/harry-styles - as-it-was.mp3",
     display: "Harry Styles - As It Was",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_AS_IT_WAS_HARRY_STYLES",
+    listenUrl: "https://open.spotify.com/track/4Dvkj6JhhA12EX05fT7y2e",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/harry-styles - watermelon-sugar.mp3",
     display: "Harry Styles - Watermelon Sugar",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WATERMELON_SUGAR_HARRY_STYLES",
+    listenUrl: "https://open.spotify.com/track/6UelLqGlWMcVH1E5c4H7lY",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/imagine-dragons-x-j-i-d - enemy.mp3",
     display: "Imagine Dragons X J I D - Enemy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ENEMY_IMAGINE_DRAGONS_X_J_I_D",
+    listenUrl: "https://open.spotify.com/track/2lD6AoA8qf2t4Dkf2TcmNK",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/jawsh-685-y-jason-derulo - savage-love-laxed-siren-beat.mp3",
     display: "Jawsh 685 Y Jason Derulo - Savage Love Laxed Siren Beat",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SAVAGE_LOVE_LAXED_SIREN_BEAT_JAWSH_685_Y_JASON_DERULO",
+    listenUrl: "https://open.spotify.com/track/1xQ6trAsedVPCdbtDAmk0c",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/jaymes-young - infinity.mp3",
     display: "Jaymes Young - Infinity",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_INFINITY_JAYMES_YOUNG",
+    listenUrl: "https://open.spotify.com/track/1SOClUWhOi8vHZYMz3GluK",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/jonas-brothers - sucker.mp3",
     display: "Jonas Brothers - Sucker",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUCKER_JONAS_BROTHERS",
+    listenUrl: "https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/justin-wellington - iko-iko.mp3",
     display: "Justin Wellington - Iko Iko",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_IKO_IKO_JUSTIN_WELLINGTON",
+    listenUrl: "https://open.spotify.com/track/7MC4XR9M9amdmKQr2iDF7i",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/kygo-y-ava-max - whatever.mp3",
     display: "Kygo Y Ava Max - Whatever",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WHATEVER_KYGO_Y_AVA_MAX",
+    listenUrl: "https://open.spotify.com/track/0owRXNqL1kz473CyWNPFJw",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/kylie-minogue - padam-padam.mp3",
     display: "Kylie Minogue - Padam Padam",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PADAM_PADAM_KYLIE_MINOGUE",
+    listenUrl: "https://open.spotify.com/track/44MuEHdlociG8KjhPhOVw5",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/lady-gaga - abracadabra.mp3",
     display: "Lady Gaga - Abracadabra",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ABRACADABRA_LADY_GAGA",
+    listenUrl: "https://open.spotify.com/track/2LHNTC9QZxsL3nWpt8iaSR",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/lady-gaga-y-bruno-mars - die-with-a-smile.mp3",
     display: "Lady Gaga Y Bruno Mars - Die With A Smile",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DIE_WITH_A_SMILE_LADY_GAGA_Y_BRUNO_MARS",
+    listenUrl: "https://open.spotify.com/track/4MJXbZ7Zz1vkl5PAoqGEeT",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/lewis-capaldi - before-you-go.mp3",
     display: "Lewis Capaldi - Before You Go",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BEFORE_YOU_GO_LEWIS_CAPALDI",
+    listenUrl: "https://open.spotify.com/track/2gMXnyrvIjhVBUZwvLZDMP",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/lewis-capaldi - someone-you-loved.mp3",
     display: "Lewis Capaldi - Someone You Loved",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOMEONE_YOU_LOVED_LEWIS_CAPALDI",
+    listenUrl: "https://open.spotify.com/track/7qEHsqek33rTcFNT9PFqLf",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/loreen -atttoo.mp3",
     display: "Loreen - Atttoo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ATTTOO_LOREEN",
+    listenUrl: "https://open.spotify.com/track/7tostJTMXhaRiVLTTXcvhe",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/lost-frequencies-ft-calum-scott - where-are-you-now.mp3",
     display: "Lost Frequencies Ft Calum Scott - Where Are You Now",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WHERE_ARE_YOU_NOW_LOST_FREQUENCIES_FT_CALUM_SCOTT",
+    listenUrl: "https://open.spotify.com/track/3uUuGVFu1V7jTQL60S1r8z",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/maneskin - beggin.mp3",
     display: "Maneskin - Beggin",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BEGGIN_MANESKIN",
+    listenUrl: "https://open.spotify.com/track/3Wrjm47oTz2sjIgck11l5e",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/mark-ambor - belong-together.mp3",
     display: "Mark Ambor - Belong Together",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BELONG_TOGETHER_MARK_AMBOR",
+    listenUrl: "https://open.spotify.com/track/0rtDE9zfXbamTlRUSwY7zy",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/masked-wolf - astronaut-in-the-ocean.mp3",
     display: "Masked Wolf - Astronaut In The Ocean",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ASTRONAUT_IN_THE_OCEAN_MASKED_WOLF",
+    listenUrl: "https://open.spotify.com/track/6E90gq0KO6FYZVOXx8kCcC",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/master-kg - jerusalema-feat-Nomcebo.mp3",
     display: "Master Kg - Jerusalema Feat Nomcebo",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_JERUSALEMA_FEAT_NOMCEBO_MASTER_KG",
+    listenUrl: "https://open.spotify.com/track/2MlOUXmcofMackX3bxfSwi",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/miley-cyrus - flowers.mp3",
     display: "Miley Cyrus - Flowers",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FLOWERS_MILEY_CYRUS",
+    listenUrl: "https://open.spotify.com/track/7DSAEUvxU8FajXtRloy8M0",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/myles-smith - stargazing.mp3",
     display: "Myles Smith - Stargazing",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STARGAZING_MYLES_SMITH",
+    listenUrl: "https://open.spotify.com/track/3Vr3zh0r7ALn8VLqCiRR10",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/nea - some-say.mp3",
     display: "Nea - Some Say",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOME_SAY_NEA",
+    listenUrl: "https://open.spotify.com/track/4poybupy26pTWPr9zY1i7h",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/olivia-rodrigo - vampire.mp3",
     display: "Olivia Rodrigo - Vampire",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_VAMPIRE_OLIVIA_RODRIGO",
+    listenUrl: "https://open.spotify.com/track/1kuGVB7EU95pJObxwvfwKS",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/pink - trustfall.mp3",
     display: "Pink - Trustfall",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TRUSTFALL_PINK",
+    listenUrl: "https://open.spotify.com/track/1gUwi1o1S9W9P0FQgJdY8s",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/rema-y- selena-gomez - calm-down.mp3",
     display: "Rema Y Selena Gomez - Calm Down",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CALM_DOWN_REMA_Y__SELENA_GOMEZ",
+    listenUrl: "https://open.spotify.com/track/37r02GOs2OONxlBraBo6F7",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/riton-x-nightcrawlers - friday-ft-mufasa-hypeman-dopamine.mp3",
     display: "Riton X Nightcrawlers - Friday Ft Mufasa Hypeman Dopamine",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FRIDAY_FT_MUFASA_HYPEMAN_DOPAMINE_RITON_X_NIGHTCRAWLERS",
+    listenUrl: "https://open.spotify.com/track/4cG7HUWYHBV6R6tHn1gxrl",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/rosa-linn - snap.mp3",
     display: "Rosa Linn - Snap",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SNAP_ROSA_LINN",
+    listenUrl: "https://open.spotify.com/track/5hx7w26Zi3zafMgvMTUqF6",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/rose-y-bruno-mars - apt.mp3",
     display: "Rose Y Bruno Mars - Apt",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_APT_ROSE_Y_BRUNO_MARS",
+    listenUrl: "https://open.spotify.com/track/5fIL2J54RrB0K9Lb51Y6og",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/sam-smith - diamonds.mp3",
     display: "Sam Smith - Diamonds",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DIAMONDS_SAM_SMITH",
+    listenUrl: "https://open.spotify.com/track/1hJIbOjWpid6LtnozHmzRS",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/sam-smith-y-alicia-keys - im-not-the-only-one.mp3",
     display: "Sam Smith Y Alicia Keys - Im Not The Only One",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_IM_NOT_THE_ONLY_ONE_SAM_SMITH_Y_ALICIA_KEYS",
+    listenUrl: "https://open.spotify.com/track/0XYCqYGz1t26UfKCePwCID",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/sam-smith-y-kim-petras - unholy.mp3",
     display: "Sam Smith Y Kim Petras - Unholy",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_UNHOLY_SAM_SMITH_Y_KIM_PETRAS",
+    listenUrl: "https://open.spotify.com/track/3nqQXoyQOWXiESFLlDF1hG",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/switch-disco-ft-ella-henderson-and-robert-miles - react.mp3",
     display: "Switch Disco Ft Ella Henderson And Robert Miles - React",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_REACT_SWITCH_DISCO_FT_ELLA_HENDERSON_AND_ROBERT_MILES",
+    listenUrl: "https://open.spotify.com/track/234OrASHTZq6NTMwprPOwI",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/taylor-swift - cruel-summer.mp3",
     display: "Taylor Swift - Cruel Summer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CRUEL_SUMMER_TAYLOR_SWIFT",
+    listenUrl: "https://open.spotify.com/track/1BxfuPKGuaTgP7aM0Bbdwr",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/teddy-swims - lose-control.mp3",
     display: "Teddy Swims - Lose Control",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOSE_CONTROL_TEDDY_SWIMS",
+    listenUrl: "https://open.spotify.com/track/17phhZDn6oGtzMe56NuWvj",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/the-kid-laroi - whithout-you.mp3",
     display: "The Kid Laroi - Whithout You",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WHITHOUT_YOU_THE_KID_LAROI",
+    listenUrl: "https://open.spotify.com/track/0weAUscowxeqDtpCgtbpgp",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/the-kid-laroi-y-justin-bieber - stay.mp3",
     display: "The Kid Laroi Y Justin Bieber - Stay",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STAY_THE_KID_LAROI_Y_JUSTIN_BIEBER",
+    listenUrl: "https://open.spotify.com/track/567e29TDzLwZwfDuEpGTwo",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/the-weeknd-y-ariana-grande - save-your-tears.mp3",
     display: "The Weeknd Y Ariana Grande - Save Your Tears",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SAVE_YOUR_TEARS_THE_WEEKND_Y_ARIANA_GRANDE",
+    listenUrl: "https://open.spotify.com/track/1oFAF1hdPOickyHgbuRjyX",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].ingles = [
   {
     file: "Actual/ingles/topic-y-a7s - breaking-me.mp3",
     display: "Topic Y A7s - Breaking Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BREAKING_ME_TOPIC_Y_A7S",
+    listenUrl: "https://open.spotify.com/track/4MynHjUNjoiY8I06ENLxdB",
     platform: "spotify",
     originalDecade: "Actual",
     originalCategory: "ingles",

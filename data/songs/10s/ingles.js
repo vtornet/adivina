@@ -5,7 +5,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/adele - hello.mp3",
     display: "Adele - Hello",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HELLO_ADELE",
+    listenUrl: "https://open.spotify.com/track/1Yk0cQdMLx5RzzFTYwmuld",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -13,7 +13,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/adele - set-fire-to-the-rain.mp3",
     display: "Adele - Set Fire To The Rain",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SETFIRETOTHERAIN_ADELE",
+    listenUrl: "https://open.spotify.com/track/3di5hcvxxciiqwMH1jarhY",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -21,7 +21,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/adele - skyfall.mp3",
     display: "Adele - Skyfall",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SKYFALL_ADELE",
+    listenUrl: "https://open.spotify.com/track/6VObnIkLVruX4UVyxWhlqm",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -29,7 +29,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/adele - someone-like-you.mp3",
     display: "Adele - Someone Like You",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOMEONELIKEYOU_ADELE",
+    listenUrl: "https://open.spotify.com/track/3bNv3VuUOKgrf5hu3YcuRo",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -37,7 +37,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/alexandra-stan - mr-saxobeat.mp3",
     display: "Alexandra Stan - Mr Saxobeat",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MRSAXOBEAT_ALEXANDRASTAN",
+    listenUrl: "https://open.spotify.com/track/3LWDPEXEaLBRGNLbdcbwBR",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -45,7 +45,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ariana-grande - 7-rings.mp3",
     display: "Ariana Grande - 7 Rings",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_7RINGS_ARIANAGRANDE",
+    listenUrl: "https://open.spotify.com/track/6ocbgoVGwYJhOv1GgI9NsF",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -53,7 +53,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ava-max - sweet-but-psycho.mp3",
     display: "Ava Max - Sweet But Psycho",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SWEETBUTPSYCHO_AVAMAX",
+    listenUrl: "https://open.spotify.com/track/7DnAm9FOTWE3cUvso43HhI",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -61,7 +61,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/avicii - wake-me-up.mp3",
     display: "Avicii - Wake Me Up",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WAKEMEUP_AVICII",
+    listenUrl: "https://open.spotify.com/track/0nrRP2bk19rLc0orkWPQk2",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -69,7 +69,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/billie-eilish - everything-i-wanted.mp3",
     display: "Billie Eilish - Everything I Wanted",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_EVERYTHINGIWANTED_BILLIEEILISH",
+    listenUrl: "https://open.spotify.com/track/3ZCTVFBt2Brf31RLEnCkWJ",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -77,7 +77,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/bruno-mars - grenade.mp3",
     display: "Bruno Mars - Grenade",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GRENADE_BRUNOMARS",
+    listenUrl: "https://open.spotify.com/track/4lLtanYk6tkMvooU0tWzG8",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -85,7 +85,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/bruno-mars - just-the-way-you-are.mp3",
     display: "Bruno Mars - Just The Way You Are",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_JUSTTHEWAYYOUARE_BRUNOMARS",
+    listenUrl: "https://open.spotify.com/track/47Slg6LuqLaX0VodpSCvPt",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -93,7 +93,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/bruno-mars - locked-out-of-heaven.mp3",
     display: "Bruno Mars - Locked Out Of Heaven",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOCKEDOUTOFHEAVEN_BRUNOMARS",
+    listenUrl: "https://open.spotify.com/track/3w3y8KPTfNeOKPiqUTakBh",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -101,7 +101,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/bruno-mars - the-lazy-song.mp3",
     display: "Bruno Mars - The Lazy Song",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THELAZYSONG_BRUNOMARS",
+    listenUrl: "https://open.spotify.com/track/386RUes7n1uM1yfzgeUuwp",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -109,7 +109,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/calvin-harris - summer.mp3",
     display: "Calvin Harris - Summer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUMMER_CALVINHARRIS",
+    listenUrl: "https://open.spotify.com/track/6YUTL4dYpB9xZO5qExPf05",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -117,7 +117,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/camila-cabello - havana.mp3",
     display: "Camila Cabello - Havana",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HAVANA_CAMILACABELLO",
+    listenUrl: "https://open.spotify.com/track/1rfofaqEpACxVEHIZBJe6W",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -125,7 +125,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/camila-cabello-ft-phantogram - havana.mp3",
     display: "Camila Cabello Ft Phantogram - Havana",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HAVANA_CAMILACABELLOFTPHANTOGRAM",
+    listenUrl: "https://open.spotify.com/track/3whrwq4DtvucphBPUogRuJ",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -133,7 +133,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/carly-rae-jepsen - call-me-maybe.mp3",
     display: "Carly Rae Jepsen - Call Me Maybe",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CALLMEMAYBE_CARLYRAEJEPSEN",
+    listenUrl: "https://open.spotify.com/track/20I6sIOMTCkB6w7ryavxtO",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -141,7 +141,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/charlie-puth - we-dont-talk-anymore.mp3",
     display: "Charlie Puth - We Dont Talk Anymore",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WEDONTTALKANYMORE_CHARLIEPUTH",
+    listenUrl: "https://open.spotify.com/track/54PbBpquVfhfrwRwvjSXbI",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -149,7 +149,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/christina-perri - a-thousand-years.mp3",
     display: "Christina Perri - A Thousand Years",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ATHOUSANDYEARS_CHRISTINAPERRI",
+    listenUrl: "https://open.spotify.com/track/6lanRgr6wXibZr8KgzXxBl",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -157,7 +157,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/clean-bandit - rockabye-feat-sean-paul-anne-marie.mp3",
     display: "Clean Bandit - Rockabye Feat Sean Paul Anne Marie",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROCKABYEFEATSEANPAULANNEMARIE_CLEANBANDIT",
+    listenUrl: "https://open.spotify.com/track/2hrUO4drrO63i7FYbCLBl2",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -165,7 +165,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/clean-bandit - solo-fea-demi-lovato.mp3",
     display: "Clean Bandit - Solo Fea Demi Lovato",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOLOFEADEMILOVATO_CLEANBANDIT",
+    listenUrl: "https://open.spotify.com/track/3NuK5xMlSlB6K2Qp16zf3h",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -173,7 +173,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/clean-bandit - symphony feat-zara-larsson.mp3",
     display: "Clean Bandit - Symphony Feat Zara Larsson",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SYMPHONYFEATZARALARSSON_CLEANBANDIT",
+    listenUrl: "https://open.spotify.com/track/72gv4zhNvRVdQA0eOenCal",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -181,7 +181,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/coldplay - a-sky-full-of-stars.mp3",
     display: "Coldplay - A Sky Full Of Stars",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ASKYFULLOFSTARS_COLDPLAY",
+    listenUrl: "https://open.spotify.com/track/0FDzzruyVECATHXKHFs9eJ",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -189,7 +189,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/david-guetta - titanium.mp3",
     display: "David Guetta - Titanium",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TITANIUM_DAVIDGUETTA",
+    listenUrl: "https://open.spotify.com/track/0TDLuuLlV54CkRRUOahJb4",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -197,7 +197,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/daze-d-luna - rockstar.mp3",
     display: "Daze D Luna - Rockstar",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROCKSTAR_DAZEDLUNA",
+    listenUrl: "https://open.spotify.com/track/07PAhqpqWictl3nHGJHz2t",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -205,7 +205,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/dj-snake - let-me-love-you-ft-justin-bieber.mp3",
     display: "DJ Snake - Let Me Love You Ft Justin Bieber",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LETMELOVEYOUFTJUSTINBIEBER_DJSNAKE",
+    listenUrl: "https://open.spotify.com/track/5uIGmbv3GwvQhtYEGQW8UX",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -213,7 +213,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ed-sheeran - don-t.mp3",
     display: "Ed Sheeran - Don’t",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DONT_EDSHEERAN",
+    listenUrl: "https://open.spotify.com/track/2oaGtVSJwivQkslaiDXOTr",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -221,7 +221,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ed-sheeran - perfect.mp3",
     display: "Ed Sheeran - Perfect",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PERFECT_EDSHEERAN",
+    listenUrl: "https://open.spotify.com/track/0tgVpDi06FyKpA1z0VMD4v",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -229,7 +229,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ed-sheeran - shape-of-you.mp3",
     display: "Ed Sheeran - Shape Of You",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SHAPEOFYOU_EDSHEERAN",
+    listenUrl: "https://open.spotify.com/track/7qiZfU4dY1lWllzX7mPBI3",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -237,7 +237,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ed-sheeran - thinking-out-loud.mp3",
     display: "Ed Sheeran - Thinking Out Loud",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THINKINGOUTLOUD_EDSHEERAN",
+    listenUrl: "https://open.spotify.com/track/34gCuhDGsG4bRPIf9bb02f",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -245,7 +245,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ellie-goulding - burn.mp3",
     display: "Ellie Goulding - Burn",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BURN_ELLIEGOULDING",
+    listenUrl: "https://open.spotify.com/track/5lF0pHbsJ0QqyIrLweHJPW",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -253,7 +253,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/ellie-goulding - love-me-like-you-do.mp3",
     display: "Ellie Goulding - Love Me Like You Do",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOVEMELIKEYOUDO_ELLIEGOULDING",
+    listenUrl: "https://open.spotify.com/track/0Cy7wt6IlRfBPHXXjmZbcP",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -261,7 +261,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/fifth-harmony - worth-it.mp3",
     display: "Fifth Harmony - Worth It",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WORTHIT_FIFTHHARMONY",
+    listenUrl: "https://open.spotify.com/track/41Fflg7qHiVOD6dEPvsCzO",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -269,7 +269,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/glass-animals - heat-waves.mp3",
     display: "Glass Animals - Heat Waves",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HEATWAVES_GLASSANIMALS",
+    listenUrl: "https://open.spotify.com/track/3USxtqRwSYz57Ewm6wWRMp",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -277,7 +277,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/gotye - somebody-that-i-used-to-know.mp3",
     display: "Gotye - Somebody That I Used To Know",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOMEBODYTHATIUSEDTOKNOW_GOTYE",
+    listenUrl: "https://open.spotify.com/track/1qDrWA6lyx8cLECdZE7TV7",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -285,7 +285,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/harry-styles - as-it-was.mp3",
     display: "Harry Styles - As It Was",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ASITWAS_HARRYSTYLES",
+    listenUrl: "https://open.spotify.com/track/4Dvkj6JhhA12EX05fT7y2e",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -293,7 +293,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/harry-styles - sig-of-the-times.mp3",
     display: "Harry Styles - Sign Of The Times",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SIGNOFTHETIMES_HARRYSTYLES",
+    listenUrl: "https://open.spotify.com/track/5Ohxk2dO5COHF1krpoPigN",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -301,7 +301,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/harry-styles - watermelon-sugar.mp3",
     display: "Harry Styles - Watermelon Sugar",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WATERMELONSUGAR_HARRYSTYLES",
+    listenUrl: "https://open.spotify.com/track/6UelLqGlWMcVH1E5c4H7lY",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -309,7 +309,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/imagine-dragons - believer.mp3",
     display: "Imagine Dragons - Believer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BELIEVER_IMAGINEDRAGONS",
+    listenUrl: "https://open.spotify.com/track/0pqnGHJpmpxLKifKRmU6WP",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -317,7 +317,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/imagine-dragons - demons.mp3",
     display: "Imagine Dragons - Demons",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DEMONS_IMAGINEDRAGONS",
+    listenUrl: "https://open.spotify.com/track/5qaEfEh1AtSdrdrByCP7qR",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -325,7 +325,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/james-arthur - impossible.mp3",
     display: "James Arthur - Impossible",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_IMPOSSIBLE_JAMESARTHUR",
+    listenUrl: "https://open.spotify.com/track/5yVIlYEHZxQVLyInCdldoS",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -333,7 +333,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/james-arthur - say-you-wont-let-go.mp3",
     display: "James Arthur - Say You Won’t Let Go",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SAYYOUWONTLETGO_JAMESARTHUR",
+    listenUrl: "https://open.spotify.com/track/5uCax9HTNlzGybIStD3vDh",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -341,7 +341,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/jennifer-lopez - dance-again-ft-pitbull.mp3",
     display: "Jennifer Lopez - Dance Again Ft Pitbull",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DANCEAGAINFTPITBULL_JENNIFERLOPEZ",
+    listenUrl: "https://open.spotify.com/track/2o55wNISMLjhwAX1FKFmSC",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -349,7 +349,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/jessie-J - domino.mp3",
     display: "Jessie J - Domino",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DOMINO_JESSIEJ",
+    listenUrl: "https://open.spotify.com/track/2fQxE0jVrjNMT9oJAXtSJR",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -357,7 +357,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/jessie-j - price-tag-ft-b-o-b.mp3",
     display: "Jessie J - Price Tag Ft B.o.B",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_PRICETAGFTBOB_JESSIEJ",
+    listenUrl: "https://open.spotify.com/track/3o3iS3AKDLARflaNeZW9kV",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -365,7 +365,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/john-legend - all-of-me.mp3",
     display: "John Legend - All Of Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ALLOFME_JOHNLEGEND",
+    listenUrl: "https://open.spotify.com/track/3U4isOIWM3VvDubwSI3y7a",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -373,7 +373,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/john-newman - love-me-again.mp3",
     display: "John Newman - Love Me Again",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOVEMEAGAIN_JOHNNEWMAN",
+    listenUrl: "https://open.spotify.com/track/5TbzAWWc5eJaANpA9kfGCd",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -381,7 +381,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/jonas-brothers - sucker.mp3",
     display: "Jonas Brothers - Sucker",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUCKER_JONASBROTHERS",
+    listenUrl: "https://open.spotify.com/track/22vgEDb5hykfaTwLuskFGD",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -389,7 +389,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/justin-bieber - love-yourself.mp3",
     display: "Justin Bieber - Love Yourself",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LOVEYOURSELF_JUSTINBIEBER",
+    listenUrl: "https://open.spotify.com/track/50kpGaPAhYJ3sGmk6vplg0",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -397,7 +397,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/justin-bieber - sorry.mp3",
     display: "Justin Bieber - Sorry",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SORRY_JUSTINBIEBER",
+    listenUrl: "https://open.spotify.com/track/09CtPGIpYB4BrO8qb1RGsF",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -405,7 +405,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/justin-timberlake - can-t-stop-the-feeling.mp3",
     display: "Justin Timberlake - Can’t Stop The Feeling",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CANTSTOPTHEFEELING_JUSTINTIMBERLAKE",
+    listenUrl: "https://open.spotify.com/track/6JV2JOEocMgcZxYSZelKcc",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -413,7 +413,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/katy-perry - california-gurls-ft-snoop-dogg.mp3",
     display: "Katy Perry - California Gurls Ft Snoop Dogg",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CALIFORNIAGURLSFTSNOOPDOGG_KATYPERRY",
+    listenUrl: "https://open.spotify.com/track/7FPmsutKmlS6cGjQTYh1Ik",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -421,7 +421,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/katy-perry - firework.mp3",
     display: "Katy Perry - Firework",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FIREWORK_KATYPERRY",
+    listenUrl: "https://open.spotify.com/track/3lXbHd0EoryoQh3vpevNEP",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -429,7 +429,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/katy-perry - teenage-dream.mp3",
     display: "Katy Perry - Teenage Dream",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TEENAGEDREAM_KATYPERRY",
+    listenUrl: "https://open.spotify.com/track/6r1ygpKNXg7deq18rzyM7F",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -437,7 +437,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/katy-perry - the-one-that-got-away.mp3",
     display: "Katy Perry - The One That Got Away",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THEONETHATGOTAWAY_KATYPERRY",
+    listenUrl: "https://open.spotify.com/track/2009X8GyWTqyxIdzAEYW6N",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -445,7 +445,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/katy-perry-ft-juicy-j - dark-horse.mp3",
     display: "Katy Perry Ft Juicy J - Dark Horse",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DARKHORSE_KATYPERRYFTJUICYJ",
+    listenUrl: "https://open.spotify.com/track/3Ulne25beUvPa66oGcSH9X",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -453,7 +453,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/katy-perry-ft-snoop-dogg - california-gurls.mp3",
     display: "Katy Perry Ft Snoop Dogg - California Gurls",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CALIFORNIAGURLS_KATYPERRYFTSNOOPDOGG",
+    listenUrl: "https://open.spotify.com/track/7FPmsutKmlS6cGjQTYh1Ik",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -461,7 +461,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/kesha - die-young.mp3",
     display: "Kesha - Die Young",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DIEYOUNG_KESHA",
+    listenUrl: "https://open.spotify.com/track/7EQGXaVSyEDsCWKmUcfpLk",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -469,7 +469,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/lady-gaga-ft-bradley-cooper - shallow.mp3",
     display: "Lady Gaga Ft Bradley Cooper - Shallow",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SHALLOW_LADYGAGABRADLEYCOOPER",
+    listenUrl: "https://open.spotify.com/track/06s3QtMJVXw1AJX3UfvZG1",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -477,7 +477,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/lana-del-rey - summertime-sadness.mp3",
     display: "Lana Del Rey - Summertime Sadness",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SUMMERTIMESADNESS_LANADELREY",
+    listenUrl: "https://open.spotify.com/track/3BJe4B8zGnqEdQPMvfVjuS",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -485,7 +485,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/lewis-capaldi - someone-you-loved.mp3",
     display: "Lewis Capaldi - Someone You Loved",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SOMEONEYOULOVED_LEWISCAPALDI",
+    listenUrl: "https://open.spotify.com/track/7qEHsqek33rTcFNT9PFqLf",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -493,7 +493,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/little-mix - black-magic.mp3",
     display: "Little Mix - Black Magic",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BLACKMAGIC_LITTLEMIX",
+    listenUrl: "https://open.spotify.com/track/6rmXhRIemCTPyMYZRDN7Qg",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -501,7 +501,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/lorde - royals.mp3",
     display: "Lorde - Royals",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ROYALS_LORDE",
+    listenUrl: "https://open.spotify.com/track/2dLLR6qlu5UJ5gk0dKz0h3",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -509,7 +509,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/lukas-graham - 7-years.mp3",
     display: "Lukas Graham - 7 Years",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_7YEARS_LUKASGRAHAM",
+    listenUrl: "https://open.spotify.com/track/5kqIPrATaCc2LqxVWzQGbk",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -517,7 +517,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/macklemore - cant-hold-us.mp3",
     display: "Macklemore - Can’t Hold Us",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CANTHOLDUS_MACKLEMORE",
+    listenUrl: "https://open.spotify.com/track/22skzmqfdWrjJylampe0kt",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -525,7 +525,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/macklemore-ft-ryan-lewis - thrift-shop.mp3",
     display: "Macklemore Ft Ryan Lewis - Thrift Shop",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_THRIFTSHOP_MACKLEMORE",
+    listenUrl: "https://open.spotify.com/track/5ZUH6eW7tqTgJjAKsPljLu",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -533,7 +533,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/magic - rude.mp3",
     display: "Magic - Rude",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_RUDE_MAGIC",
+    listenUrl: "https://open.spotify.com/track/6RtPijgfPKROxEzTHNRiDp",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -541,7 +541,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/mark-ronson-y-bruno-mars - uptown-funk.mp3",
     display: "Mark Ronson Y Bruno Mars - Uptown Funk",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_UPTOWNFUNK_MARKRONSONBRUNOMARS",
+    listenUrl: "https://open.spotify.com/track/32OlwWuMpZ6b0aN2RZOeMS",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -549,7 +549,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/maroon-5 - animals.mp3",
     display: "Maroon 5 - Animals",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANIMALS_MAROON5",
+    listenUrl: "https://open.spotify.com/track/2bL2gyO6kBdLkNSkxXNh6x",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -557,7 +557,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/maroon-5 - girls-like-you.mp3",
     display: "Maroon 5 - Girls Like You",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GIRLSLIKEYOU_MAROON5",
+    listenUrl: "https://open.spotify.com/track/7fa9MBXhVfQ8P8Df9OEbD8",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -565,7 +565,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/maroon-5 - memories.mp3",
     display: "Maroon 5 - Memories",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MEMORIES_MAROON5",
+    listenUrl: "https://open.spotify.com/track/4cktbXiXOapiLBMprHFErI",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -573,7 +573,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/maroon-5 - moves-like-jagger-ft-christina-aguilera.mp3",
     display: "Maroon 5 - Moves Like Jagger Ft Christina Aguilera",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MOVESLIKEJAGGER_MAROON5",
+    listenUrl: "https://open.spotify.com/track/6h4A52KVdu1ctfj7zPoSTg",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -581,7 +581,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/maroon-5 - one-more-night.mp3",
     display: "Maroon 5 - One More Night",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ONEMORENIGHT_MAROON5",
+    listenUrl: "https://open.spotify.com/track/6cpk00i5TxCqSeqNi2HuIe",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -589,7 +589,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/meghan-trainor - all-about-that-bass.mp3",
     display: "Meghan Trainor - All About That Bass",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ALLABOUTTHATBASS_MEGHANTRAINOR",
+    listenUrl: "https://open.spotify.com/track/5jSlcXdUGLWOV2pSfYYiBs",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -597,7 +597,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/mgk - cliche.mp3",
     display: "MGK - Cliché",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CLICHE_MGK",
+    listenUrl: "https://open.spotify.com/track/0vrWrwDcDb78lyHyFTvxx2",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -605,7 +605,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/naughty- boy - la-la-la-ft-sam-smith.mp3",
     display: "Naughty Boy - La La La Ft Sam Smith",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LALALA_NAUGHTYBOY",
+    listenUrl: "https://open.spotify.com/track/3a683cMEXdPiTwkebrZLap",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -613,7 +613,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/nicki-minaj - starships.mp3",
     display: "Nicki Minaj - Starships",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STARSHIPS_NICKIMINAJ",
+    listenUrl: "https://open.spotify.com/track/2EBCVPNAG46nbgs6jXPGvv",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -621,7 +621,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/one-direction - drag-me-down.mp3",
     display: "One Direction - Drag Me Down",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DRAGMEDOWN_ONEDIRECTION",
+    listenUrl: "https://open.spotify.com/track/2K87XMYnUMqLcX3zvtAF4G",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -629,7 +629,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/one-direction - story-of-my-life.mp3",
     display: "One Direction - Story Of My Life",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STORYOFMYLIFE_ONEDIRECTION",
+    listenUrl: "https://open.spotify.com/track/4nVBt6MZDDP6tRVdQTgxJg",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -637,7 +637,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/one-direction - what-makes-you-beautiful.mp3",
     display: "One Direction - What Makes You Beautiful",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WHATMAKESYOUBEAUTIFUL_ONEDIRECTION",
+    listenUrl: "https://open.spotify.com/track/4cluDES4hQEUhmXj6TXkSo",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -645,7 +645,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/one-republic - counting-stars.mp3",
     display: "OneRepublic - Counting Stars",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_COUNTINGSTARS_ONEREPUBLIC",
+    listenUrl: "https://open.spotify.com/track/2tpWsVSb9UEmDRxAl1zhX1",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -653,7 +653,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/passenger - let-her-go.mp3",
     display: "Passenger - Let Her Go",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LETHERGO_PASSENGER",
+    listenUrl: "https://open.spotify.com/track/5kWcIgj5CszKQBB0Lg7sGY",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -661,7 +661,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/pentatonix - hallelujah.mp3",
     display: "Pentatonix - Hallelujah",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HALLELUJAH_PENTATONIX",
+    listenUrl: "https://open.spotify.com/track/550rQQCGkrTzvp4SfpOPzx",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -669,7 +669,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/pink - try.mp3",
     display: "P!nk - Try",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TRY_PINK",
+    listenUrl: "https://open.spotify.com/track/1jF7IL57ayN4Ity3jQqGu0",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -677,7 +677,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/pink-ft-nate-ruess - just-give-me-a-reason.mp3",
     display: "P!nk Ft Nate Ruess - Just Give Me A Reason",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_JUSTGIVEMEAREASON_PINK",
+    listenUrl: "https://open.spotify.com/track/4kgZjxubSyg5ER8YF10weM",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -685,7 +685,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/pitbull - fireball-ft-john-ryan.mp3",
     display: "Pitbull - Fireball Ft John Ryan",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FIREBALL_PITBULL",
+    listenUrl: "https://open.spotify.com/track/1EtO61zOPdszOkc9UooROu",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -693,7 +693,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/pitbull - give-me-everything-ft-Ne-Yo-Afrojack-Nayer.mp3",
     display: "Pitbull - Give Me Everything Ft Ne-Yo Afrojack Nayer",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GIVEMEEVERYTHING_PITBULL",
+    listenUrl: "https://open.spotify.com/track/2aBnB4O15IXOO9XsFcplhl",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -701,7 +701,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/pitbull-y-kesha - timber.mp3",
     display: "Pitbull Y Kesha - Timber",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TIMBER_PITBULLKESHA",
+    listenUrl: "https://open.spotify.com/track/4r4dm316Wl9tRBFBUc6sZZ",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -709,7 +709,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/pitbull-y-marc-anthony  - rain-over-me.mp3",
     display: "Pitbull Y Marc Anthony - Rain Over Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_RAINOVERME_PITBULLMARCANTHONY",
+    listenUrl: "https://open.spotify.com/track/2cZrrQMjB63c0iIugYH9zS",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -717,7 +717,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/psy - gangnam-style.mp3",
     display: "PSY - Gangnam Style",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_GANGNAMSTYLE_PSY",
+    listenUrl: "https://open.spotify.com/track/03UrZgTINDqvnUMbbIMhql",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -725,7 +725,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/rihanna - diamonds.mp3",
     display: "Rihanna - Diamonds",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DIAMONDS_RIHANNA",
+    listenUrl: "https://open.spotify.com/track/6O20JhBJPePEkBdrB5sqRx",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -733,7 +733,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/rihanna - only-girl-in-the-world.mp3",
     display: "Rihanna - Only Girl In The World",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ONLYGIRLINTHEWORLD_RIHANNA",
+    listenUrl: "https://open.spotify.com/track/2ENexcMEMsYk0rVJigVD3i",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -741,7 +741,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/rihanna - stay-ft-mikky-ekko.mp3",
     display: "Rihanna - Stay Ft Mikky Ekko",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STAY_RIHANNAFTMIKKY",
+    listenUrl: "https://open.spotify.com/track/2JwS47l2MKrOji0ufc6Je0",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -749,7 +749,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/rihanna-ft-calvin-harris - we-found-love.mp3",
     display: "Rihanna Ft Calvin Harris - We Found Love",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WEFOUNDLOVE_RIHANNAFTC.H.",
+    listenUrl: "https://open.spotify.com/track/0ovRMnNsmpKGhz7KrpCi83",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -757,7 +757,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/rixton - me-and-my-broken-heart.mp3",
     display: "Rixton - Me And My Broken Heart",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_MEANDMYBROKENHEART_RIXTON",
+    listenUrl: "https://open.spotify.com/track/1oew3nFNY3vMacJAsvry0S",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -765,7 +765,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/robin-thicke - blurred-lines-ft-pharrell.mp3",
     display: "Robin Thicke - Blurred Lines Ft Pharrell",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BLURREDLINES_ROBINTHICKE",
+    listenUrl: "https://open.spotify.com/track/6juB6ztt3xcoFVwKg80Grp",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -773,7 +773,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/sam-smith - stay-with-me.mp3",
     display: "Sam Smith - Stay With Me",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_STAYWITHME_SAMSMITH",
+    listenUrl: "https://open.spotify.com/track/5Nm9ERjJZ5oyfXZTECKmRt",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -781,7 +781,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/shakira-y-rihanna - cant-remember-to-forget-you.mp3",
     display: "Shakira Y Rihanna - Can’t Remember To Forget You",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CANTREMEMBERTOFORGETYOU_SHAKIRARIHANNA",
+    listenUrl: "https://open.spotify.com/track/7o1Pm9jpH0wFpN5g793Lnq",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -789,7 +789,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/shawn-mendes - treat-you-better.mp3",
     display: "Shawn Mendes - Treat You Better",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_TREATYOUBETTER_SHAWNMENDES",
+    listenUrl: "https://open.spotify.com/track/3QGsuHI8jO1Rx4JWLUh9jd",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -797,7 +797,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/sia - chandelier.mp3",
     display: "Sia - Chandelier",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CHANDELIER_SIA",
+    listenUrl: "https://open.spotify.com/track/4VrWlk8IQxevMvERoX08iC",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -805,7 +805,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/sia-ft-sean-paul - cheap-thrills.mp3",
     display: "Sia Ft Sean Paul - Cheap Thrills",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CHEAPTHRILLS_SIA",
+    listenUrl: "https://open.spotify.com/track/6b3b7lILUJqXcp6w9wNQSm",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -813,7 +813,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/taylor-swift - blank-space.mp3",
     display: "Taylor Swift - Blank Space",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BLANKSPACE_TAYLORSWIFT",
+    listenUrl: "https://open.spotify.com/track/1u8c2t2Cy7UBoG4ArRcF5g",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -821,7 +821,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/taylor-swift - shake-it-off.mp3",
     display: "Taylor Swift - Shake It Off",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SHAKEITOFF_TAYLORSWIFT",
+    listenUrl: "https://open.spotify.com/track/0cqRj7pUJDkTCEsJkx8snD",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -829,7 +829,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/taylor-swift - we-are-never-ever-getting-back-together.mp3",
     display: "Taylor Swift - We Are Never Ever Getting Back Together",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_WERENEVERGETTINGBACKTOGETHER_TAYLORSWIFT",
+    listenUrl: "https://open.spotify.com/track/5YqltLsjdqFtvqE7Nrysvs",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -837,7 +837,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/taylor-swift-ft-kendrick-lamar - bad-blood.mp3",
     display: "Taylor Swift Ft Kendrick Lamar - Bad Blood",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BADBLOOD_TAYLORSWIFTFTKENDRICKLAMAR",
+    listenUrl: "https://open.spotify.com/track/0pzWRnlLshquCGnwDEGdZM",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -845,7 +845,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/the-weeknd - blinding-lights.mp3",
     display: "The Weeknd - Blinding Lights",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_BLINDINGLIGHTS_THEWEEKND",
+    listenUrl: "https://open.spotify.com/track/0VjIjW4GlUZAMYd2vXMi3b",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -853,7 +853,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/tom-odell - another-love.mp3",
     display: "Tom Odell - Another Love",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_ANOTHERLOVE_TOMODELL",
+    listenUrl: "https://open.spotify.com/track/3JvKfv6T31zO0ini8iNItO",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -861,7 +861,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/tones-and-i - dance-monkey.mp3",
     display: "Tones And I - Dance Monkey",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_DANCEMONKEY_TONESANDI",
+    listenUrl: "https://open.spotify.com/track/2N8m6CYs74qQO4mjVcXO30",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -869,7 +869,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/wiz-khalifa-ft-charlie-puth - see-you-again.mp3",
     display: "Wiz Khalifa Ft Charlie Puth - See You Again",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_SEEYOUAGAIN_WIZKHALIFAFTCHARLIEPUTH",
+    listenUrl: "https://open.spotify.com/track/1aWn3yG1YEmW7VQjyBEQW8",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
@@ -877,7 +877,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
   {
     file: "10s/ingles/zara-larsson - lush-life.mp3",
     display: "Zara Larsson - Lush Life",
-    listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_LUSHLIFE_ZARALARSSON",
+    listenUrl: "https://open.spotify.com/track/1rIKgCH4H52lrvDcz50hS8",
     platform: "spotify",
     originalDecade: "10s",
     originalCategory: "ingles",
