@@ -59,7 +59,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
 
 Special cases:
 - `verano/consolidated.js` and `elderly/consolidated.js` use `"consolidated"` as the category key.
-- `espanol.js` and `ingles.js` for `80s`, `90s`, `00s` have real Spotify URLs. The same files for `10s` and `actual` still have placeholder strings (`URL_PENDIENTE_...`) — pending a Spotify API rate-limit reset before the script can finish. Run `python -u spotify_urls.py` from the project root once the rate limit resets.
+- All `espanol.js` and `ingles.js` files (80s–actual) have real Spotify URLs. `spotify_urls.py` was used to fill them via the Spotify Search API — do not re-run unless new placeholders appear.
 
 ### Decades and Categories
 
@@ -83,13 +83,13 @@ MP3 files live in `public/audio/[decade]/[category]/`. All files are normalized 
 | peliculas | ✅ | ✅ | ✅ | ❌ | ❌ |
 | series | ✅ | ✅ | ✅ | ❌ | ❌ |
 | tv | ✅ | ✅ | ✅ | ❌ | ❌ |
-| infantiles | ✅ | ❌ pending | ❌ | ❌ | ❌ |
+| infantiles | ✅ | ✅ | ❌ | ❌ | ❌ |
 | anuncios | ✅ | ✅ | ❌ | ❌ | ❌ |
 
 **Known data issues in JS files:**
-- `90s/infantiles.js` — has correct content (84 real 90s cartoons: Pokémon, Bob Esponja, etc.) but the `public/audio/90s/infantiles/` folder doesn't exist yet. Owner will upload the audio files.
 - `00s/infantiles.js`, `10s/infantiles.js`, `actual/infantiles.js` — contain Spanish pop songs instead of children's shows (script generation error). No audio exists for these.
 - `10s/series.js`, `actual/series.js`, `10s/tv.js`, `actual/tv.js`, `10s/peliculas.js`, `actual/peliculas.js`, `10s/anuncios.js`, `actual/anuncios.js`, `00s/anuncios.js` — same generation error, contain Spanish pop songs. No audio exists.
+- All these broken categories are handled gracefully by the audio skip mechanism — they won't crash the game.
 
 **Audio 404 handling:** `audio-manager.js` automatically skips songs with no audio: removes the broken song from the active pool, replaces it with another from the pool, and reloads the question silently. If no replacement is available, it skips the question without penalizing the player. This means "Todas las Décadas" works even for categories with partial audio coverage.
 
@@ -132,21 +132,25 @@ Email comparisons in online code must always use `.toLowerCase()` on both sides 
 
 ### Payment System (Stripe)
 
-Single product: **€2.99 — desbloquea todo** (`price_1U18xPBesxEarqE5eMvhTLin`, Stripe test mode).
+Single product: **€2.99 — desbloquea todo**.
+- Live price ID: `price_1U1UOVBs7hDZJlieCFVbLfee` (default en `server.js`)
+- Test price ID: `price_1SuACIAzxZ5jYRrVNKmtD0KN` (set `STRIPE_PRICE_ID` en `.env` local para test)
 
-- `PREMIUM_PRICE_ID` is hardcoded in `server.js` just above the `/api/create-checkout-session` route. The frontend sends only `{ email, returnUrl }` — the server always charges the same price, which is safer than trusting a price ID from the client.
-- On payment, webhook saves `"premium_all"` to `user.unlocked_sections`. `hasCategoryAccess()` and `hasPremiumAccess()` in `premium-functions.js` both check for `"premium_all"`.
-- All API calls in `payment-functions.js` use relative paths (`/api/...`) — no `CANONICAL_PROD_ORIGIN` dependency.
-- When going live: create a new product in Stripe **live mode** and update `PREMIUM_PRICE_ID` in `server.js`.
+`PREMIUM_PRICE_ID` se resuelve en `server.js` como `process.env.STRIPE_PRICE_ID || "<live_id>"`. El frontend envía solo `{ email, returnUrl }` — el servidor siempre impone el precio correcto.
+
+On payment, webhook saves `"premium_all"` to `user.unlocked_sections`. `hasCategoryAccess()` and `hasPremiumAccess()` in `premium-functions.js` both check for `"premium_all"`.
+
+All API calls in `payment-functions.js` use relative paths (`/api/...`).
+
+**Future:** compras por categoría individual a €1,99 (anuncios, peliculas, etc.) — ver memory `plan_category_purchases.md`.
 
 ### Service Worker
 
-Cache name is `adivina-cancion-v1.3.2` in `public/sw.js`. When changing static assets that need cache-busting, update this version string.
+Cache name is `adivina-cancion-v1.3.3` in `public/sw.js`. When changing static assets that need cache-busting, update this version string.
 
 ### Notes
 
-- `spotify_urls.py` in the project root is a one-time utility script — do NOT commit it (contains API credentials).
-- The `.gitignore` file has an unresolved merge conflict marker that should be cleaned up.
+- `spotify_urls.py` in the project root is a one-time utility script — already in `.gitignore` (contains API credentials). Only re-run if new `URL_PENDIENTE_` placeholders appear.
 - Admin email (`vtornet@gmail.com`) is hardcoded in both `server.js` (login bypass) and `public/js/constants/app-constants.js`.
 - `CANONICAL_PROD_ORIGIN` is `"https://adivinalacancion.app"` in both `constants.js` and `app-constants.js`. Verify this domain is correctly configured in Railway before relying on it.
 - Linux filesystem on Railway is case-sensitive. Audio file paths in JS data files must match the exact casing of the MP3 filenames. Windows local dev is case-insensitive and will mask these bugs.
