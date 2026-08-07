@@ -43,8 +43,14 @@ export async function sendContactForm() {
     const data = await response.json();
 
     if (response.ok) {
-      await showAppAlert(data.message);
-      closeContactModal();
+      const body = document.querySelector("#contact-modal .modal-body");
+      if (body) {
+        body.innerHTML = `
+          <p style="text-align:center;padding:1rem 0;font-size:1.3rem;">✓</p>
+          <p style="text-align:center;">${data.message}</p>`;
+      }
+      setTimeout(() => closeContactModal(), 2500);
+      return;
     } else {
       showAppAlert(data.message || "Error al enviar el mensaje.");
     }
