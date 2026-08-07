@@ -27,21 +27,7 @@ export async function showSongsListCategorySelection() {
   await Promise.allSettled(loadPromises);
 
   DECADES_WITH_SPECIALS.forEach((decadeId) => {
-    if (decadeId === "Todas" || decadeId === "verano") {
-      const allButtonDiv = document.createElement("div");
-      allButtonDiv.style.gridColumn = "1 / -1";
-      allButtonDiv.style.marginTop = "20px";
-      const allButton = document.createElement("button");
-      allButton.className = "category-btn tertiary";
-      allButton.innerText = getDecadeLabel(decadeId);
-      allButton.onclick = () => displaySongsForCategory(decadeId, "consolidated");
-      if (!hasPremiumAccess()) {
-        allButton.classList.add("locked");
-      }
-      allButtonDiv.appendChild(allButton);
-      container.appendChild(allButtonDiv);
-      return;
-    }
+    if (decadeId === "Todas" || decadeId === "verano" || decadeId === "elderly") return;
 
     const decadeCategorySongs = globalThis.configuracionCanciones[decadeId];
     if (decadeCategorySongs) {
@@ -58,16 +44,13 @@ export async function showSongsListCategorySelection() {
       categoryButtonsForDecadeDiv.style.gap = "10px";
       container.appendChild(categoryButtonsForDecadeDiv);
 
-      CATEGORY_ORDER.forEach((categoryId) => {
+      ["espanol", "ingles"].forEach((categoryId) => {
         const songsArray = decadeCategorySongs[categoryId];
         if (Array.isArray(songsArray) && songsArray.length > 0) {
           const button = document.createElement("button");
           button.className = "category-btn";
           button.innerText = getCategoryLabel(categoryId);
           button.onclick = () => displaySongsForCategory(decadeId, categoryId);
-          if (isPremiumCategory(categoryId) && !hasPremiumAccess()) {
-            button.classList.add("locked");
-          }
           categoryButtonsForDecadeDiv.appendChild(button);
         }
       });
