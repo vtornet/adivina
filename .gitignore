@@ -24,3 +24,7 @@ build/
 
 # Scripts con credenciales
 spotify_urls.py
+
+# Utilidades y assets locales
+gen_pdf_video.py
+*.pdf
