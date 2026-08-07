@@ -128,6 +128,7 @@ import {
   calculateDuelWins,
 } from "./files/statistics-functions.js";
 import { showSongsListCategorySelection, displaySongsForCategory } from "./files/songs-list-functions.js";
+import { showContactModal, closeContactModal, sendContactForm } from "./files/contact-functions.js";
 import {
   exitGame,
   confirmReturnToMenu,
@@ -317,6 +318,9 @@ Object.assign(globalThis, {
   closeCookiePolicy,
   openSelectPicker,
   closeSelectPicker,
+  showContactModal,
+  closeContactModal,
+  sendContactForm,
 });
 
 // Inicialización

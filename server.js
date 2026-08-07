@@ -298,6 +298,40 @@ app.post("/api/create-checkout-session", async (req, res) => {
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
+app.post("/api/contact", async (req, res) => {
+  const { reason, email, message } = req.body || {};
+  if (!reason || !message?.trim()) {
+    return res.status(400).json({ message: "Faltan campos obligatorios." });
+  }
+
+  const reasonLabels = {
+    sugerencia: "Sugerencia de mejora",
+    tecnico: "Problema técnico",
+    pago: "Problema con el pago",
+    contenido: "Canción incorrecta o mal categorizada",
+    solicitud: "Solicitar una canción",
+    otros: "Otros",
+  };
+
+  const reasonLabel = reasonLabels[reason] || reason;
+  const replyTo = email?.trim() || "sin email";
+
+  const ok = await sendEmail({
+    to: "contact@appstracta.app",
+    subject: `[Adivina la Canción] ${reasonLabel}`,
+    html: `<p><strong>Motivo:</strong> ${reasonLabel}</p>
+           <p><strong>Email del usuario:</strong> ${replyTo}</p>
+           <p><strong>Mensaje:</strong></p>
+           <p>${message.trim().replace(/\n/g, "<br>")}</p>`,
+  });
+
+  if (ok) {
+    res.json({ message: "Mensaje enviado. ¡Gracias por contactarnos!" });
+  } else {
+    res.status(500).json({ message: "Error al enviar el mensaje. Inténtalo de nuevo." });
+  }
+});
+
 // --- REGISTRO CON VERIFICACIÓN ---
 app.post("/api/register", async (req, res) => {
   const { email, password } = req.body || {};

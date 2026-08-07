@@ -526,6 +526,7 @@
           <button class="btn secondary" type="button" onclick="showStats()">Estadísticas</button>
           <button class="btn secondary" type="button" onclick="showAllSongs()">Canciones</button>
           <button class="btn secondary" type="button" onclick="showInstructions()">Instrucciones</button>
+          <button class="btn secondary" type="button" onclick="showContactModal()">Contacto</button>
           <button class="btn secondary" type="button" onclick="showPasswordRecoveryInfo()">Recuperar contraseña</button>
           <button class="btn secondary" type="button" onclick="showChangePasswordModal()">Cambiar contraseña</button>
           <button class="btn secondary" type="button" onclick="endOnlineModeAndGoHome()">Menú Principal</button>
@@ -537,6 +538,35 @@
           <button class="btn tertiary" type="button" onclick="exitGame()">Salir del Juego</button>
         </div>
         <button class="btn" type="button" onclick="closeHamburgerMenu()">Cerrar</button>
+      </div>
+    </div>
+
+    <div
+      id="contact-modal"
+      class="modal-overlay hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-modal-title"
+    >
+      <div class="modal-content">
+        <h3 id="contact-modal-title">Contacto</h3>
+        <div class="modal-body">
+          <label style="font-size:0.9rem;margin-bottom:4px;display:block">Motivo</label>
+          <select id="contact-reason" class="text-input">
+            <option value="sugerencia">Sugerencia de mejora</option>
+            <option value="tecnico">Problema técnico</option>
+            <option value="pago">Problema con el pago</option>
+            <option value="contenido">Canción incorrecta o mal categorizada</option>
+            <option value="solicitud">Solicitar una canción</option>
+            <option value="otros">Otros</option>
+          </select>
+          <label style="font-size:0.9rem;margin:10px 0 4px;display:block">Tu email (para responderte)</label>
+          <input type="email" id="contact-email" class="text-input" placeholder="correo@ejemplo.com" />
+          <label style="font-size:0.9rem;margin:10px 0 4px;display:block">Mensaje</label>
+          <textarea id="contact-message" class="text-input" rows="5" placeholder="Escribe tu mensaje aquí..." style="resize:vertical;min-height:100px"></textarea>
+          <button class="btn" type="button" onclick="sendContactForm()" style="margin-top:12px">Enviar</button>
+        </div>
+        <button class="btn secondary" type="button" onclick="closeContactModal()">Cerrar</button>
       </div>
     </div>
 
