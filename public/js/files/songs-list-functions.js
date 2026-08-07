@@ -14,9 +14,11 @@ export async function showSongsListCategorySelection() {
   const container = document.getElementById("songs-list-category-buttons");
   container.innerHTML = "";
 
-  const decadesToLoad = DECADES_WITH_SPECIALS.filter((decadeId) => decadeId !== "Todas" && decadeId !== "verano");
+  const decadesToLoad = DECADES_WITH_SPECIALS.filter(
+    (decadeId) => decadeId !== "Todas" && decadeId !== "verano" && decadeId !== "especiales" && decadeId !== "elderly",
+  );
   const loadPromises = decadesToLoad.flatMap((decadeId) =>
-    CATEGORY_ORDER.map((categoryId) =>
+    ["espanol", "ingles"].map((categoryId) =>
       globalThis.loadSongsForDecadeAndCategory(decadeId, categoryId).catch((error) => {
         logger.warn(`No se pudo cargar la categoría ${categoryId} para la década ${decadeId}.`, error);
         return null;
@@ -27,7 +29,7 @@ export async function showSongsListCategorySelection() {
   await Promise.allSettled(loadPromises);
 
   DECADES_WITH_SPECIALS.forEach((decadeId) => {
-    if (decadeId === "Todas" || decadeId === "verano" || decadeId === "elderly") return;
+    if (decadeId === "Todas" || decadeId === "verano" || decadeId === "elderly" || decadeId === "especiales") return;
 
     const decadeCategorySongs = globalThis.configuracionCanciones[decadeId];
     if (decadeCategorySongs) {
