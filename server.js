@@ -357,6 +357,14 @@ app.post("/api/register", async (req, res) => {
       verificationCode,
     }).save();
 
+    // Notificación al admin (fire-and-forget)
+    sendEmail({
+      to: "vtornet@gmail.com",
+      subject: "Nuevo registro — Adivina la Canción",
+      html: `<p>Nuevo usuario registrado: <strong>${email}</strong></p>
+             <p>Fecha: ${new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}</p>`,
+    }).catch((err) => console.error("Error notificación admin:", err));
+
     // Enviar correo
     try {
       await sendEmail({
