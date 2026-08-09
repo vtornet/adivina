@@ -357,14 +357,6 @@ app.post("/api/register", async (req, res) => {
       verificationCode,
     }).save();
 
-    // Notificación al admin (fire-and-forget)
-    sendEmail({
-      to: "vtornet@gmail.com",
-      subject: "Nuevo registro — Adivina la Canción",
-      html: `<p>Nuevo usuario registrado: <strong>${email}</strong></p>
-             <p>Fecha: ${new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" })}</p>`,
-    }).catch((err) => console.error("Error notificación admin:", err));
-
     // Enviar correo
     try {
       await sendEmail({
@@ -877,6 +869,94 @@ app.delete("/api/online-games/clear-history/:playerEmail", async (req, res) => {
     });
   } catch (err) {
     console.error("Error clear history:", err.message);
+    res.status(500).json({ message: "Error del servidor." });
+  }
+});
+
+// ==============================
+// Admin — estadísticas
+// ==============================
+function requireAdminKey(req, res, next) {
+  const providedKey = req.headers["x-admin-key"] || req.query.key;
+  const expectedKey = process.env.ADMIN_STATS_KEY;
+  if (!expectedKey || providedKey !== expectedKey) {
+    return res.status(401).json({ message: "No autorizado." });
+  }
+  next();
+}
+
+function mergeCounts(...groups) {
+  const totals = new Map();
+  for (const group of groups) {
+    for (const { _id, count } of group) {
+      if (!_id) continue;
+      totals.set(_id, (totals.get(_id) || 0) + count);
+    }
+  }
+  return [...totals.entries()]
+    .map(([key, count]) => ({ key, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+app.get("/api/admin/stats", requireAdminKey, async (req, res) => {
+  try {
+    const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+
+    const [
+      totalUsers,
+      newUsersFacets,
+      gameHistoryCount,
+      onlineGameCount,
+      gameHistoryByDecade,
+      onlineGameByDecade,
+      gameHistoryByCategory,
+      onlineGameByCategory,
+    ] = await Promise.all([
+      User.countDocuments(),
+      User.aggregate([
+        { $addFields: { createdAt: { $toDate: "$_id" } } },
+        {
+          $facet: {
+            byDay: [
+              { $match: { createdAt: { $gte: ninetyDaysAgo } } },
+              { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, count: { $sum: 1 } } },
+              { $sort: { _id: 1 } },
+            ],
+            byWeek: [
+              { $group: { _id: { $dateToString: { format: "%G-W%V", date: "$createdAt" } }, count: { $sum: 1 } } },
+              { $sort: { _id: 1 } },
+            ],
+            byMonth: [
+              { $group: { _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } }, count: { $sum: 1 } } },
+              { $sort: { _id: 1 } },
+            ],
+          },
+        },
+      ]),
+      GameHistory.countDocuments(),
+      OnlineGame.countDocuments(),
+      GameHistory.aggregate([{ $group: { _id: "$decade", count: { $sum: 1 } } }]),
+      OnlineGame.aggregate([{ $group: { _id: "$decade", count: { $sum: 1 } } }]),
+      GameHistory.aggregate([{ $group: { _id: "$category", count: { $sum: 1 } } }]),
+      OnlineGame.aggregate([{ $group: { _id: "$category", count: { $sum: 1 } } }]),
+    ]);
+
+    const { byDay, byWeek, byMonth } = newUsersFacets[0];
+
+    res.status(200).json({
+      totalUsers,
+      totalGamesPlayed: gameHistoryCount + onlineGameCount,
+      newUsers: {
+        byDay,
+        byWeek: byWeek.slice(-26),
+        byMonth: byMonth.slice(-12),
+      },
+      topDecades: mergeCounts(gameHistoryByDecade, onlineGameByDecade),
+      topCategories: mergeCounts(gameHistoryByCategory, onlineGameByCategory),
+      note: "El tiempo de juego no se registra actualmente en el servidor.",
+    });
+  } catch (err) {
+    console.error("Error admin stats:", err.message);
     res.status(500).json({ message: "Error del servidor." });
   }
 });

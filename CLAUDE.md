@@ -16,6 +16,7 @@ To run locally, copy `.env.example` (or create `.env`) with:
 - `MONGO_URI` — MongoDB connection string
 - `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`
 - `EMAIL_PASS` — Resend API key (used as Bearer token)
+- `ADMIN_STATS_KEY` — shared secret for the `/api/admin/stats` endpoint (see Admin Stats below)
 
 ## Architecture
 
@@ -147,6 +148,12 @@ All API calls in `payment-functions.js` use relative paths (`/api/...`).
 ### Service Worker
 
 Cache name is `adivina-cancion-v1.3.3` in `public/sw.js`. When changing static assets that need cache-busting, update this version string.
+
+### Admin Stats
+
+`public/admin-stats.html` (+ `public/js/admin-stats-page.js`) is a standalone, unlisted dashboard — not linked from the app UI, not part of the ES-module/`globalThis` pattern. It calls `GET /api/admin/stats` in `server.js`, protected by `requireAdminKey` middleware: the request must send the value of the `ADMIN_STATS_KEY` env var as an `x-admin-key` header (the page prompts for it once and caches it in `localStorage`). If `ADMIN_STATS_KEY` is unset, the endpoint always returns 401 (fails closed).
+
+The endpoint returns: total users, new-user counts by day/week/month (derived from each `User._id`'s embedded ObjectId timestamp — no `createdAt` field exists on the schema), total games played, and top decades/categories (merged counts from `GameHistory` + `OnlineGame`). Play time/session duration is **not tracked anywhere** in the schema, so it cannot be reported without adding new instrumentation.
 
 ### Notes
 

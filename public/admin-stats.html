@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Estadísticas — Adivina la Canción</title>
+    <link rel="icon" href="img/adivina.png" type="image/png" />
+    <style>
+      :root {
+        color-scheme: light;
+        --surface-1: #fcfcfb;
+        --page-plane: #f9f9f7;
+        --text-primary: #0b0b0b;
+        --text-secondary: #52514e;
+        --text-muted: #898781;
+        --gridline: #e1e0d9;
+        --baseline: #c3c2b7;
+        --border: rgba(11, 11, 11, 0.1);
+        --series-1: #2a78d6;
+        --series-1-wash: rgba(42, 120, 214, 0.12);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --surface-1: #1a1a19;
+          --page-plane: #0d0d0d;
+          --text-primary: #ffffff;
+          --text-secondary: #c3c2b7;
+          --text-muted: #898781;
+          --gridline: #2c2c2a;
+          --baseline: #383835;
+          --border: rgba(255, 255, 255, 0.1);
+          --series-1: #3987e5;
+          --series-1-wash: rgba(57, 135, 229, 0.16);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--page-plane);
+        color: var(--text-primary);
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      .page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 24px 16px 64px;
+      }
+
+      .page-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin: 0;
+      }
+
+      h2 {
+        font-size: 1.05rem;
+        margin: 0;
+        color: var(--text-primary);
+      }
+
+      .key-box {
+        display: flex;
+        gap: 8px;
+      }
+
+      .key-box input {
+        font-family: inherit;
+        font-size: 0.9rem;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface-1);
+        color: var(--text-primary);
+        min-width: 200px;
+      }
+
+      .key-box button {
+        font-family: inherit;
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        background: var(--series-1);
+        color: #ffffff;
+        cursor: pointer;
+      }
+
+      .key-box button:hover {
+        opacity: 0.9;
+      }
+
+      .stats-content {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .tiles-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+      }
+
+      .stat-tile {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 18px;
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 600;
+      }
+
+      .chart-card {
+        background: var(--surface-1);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+      }
+
+      .chart-card-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .range-toggle {
+        display: flex;
+        gap: 4px;
+        background: var(--page-plane);
+        border-radius: 8px;
+        padding: 3px;
+      }
+
+      .range-btn {
+        font-family: inherit;
+        font-size: 0.82rem;
+        padding: 5px 12px;
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+      }
+
+      .range-btn.active {
+        background: var(--series-1);
+        color: #ffffff;
+      }
+
+      .chart-body {
+        min-height: 40px;
+      }
+
+      /* Vertical bar chart (time series) */
+      .vbar-chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 160px;
+        border-bottom: 1px solid var(--baseline);
+        padding: 0 2px;
+        position: relative;
+      }
+
+      .vbar-col {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100%;
+        min-width: 2px;
+        position: relative;
+      }
+
+      .vbar {
+        width: 100%;
+        max-width: 24px;
+        background: var(--series-1);
+        border-radius: 4px 4px 0 0;
+      }
+
+      .vbar-axis-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 6px;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+
+      /* Horizontal bar chart (rankings) */
+      .hbar-chart {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .hbar-row {
+        display: grid;
+        grid-template-columns: 90px 1fr 48px;
+        align-items: center;
+        gap: 8px;
+        height: 26px;
+      }
+
+      .hbar-name {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .hbar-track {
+        background: var(--gridline);
+        border-radius: 4px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .hbar-fill {
+        height: 20px;
+        max-width: 100%;
+        background: var(--series-1);
+        border-radius: 4px;
+      }
+
+      .hbar-value {
+        font-size: 0.82rem;
+        color: var(--text-primary);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .tooltip {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--text-primary);
+        color: var(--surface-1);
+        font-size: 0.72rem;
+        padding: 4px 7px;
+        border-radius: 6px;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.1s;
+        z-index: 2;
+      }
+
+      .vbar-col:hover .tooltip {
+        opacity: 1;
+      }
+
+      .note {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+
+      .error-msg {
+        color: #d03b3b;
+        font-size: 0.9rem;
+      }
+
+      .empty-msg {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        padding: 12px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <h1>Estadísticas</h1>
+        <div class="key-box" id="key-box">
+          <input type="password" id="admin-key-input" placeholder="Clave de administrador" autocomplete="off" />
+          <button id="admin-key-save" type="button">Ver estadísticas</button>
+        </div>
+      </header>
+
+      <p id="stats-error" class="error-msg" hidden></p>
+
+      <div id="stats-content" class="stats-content" hidden>
+        <section class="tiles-row">
+          <div class="stat-tile">
+            <div class="stat-label">Usuarios totales</div>
+            <div class="stat-value" id="tile-total-users">—</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-label">Partidas registradas</div>
+            <div class="stat-value" id="tile-total-games">—</div>
+          </div>
+        </section>
+
+        <section class="chart-card">
+          <div class="chart-card-header">
+            <h2>Usuarios nuevos</h2>
+            <div class="range-toggle" role="tablist">
+              <button type="button" class="range-btn active" data-range="byDay">Día</button>
+              <button type="button" class="range-btn" data-range="byWeek">Semana</button>
+              <button type="button" class="range-btn" data-range="byMonth">Mes</button>
+            </div>
+          </div>
+          <div class="chart-body" id="new-users-chart"></div>
+        </section>
+
+        <section class="chart-card">
+          <h2>Décadas más jugadas</h2>
+          <div class="chart-body hbar-chart" id="decades-chart"></div>
+        </section>
+
+        <section class="chart-card">
+          <h2>Categorías más jugadas</h2>
+          <div class="chart-body hbar-chart" id="categories-chart"></div>
+        </section>
+
+        <p class="note" id="stats-note"></p>
+      </div>
+    </div>
+
+    <script src="js/admin-stats-page.js" defer></script>
+  </body>
+</html>
