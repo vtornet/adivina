@@ -412,7 +412,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   },
   {
     file: "Actual/espanol/isabel.aaiun - potra-salvaje-oficial-remix.mp3",
-    display: "Isabel.aaiun - Potra Salvaje Oficial Remix",
+    display: "Isabel Aaiun - Potra Salvaje Oficial Remix",
     listenUrl: "https://open.spotify.com/track/6KbPnhLCdUGYij2P730EnP",
     platform: "spotify",
     originalDecade: "Actual",
@@ -772,7 +772,7 @@ globalThis.allSongsByDecadeAndCategory["actual"].espanol = [
   },
   {
     file: "Actual/espanol/susana-cala-y-anotnio-jose - no-fue-tu-culpa.mp3",
-    display: "Susana Cala y Anotnio Jose - No Fue Tu Culpa",
+    display: "Susana Cala y Antonio José - No Fue Tu Culpa",
     listenUrl: "https://open.spotify.com/track/0sfk352FO8bJUjWjIsyzSR",
     platform: "spotify",
     originalDecade: "Actual",

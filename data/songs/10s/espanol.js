@@ -364,7 +364,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].espanol = [
   },
   {
     file: "10s/espanol/luis-fonsi-y-demi-lobato - echame-la-culpa-a-mi.mp3",
-    display: "Luis Fonsi y Demi Lobato - Échame La Culpa A Mí",
+    display: "Luis Fonsi y Demi Lovato - Échame La Culpa A Mí",
     listenUrl: "https://open.spotify.com/track/24XwHoTZKMFVwdIMGyEz39",
     platform: "spotify",
     originalDecade: "10s",
@@ -620,7 +620,7 @@ globalThis.allSongsByDecadeAndCategory["10s"].espanol = [
   },
   {
     file: "10s/espanol/alejandro-sanz - mi-marciana.mp3",
-    display: "Alejandro Sabz - Mi Marciaana",
+    display: "Alejandro Sanz - Mi Marciana",
     listenUrl: "https://open.spotify.com/track/64jEPUJdZzI4sdivFkR4A7",
     platform: "spotify",
     originalDecade: "10s",

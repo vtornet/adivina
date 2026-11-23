@@ -548,7 +548,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].espanol = [
   },
   {
     file: "80s/espanol/ricchi-e-poveri - sera-porque-te-amo.mp3",
-    display: "Ricchi E Poveri - Sará Porque Te Amo",
+    display: "Ricchi E Poveri - Será Porque Te Amo",
     listenUrl: "https://open.spotify.com/track/7D5F5BzIon5zhzQrOU2pdN",
     platform: "spotify",
     originalDecade: "80s",

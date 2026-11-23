@@ -283,14 +283,6 @@ globalThis.allSongsByDecadeAndCategory["10s"].ingles = [
     originalCategory: "ingles",
   },
   {
-    file: "10s/ingles/harry-styles - as-it-was.mp3",
-    display: "Harry Styles - As It Was",
-    listenUrl: "https://open.spotify.com/track/4Dvkj6JhhA12EX05fT7y2e",
-    platform: "spotify",
-    originalDecade: "10s",
-    originalCategory: "ingles",
-  },
-  {
     file: "10s/ingles/harry-styles - sig-of-the-times.mp3",
     display: "Harry Styles - Sign Of The Times",
     listenUrl: "https://open.spotify.com/track/5Ohxk2dO5COHF1krpoPigN",

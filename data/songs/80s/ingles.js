@@ -108,7 +108,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   },
   {
     file: "80s/ingles/crowded-house - dont-dream-its-ove.mp3",
-    display: "Crowded House - Dont Dream Its Ove",
+    display: "Crowded House - Don't Dream It's Over",
     listenUrl: "https://open.spotify.com/track/56GbZVwxMdf1DENCluYS8A",
     platform: "spotify",
     originalDecade: "80s",
@@ -140,7 +140,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   },
   {
     file: "80s/ingles/david-bowie - letss-dance.mp3",
-    display: "David Bowie - Letss Dance",
+    display: "David Bowie - Let's Dance",
     listenUrl: "https://open.spotify.com/track/44T13PWJ87jb3lFElhVIHx",
     platform: "spotify",
     originalDecade: "80s",
@@ -419,14 +419,6 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
     originalCategory: "ingles",
   },
   {
-    file: "80s/ingles/m-c-hammer - U-cant-touch-this.mp3",
-    display: "M C Hammer - U Cant Touch This",
-    listenUrl: "https://open.spotify.com/track/1B75hgRqe7A4fwee3g3Wmu",
-    platform: "spotify",
-    originalDecade: "80s",
-    originalCategory: "ingles",
-  },
-  {
     file: "80s/ingles/madness - our-house.mp3",
     display: "Madness - Our House",
     listenUrl: "https://open.spotify.com/track/5HrtZ0YLAcKIRx4tdQoHWc",
@@ -627,14 +619,6 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
     originalCategory: "ingles",
   },
   {
-    file: "80s/ingles/right-said-fred - i-m-too-sexy.mp3",
-    display: "Right Said Fred - I M Too Sexy",
-    listenUrl: "https://open.spotify.com/track/1MQrMQwfqjgOjXEUaN9AMd",
-    platform: "spotify",
-    originalDecade: "80s",
-    originalCategory: "ingles",
-  },
-  {
     file: "80s/ingles/robert-palmer - simply-irresistible.mp3",
     display: "Robert Palmer - Simply Irresistible",
     listenUrl: "https://open.spotify.com/track/7mmhMfqs3knRMMlvnMPTHn",
@@ -740,7 +724,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   },
   {
     file: "80s/ingles/the clash - roc-the-casbah.mp3",
-    display: "The Clash - Roc The Casbah",
+    display: "The Clash - Rock The Casbah",
     listenUrl: "https://open.spotify.com/track/56KqaFSGTb7ifpt16t5Y1N",
     platform: "spotify",
     originalDecade: "80s",
@@ -764,7 +748,7 @@ globalThis.allSongsByDecadeAndCategory["80s"].ingles = [
   },
   {
     file: "80s/ingles/the-communards - dontt-leave-me-this-way.mp3",
-    display: "The Communards - Dontt Leave Me This Way",
+    display: "The Communards - Don't Leave Me This Way",
     listenUrl: "https://open.spotify.com/track/0ire4j2mcGovF5JA1D2cTp",
     platform: "spotify",
     originalDecade: "80s",

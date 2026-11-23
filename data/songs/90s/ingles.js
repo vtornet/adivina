@@ -419,14 +419,6 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
     originalCategory: "ingles",
   },
   {
-    file: "90s/ingles/phil-collins - another-day-in-paradise.mp3",
-    display: "Phil Collins - Another Day In Paradise",
-    listenUrl: "https://open.spotify.com/track/1NCuYqMc8hKMb4cpNTcJbD",
-    platform: "spotify",
-    originalDecade: "90s",
-    originalCategory: "ingles",
-  },
-  {
     file: "90s/ingles/R-E-M - everybody-hurts.mp3",
     display: "R E M - Everybody Hurts",
     listenUrl: "https://open.spotify.com/track/6PypGyiu0Y2lCDBN1XZEnP",
@@ -550,14 +542,6 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
     file: "90s/ingles/smash-mouth - all-star.mp3",
     display: "Smash Mouth - All Star",
     listenUrl: "https://open.spotify.com/track/3cfOd4CMv2snFaKAnMdnvK",
-    platform: "spotify",
-    originalDecade: "90s",
-    originalCategory: "ingles",
-  },
-  {
-    file: "90s/ingles/soul-ii-soul - back-to-life.mp3",
-    display: "Soul II Soul - Back To Life",
-    listenUrl: "https://open.spotify.com/track/7vvRkLPIvfjjmCIqNxBuEZ",
     platform: "spotify",
     originalDecade: "90s",
     originalCategory: "ingles",
@@ -700,7 +684,7 @@ globalThis.allSongsByDecadeAndCategory["90s"].ingles = [
   },
   {
     file: "90s/ingles/apollo-440 - stop-the-rock.mp3",
-    display: "Apollo 440 - 7 Stopo The Rock",
+    display: "Apollo 440 - Stop The Rock",
     listenUrl: "https://open.spotify.com/track/7wEqDbpAoBo0xVdlmb2LAa",
     platform: "spotify",
     originalDecade: "90s",

@@ -124,7 +124,7 @@ globalThis.allSongsByDecadeAndCategory["elderly"].consolidated = [
   },
   {
     file: "elderly/consolidated/gracia-montes - esa-mujercita.mp3",
-    display: "Gracia Montes - Esa Mujerjita",
+    display: "Gracia Montes - Esa Mujercita",
     listenUrl: "URL_PENDIENTE_ESA_MUJERJITA",
     platform: "spotify",
     originalDecade: "elderly",
@@ -212,7 +212,7 @@ globalThis.allSongsByDecadeAndCategory["elderly"].consolidated = [
   },
   {
     file: "elderly/consolidated/los-giraldillos - mis-tres-novias.mp3",
-    display: "Los Giraldiillos - Mis Tres Novias",
+    display: "Los Giraldillos - Mis Tres Novias",
     listenUrl: "URL_PENDIENTE_MIS_TRES_NOVIAS",
     platform: "spotify",
     originalDecade: "elderly",

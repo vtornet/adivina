@@ -356,7 +356,7 @@ globalThis.allSongsByDecadeAndCategory["verano"].consolidated = [
   },
   {
     file: "verano/consolidated/lippd-inc - funkytown.mp3",
-    display: "Lippd Inc - Funkytown",
+    display: "Lipps Inc - Funkytown",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FUNKYTOWN_LIPPDINC",
     platform: "spotify",
     originalDecade: "verano",
@@ -532,7 +532,7 @@ globalThis.allSongsByDecadeAndCategory["verano"].consolidated = [
   },
   {
     file: "verano/consolidated/pibull - i-know-you-want-me.mp3",
-    display: "Pibull - I Know You Want Me",
+    display: "Pitbull - I Know You Want Me",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_IKNOWYOUWANTME_PIBULL",
     platform: "spotify",
     originalDecade: "verano",
@@ -580,7 +580,7 @@ globalThis.allSongsByDecadeAndCategory["verano"].consolidated = [
   },
   {
     file: "verano/consolidated/rafaela-carra - fiesta.mp3",
-    display: "Rafaela Carrá - Fiesta",
+    display: "Raffaella Carrà - Fiesta",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_FIESTA_RAFAELACARRA",
     platform: "spotify",
     originalDecade: "verano",
@@ -588,7 +588,7 @@ globalThis.allSongsByDecadeAndCategory["verano"].consolidated = [
   },
   {
     file: "verano/consolidated/raffaella-carra - hay-que-venir-al-sur.mp3",
-    display: "Raffaella Carrá - Hay Que Venir al Sur",
+    display: "Raffaella Carrà - Hay Que Venir al Sur",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_HAYQUEVENIR_RAFAELLACARRA",
     platform: "spotify",
     originalDecade: "verano",
@@ -636,7 +636,7 @@ globalThis.allSongsByDecadeAndCategory["verano"].consolidated = [
   },
   {
     file: "verano/consolidated/rolsalia-j-balbin - con-altura.mp3",
-    display: "Rolsalia y J Balbin - Con Altura",
+    display: "Rosalía y J Balvin - Con Altura",
     listenUrl: "URL_DE_BUSQUEDA_PENDIENTE_CONALTURA_ROLSALIA_JBALBIN",
     platform: "spotify",
     originalDecade: "verano",
