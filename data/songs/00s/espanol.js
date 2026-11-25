@@ -123,14 +123,6 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
     originalCategory: "espanol",
   },
   {
-    file: "00s/espanol/causa-y-efecto - paulina-rubio.mp3",
-    display: "Causa Y Efecto - Paulina Rubio",
-    listenUrl: "https://open.spotify.com/track/0gdt218D74akk9AqMlbc45",
-    platform: "spotify",
-    originalDecade: "00s",
-    originalCategory: "espanol",
-  },
-  {
     file: "00s/espanol/chayanne - torero.mp3",
     display: "Chayanne - Torero",
     listenUrl: "https://open.spotify.com/track/709CndJJB3GTUhQD0LLFse",
@@ -580,9 +572,7 @@ globalThis.allSongsByDecadeAndCategory["00s"].espanol = [
   },
   {
     file: "00s/espanol/miguel-bose-y-julieta-venegas - morena-mia.mp3",
-    display: "Miguel Bose Y Julieta Venegas - Morena Mia",
-    listenUrl: "https://open.spotify.com/track/2pJQNjK0uYUgPRo6fpIOEC",
-    platform: "spotify",
+    display: "Miguel Bosé y Shakira - Si Tú No Vuelves",
     originalDecade: "00s",
     originalCategory: "espanol",
   },
